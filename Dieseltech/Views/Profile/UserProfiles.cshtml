@@ -1,0 +1,174 @@
+﻿@using Dieseltech.Models;
+@{
+    ViewBag.Title = "Index";
+    List<tblProfile> list = (List<tblProfile>)ViewBag.speaker;
+}
+
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    @*<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">*@
+
+    <style>
+        div.profile-widget:hover, div.profile-widget:active {
+            font-size: 150%;
+        }
+
+        .icon-bar a {
+            display: block;
+            text-align: center;
+            padding: 2px;
+            color: white;
+            font-size: 15px;
+            border-radius: 50%;
+        }
+
+        .profile-widget div {
+            transition: all 0.3s ease;
+        }
+
+        .facebook {
+            background: #3B5998;
+            color: white;
+        }
+
+        .twitter {
+            background: #55ACEE;
+            color: white;
+        }
+
+        .google {
+            background: #dd4b39;
+            color: white;
+        }
+
+        .linkedin {
+            background: #007bb5;
+            color: white;
+        }
+
+        .instagram {
+            background: #ea4c89;
+            color: white;
+        }
+
+        .youtube {
+            background: #bb0000;
+            color: white;
+        }
+    </style>
+</head>
+
+
+
+<div class="content">
+    @foreach (var item in list)
+    {
+        <div class="row">
+            <div class="col-sm-7 col-6">
+                <h4 class="page-title">Profile</h4>
+            </div>
+
+        </div>
+        <div class="card-box profile-header">
+            <div class="row">
+                <div class="col-md-12">
+
+                    <div class="profile-view">
+                        <div class="profile-img-wrap">
+                            <div class="profile-img">
+                                <a href="#"><img class="avatar" src="@item.Image" alt=""></a>
+                                <a href="@item.instagram" class="instagram"><i class="fa fa-instagram"></i></a>
+
+                            </div>
+                        </div>
+
+                        <div class="profile-basic">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="profile-info-left">
+                                        <h3 class="user-name m-t-0 mb-0">@item.Profile_name</h3>
+                                        <small class="text-muted">@item.Email</small>
+                                        <div class="staff-id">@item.Designation</div>
+                                        <ul class="social-share">
+                                            <li><a target="_blank" href="@item.Facebook" title="Facebook"><i class="fa fa-facebook"></i></a></li>
+                                            <li><a  target="_blank"  href="@item.Twitter" title="Twitter"><i class="fa fa-twitter"></i></a></li>
+                                            <li><a target="_blank"  href="@item.instagram" title="Google Plus"><i class="fa fa-instagram"></i></a></li>
+                                            <li><a target="_blank"  href="@item.youtube" title="Youtube"><i class="fa fa-youtube"></i></a></li>
+                                        </ul>
+                                        @*<div class="row">
+                                                <div class="col-sm-2 icon-bar">
+                                                    <a href="@item.instagram" class="instagram"><i class="fa fa-instagram"></i></a>
+                                                </div>
+                                                <div class="col-sm-2 icon-bar">
+                                                    <a href="@item.Twitter" class="twitter"><i class="fa fa-twitter"></i></a>
+                                                </div>
+                                                <div class="col-sm-2 icon-bar">
+                                                    <a href="@item.Facebook" class="facebook"><i class="fa fa-facebook"></i></a>
+                                                </div>
+                                                <div class="col-sm-2 icon-bar">
+                                                    <a href="@item.youtube" class="youtube"><i class="fa fa-youtube"></i></a>
+                                                </div>
+                                            </div>*@
+                                        @*<div class="staff-msg"><a href="chat.html" class="btn btn-primary">Send Message</a></div>*@
+                                    </div>
+                                </div>
+                                <div class="col-md-8">
+                                    <ul class="personal-info">
+                                        <li>
+                                            <span class="title">Phone:</span>
+                                            <span class="text"><a  target="_blank"  href="#">@item.phoneNo</a></span>
+                                        </li>
+
+
+                                        <li>
+                                            <span class="title">Address:</span>
+                                            <span class="text">@item.Adress</span>
+                                        </li>
+                                        <li>
+                                            <span class="title">Facebook:</span>
+                                            <span class="text"><a target="_blank"   href="@item.Facebook">@item.Facebook</a></span>
+                                        </li>
+                                        <li>
+                                            <span class="title">Instagram:</span>
+                                            <span class="text"><a target="_blank"   href="@item.instagram">@item.instagram</a></span>
+                                        </li>
+                                        <li>
+                                            <span class="title">Twitter:</span>
+                                            <span class="text"><a target="_blank"   href="@item.Twitter">@item.Twitter</a></span>
+                                        </li>
+                                        <li>
+                                            <span class="title">Youtube:</span>
+                                            <span class="text"><a target="_blank"   href="@item.youtube">@item.youtube</a></span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="profile-tabs">
+
+            <div class="tab-content">
+                <div class="tab-pane show active" id="about-cont">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card-box">
+                                <h3 class="card-title">Biography</h3>
+                                <div class="experience-box">
+                                    @item.Details
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+
+                </div>
+
+            </div>
+        </div>
+    }
+</div>

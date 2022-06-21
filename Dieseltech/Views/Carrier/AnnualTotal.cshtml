@@ -1,0 +1,304 @@
+﻿
+@{
+    ViewBag.Title = "Leaderboard";
+}
+
+
+<head>
+    <style>
+
+
+        div#tblannualtotals_filter {
+            position: sticky;
+            top: 0;
+            padding: 5px;
+            z-index: 100;
+            background: darkblue;
+        }
+
+        /*  #Loadshead {
+            position: sticky;
+            top: 0;
+            padding: 5px;
+            z-index: 100;
+        }*/
+
+        div#tblannualtotals_length {
+            position: sticky !important;
+            top: 0 !important;
+            padding: 5px !important;
+            z-index: 100 !important;
+            background: darkblue !important;
+            color: white !important;
+            width: 79.5% !important;
+            /*height: 4.5% !important;*/
+        }
+
+        select {
+            color: white !important;
+        }
+
+        option {
+            color: black !important;
+        }
+
+        label {
+            color: white !important
+        }
+
+        input[type="search"] {
+            color: white !important;
+        }
+    </style>
+
+</head>
+<div class="content">
+    <div class="row">
+        <div class="col-md-2">
+            <h4 class="page-title">Annual Totals <i onclick="RefereshList()" class="fa fa-refresh"></i></h4>
+            <span style="color:red;" id="fademsg">@ViewBag.error</span>
+        </div>
+        <div class="col-md-2">
+
+            <select id="ddlyear" required name="ddlyear" onchange="ReloadList(this)" class="form-control js-example-basic-single">
+
+                @foreach (var item in ViewBag.ddlYears)
+                {
+                    <text>
+                        @if (item.Value == Convert.ToString(@ViewBag.CurrentYear))
+                        {
+                            <option selected value="@item.Value">@item.Value</option>
+                        }
+                        else
+                        {
+                            <option value="@item.Value">@item.Value</option>
+                        }
+
+
+                    </text>
+                }
+            </select>
+        </div>
+        <div class="col-md-2">
+
+            <select id="ddlmonth" required name="ddlmonth" onchange="ReloadList()" class="form-control js-example-basic-single">
+                <option selected value="0">All Months</option>
+                @foreach (var item in ViewBag.Days)
+                {
+
+                    <text>
+                        @if (item.ID == Convert.ToString(@ViewBag.CurrentMonth))
+                        {
+                            <option selected value="@item.ID">@item.Day</option>
+                        }
+                        else
+                        {
+                            <option value="@item.ID">@item.Day</option>
+                        }
+
+
+                    </text>
+                }
+
+            </select>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="table-responsive">
+                @*<table class="table table-border table-striped custom-table  g-dataTable mb-0">*@
+
+                <table style="font-size:12px;width:100%" class="table table-condensed table-fit table-sm table-striped g-dataTable  mb-0" id="tblannualtotals">
+                    <thead>
+                        <tr>
+                            <th>Carrier ID </th>
+                            <th>Carrier Category </th>
+                            <th>Carrier Name </th>
+
+
+                            <th>ALKAIOS TRANSPORTATION </th>
+                            <th>ALKAIOS STATUS </th>
+                            <th>JETLINE TRANSPORT</th>
+                            <th>JETLINE STATUS</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in @ViewBag.AnnualTotals)
+                        {
+                            <tr>
+
+                                <td>@item.CarrierId</td>
+                                <td>
+                                    @if (item.CarrierCategoryId == 1)
+                                    {
+                                        <i class="fa fa-circle" style="color: orange;font-size: 15px;" aria-hidden="true"></i>
+                                    }
+                                    else if (item.CarrierCategoryId == 2)
+                                    {
+                                <i class="fa fa-circle" style="color:brown;font-size: 15px;" aria-hidden="true"></i>
+                                    }
+                                    @item.CategoryName
+                                </td>
+                                <td>  @item.CarrierName   </td>
+                                <td> @Convert.ToInt64(@item.ALKAIOS) </td>
+
+                                @if (@item.ALKAIOSStatus == 0)
+                                {
+
+                                    <td>
+                                        <a onclick="Updatecarriermark(1,1,'@item.CarrierId')">
+                                            <img style="width:15% !important" class="CheckedImageSize" src="~/assets/img/Unchecked.png" />
+                                        </a>
+
+
+                                    </td>
+                                }
+                                else if (@item.ALKAIOSStatus == 1)
+                                {
+
+                                    <td>
+                                        <a onclick="Updatecarriermark(0,1,'@item.CarrierId')">
+                                            <img style="width:15% !important" class="CheckedImageSize" src="~/assets/img/checkbox.png" />
+                                        </a>
+                                    </td>
+                                }
+                                <td> @Convert.ToInt64(@item.JETLINE) </td>
+
+                                @if (@item.JETLINEStatus == 0)
+                                {
+
+                                    <td>
+                                        <a onclick="Updatecarriermark(1,3,'@item.CarrierId')">
+                                            <img style="width:15% !important" class="CheckedImageSize" src="~/assets/img/Unchecked.png" />
+                                        </a>
+
+
+                                    </td>
+                                }
+                                else if (@item.JETLINEStatus == 1)
+                                {
+
+                                    <td>
+                                        <a onclick="Updatecarriermark(0,3,'@item.CarrierId')">
+                                            <img style="width:15% !important" class="CheckedImageSize" src="~/assets/img/checkbox.png" />
+                                        </a>
+                                    </td>
+                                }
+                                <td>@item.CompanyTotalAmount</td>
+                            </tr>
+                        }
+
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+
+    function Updatecarriermark(status, companyid, carrierid) {
+
+        var JqueryTableSearchValue = $("#tblannualtotals_filter input").val();
+
+        var yearid = $("#ddlyear").val();
+        $.ajax({
+
+            type: "POST",
+            url: "/Carrier/UpdateCarrierMark/?status=" + status + "&companyid=" + companyid + "&carrierid=" + carrierid + "&Year=" + yearid + "&search=" + JqueryTableSearchValue+"",
+
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                if (data == "1") {
+                    location.reload();
+
+                }
+                else {
+
+                }
+
+
+            }
+
+
+
+
+        });
+
+
+
+
+        //$('#Update_Load_Invoice').modal('show');
+
+
+
+    }
+
+    jQuery(document).ready(function () {
+
+          var JqueryTableSearchValue = @Html.Raw(Json.Encode(ViewBag.JqueryTableSearchValue));
+
+        var carrierscroll = @Html.Raw(Json.Encode(ViewBag.carrierscroll));
+
+
+
+        var row = $('tr');
+        var table = $('table');
+        var w = $(window);
+        var row = table.find('tr').eq(carrierscroll);
+
+        if (row.length) {
+            w.scrollTop(row.offset().top - (w.height() / 2));
+        }
+
+
+
+        jQuery('#ddlyear').select2();
+        jQuery('#ddlmonth').select2();
+        $('#tblannualtotals').DataTable({
+            "search": {
+                "search": JqueryTableSearchValue
+            },
+           "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+            "pageLength": -1
+        });
+    });
+    function RefereshList() {
+        location.reload();
+    }
+
+    function ReloadList(year) {
+
+        /*var year = year.value;*/
+        var year = $("#ddlyear").val();
+        var month = $("#ddlmonth").val();
+
+        if (year == null) {
+            year = 0;
+        }
+        if (month == null) {
+            month = 0;
+        }
+        var model = {
+            ddlyear: year,
+            ddlmonth: month
+        };
+
+          $.ajax({
+            url: '@Url.Action("ReloadAnnualTotal", "Carrier")',
+            type: "POST",
+              data: JSON.stringify(model),
+              contentType: "application/json; charset=utf-8",
+              dataType: "json",
+              success: function (result) {
+                  window.location = result.url;
+              }
+        });
+    }
+</script>

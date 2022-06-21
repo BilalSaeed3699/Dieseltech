@@ -1,0 +1,179 @@
+﻿@using Dieseltech.Models;
+@model Dieseltech.Models.tblAccess_Level
+@{
+    ViewBag.Title = "Index";
+    List<sp_getAccessMenus_Result1> list = (List<sp_getAccessMenus_Result1>)ViewBag.Menu;
+}
+
+
+<div class="content">
+    <div class="row">
+        <div class="col-sm-4 col-3">
+            <h4 class="page-title">Access Level</h4>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-6 offset-lg-3 card-box" style="border-color:lightblue; border-style:groove">
+            @using (Html.BeginForm("Access_Level_Menu", "AccessLevel", FormMethod.Post, new { id = "adForm", enctype = "multipart/form-data" }))
+            {
+                @Html.HiddenFor(model => model.Access_ID)
+                @Html.AntiForgeryToken()
+            <form>
+             
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group" style="background-color: #00539CFF !important;color:white;">
+                                @Html.EditorFor(model => model.Access_Level_Type, new { htmlAttributes = new { @class = "form-control" } })
+
+                                @*@Html.EditorFor(model => model.Access_Level_Type, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })*@
+                            </div>
+                        </div>
+
+                    </div>
+              
+                    <div class="row">
+                        @foreach (var item in list)
+                        {
+
+                            <div class="col-md-10">
+                                <div class="form-check">
+                                    <label class="form-check-label">
+                                        @if (item.value == "true")
+                                        {
+                                            if (@item.IsParent == 1)
+                                            {
+                                                <input  class="form-check-input"  type="checkbox" name="Menus[]" id="@item.Page_ID" value="@item.Page_ID" checked />
+                                            }
+                                            else
+                                            {
+                                                <input type="checkbox" name="Menus[]" id="@item.Page_ID" value="@item.Page_ID" checked />
+
+                                            }
+                                        }
+
+                                        else
+                                        {
+                                            if (@item.IsParent == 1)
+                                            {
+                                                <input class="form-check-input" type="checkbox" name="Menus[]" id="@item.Page_ID" value="@item.Page_ID"  />
+                                                <span class="form-check-sign">
+                                                    <span class="check"></span>
+                                                </span>
+                                            }
+                                            else
+                                            {
+                                                <input type="checkbox" name="Menus[]" id="@item.Page_ID" value="@item.Page_ID"  />
+                                                <span class="form-check-sign">
+                                                    <span class="check"></span>
+                                                </span>
+
+                                            }
+
+                                            @*<input class="form-check-input" type="checkbox" name="Menus[]" id="@item.Page_ID" value="@item.Page_ID">*@
+                                        
+                                        }
+
+                                        @item.Page_Name
+                                    </label>
+                                </div>
+                            </div>
+
+                        }
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="form-group">
+
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="m-t-5 text-right">
+                                <button class="btn btn-danger" style="        color: black !important;
+        background-color: white !important;
+        border: 1px solid #00539CFF !important" onclick="@("window.location.href='" + @Url.Action("Index", "AccessLevel") + "'")">Cancel</button>
+                                <button type="submit" class="btn btn-primary admin" style="        color: white;
+        background-color: #4c5564 !important
+" onclick="updatemark()">Save</button>
+                            </div>
+
+                        </div>
+                    </div>
+
+            </form>
+            }
+        </div>
+    </div>
+</div>
+
+
+
+@*<div class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="card">
+                        <div class="card-header card-header-primary">
+                            <h4 class="card-title">Access Level</h4>
+                            <p class="card-category"></p>
+                        </div>
+                        @using (Html.BeginForm("Access_Level_Menu", "AccessLevel", FormMethod.Post, new { id = "adForm", enctype = "multipart/form-data" }))
+                        {
+                            @Html.HiddenFor(model => model.Access_ID)
+                            @Html.AntiForgeryToken()
+                            <div class="card-body">
+                                <form>
+                                    <div class="row">
+
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label class="bmd-label-floating">Access Level Type</label>
+                                                @Html.EditorFor(model => model.Access_Level_Type, new { htmlAttributes = new { @class = "form-control" } })
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    @foreach (var item in list)
+                                    {
+                                        <div class="form-check">
+                                            <label class="form-check-label">
+                                                @if (item.value == "true")
+                                                {
+                                                    <input class="form-check-input" type="checkbox" name="Menus[]" id="@item.Page_ID" value="@item.Page_ID" checked />}
+                                                else
+                                                {
+                                                    <input class="form-check-input" type="checkbox" name="Menus[]" id="@item.Page_ID" value="@item.Page_ID">}
+                                                <span class="form-check-sign">
+                                                    <span class="check"></span>
+                                                </span>
+                                                @item.Page_Name
+                                            </label>
+                                        </div>
+                                    }
+                                    <button type="submit" class="btn btn-primary pull-right" onclick="updatemark()">Save</button>
+                                    <div class="clearfix"></div>
+                                </form>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>*@
+<script>
+
+    function updatemark(arg) {
+        var abc = ""
+        //Iterating the collection of checkboxes which checked marked
+        $('input[type=checkbox]').each(function () {
+            if (this.checked) {
+                abc = abc + $(this).val() + ","
+                //assign set value to hidden field
+                $('#Page_ID').val(abc);
+            }
+        });
+
+    }
+</script>

@@ -1,0 +1,1112 @@
+﻿@using Dieseltech.Models;
+
+@{
+    ViewBag.Title = "Load Details";
+
+    List<Sp_Get_LoadDetail_WithAllFilter_Result> listmonth = (List<Sp_Get_LoadDetail_WithAllFilter_Result>)ViewBag.LoadDetailsMonth;
+    //List<Sp_Get_LoadDetail_FilterWise_Result> list  = (List<Sp_Get_LoadDetail_FilterWise_Result>)ViewBag.LoadDetails;
+
+    //if (ViewBag.IsDateFilter == "1")
+    //{
+    //    listmonth = (List<Sp_Get_LoadDetail_FilterMonthWise_Result>)ViewBag.LoadDetailsMonth;
+    //}
+    //else if (ViewBag.IsDateFilter == "0")
+    //{
+    //    list = (List<Sp_Get_LoadDetail_FilterWise_Result>)ViewBag.LoadDetails;
+    //}
+
+    //List<tblEmailHistory> ListEmailHistory = (List<tblEmailHistory>)ViewBag.EmailHistory;
+    Decimal profitmargin = 0;
+}
+
+<head>
+    <style>
+        .FilterButton {
+            margin: 5px;
+        }
+
+        .fa-check-square {
+        }
+
+        #btnView {
+            font-size: 12px !important;
+        }
+
+        .hiddenRow {
+            padding: 0 !important;
+        }
+
+        th {
+            cursor: pointer;
+        }
+
+        .delete-modal .modal-body .btn {
+            width: 26%;
+        }
+
+        div#DailyLoads_filter {
+            position: sticky;
+            top: 0;
+            padding: 5px;
+            z-index: 100;
+            background: darkblue;
+        }
+
+        /*  #Loadshead {
+            position: sticky;
+            top: 0;
+            padding: 5px;
+            z-index: 100;
+        }*/
+
+        div#DailyLoads_length {
+            position: sticky;
+            top: 0;
+            padding: 5px;
+            z-index: 100;
+            background: darkblue;
+            color: white;
+            width: 79.5% !important;
+            height: 7.5% !important;
+        }
+
+        select {
+            color: white !important
+        }
+
+        option {
+            color: black !important
+        }
+
+        label {
+            color: white !important
+        }
+
+        input[type="search"] {
+            color: white !important;
+        }
+    </style>
+</head>
+
+<div class="content">
+    @Html.AntiForgeryToken()
+    <form>
+        <div class="row">
+            <div class="col-sm-2">
+                <h4 class="page-title">Loads List </h4>
+                <span style="color:red;" id="fademsg">@ViewBag.error</span>
+            </div>
+
+            <div class="col-md-10">
+                <div style="float:right !important">
+                    Advance Search <input required name="cwhere" value="@ViewBag.cwhere" />
+                    <button type="submit" name="Filter" href="@Url.Action("Index", "Report", new {userid =@ViewBag.UserId,Filter ="S", Type = @ViewBag.LoadType, FilterDateFroms = ViewBag.LoadFilterDateFrom, FilterDateTos = ViewBag.LoadFilterDateTo })" style="background-color: darkblue   !important" class="btn btn-primary FilterButton">
+                        <i class="fa fa-search"></i> Search
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+        @*@using (Html.BeginForm("Index", "Report", FormMethod.Post))
+            {*@
+
+        <div class="row">
+            <div class="col-sm-12 col-md-12">
+                @*<div class="form-group" >
+                        <select class="form-control" name="Filter" id="ddlLoadType" style="height: 35px !important;">
+                            <option value="0">Select Load</option>
+                            <option value="D">Daily</option>
+                            <option value="W">Weekly</option>
+                            <option value="M">Monthly</option>
+                        </select>
+                    </div>*@
+
+                <!--<div class="controls">
+                    <label><bold> Load Filter: </bold></label>
+                    <div class="btn-group">
+                        <button name="Filter" value="D" onclick="GetFilterTypeValue('D')" class="btn btn-primary FilterButton">Daily</button>
+                        <button name="Filter" value="W" onclick="GetFilterTypeValue('W')" class="btn btn-primary FilterButton">Weekly</button>
+                        <button name="Filter" value="M" onclick="GetFilterTypeValue('M')" class="btn btn-primary FilterButton">Monthly</button>
+                        <button name="Filter" value="0" onclick="GetFilterTypeValue('0')" class="btn btn-primary FilterButton">All</button>
+                    </div>-->
+                @*<input type="date" name="FilterDateFrom" value="@ViewBag.DateFrom.ToString("yyyy-MM-dd")" id="txtdatefrom" />
+                    <input type="date" name="FilterDateTo" value="@ViewBag.DateTo.ToString("yyyy-MM-dd")" id="txtdateto" />*@
+
+                <!--<button name="Filter" value="2" class="btn btn-primary FilterButton">Apply</button>-->
+                @*<label class="radio-inline" style="font-size:18px">
+                        <input type="radio" id="rdbDaily" onchange="GetFilterTypeValue('D')" name="Filter" value="D">
+                        Daily
+                    </label>
+                    <label class="radio-inline" style="font-size:18px">
+                        <input type="radio" id="rdbWeekly" name="Filter" onchange="GetFilterTypeValue('W')" value="W">
+                        Weekly
+                    </label>
+                    <label class="radio-inline" style="font-size:18px">
+                        <input type="radio" id="rdbMonthly" name="Filter" onchange="GetFilterTypeValue('M')" value="M">
+                        Monthly
+                    </label>
+                    <label class="radio-inline" style="font-size:18px">
+                        <input type="radio" id="rdbAll" name="Filter" onchange="GetFilterTypeValue('0')" value="0">
+                        All
+                    </label>
+                    <button id="btnAddSearch" href="#"
+                            class="btn btn-secondary" style="background-color: #4c5564 !important">
+                        <i class="fa fa-search"></i>Search
+                    </button>*@
+                <!--<input type="text" id="FilterType" name="Type" value="0" class="form-control" hidden />
+                </div>-->
+
+
+                <div class="row">
+                    <div class="col-md-5">
+                        <a href="@Url.Action("Index", "Report", new {userid =@ViewBag.UserId,Filter ="A", Type = @ViewBag.LoadType,AdvanceFilterDateFroms = ViewBag.AdvanceFilterDateFroms, AdvanceFilterDateTo = ViewBag.AdvanceFilterDateTo, FilterDateFroms = ViewBag.LoadFilterDateFrom, FilterDateTos = ViewBag.LoadFilterDateTo })" style="width:100% !important;height:100%">
+                            <div class="col-md-12" style="background-color: rgb(20,29,186) !important;height:100% !important;width:31%">
+
+                                <h3 style="color:White" id="FilterPeriodType">@ViewBag.LoadType</h3>
+
+                                @*<h5 style="color:White">@DateTime.Now.ToString("MM/dd/yyyy")</h5>*@
+                                <h5 style="color:White">
+                                    @if (ViewBag.LoadType == "Daily")
+                                    {
+                                        @ViewBag.LoadFilterDateFrom.ToString("MM/dd/yyyy")
+                                    }
+
+                                    else if (ViewBag.LoadType == "Weekly")
+                                    {
+                                        @ViewBag.LoadFilterDateFrom.ToString("MM/dd/yyyy")
+                                        <label> - @ViewBag.LoadFilterDateTo.ToString("MM/dd/yyyy")</label>
+                                    }
+                                    else if (ViewBag.LoadType == "Monthly")
+                                    {
+                                        @ViewBag.MonthDetails
+                                    }
+
+                                </h5>
+
+
+
+
+
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-md-7">
+                        <div class="btn-group" style="float:right">
+                            @*<i class="fa fa-circle" style="color:darkorange;font-size:15px" aria-hidden="true"> Confo</i>
+                                &nbsp;
+                                <i class="fa fa-circle" style="color:darkgreen;font-size:15px" aria-hidden="true"> Confo POD</i>
+                                &nbsp;
+                                <i class="fa fa-circle" style="color:blue;font-size:15px" aria-hidden="true"> Confo POD,Invoice</i>*@
+
+                            @*<a name="Filter" onclick="AgentModel(@Session["User_id"],'@ViewBag.LoadFilterDateFrom.ToString("yyyy-MM-dd")','@ViewBag.LoadFilterDateTo.ToString("yyyy-MM-dd")')" style="background-color: darkgreen !important" class="btn btn-secondary FilterButton">
+                                    <i class="fa fa-plus"></i>
+                                    My Sum
+                                </a>*@
+
+                            <a style="background-color: deepskyblue !important" class="btn btn-primary FilterButton"><i onclick="RefereshList()" style="font-size:19px !important" class="fa fa-refresh"></i></a>
+
+                            <a name="Filter"
+                               style="background-color: darkgreen !important" class="btn btn-secondary FilterButton"
+                               href="@Url.Action("index", "AgentStatistics", new { FilterDateFroms= DateTime.Now.ToString("MM/dd/yyyy") , FilterDateTos =  DateTime.Now.ToString("MM/dd/yyyy") })">
+
+                                <i class="fa fa-plus"></i>
+                                Agent Statistics
+                            </a>
+
+
+                            <a name="Filter" href="@Url.Action("Index", "Report", new { userid =@ViewBag.UserId, Filter ="M", Type = @ViewBag.LoadType,AdvanceFilterDateFroms = ViewBag.AdvanceFilterDateFroms, AdvanceFilterDateTo = ViewBag.AdvanceFilterDateTo, FilterDateFroms = ViewBag.LoadFilterDateFrom, FilterDateTos = ViewBag.LoadFilterDateTo })" style="background-color: orange !important" class="btn btn-primary FilterButton"><i class="fa fa-futbol-o"></i> Future Load Manager</a>
+                            <a name="Filter" href="@Url.Action("Index", "Report", new {userid =@ViewBag.UserId,Filter ="F", Type = @ViewBag.LoadType,AdvanceFilterDateFroms = ViewBag.AdvanceFilterDateFroms, AdvanceFilterDateTo = ViewBag.AdvanceFilterDateTo, FilterDateFroms = ViewBag.LoadFilterDateFrom, FilterDateTos = ViewBag.LoadFilterDateTo })" style="background-color: #6c757d !important" class="btn btn-secondary FilterButton"><i class="fa fa-history"></i> Future Loads</a>
+                            <a name="Filter" href="@Url.Action("Index", "Report", new {userid =@ViewBag.UserId,Filter ="AC", Type = @ViewBag.LoadType,AdvanceFilterDateFroms = ViewBag.AdvanceFilterDateFroms, AdvanceFilterDateTo = ViewBag.AdvanceFilterDateTo, FilterDateFroms = ViewBag.LoadFilterDateFrom, FilterDateTos = ViewBag.LoadFilterDateTo })" style="background-color: #218838 !important" class="btn btn-success FilterButton"><i class="fa fa-check"></i> Active</a>
+                            <a name="Filter" href="@Url.Action("Index", "Report", new {userid =@ViewBag.UserId,Filter ="C", Type = @ViewBag.LoadType, AdvanceFilterDateFroms = ViewBag.AdvanceFilterDateFroms, AdvanceFilterDateTo = ViewBag.AdvanceFilterDateTo,FilterDateFroms = ViewBag.LoadFilterDateFrom, FilterDateTos = ViewBag.LoadFilterDateTo })" style="background-color: #e6294b !important" class="btn btn-primary FilterButton"><i class="fa fa-window-close"></i> Canceled</a>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-10">
+                        <a href="@Url.Action("Index","Report",new {userid =@ViewBag.UserId,Filter ="A", Type = @ViewBag.LoadType,previous=1,Next=0,AdvanceFilterDateFroms = ViewBag.AdvanceFilterDateFroms, AdvanceFilterDateTo = ViewBag.AdvanceFilterDateTo,FilterDateFroms = ViewBag.LoadFilterDateFrom,FilterDateTos = ViewBag.LoadFilterDateTo})" name="Filter" value="D" onclick="GetFilterTypeValue('D')" class="btn btn-primary FilterButton">Previous</a>
+                        <a name="Filter" href="@Url.Action("Index","Report",new {userid =@ViewBag.UserId,Filter ="A", Type = @ViewBag.LoadType,previous=0,Next=1,AdvanceFilterDateFroms = ViewBag.AdvanceFilterDateFroms, AdvanceFilterDateTo = ViewBag.AdvanceFilterDateTo,FilterDateFroms = ViewBag.LoadFilterDateFrom,FilterDateTos = ViewBag.LoadFilterDateTo })" value="W" onclick="GetFilterTypeValue('W')" class="btn btn-primary">
+                            Next
+                        </a>
+
+                        <input type="date" value="@ViewBag.AdvanceFilterDateFroms.ToString("yyyy-MM-dd")" name="AdvanceFilterDateFroms" id="AdvanceFilterDateFroms" />
+                        <input type="date" value="@ViewBag.AdvanceFilterDateTo.ToString("yyyy-MM-dd")" name="AdvanceFilterDateTo" id="AdvanceFilterDateTo" />
+
+
+                        <input hidden type="date" value="@ViewBag.LoadFilterDateFrom.ToString("yyyy-MM-dd")" name="FilterDateFroms" />
+                        <input hidden type="date" value="@ViewBag.LoadFilterDateTo.ToString("yyyy-MM-dd")" name="FilterDateTos" />
+                        @*<select style="width:10% !important" id="ddlmonth" required="" name="ddlmonth" class="form-control js-example-basic-single">
+                                <option value="1">Jan</option>
+                                <option value="2">Feb</option>
+                                <option value="3">Mar</option>
+                                <option value="4">Apr</option>
+                                <option value="5">May</option>
+                                <option value="6">Jun</option>
+                                <option value="7">Jul</option>
+                                <option value="8">Aug</option>
+                                <option value="9">Sep</option>
+                                <option value="10">Oct</option>
+                                <option value="11">Nov</option>
+                                <option value="12">Dec</option>
+
+                            </select>*@
+
+                        <a name="Filter"
+                           @*href="@Url.Action("Index","Report",new {Filter ="A", Type = @ViewBag.LoadType,AdvanceFilterDateFroms = ViewBag.AdvanceFilterDateFroms, AdvanceFilterDateTo = ViewBag.AdvanceFilterDateTo,
+                                FilterDateFroms = ViewBag.LoadFilterDateFrom,FilterDateTos = ViewBag.LoadFilterDateTo,Custom=1 })"*@
+                           value="W" onclick="Advancesearch('@ViewBag.UserId','A','@ViewBag.LoadType','@ViewBag.AdvanceFilterDateFroms','@ViewBag.AdvanceFilterDateTo',
+                                '@ViewBag.LoadFilterDateFrom','@ViewBag.LoadFilterDateTo',1)" class="btn btn-info" style="background-color: darkgray !important;border:1px solid darkgray !important">
+                            Search
+                        </a>
+
+
+
+                        @if (ViewBag.AccessLevel == 1)
+                        {
+                            <strong>   Agent List </strong>
+                            <select style="width:20% !important" id="userid" required name="userid"
+                                    onchange="ReloadList(this,'D','@ViewBag.LoadType','@ViewBag.AdvanceFilterDateFroms','@ViewBag.AdvanceFilterDateTo',
+                                '@ViewBag.LoadFilterDateFrom','@ViewBag.LoadFilterDateTo')" class="form-control js-example-basic-single">
+
+                                @foreach (var item in ViewBag.AgentList)
+                                {
+                                    <text>
+                                        @if (item.User_ID == ViewBag.UserId)
+                                        {
+                                            <option selected value="@item.User_ID">@item.UserName</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@item.User_ID">@item.UserName</option>
+                                        }
+
+
+
+
+                                    </text>
+                                }
+                            </select>
+                        }
+
+
+
+
+                        <input hidden value="@Session["User_id"]" />
+                    </div>
+
+                </div>
+
+
+                <br />
+
+
+            </div>
+            <br />
+            <!--<div class="col-sm-2 col-md-2 float-left" >-->
+            @*<button id="btnAddSearch" type="button" class="btn btn-success btn-block"> Search </button>*@
+            <!--<button onclick="changeLabel('P')" id="btnAddSearch" href="#"
+                        class="btn btn-secondary">
+                    <i class="fa fa-search"></i>Search
+                </button>
+
+            </div>-->
+
+        </div>
+        <br />
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="table-responsive" style="overflow: auto !important; height: 700px !important">
+
+                    <table style="font-size:11px" id="DailyLoads" class="table table-border table-striped table-sm custom-table mb-0 g-dataTable searchable sortable">
+                        <thead>
+                            <tr>
+                                @*<th>Email History</th>*@
+                                <th>Status</th>
+                                <th>C.O.D</th>
+                                <th>Load Number </th>
+                                <th>Broker Reference</th>
+                                <th>Future Load</th>
+                                <th>Date</th>
+                                <th>Agent </th>
+                                <th>Profile </th>
+                                <th>Customer </th>
+                                <th>Carrier </th>
+
+                                <th>Load Type </th>
+                                @*<th>Pickup Location </th>
+                                    <th>Pickup Date </th>
+                                    <th>Delivery Location</th>
+                                    <th>Delivery Date</th>*@
+                                <th>Broker Amount </th>
+                                <th>Carrier Amount </th>
+                                <th>Agent Amount </th>
+                                <th>Profit Margin (%)</th>
+                                <th>View </th>
+                                @*<th>IsCancel</th>*@
+
+
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{Decimal @agentamount = 0; }
+                            @{Decimal @brokeramount = 0; }
+                            @if (ViewBag.IsDateFilter == "1")
+                            {
+                                foreach (var item in listmonth)
+                                {
+                                    agentamount = Convert.ToDecimal(item.Profit);
+                                    brokeramount = Convert.ToDecimal(item.BrokerRate);
+
+                                    if (brokeramount > 0)
+                                    {
+                                        profitmargin = (agentamount / brokeramount) * 100;
+
+                                    }
+
+                                    <tr>
+                                        @*<td onclick="ShowEmailHistory(@item.LoaderNumber)"><button type="button" class="fa fa-eye"><span class="glyphicon glyphicon-eye-open"></span></button></td>*@
+
+                                        @*<td data-toggle="collapse" data-target="#Load_@item.LoaderNumber" class="accordion-toggle"><button data-toggle="tooltip" data-placement="top" title="Click to view Email History" type="button" class="fa fa-eye"><span class="glyphicon glyphicon-eye-open"></span></button></td>*@
+                                        @if (@item.IsCancel == 0)
+                                        {
+
+                                            <td onclick="LoadApprovalStatus(@item.IsCancel,'@item.LoaderNumber')"><i class="fa fa-check-square" style="font-size: 25px;color: #218838"></i></td>
+                                        }
+                                        else if (@item.IsCancel == 1)
+                                        {
+                                            <td onclick="LoadApprovalStatus(@item.IsCancel,'@item.LoaderNumber')"><i class="fa fa-window-close" style="font-size: 25px;color:Red"></i></td>
+                                        }
+
+                                        <td>@item.COD</td>
+                                        <td class="LoadNumber"> <a> @item.LoaderNumber</a></td>
+                                        <td class="BrokerReference"> <a> @item.BrokerReference</a></td>
+                                        <td class="FutureLoad"> <a style="color: #009efb" target="_blank" href="@Url.Action("Index", "CopyLoad", new { LoadNumber = @item.LoaderNumber })"> @item.FutureLoadText</a></td>
+
+                                        @*<td class="LoadNumber"> <a style="color: #009efb" target="_blank" href="@Url.Action("EditLoad", "Load", new { LoaderNumber = @item.LoaderNumber })"> @item.LoaderNumber</a></td>*@
+                                        <td>@item.RegistrationDate</td>
+                                        <td>
+
+                                            <a>
+                                                @item.Agent
+                                            </a>
+                                        </td>
+
+                                        <td>@item.Profile</td>
+                                        <td>@item.Brokernanme</td>
+                                        <td class="LoadReportNumber"> <a style="color: #009efb" target="_blank" href="@Url.Action("LoadConfirmation", "Load", new { LoaderNumber = @item.LoaderNumber })"> @item.CarrierName</a></td>
+
+                                        <td>@item.LoadTypeName</td>
+
+                                        @*<td>@item.PickupInfo</td>
+                                            <td>@item.PickupDate</td>
+                                            <td>@item.DeliveryInfo</td>
+                                            <td>@item.DeliveryDate</td>*@
+                                        <td>@item.BrokerRate</td>
+                                        <td>@item.CarrierRate</td>
+                                        <td>@item.Profit</td>
+                                        <td>@Convert.ToInt64(@profitmargin)</td>
+                                        <td style="width:7%">
+                                            <a id="btnView" target="_blank" href="@Url.Action("ReportPreview", "Report", new { LoadNumberModel = @item.LoaderNumber })" class="btn btn-sm bg-info-light">
+                                                <i class="fa fa-eye"></i> View
+                                            </a>
+                                        </td>
+
+
+
+
+
+                                    </tr>
+
+
+                                    //Inner table
+                                    @*<tr style="width:100%">
+                                            <td colspan="12" class="hiddenRow">
+                                                <div class="accordian-body collapse" id="Load_@item.LoaderNumber">
+                                                    <table class="table table-border table-striped table-sm custom-table mb-0 g-dataTable searchable sortable">
+                                                        <thead>
+                                                            <tr class="info">
+                                                                <th>Load Number</th>
+                                                                <th>Send To Email</th>
+                                                                <th>Subject</th>
+                                                                <th>Date</th>
+                                                                <th>Send Status </th>
+                                                                <th>Send Message</th>
+                                                            </tr>
+                                                        </thead>
+
+                                                        <tbody>
+                                                            @{int i = 0;}
+                                                            @foreach (var items in ListEmailHistory)
+                                                            {
+
+                                                                if (items.LoadNumber == item.LoaderNumber)
+                                                                {
+                                                                    i++;
+                                                                    <tr data-toggle="collapse" class="accordion-toggle">
+                                                                        <td>@items.LoadNumber</td>
+                                                                        <td>@items.Email</td>
+                                                                        <td>@items.Subject</td>
+                                                                        <td>@items.Date.ToString("MM/dd/yyyy")</td>
+                                                                        <td>
+                                                                            @if (items.IsSend == 0)
+                                                                            {
+                                                                                <span data-toggle="tooltip" data-placement="top" title="@items.SendStatus" class="badge badge-danger">Failed</span>
+                                                                            }
+                                                                            else if (items.IsSend == 1)
+                                                                            {
+                                                                                <span class="badge badge-success">Send</span>
+                                                                            }
+                                                                        </td>
+                                                                        <td>@items.Detail</td>
+
+                                                                    </tr>
+                                                                }
+
+                                                            }
+
+                                                            @if (i == 0)
+                                                            {
+                                                                <tr data-toggle="collapse" class="accordion-toggle">
+                                                                    <td colspan="7" class="text-center"><strong style="font-size:15px;font-weight:bold">No Email Send</strong></td>
+                                                                </tr>
+                                                            }
+                                                        </tbody>
+                                                    </table>
+
+                                                </div>
+                                            </td>
+                                        </tr>*@
+                                }
+                            }
+
+
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </form>
+    @*}*@
+</div>
+
+<div id="Cancel_Load" class="modal fade Load-modal" role="dialog">
+    <div class="modal-dialog " style="max-width:500px">
+
+        <div class="modal-content">
+
+            <div class="modal-body text-center">
+                <input type="text" id="LoadNumber" name="LoadNumber" class="form-control" hidden />
+                <input type="text" id="LoadStatus" name="LoadStatus" class="form-control" hidden />
+                <img src="~/assets/img/sent.png" alt="" width="50" height="46">
+                <h3 id="MessageHeading"></h3>
+                <div class="m-t-20">
+                    <a href="#" class="btn btn-white" data-dismiss="modal">No</a>
+
+                    <button type="button" onclick="CancelLoad()" style="background-color: #4c5564 !important;border: 1px solid #4c5564" class="btn btn-danger">Yes</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<div id="View_Load_Email_History" class="modal fade delete-modal" role="dialog">
+    <div class="modal-dialog ">
+        @using (Html.BeginForm("SaveCarrierInformation", "Definition", FormMethod.Post, new
+        {
+            enctype = "multipart/form-data"
+        }))
+        {@Html.AntiForgeryToken()
+
+
+        <div class="modal-content">
+            <!--Header-->
+            <div class="modal-header" style="height: 35px !important;">
+                <p class="heading lead" style="font-size: 15px !important;">Email History</p>
+
+                <button type="button" style="color:white" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" class="white-text">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="ModalBody">
+                <div class="row ">
+
+
+                    <div class="col-md-12">
+                        <div class="card-box shadow-none  bg-light rounded" style="padding:8px;">
+
+
+
+
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-md-12">
+
+                                        <h3><strong>Email History</strong></h3>
+                                        <div class="table-responsive">
+                                            <table style="font-size:12px" id="tblEmailHistory" class="table table-border table-striped table-sm custom-table mb-0 g-dataTable ">
+                                                <thead>
+                                                    <tr class="info">
+                                                        <th>Load Number</th>
+                                                        <th>Send To Email</th>
+                                                        <th>Subject</th>
+                                                        <th>Date</th>
+                                                        <th>Send Status </th>
+                                                        <th>Send Message</th>
+                                                    </tr>
+                                                </thead>
+
+                                                <tbody>
+                                                    <tr></tr>
+                                                    @*@foreach (var items in ListEmailHistory)
+                                                        {
+
+                                                                <tr data-toggle="collapse" class="accordion-toggle">
+                                                                    <td>@items.LoadNumber</td>
+                                                                    <td>@items.Email</td>
+                                                                    <td>@items.Subject</td>
+                                                                    <td>@items.Date.ToString("MM/dd/yyyy")</td>
+                                                                    <td>
+                                                                        @if (items.IsSend == 0)
+                                                                        {
+                                                                            <span data-toggle="tooltip" data-placement="top" title="@items.SendStatus" class="badge badge-danger">Failed</span>
+                                                                        }
+                                                                        else if (items.IsSend == 1)
+                                                                        {
+                                                                            <span class="badge badge-success">Send</span>
+                                                                        }
+                                                                    </td>
+                                                                    <td>@items.Detail</td>
+
+                                                                </tr>
+                                                            }*@
+
+
+
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+
+
+            </div>
+        </div>
+    }
+    </div>
+
+</div>
+
+
+
+<div id="Agend_Stats" class="modal fade delete-modal" role="dialog">
+    <div class="modal-dialog" style="max-width:500px">
+        @*@using (Html.BeginForm("SaveDriver", "Definition", FormMethod.Post, new
+            {
+                enctype = "multipart/form-data"
+            }))
+            {@Html.AntiForgeryToken()*@
+
+
+        <div class="modal-content" style="margin-top:150px">
+            <!--Header-->
+            <div class="modal-header">
+                <p class="heading lead">Agent statistics </p>
+                <input hidden id="AgentNameModel" />
+                <button onclick="CloseDriverModel()" type="button" style="color:white" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" class="white-text">&times;</span>
+                </button>
+
+
+                @*<button type="button" style="color:white" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true" class="white-text">&times;</span>
+                    </button>*@
+            </div>
+            <div class="modal-body">
+                <div id="wait" style="display:none;width:19%;height:25%;position:absolute;top:78%;left:40%;padding:2px;">
+                    <img src="~/assets/img/demo_wait.gif" style="width:70%;height:70%" />
+                    <br>Wait...
+                </div>
+
+
+                <div class="row">
+                    <div class="col-sm-12 col-md-12">
+
+                        <div class="row">
+                            <div class="col-md-6" id="FilterDateBox">
+                                <a style="cursor:pointer;width:100% !important;height:100%">
+                                    <div class="col-md-12" style="background-color: rgb(20,29,186) !important;height:100% !important;width:55%">
+
+                                        <h3 style="color:White" id="FilterPeriodModelType">@ViewBag.LoadType</h3>
+
+                                        <h5 style="color:White">
+
+                                            @if (ViewBag.LoadType == "Monthly")
+                                            {
+                                                @ViewBag.MonthDetails
+                                            }
+
+                                        </h5>
+
+                                    </div>
+                                </a>
+                            </div>
+
+                        </div>
+                        <div class="row" id="FilterDetailBox">
+                            <div class="col-md-10">
+                                <a onclick="DataFilter('@ViewBag.LoadFilterDateFrom.ToString("yyyy-MM-dd")','@ViewBag.LoadFilterDateTo.ToString("yyyy-MM-dd")')" class="btn btn-primary FilterButton">Previous</a>
+                                <a onclick="DataFilter('@ViewBag.LoadFilterDateFrom.ToString("yyyy-MM-dd")','@ViewBag.LoadFilterDateTo.ToString("yyyy-MM-dd")')" class="btn btn-primary">
+                                    Next
+                                </a>
+                                <input value="@ViewBag.LoadFilterDateFrom.ToString("yyyy-MM-dd")" id="FilterDateModelFroms" />
+                                <input value="@ViewBag.LoadFilterDateTo.ToString("yyyy-MM-dd")" id="FilterDateModelTos" />
+                                <input id="txtUserId" value="@Session["User_id"]" />
+                                <input id="txtFilterType" value="1" />
+                            </div>
+
+                        </div>
+
+
+                        <br />
+
+
+                    </div>
+                    <br />
+
+
+                </div>
+                <br />
+
+
+
+                @*<div class="row">
+                        <div class="col-sm-12 col-md-12">
+
+
+                            <div class="btn-group">
+
+
+                                <label style="color:orange" class="radio-inline">
+                                    <input checked onclick="GetAgentProfit('D')" type="radio" name="optradio"> Daily
+                                </label> &nbsp;&nbsp;
+                                <label style="color:orange" class="radio-inline">
+                                    <input onclick="GetAgentProfit('W')" type="radio" name="optradio"> Weekly
+                                </label>&nbsp;&nbsp;
+                                <label style="color:orange" class="radio-inline">
+                                    <input onclick="GetAgentProfit('M')" type="radio" name="optradio"> Monthly
+                                </label>&nbsp;&nbsp;
+                                <label style="color:orange" class="radio-inline">
+                                    <input onclick="GetAgentProfit('0')" type="radio" name="optradio"> All
+                                </label>
+
+                            </div>
+
+                            <input type="text" id="FilterType" name="Type" value="0" class="form-control" hidden="">
+
+                        </div>
+
+                    </div>*@
+                <div class="row">
+                    <div class="col-md-1"></div>
+                    <div class="col-md-3">
+                        <label>   </label>
+                        <label><strong> Agent: </strong> <small id="lblAgentName"></small> </label>
+                    </div>
+                    <div class="col-md-4">
+                        <label><strong> Total Qty: </strong><small id="lblAgentTotalQuantity"></small></label>
+                    </div>
+                    <div class="col-md-4">
+                        <label><strong> Gross Profit: </strong><small id="lblAgentGrossProfit"></small></label>
+                    </div>
+
+                </div>
+
+
+            </div>
+        </div>
+        @*}*@
+    </div>
+
+</div>
+
+
+
+
+
+
+
+
+@*<script>
+        $(document).ready(function () {
+            $('#DailyLoads').DataTable();
+        });
+
+    </script>*@
+
+
+<script type="text/javascript">
+
+
+    function ReloadList(userid, Filter, Type, AdvanceFilterDateFroms,AdvanceFilterDateTo,FilterDateFroms,FilterDateTos) {
+
+        var userid = userid.value;
+          $.ajax({
+            url: '@Url.Action("AgentLoadList", "Report")',
+            type: "POST",
+            dataType: 'JSON',
+              data: { userid: userid, Filter: Filter, Type:Type,FilterDateFroms: FilterDateFroms, FilterDateTos: FilterDateTos, AdvanceFilterDateFroms: AdvanceFilterDateFroms, AdvanceFilterDateTo: AdvanceFilterDateTo},
+              success: function (result) {
+                  window.location = result.url;
+              }
+        });
+    }
+
+    @* href="@Url.Action("Index","Report",new {Filter ="A", Type = @ViewBag.LoadType,AdvanceFilterDateFroms = ViewBag.AdvanceFilterDateFroms, AdvanceFilterDateTo = ViewBag.AdvanceFilterDateTo,
+    FilterDateFroms = ViewBag.LoadFilterDateFrom, FilterDateTos = ViewBag.LoadFilterDateTo, Custom = 1 }) "*@
+
+
+
+    function Advancesearch(userid,Filter, Type, AdvanceFilterDateFroms, AdvanceFilterDateTo, FilterDateFroms, FilterDateTos, Custom) {
+
+
+        AdvanceFilterDateFroms=  $("#AdvanceFilterDateFroms").val();
+        AdvanceFilterDateTo=  $("#AdvanceFilterDateTo").val();
+
+
+        var model = {
+            userid: userid,
+            Filter: Filter,
+            Type: Type,
+            AdvanceFilterDateFroms: AdvanceFilterDateFroms,
+            AdvanceFilterDateTo: AdvanceFilterDateTo,
+            FilterDateFroms: FilterDateFroms,
+            FilterDateTos: FilterDateTos,
+            Custom: Custom
+        };
+
+          $.ajax({
+            type: "POST",
+            url: '@Url.Action("Advancesearch", "Report")',
+              data: JSON.stringify(model),
+              contentType: "application/json; charset=utf-8",
+              dataType: "json",
+            success: function (result) {
+                window.location = result.url;
+            }
+        });
+
+
+    }
+
+
+    function RefereshList() {
+        location.reload();
+    }
+    function DataFilter(DateFrom, DataTo) {
+
+
+    }
+
+    $(document).ready(function () {
+        jQuery('#userid').select2();
+        $('#DailyLoads').DataTable({
+
+            //"search": {
+            //    "search": "today"
+            //},
+            "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+            "pageLength": -1,
+            "fixedHeader": true
+        });
+
+
+    });
+
+
+
+    function AgentModel(AgentId, DateFrom, DateTo) {
+        alert('Test');
+        $.ajax({
+
+
+
+            type: "POST",
+
+            url: "/Report/GetAgentStats/?AgentId=" + AgentId + "&FilterType=M&FilterDateFroms=" + DateFrom + "&FilterDateTos=" + FilterDateTos + "",
+
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                if (data.length != null) {
+
+
+                    document.getElementById('lblAgentName').innerHTML = data[0].AgentName;
+                    document.getElementById('lblAgentTotalQuantity').innerHTML = data[0].TotalQuantity;
+                    document.getElementById('lblAgentGrossProfit').innerHTML = data[0].GrossProfit;
+                    $("#AgentNameModel").val(data[0].AgentName);
+                }
+                else {
+                    document.getElementById('lblAgentTotalQuantity').innerHTML = 0;
+                    document.getElementById('lblAgentGrossProfit').innerHTML = 0;
+                    $("#AgentNameModel").val(0);
+                }
+            }
+        });
+
+        $('#Agend_Stats').modal('show');
+
+    }
+
+</script>
+
+
+<script type="text/javascript">
+
+    function GetAgentProfit(values) {
+
+
+        var AgentName = $("#AgentNameModel").val();
+
+        $.ajax({
+
+            type: "POST",
+            url: "/Report/GetAgentStats/?AgentName=" + AgentName + "&FilterType=" + values + "",
+
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                if (data.length > 0) {
+
+                    document.getElementById('lblAgentName').innerHTML = data[0].AgentName;
+                    document.getElementById('lblAgentTotalQuantity').innerHTML = data[0].TotalQuantity;
+                    document.getElementById('lblAgentGrossProfit').innerHTML = data[0].GrossProfit;
+                }
+                else {
+                    document.getElementById('lblAgentName').innerHTML = data[0].AgentName;
+                    document.getElementById('lblAgentTotalQuantity').innerHTML = 0;
+                    document.getElementById('lblAgentGrossProfit').innerHTML = 0;
+                }
+
+
+            }
+        });
+
+    }
+</script>
+
+
+<script>
+
+
+    function LoadApprovalStatus(status, LoadNumber) {
+        //var status;
+        //if (status.checked) {
+        //    status = 1;
+        //}
+        //else {
+        //    status = 0;
+        //}
+        //alert(status);
+        //$("#Cancel_Load").show();
+
+        if (status == 0) {
+            document.getElementById("MessageHeading").innerHTML = "Are you sure you want to Cancel Load#: " + LoadNumber + " ";
+            $("#LoadStatus").val(1);
+        }
+        else if (status == 1) {
+            document.getElementById("MessageHeading").innerHTML = "Are you sure you want to Active Load#: " + LoadNumber + " ";
+            $("#LoadStatus").val(0);
+        }
+
+        $("#LoadNumber").val(LoadNumber);
+
+
+
+        $('#Cancel_Load').modal('show');
+
+
+
+    }
+
+
+    function CancelLoad() {
+
+
+
+        var LoadNumber = $("#LoadNumber").val();
+        var LoadStatus = $("#LoadStatus").val();
+        $.ajax({
+
+            type: "POST",
+            url: "/Load/UpdateLoadStatus/?LoadNumber=" + LoadNumber + "&LoadStatus=" + LoadStatus + "",
+
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                if (data == "1") {
+                    location.reload();
+
+                }
+                else {
+
+                }
+
+
+            }
+
+
+
+
+        });
+    }
+
+
+    function changeLabel(LoadType) {
+
+        //var Filter = $("#ddlLoadType").find("option:selected").val();
+
+        //alert(LoadType);
+
+        var model = {
+            Filter: LoadType,
+        };
+
+        //Send the JSON array to Controller using AJAX.
+        $.ajax({
+
+            type: "POST",
+            url: "/Report/FilterLodList",
+            data: JSON.stringify(model),
+            //data: { 'ListOfVariants': customers },
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+
+                $("#DailyLoads").html(data);
+            }
+        });
+
+
+    }
+
+    function ShowEmailHistory(LoaderNumber) {
+
+        $("#tblEmailHistory tbody tr").remove();
+        $('#View_Load_Email_History').modal('show');
+        //Call EmpDetails jsonResult Method
+        $.getJSON("/Report/GetLoadEmailHistory/?LoadNumber=" + LoaderNumber + "",
+            function (json) {
+
+                var tr;
+                //$('#txtContactName').val(json[0].ContactName);
+                if (json.length > 0) {
+                    $('#Edit_Truck').modal('show');
+
+
+                    //Append each row to html table
+                    for (var i = 0; i < json.length; i++) {
+
+
+
+                        tr = $('<tr/>');
+
+                        tr.append("<td>" + json[i].LoadNumber + "</td>");
+                        tr.append("<td>" + json[i].Email + "</td>");
+                        tr.append("<td>" + json[i].Subject + "</td>");
+
+
+
+                        var datevalue = new Date(parseInt(json[i].Date.replace("/Date(", "").replace(")/", ""), 10));
+                        var todayDate = new Date(datevalue);
+                        var format = "AM";
+                        var hour = todayDate.getHours();
+                        var min = todayDate.getMinutes();
+                        if (hour > 11) { format = "PM"; }
+                        if (hour > 12) { hour = hour - 12; }
+                        if (hour == 0) { hour = 12; }
+                        if (min < 10) { min = "0" + min; }
+                        var Month = todayDate.getMonth() + 1;
+
+                        //var DateFrom = Month + "/" + todayDate.getDate() + "/" + todayDate.getFullYear() + " " + hour + ":" + min + " " + format;
+
+
+
+                        var DateFrom = Month + "/" + todayDate.getDate() + "/" + todayDate.getFullYear() + " " + hour + ":" + min + " " + format;
+
+
+
+                        tr.append("<td>" + DateFrom + "</td>");
+
+
+                        if (json[i].IsSend == 0) {
+                            tr.append("<td> <span data-toggle='tooltip' data-placement='top' title=" + json[i].SendStatus + " class='badge badge-danger'>Failed</span></td>");
+                        }
+                        else if (json[i].IsSend == 1) {
+                            tr.append("<td>  <span class='badge badge-success'>Send</span></td>");
+                        }
+
+                        tr.append("<td >" + json[i].Detail + "</td>");
+
+
+
+
+                        $('#tblEmailHistory tbody').append(tr);
+                    }
+                }
+                else {
+
+                    $('#Edit_Truck').modal('show');
+                    tr = $('<tr/>');
+                    tr.append("<td colspan='7' class='text-center'><strong style='font-size: 15px; font-weight: bold'>No Email Send</strong>'</td>");
+                    $('#tblEmailHistory tbody').append(tr);
+
+                }
+
+
+            });
+    }
+
+</script>
+<script>
+    @*$(document).ready(function () {
+        if ("@ViewBag.Type" == "0" ) {
+            document.getElementById("rdbAll").checked = true;
+        }
+        else if ("@ViewBag.Type" == "M" ) {
+            document.getElementById("rdbMonthly").checked = true;
+        }
+          else if ("@ViewBag.Type" == "W" ) {
+            document.getElementById("rdbWeekly").checked = true;
+        }
+          else if ("@ViewBag.Type" == "D" ) {
+            document.getElementById("rdbDaily").checked = true;
+        }
+
+
+    });*@
+    function GetFilterTypeValue(type) {
+
+
+        $("#FilterType").val(type);
+    }
+    $("body").on("click", "#btnAddSearch", function () {
+
+
+    });
+
+</script>
+
+

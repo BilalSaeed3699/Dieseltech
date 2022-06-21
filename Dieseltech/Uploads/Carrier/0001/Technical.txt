@@ -1,0 +1,49 @@
+1.Add column in existing table sql 
+ALTER TABLE tblTransactionList
+ADD PaidDate datetime NOT NULL DEFAULT(getdate())
+GO
+
+
+
+2. Access viewbag value in javascript 
+var cc = @Html.Raw(Json.Encode(ViewBag.CC)
+
+3.on ajax response move to controller action  (Load ---> Index ---> (MoveToCopyLoad) )
+ [HttpPost]
+        public ActionResult MoveToCopyLoad(string LoadNumber)
+        {
+            string qry = " Exec SpGetLoadNumber ";
+
+            string NewLoadNumber = ut.ExecuteScalar(qry);
+
+            return Json(new { data = LoadNumber, url = Url.Action("Index", "CopyLoad", new { LoadNumber = LoadNumber }) });
+        }
+
+
+   $.ajax({
+                url: '/Load/MoveToCopyLoad?LoadNumber=' + LoadNumber + '',
+                type: "POST",
+                contentType: false, // Not to set any content header
+                processData: false, // Not to process data
+                success: function (result) {
+                    window.location = result.url;
+
+                },
+                error: function (err) {
+                    alert(err.statusText);
+                }
+            });
+
+
+4. Get total number of columns count in  a table 
+
+SELECT COUNT(COLUMN_NAME) 
+FROM INFORMATION_SCHEMA.COLUMNS 
+WHERE TABLE_CATALOG = 'RestockReports' AND TABLE_SCHEMA = 'dbo'
+AND TABLE_NAME = 'tblReportData'   
+
+5.Remove double quotation from string ("")
+
+for C# you'd have to escape the quotation mark using a backslash:
+
+s = s.Replace("\"", "");

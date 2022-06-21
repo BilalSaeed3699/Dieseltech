@@ -1,0 +1,1266 @@
+﻿﻿
+@{
+
+    Layout = null;
+}
+@using Dieseltech.Models;
+@{
+    ViewBag.Title = "Load Report";
+
+    List<Sp_Get_LoadHeadInformation_Edit_Result> listLoadHeadInformation = (List<Sp_Get_LoadHeadInformation_Edit_Result>)ViewBag.LoadHead;
+
+
+    List<tblLoadHead> list = (List<tblLoadHead>)ViewBag.LoadInformation;
+    //List<tblLoadPickupDelivery> listPickDelivery = (List<tblLoadPickupDelivery>)ViewBag.LoadPickupDelivery;
+    List<tblLoadCharge1> listLoadCharge = (List<tblLoadCharge1>)ViewBag.LoadCharges;
+
+
+    List<PickupDeliveryInformation> LoadPickuplist = (List<PickupDeliveryInformation>)ViewBag.LoadPickup;
+    List<PickupDeliveryInformation> LoadDeliverylist = (List<PickupDeliveryInformation>)ViewBag.LoadDelivery;
+
+
+    List<tblCarrier> CarrierList = (List<tblCarrier>)ViewBag.CarrierInformation;
+
+
+}
+@{string UserID = "";}
+@if (@Context.Request.Cookies["_UserID"].Value != null && @Context.Request.Cookies["_UserID"].Value != "")
+{
+    UserID = @Context.Request.Cookies["_UserID"].Value;
+}
+@*<!DOCTYPE html>
+    <html lang="en">*@
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+    <link rel="shortcut icon" type="image/x-icon" href="~/assets/img/Logo_2.png">
+    <title>Report Preview</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="~/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" type="text/css" href="~/assets/fonts/glyphicons-halflings-regular.ttf">
+    <link href="~/assets/css/fileinput.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="~/assets/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="~/assets/css/style.css">
+    <link rel="stylesheet" type="text/css" href="~/assets/css/select2.min.css">
+    <link href="~/assets/css/jquery-ui.css" rel="stylesheet" />
+
+    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+    <script src="~/assets/js/app.js"></script>
+    <script src="~/assets/js/popper.min.js"></script>
+    <script src="~/assets/js/bootstrap.min.js"></script>
+    <script src="~/assets/js/select2.min.js"></script>
+    <script src="~/assets/js/fileinput.js"></script>
+    <script src="~/assets/js/jquery.slimscroll.js"></script>
+    <script src="~/assets/js/Chart.bundle.js"></script>
+    <script src="//cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+
+    <style>
+
+        .checked {
+            color: orange !important;
+        }
+
+        .unchecked {
+            color: black !important;
+        }
+
+        td {
+            white-space: nowrap;
+            width: 1%;
+        }
+        input.form-control {
+            font-size: 13px !important;
+            height: 19px !important;
+            min-height: 30px;
+        }
+
+        th {
+            background-color: rgb(189, 183, 107) !important;
+            Color: white;
+        }
+        .paragraphstyle {
+            margin-bottom: 0rem;
+        }
+        body
+        {
+            background-color:white;
+        }
+        .ImportantFields {
+            color: red;
+        }
+        /*body {
+  margin: 0;
+  padding: 0;*/
+/*  background-color: #FAFAFA;*/
+  /*font: 12pt "Tahoma";
+}
+
+*{
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+}
+
+.page {
+  width: 21cm;
+  min-height: 29.7cm;
+  padding: 2cm;
+  margin: 1cm auto;
+  border: 1px #D3D3D3 solid;
+  border-radius: 5px;
+  background: white;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.subpage {
+  padding: 1cm;
+  border: 5px red solid;
+  height: 256mm;
+  outline: 2cm #FFEAEA solid;
+}*/
+
+@*@page {
+  size: A4;
+  margin: 0;
+}*@
+
+@*@media print {
+  .page {
+    margin: 0;
+    border: initial;
+    border-radius: initial;
+    width: initial;
+    min-height: initial;
+    box-shadow: initial;
+    background: initial;
+    page-break-after: always;
+  }
+}*@
+
+      /* body {
+            background: rgb(204,204,204);
+        }*/
+
+        page {
+            background: white;
+            display: block;
+            margin: 0 auto;
+            margin-bottom: 0.5cm;
+            box-shadow: 0 0 0.5cm rgba(0,0,0,0.5);
+        }
+        td{
+            font-size:14px !important;
+        }
+
+            page[size="A4"] {
+                width: 28cm;
+                height: 29.7cm;
+            }
+            @@media print {
+  body, page {
+    margin: 0;
+    box-shadow: 0;
+  }
+    #cmd{
+    display:none;}
+
+    #btnsendemail {
+    display: none;
+    }
+                #btndownload{
+                    display:none;
+                }
+                #btnMAP
+                {
+                    display:none;
+                }
+                #btnCarrierReviews
+                {
+                    display:none;
+                }
+                #Header, #Footer {
+                    display: none !important;
+                }
+
+               /* page[size="A4"] {
+                    width: 28cm;
+                    height: 29.7cm;
+                }*/
+
+}
+    </style>
+</head>
+
+<page size="A4">
+    <body>
+
+
+
+        @*<P>@ViewBag.RequestURL</P>*@
+        <input id="LoadNumber" hidden value="@ViewBag.LoadNumber" />
+        <input value=@UserID  id="txtusercookieid" hidden/>
+        <div id="Grid">
+
+            <div id="LoadPreview" class="container">
+                <div class="col-md-12">
+                    <div class="content">
+
+                        <br />
+                        <div class="row">
+                            @*<div class="col-sm-5 col-4">
+                                <h4 class="page-title" style="font-weight:bold  ">Load Print</h4>
+                            </div>*@
+                            <div class="col-md-10 offset-md-1">
+                                <div class="btn-group btn-group-sm" style="float:right">
+                                    @*<button class="btn btn-white">CSV</button>
+                                    <button class="btn btn-white">PDF</button>*@
+
+                                    @*<a id="Emailss" onclick="SendEmail()"  class="btn btn-white"><i class="fa fa-envelope"></i> Send Email</a>*@
+                                    @*<a id="Emailss" href="@Url.Action("SendEmail","Report")" class="btn btn-white"><i class="fa fa-envelope"></i> Send Email</a>
+                                    &nbsp;&nbsp;&nbsp;*@
+                                    <button style="background-color: #4ab657 !important;border: 1px solid #4ab657" onclick="PrintCommand()" id="cmd" class="btn btn-white"><i class="fa fa-print fa-lg"></i> Print</button>
+                                    &nbsp;&nbsp;&nbsp;
+
+                                    <a onclick="ShowCommentRating('@ViewBag.LoadNumber')" data-toggle="modal" style="        background-color: #ff6a00 !important;
+        border: 1px solid #ff6a00
+"
+                                       data-target="#Carrier_Reviews" id="btnCarrierReviews" class="btn btn-success"><i class="fa fa-star"></i> Reviews </a>
+
+                                    &nbsp;&nbsp;&nbsp;
+                                    <a data-toggle="modal" style="        background-color: #6c757d !important;
+        border: 1px solid #6c757d
+" data-target="#Send_Email" id="btnsendemail" class="btn btn-success"><i class="fa fa-envelope fa-lg"></i> Send Email</a>
+                                    &nbsp;&nbsp;&nbsp;
+
+
+                                    <a style="background-color: #028ee1 !important;border: 1px solid #028ee1" id="btndownload" href="@Url.Action("DownloadPdf","Report",new {LoadNumberModel = @ViewBag.LoadNumber })" class="btn btn-success"><i class="fa fa-download"></i> Download</a>
+                                    @*<a onclick="SendPDFEmail()" data-toggle="modal" data-target="#Send_Email" id="btnsendemail" class="btn btn-success"><i class="fa fa-envelope fa-lg"></i> Send Email</a>*@
+
+                                    &nbsp;&nbsp;&nbsp;
+                                    <a style="        background-color: rgb(189, 183, 107) !important;
+        border: 1px solid rgb(189, 183, 107)" id="btnMAP" href="@Url.Action("DriverLocations","Report",new {LoadNumber = @ViewBag.LoadNumber })" class="btn btn-success"><i class="fa fa-map"></i> Load Locations</a>
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        @*<div class="book">
+                        <div class="page">*@
+                        @*<div class="subpage">*@
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="card">
+                                    <div class="card-body">
+                                        @*<td>@listLoadHeadInformation[0].CarrierName</td>
+                                        <td>@listLoadHeadInformation[0].Phonenumber</td>
+                                        <td></td>
+                                        <td>@listLoadHeadInformation[0].Weight</td>
+                                        <td>@listLoadHeadInformation[0].Equipment</td>
+                                        <td>$@listLoadHeadInformation[0].CarrierAmount</td>*@
+                                        <div class="row">
+                                            <div class="col-md-6">
+
+                                                <h4 class="paragraphstyle" style="text-align:center;background-color:rgb(189, 183, 107) !important;color:white; border:3px solid rgb(189, 183, 107) !important;width:50%;font-weight:bold;padding:5px">Load# @list[0].LoaderNumber</h4>
+                                                <br />
+                                                <h4 style="font-weight:bold">To Carrier: @CarrierList[0].CarrierName</h4>
+                                                <p class="paragraphstyle"><strong>Tel:</strong> @CarrierList[0].Phonenumber </p>
+                                                <p class="paragraphstyle"><strong>MC#:</strong> @CarrierList[0].MC_ </p>
+                                                <p class="paragraphstyle"><strong>Contact Name:</strong> @CarrierList[0].ContactName </p>
+                                                <hr />
+                                                <p class="paragraphstyle"><strong>Equip Type: </strong> @listLoadHeadInformation[0].Equipment </p>
+                                                <p class="paragraphstyle"><strong>Total Weight: </strong> @listLoadHeadInformation[0].Weight </p>
+                                                <p class="paragraphstyle"><strong>Quantity: </strong> @CarrierList[0].ContactName </p>
+
+                                                <p class="paragraphstyle"><strong>Agreed Amount: </strong> $@listLoadHeadInformation[0].CarrierAmount </p>
+                                            </div>
+
+                                            <div class="col-md-6">
+
+
+
+
+                                                <div class="row">
+                                                    <div class="col-md-2"></div>
+                                                    <div class="col-md-10">
+
+                                                        <table style="width:100%">
+
+                                                            <img style="max-height:120px !important;float:right" src="~/assets/img/Logo_1.png" />
+                                                            <br />
+                                                            <tr>
+                                                                <td><strong>Dispatcher:</strong></td>
+                                                                @*<td>@list[0].DispatcherName</td>*@
+                                                            <td>   @ViewBag.agentname</td>
+                                                            </tr>
+
+                                                            <tr>
+                                                                <td><strong>Phone#:</strong></td>
+                                                                <td>@ViewBag.agentphone</td>
+                                                                @*<td>469-651-9059</td>*@
+                                                            </tr>
+
+                                                            <tr>
+                                                                <td><strong>Driver:</strong></td>
+                                                                <td>@list[0].DriverName</td>
+                                                            </tr>
+
+                                                            <tr>
+                                                                <td><strong>Phone#:</strong></td>
+                                                                <td>@list[0].DriverPhone</td>
+                                                            </tr>
+
+                                                            <tr>
+                                                                <td><strong>Email#:</strong></td>
+                                                                <td>@ViewBag.agentemail</td>
+                                                                @*<td>Jack@Alkaiostransportation.Com</td>*@
+                                                            </tr>
+
+                                                            <tr>
+                                                                <td></td>
+                                                                @*<td><strong>
+                                                                    Please send all original bill of ladings to the
+                                                                    <br /> address listed below</strong></td>*@
+                                                            </tr>
+
+                                                            <tr>
+
+                                                                <td><strong>Address:</strong></td>
+                                                                <td>
+
+                                                                    Alkaios Transportation Inc.<br />
+                                                                    1209 N Goliad Street, Rockwall, TX 75087
+
+                                                                </td>
+                                                            </tr>
+
+                                                            <tr>
+
+                                                                <td></td>
+                                                                <td>
+                                                                    <br />
+                                                                    Please send all invoices to <br />
+                                                                    <strong>invoicing@alkaiostransportation.com</strong>
+
+                                                                </td>
+                                                            </tr>
+
+
+                                                        </table>
+
+
+                                                        @*<table>
+                                                            <tr>
+                                                                <td></td>
+                                                                <td>Alkaios Transportation Inc</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Dispatcher</td>
+                                                                <td>@list[0].DispatcherName</td>
+                                                            </tr>
+
+
+                                                        </table>*@
+
+                                                        @*<p style="text-align: left;" class="paragraphstyle">Alkaios Transportation Inc</p>
+                                                        <p class="paragraphstyle" style="padding:5px;text-align:left"><strong>Dispatcher:</strong>  @list[0].DispatcherName</p>
+                                                        <p class="paragraphstyle" style="padding:5px;text-align:left"><strong>Phone#:</strong> @list[0].DispatcherPhone</p>
+                                                        <p class="paragraphstyle" style="padding:5px;text-align:left"><strong>Email#:</strong> Jack.paul@gmail.com</p>*@
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+
+                                        </div>
+
+
+
+                                        <!--<div class="row custom-invoice">
+                                    <div class="col-4 col-sm-4 m-b-20">
+                                        <h3 style="font-size:100px;font-weight:bold" id="CompanyName"></h3>
+                                        Alkaios Transportation Inc
+
+                                        <p style="border:1px solid black;font-weight:bold;padding:5px;text-align:center;width:40%">Load# @list[0].LoaderNumber</p>
+                                    </div>
+                                    <div class="col-2 col-sm-2 m-b-20 text-left">
+                                        <div class="invoice-details">
+                                            <ul class="list-unstyled text-md-left">
+                                                <li>Alkaios Transportation Inc. <br /> 7 Sheffield Court Heath, TX 75032</li>
+
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="col-6 col-sm-6 m-b-20">
+                                        <div class="invoice-details">
+
+                                            <table style="font-size:10px" class="table table-condensed table-bordered table-sm mb-0" id="tblGeneral">-->
+                                        @*<table class="table table-bordered table-condensed" style="font-size:12px">*@
+
+                                        <!--<thead>
+                                        <tr>
+                                            <th>LOAD</th>
+                                            <th>Page</th>
+                                            <th>Date</th>
+                                            <th>Dispatcher</th>
+                                            <th>Email</th>
+                                            <th>CellPhone</th>
+                                            <th>Office</th>
+                                            <th>Fax</th>
+                                        </tr>
+
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td name="LoaderNumber">@list[0].LoaderNumber</td>
+
+
+                                            <td>1/1</td>
+
+                                            <td>10/15/2020</td>
+
+                                            <td>Jack</td>
+
+                                            <td>Jack.paul@gmail.com </td>
+
+                                            <td>(818) 399-3223</td>
+
+                                            <td>(818) 399-3223</td>
+
+                                            <td>(747) 202-1030</td>
+                                        </tr>-->
+                                        @*<tr>
+                                            <td>LOAD</td>
+                                            <td>@list[0].LoaderNumber</td>
+                                        </tr>
+                                        <tr>
+                                            <td>LOAD</td>
+                                            <td>@list[0].LoaderNumber</td>
+                                        </tr>
+                                        <tr>
+                                            <td>LOAD</td>
+                                            <td>@list[0].LoaderNumber</td>
+                                        </tr>
+                                        <tr>
+                                            <td>LOAD</td>
+                                            <td>@list[0].LoaderNumber</td>
+                                        </tr>
+                                        <tr>
+                                            <td>LOAD</td>
+                                            <td>@list[0].LoaderNumber</td>
+                                        </tr>
+                                        <tr>
+                                            <td>LOAD</td>
+                                            <td>@list[0].LoaderNumber</td>
+                                        </tr>
+                                        <tr>
+                                            <td>LOAD</td>
+                                            <td>@list[0].LoaderNumber</td>
+                                        </tr>
+                                        <tr>
+                                            <td>LOAD</td>
+                                            <td>@list[0].LoaderNumber</td>
+                                        </tr>*@
+                                        <!--</tbody>
+
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+
+                                    <div class="table-responsive">
+                                        <table class="table table-condensed  table-sm table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>Carrier</th>
+                                                    <th>Telephone</th>
+                                                    <th>Fax</th>
+                                                    <th>Weight</th>
+                                                    <th>Equipment</th>
+                                                    <th>Agreed Amount</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>@listLoadHeadInformation[0].CarrierName</td>
+                                                    <td>@listLoadHeadInformation[0].Phonenumber</td>
+                                                    <td></td>
+                                                    <td>@listLoadHeadInformation[0].Weight</td>
+                                                    <td>@listLoadHeadInformation[0].Equipment</td>
+                                                    <td>$@listLoadHeadInformation[0].CarrierAmount</td>
+                                                </tr>
+
+                                            </tbody>
+                                        </table>
+                                    </div>-->
+
+
+                                        <br />
+                                        <div class="table-responsive">
+                                            <table class="table table-striped table-sm table-hover" style="font-size:11px !important">
+                                                <thead>
+                                                    <tr class="Heading">
+                                                        <th>Pickup</th>
+                                                        <th>Departure Date From</th>
+                                                        <th>Departure Date To </th>
+                                                        <th>Phone</th>
+                                                        <th>Pickup Number</th>
+                                                        <th>Comment</th>
+                                                    </tr>
+                                                </thead>
+                                                @*<tbody>
+                                                    <tr>
+                                                        <td>1</td>
+                                                        <td>Full body checkup</td>
+                                                        <td>Lorem ipsum dolor sit amet, consectetur adipiscing elit</td>
+                                                        <td>$150</td>
+
+                                                    </tr>
+
+                                                </tbody>*@
+
+
+                                                <tbody>
+                                                    @foreach (var PD in LoadPickuplist)
+                                                    {
+                                                        <tr>
+                                                            <td class="text-left" style="width:30%">
+                                                                @PD.Name @PD.ShipperName <br />
+                                                                @PD.ShipperAddress <br />
+                                                                @PD.CityName, @PD.StateCode, @PD.ZipCode
+                                                            </td>
+                                                            <td class="text-left">@PD.DateTime</td>
+                                                            <td class="text-left">@PD.DateTimeTo</td>
+                                                            <td class="text-left">@PD.ShipperPhone</td>
+                                                            <td class="text-left">@PD.PickupNumber</td>
+                                                            <td class="text-left">@PD.Comment</td>
+                                                        </tr>
+
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        <div class="table-responsive">
+                                            <table class="table table-striped table-sm table-hover" style="font-size:11px !important">
+                                                <thead>
+                                                    <tr class="Heading">
+                                                        <th>Delivery</th>
+                                                        <th>Arrival Date From</th>
+                                                        <th>Arrival Date To</th>
+                                                        <th>Phone</th>
+                                                        <th>Pickup Number</th>
+                                                        <th>Comment</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach (var PD in LoadDeliverylist)
+                                                    {
+
+                                                        <tr>
+                                                            <td class="text-left" style="width:30%">
+                                                                @PD.Name @PD.ShipperName <br />
+                                                                @PD.ShipperAddress <br />
+                                                                @PD.CityName, @PD.StateCode, @PD.ZipCode
+                                                            </td>
+                                                            <td class="text-left">@PD.DateTime</td>
+                                                            <td class="text-left">@PD.DateTimeTo</td>
+                                                            <td class="text-left">@PD.ShipperPhone</td>
+                                                            <td class="text-left">@PD.PickupNumber</td>
+                                                            <td class="text-left">@PD.Comment</td>
+                                                        </tr>
+
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                        <div>
+
+                                            <div class="invoice-info">
+                                                <p style="font-weight:bold" class="text-uppercase">
+                                                    Carrier Instructions : @listLoadHeadInformation[0].CarrierInstructions
+                                                </p>
+
+                                                <p><strong>“MUST MAINTAIN GOOD COMMUNICATION AND MUST SEND POD RIGHT AFTER YOU DELIVER OR $$$FEES$$$ MAY APPLY!!!”</strong></p>
+                                            </div>
+                                        </div>
+
+
+                                        <div>
+
+                                            <div class="invoice-info">
+                                                <p style="font-size:14px" class="text-uppercase">
+                                                    1) if agreed services are not fulfilled  Rates are negotiable.<br />
+                                                    2) if LOAD is doubled brokered rate is void. <br />
+                                                    3) Provide the information required below . <br />
+                                                    4) Call Dispatch when LOADED and Unloaded
+
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <label style="text-align:left"><strong>Load Accepted By</strong></label>&nbsp;&nbsp;_______________________
+                                            &nbsp;&nbsp; <label><strong>Date</strong></label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_______________________
+
+
+                                        </div>
+
+                                        <div>
+                                            <label style="text-align:left"><strong>Driver Name 1</strong></label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_______________________
+                                            &nbsp;&nbsp;  <label><strong> Phone Number</strong></label>&nbsp;&nbsp;&nbsp;&nbsp;_______________________
+
+                                        </div>
+                                        <div>
+                                            <label style="text-align:left"><strong> Driver Name 2</strong></label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;_______________________
+                                            &nbsp;&nbsp; <label><strong> Phone Number</strong></label>&nbsp;&nbsp;&nbsp;&nbsp;_______________________
+
+                                        </div>
+
+                                        <div>
+                                            <label style="text-align:left"><strong>Truck&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </strong></label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_______________________
+                                            &nbsp;&nbsp;     <label style="text-align:left"><strong> Trailer</strong></label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_______________________
+
+
+                                        </div>
+                                        <div>
+                                            <label style="text-align:left"><strong>Signature</strong></label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_______________________
+
+                                        </div>
+
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @*</div>*@
+                        @*</div>
+                        </div>*@
+                    </div>
+
+                </div>
+
+            </div>
+            <div id="editor"></div>
+
+
+
+        </div>
+
+
+
+
+        <div id="Send_Email" class="modal fade delete-modal" role="dialog">
+            <div class="modal-dialog" style="max-width:500px">
+                @*@using (Html.BeginForm("SaveDriver", "Definition", FormMethod.Post, new
+                {
+                    enctype = "multipart/form-data"
+                }))
+                {@Html.AntiForgeryToken()*@
+
+
+                <div class="modal-content" style="margin-top:150px">
+                    <!--Header-->
+                    <div class="modal-header">
+                        <p class="heading lead">Send Email</p>
+
+                        <button onclick="CloseDriverModel()" type="button" style="color:white" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true" class="white-text">&times;</span>
+                        </button>
+
+
+                        @*<button type="button" style="color:white" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true" class="white-text">&times;</span>
+                        </button>*@
+                    </div>
+                    <div class="modal-body">
+                        <div id="wait" style="display:none;width:19%;height:25%;position:absolute;top:78%;left:40%;padding:2px;">
+                            <img src="~/assets/img/demo_wait.gif" style="width:70%;height:70%" />
+                            <br>Wait...
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div id="EmailSendMessage" style="display:none;" class="alert alert-success alert-dismissible fade show" role="alert">
+                                    <strong>Success!</strong> Your <a href="#" class="alert-link">Email</a> has been sent successfully.
+
+                                </div>
+
+                                <div id="EmailFailedMessage" style="display:none;" class="alert alert-danger alert-dismissible fade show" role="alert">
+                                    <strong>Alert!</strong><a href="#" class="alert-link">Email</a>sending failed.
+
+                                </div>
+                                <form>
+
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label>
+                                                    Subject  <small id="lblSubject" style="display:none;color:red">
+                                                        Enter Subject
+                                                    </small>
+                                                </label>
+                                                <input style="min-height:45px" class="form-control" type="text" id="txtSubject" name="Subject" required>
+
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label>
+                                                    Email <span class="ImportantFields">*</span>
+                                                    <small id="lblEmail" style="display:none;color:red">
+                                                        Enter Email
+                                                    </small>
+                                                </label>
+                                                <input style="min-height:45px" value="@ViewBag.CarrierEmail" class="form-control" type="text" id="txtEmail" multiple required name="Email">
+
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label>
+                                                    Detail
+                                                </label>
+                                                @*<input class="form-control" type="text" id="txtDetail" name="Detail" required>*@
+                                                <textarea id="txtDetail" name="Detail" rows="5" style="width:100%"> </textarea>
+
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+
+
+
+                                    <div class="row">
+
+                                        <div class="col-sm-12">
+                                            <div class="m-t-5 text-right">
+                                                <a href="#" class="btn btn-white" onclick="CloseEmailModel()">Close</a>
+                                                <a onclick="SendPDFEmail()" id="btnAddDriver" class="btn btn-primary" style="color: white;background-color: #4c5564 !important;">Send</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                @*}*@
+            </div>
+
+        </div>
+
+
+
+    </body>
+
+</page>
+
+
+<div id="Carrier_Reviews" class="modal fade delete-modal" role="dialog">
+    <div class="modal-dialog ">
+
+        <div class="modal-content">
+            <!--Header-->
+            <div class="modal-header" style="height: 35px !important;
+        background-color: rgb(20,29,186) !important;
+    ">
+                <p class="heading lead" style="font-size: 15px !important;">Carrier Reviews</p>
+
+                <button type="button" style="color:white" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" class="white-text">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="ModalBody">
+                <div class="row ">
+
+
+                    <div class="col-md-12">
+                        <div class="card-box shadow-none  bg-light rounded" style="padding:8px;">
+                            <input id="RatingStar" hidden />
+
+                            <h5> Rating <small id="lblCarrierSaveComment" style="display:none;border-color:#c3e6cb;color: #155724;padding: 5px;margin-right:10px"></small>  </h5>
+                            <hr />
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-md-9">
+                                        <label>Comment</label>
+                                        @*<input type="text" style="height:80px !important" id="txtCarrierComment" name="CarrierComment" class="form-control" required="">*@
+                                        <textarea type="text" cols="5" rows="2" id="txtCarrierComment" name="CarrierComment" class="form-control" required=""></textarea>
+                                    </div>
+                                    <div class="col-md-3" id="RatingDiv">
+                                        <label>Mark Rating</label> <br />
+                                        <div>
+
+                                            @*@{Int32 value = 0;}*@
+                                            @for (int i = 1; i < 11; i++)
+                                            {
+                                                //value = i;
+                                                <a href="#" style="font-size:15px" onclick="MarkRating(@i)"><span class="fa fa-star unchecked"></span></a>
+                                            }
+
+                                        </div>
+                                    </div>
+
+
+
+                                </div>
+                                <div class="row" style="margin-top:5px">
+                                    <div class="col-md-12">
+                                        <div class="text-right">
+                                            <button style="font-size: 11px;width: 13%;background-color: rgb(20,29,186) !important"
+                                                    id="btnSaveCarrierComment" onclick="SaveComment()" type="button" class="btn btn-primary ThemeColor">
+                                                Save Comment
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br />
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                </div>
+
+                <br />
+                <h5> Comments List </h5>
+                <hr />
+                <div class="row">
+                    <div class="col-md-12">
+
+                        <div class="table-responsive">
+
+                            <table name="tblCarrierComments" style="        font-size: 12px;
+        width: 100%;
+       " class="table table-condensed table-fit table-sm table-striped tblComments    mb-0" id="tblComment">
+
+                                <thead>
+
+                                    <tr>
+                                        <th style="background-color: rgb(20,29,186) !important">Comment</th>
+                                        <th style="background-color: rgb(20,29,186) !important"> By</th>
+                                        <th style="background-color: rgb(20,29,186) !important">On</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody id="CommentBody">
+                                    @*@foreach (var item in ListTruck)
+                                        {
+                                            <tr>
+                                                <td class="Comment">  @item.TruckId </td>
+                                                <td class="By">  @item.TruckNo</td>
+                                                <td class="On">  @item.AssignID </td>
+
+
+                                            </tr>
+                                        }*@
+
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+@*</html>*@
+
+<script>
+
+    function SaveComment() {
+
+        var LoadNumber = $("#LoadNumber").val();
+        var Comment = $("#txtCarrierComment").val();
+        //var CarrierAssignId = $("#txtCarrierId").val();
+        var RatingStar = $("#RatingStar").val();
+
+        if (Comment == "") {
+
+            document.getElementById('lblCarrierSaveComment').innerHTML = "Enter Comment";
+            document.getElementById('lblCarrierSaveComment').style.color = "Red";
+            //document.getElementById('lblCarrierSaveComment').style.backgroundColor = "Transparent";
+            //document.getElementById('lblCarrierSaveComment').style.borderColor = "Red";
+
+            $("#lblCarrierSaveComment").fadeIn();
+            $("#lblCarrierSaveComment").fadeOut(8000);
+            return;
+        }
+
+        $.ajax({
+            url: '/Truck/UpdateCarrierComments/?LoaderNumber=' + LoadNumber + '&Comment=' + Comment + '&Ratings='+RatingStar,
+            type: "POST",
+            contentType: false, // Not to set any content header
+            processData: false, // Not to process data
+            //data: fileData,
+            success: function (result) {
+
+
+                    document.getElementById('lblCarrierSaveComment').innerHTML = "Carrier Comments Updated";
+
+                    $("#lblCarrierSaveComment").fadeIn();
+                    $("#lblCarrierSaveComment").fadeOut(8000);
+
+
+                $("#tblComment tbody tr").remove();
+                //$('html,body').animate({
+                //    scrollTop: $("#Edit_Truck .modal-body .tblComments").sectionOffset.top - 30
+                //},
+                //    'slow');
+
+                $('#Edit_Truck').animate({ scrollTop: 200 }, 'fast');
+
+                //Append each row to html table
+                for (var i = 0; i < result.length; i++) {
+
+
+                    tr = $('<tr/>');
+                    tr.append("<td>" + result[i].Comments + "</td>");
+                    tr.append("<td>" + result[i].UserName + "</td>");
+                    tr.append("<td>" + result[i].Date + "</td>");
+
+                    //tr.append("<td>" + response[i].ContactName + "</td>");
+                    //tr.append("<td>" + response[i].Phonenumber + "</td>");
+                    //tr.append("<td>" + response[i].TrailerNo + "</td>");
+                    //tr.append("<td>" + response[i].TruckYard + "</td>");
+                    //tr.append("<td>" + response[i].ZipCode + "</td>");
+                    //tr.append("<td>" + response[i].StateCode + "</td>");
+                    //tr.append("<td>" + response[i].DriverName + "</td>");
+                    //tr.append("<td>" + response[i].DriverPhone + "</td>");
+                    $('#tblComment').append(tr);
+                }
+
+                $("#txtCarrierComment").val("");
+
+
+
+            },
+            error: function (err) {
+                alert(err.statusText);
+            }
+        });
+    }
+    function MarkRating(value) {
+
+        var LoadNumber = $("#LoadNumber").val();
+
+
+
+        $("#RatingStar").val(value);
+
+        $.ajax({
+            url: '/Truck/MarkCarrierRating/?LoaderNumber=' + LoadNumber + '&RatingID=' + value + '',
+            type: "POST",
+            contentType: false, // Not to set any content header
+            processData: false, // Not to process data
+            //data: fileData,
+            success: function (result) {
+                //alert(result);
+                var Documents;
+                if (result != null) {
+                    //alert('Test');
+
+                    $("#RatingDiv div a ").remove();
+
+                    for (var i = 1; i <= 10; i++) {
+                        var RatingDiv;
+                        if (i <= result) {
+
+
+                            RatingDiv = "<a href='#' style='font-size:18px' onclick='MarkRating(" + i + ")'><span class='fa fa-star checked'></span></a>"
+                            //RatingDiv = "<div> <a target='_blank' class='social-icon text-xs-center' href = '" + MCAuthortiypath + "' > <i class='fa fa-file'></i> " + json[0].McAuthorityFileName + "</a > ";
+                            $('#RatingDiv div').append(RatingDiv);
+                        }
+                        else if (i > result && i <= 10) {
+
+                            RatingDiv = "<a href='#' style='font-size:18px' onclick='MarkRating(" + i + ")'><span class='fa fa-star unchecked'></span></a>"
+                            //RatingDiv = "<div> <a target='_blank' class='social-icon text-xs-center' href = '" + MCAuthortiypath + "' > <i class='fa fa-file'></i> " + json[0].McAuthorityFileName + "</a > ";
+                            $('#RatingDiv div ').append(RatingDiv);
+                        }
+
+
+
+
+                    }
+
+
+
+
+
+                    @* <div>
+                        <label>Mark Rating</label> <br />
+                                            @{Int32 value = 0;}
+                                            @for (int i = 1; i < 11; i++)
+                                            {
+                            value = i;
+                                                <a href="#" style="font-size:15px" onclick="MarkRating(@value)"><span class="fa fa-star unchecked"></span></a>
+                                            }
+                                        </div> *@
+                }
+
+            },
+            error: function (err) {
+                alert(err.statusText);
+            }
+        });
+
+    }
+
+
+
+    function CloseEmailModel() {
+
+        $("#Send_Email").modal('hide');
+    }
+    jQuery(document).ready(function () {
+        var str = "Alkaios Transportation Inc";
+        var matches = str.match(/\b(\w)/g); // ['J','S','O','N']
+        var acronym = matches.join(''); // JSON
+        //alert(acronym.toLocaleUpperCase());
+
+        document.getElementById("CompanyName").textContent = acronym.toLocaleUpperCase();
+
+    });
+
+
+</script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.2/jspdf.min.js"></script>
+<script>
+
+    function ShowCommentRating(LoaderNumber) {
+        
+        $.ajax({
+            url: '/Truck/GetLoadCommentRating/?LoaderNumber=' + LoaderNumber + '',
+            type: "POST",
+            contentType: false, // Not to set any content header
+            processData: false, // Not to process data
+            //data: fileData,
+            success: function (result) {
+                //alert(result);
+                var Documents;
+                if (result != null) {
+                    //alert('Test');
+
+                    $("#RatingDiv div a ").remove();
+
+                    for (var i = 1; i <= 10; i++) {
+                        var RatingDiv;
+                        if (i <= result[0].Rating) {
+
+
+                            RatingDiv = "<a href='#' style='font-size:18px' onclick='MarkRating(" + i + ")'><span class='fa fa-star checked'></span></a>"
+                            //RatingDiv = "<div> <a target='_blank' class='social-icon text-xs-center' href = '" + MCAuthortiypath + "' > <i class='fa fa-file'></i> " + json[0].McAuthorityFileName + "</a > ";
+                            $('#RatingDiv div').append(RatingDiv);
+                        }
+                        else if (i > result[0].Rating && i <= 10) {
+
+                            RatingDiv = "<a href='#' style='font-size:18px' onclick='MarkRating(" + i + ")'><span class='fa fa-star unchecked'></span></a>"
+                            //RatingDiv = "<div> <a target='_blank' class='social-icon text-xs-center' href = '" + MCAuthortiypath + "' > <i class='fa fa-file'></i> " + json[0].McAuthorityFileName + "</a > ";
+                            $('#RatingDiv div ').append(RatingDiv);
+                        }
+
+
+
+
+                    }
+
+
+
+                    $("#tblComment tbody tr").remove();
+                    //$('html,body').animate({
+                    //    scrollTop: $("#Edit_Truck .modal-body .tblComments").sectionOffset.top - 30
+                    //},
+                    //    'slow');
+
+
+
+                    //Append each row to html table
+                    for (var i = 0; i < result.length; i++) {
+
+
+                        tr = $('<tr/>');
+                        tr.append("<td>" + result[i].Comments + "</td>");
+                        tr.append("<td>" + result[i].UserName + "</td>");
+                        tr.append("<td>" + result[i].Date + "</td>");
+
+                        //tr.append("<td>" + response[i].ContactName + "</td>");
+                        //tr.append("<td>" + response[i].Phonenumber + "</td>");
+                        //tr.append("<td>" + response[i].TrailerNo + "</td>");
+                        //tr.append("<td>" + response[i].TruckYard + "</td>");
+                        //tr.append("<td>" + response[i].ZipCode + "</td>");
+                        //tr.append("<td>" + response[i].StateCode + "</td>");
+                        //tr.append("<td>" + response[i].DriverName + "</td>");
+                        //tr.append("<td>" + response[i].DriverPhone + "</td>");
+                        $('#tblComment').append(tr);
+                    }
+
+
+
+
+
+
+                    @* <div>
+                        <label>Mark Rating</label> <br />
+                                            @{Int32 value = 0;}
+                                            @for (int i = 1; i < 11; i++)
+                                            {
+                            value = i;
+                                                <a href="#" style="font-size:15px" onclick="MarkRating(@value)"><span class="fa fa-star unchecked"></span></a>
+                                            }
+                                        </div> *@
+                }
+
+            },
+            error: function (err) {
+                //alert(err.statusText);
+            }
+        });
+    }
+    function SendPDFEmail() {
+        var LoadNumber = $("#LoadNumber").val();
+        var Subject = $("#txtSubject").val();
+        var Email = $("#txtEmail").val();
+        var Detail = $("#txtDetail").val();
+        var userid = $("#txtusercookieid").val();
+
+
+
+
+        if (Email == "") {
+            $("#txtEmail").focus();
+            $("#lblEmail").fadeIn();
+            $("#lblEmail").fadeOut(5000);
+            return;
+        }
+
+
+        $("#wait").css("display", "block");
+
+
+        $.ajax({
+            type: "POST",
+            url: "/Report/ConvertToPdf/?LoadNumber=" + LoadNumber + "&Subject=" + Subject + "&Email=" + Email + "&Detail=" + Detail + "&userid=" + userid+" ",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+
+
+                if (response == "1") {
+                    $("#wait").css("display", "none");
+
+                    $("#EmailSendMessage").fadeIn();
+                    $("#EmailSendMessage").fadeOut(3000);
+
+                    //var Subject = $("#txtSubject").val();
+                    //var Email = $("#txtEmail").val();
+
+                    setTimeout(function () {
+                        $("#Send_Email").modal('hide')
+                    }, 1000);
+
+
+                    $("#txtSubject").val("");
+                    //$("#txtEmail").val("");
+                    $("#txtDetail").val("");
+                    //var Subject = $("#txtSubject").val();
+                    //var Email = $("#txtEmail").val();
+                }
+                else if (response == "0") {
+
+                    $("#wait").css("display", "none");
+                    $("#EmailFailedMessage").fadeIn();
+                    $("#EmailFailedMessage").fadeOut(3000);
+
+
+                    setTimeout(function () {
+                        $("#Send_Email").modal('hide')
+                    }, 5000);
+
+
+                    $("#txtSubject").val("");
+                    //$("#txtEmail").val("");
+                    $("#txtDetail").val("");
+                }
+            },
+            failure: function (response) {
+                //alert("No Data");
+            },
+            error: function (response) {
+                //alert(response.responseText);
+            }
+        });
+    }
+
+    var doc = new jsPDF();
+    var specialElementHandlers = {
+        '#editor': function (element, renderer) {
+            return true;
+        }
+    };
+
+    //$('#cmd').click(function () {
+
+    //    doc.fromHTML($('#LoadPreview').html(), 15, 15, {
+    //        'width': 1500,
+    //        'elementHandlers': specialElementHandlers
+    //    });
+    //    doc.save('sample-file.pdf');
+
+
+
+
+    //});
+
+    function PrintCommand() {
+        //alert('TEst');
+        window.print();
+
+    }
+    function SendEmail() {
+        var doc = new jsPDF();
+        var specialElementHandlers = {
+            '#editor': function (element, renderer) {
+                return true;
+            }
+        };
+
+        doc.fromHTML($('#LoadPreview').html(), 300, 15, {
+            'width': 500,
+            'elementHandlers': specialElementHandlers
+        });
+        doc.save('sample-file.pdf');
+
+
+    }
+
+
+
+
+
+
+
+
+</script>
+
+@*<script type="text/javascript">
+        $(function () {
+            $("#btnSubmit").click(function () {
+                $("input[name='GridHtml']").val($("#Grid").html());
+            });
+        });
+    </script>*@

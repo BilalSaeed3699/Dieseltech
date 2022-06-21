@@ -1,0 +1,207 @@
+﻿@model IEnumerable<Dieseltech.Models.tblLoadHead>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.LoaderNumber)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CarrierId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CarrierHelperId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.NumberToText)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IsSendText)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TruckId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CarrierRate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.LoadTypeId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Commodity)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.LoadSubTypeId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Available)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Weight)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.QuantityTypeId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Quantity)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DriverTypeId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CarrierInstructions)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CompanyId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.BrokerId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.BrokerHelperId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.BrokerRate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ContactName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ContactPhone)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Extension)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ContactEmail)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.BrokerReference)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.RegistrationDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.User_ID)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.AgentGross)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.AgentFlat)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.BranchFlat)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.LoaderNumber)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CarrierId)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CarrierHelperId)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.NumberToText)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.IsSendText)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.TruckId)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CarrierRate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.LoadTypeId)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Commodity)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.LoadSubTypeId)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Available)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Weight)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.QuantityTypeId)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Quantity)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DriverTypeId)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CarrierInstructions)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CompanyId)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.BrokerId)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.BrokerHelperId)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.BrokerRate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ContactName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ContactPhone)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Extension)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ContactEmail)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.BrokerReference)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.RegistrationDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.User_ID)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.AgentGross)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.AgentFlat)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.BranchFlat)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.LoaderHeadId }) |
+            @Html.ActionLink("Details", "Details", new { id=item.LoaderHeadId }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.LoaderHeadId })
+        </td>
+    </tr>
+}
+
+</table>

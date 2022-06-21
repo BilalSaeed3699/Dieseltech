@@ -1,0 +1,98 @@
+﻿
+@using Dieseltech.Models;
+@model Dieseltech.Models.sp_Get_Carrier_Helper_List_Result
+@{
+    ViewBag.Title = "Truck Detail";
+
+    List<Sp_Get_Truck_Detailed_List_Result> list = (List<Sp_Get_Truck_Detailed_List_Result>)ViewBag.TruckList;
+}
+<head>
+
+   
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="/assets/css/font-awesome.min.css">
+
+    <link rel="stylesheet" type="text/css" href="/assets/css/style.css">
+    <!--[if lt IE 9]>
+        <script src="assets/js/html5shiv.min.js"></script>
+        <script src="assets/js/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<div class="content">
+    <div class="row">
+        <div class="col-sm-4 col-3">
+            
+            <h4 class="page-title">Carrier Detail</h4>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="table-responsive">
+                <table class="table table-border table-striped custom-table datatable mb-0">
+                    <thead>
+                        <tr>
+                            <th class="carrier_helper_id" hidden>id</th>
+                            <th class="carrier__id" hidden>Driverid</th>
+
+                            <th>Carrier Name </th>
+                            <th>Zone Name </th>
+
+                            <th>Truck Number</th>
+                            <th>Driver Name </th>
+                            <th hidden>Active Flag </th>
+                            <th>Active </th>
+                            
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in list)
+                        {
+                            <tr>
+                                <td class="recipient_id" hidden>@item.TruckId</td>
+                                <td class="CarrierHelper_id" hidden>@item.Driverid</td>
+                                <td class="Carrier_id" hidden>@item.CarrierId</td>
+                                <td class="Zone_id" hidden>@item.ZoneId</td>
+                                @*<td class="CarrierName_id">@item.CarrierName</td>*@
+                                <td class="CarrierName_id"> <a target="_blank" href="@Url.Action("TruckDetail", "Definition" ,new { id=@item.CarrierId})"> @item.CarrierName     </a>  </td>
+                                <td class="ZoneName_id"> <a target="_blank" href="@Url.Action("TruckDetail", "Definition" ,new { id=@item.ZoneId})"> @item.ZoneName     </a>  </td>
+                                @*<td class="TruckName_id"> <a href="@Url.Action("Edit", "AccessLevel" ,new { id=@item.TruckId})"> @item.TruckName     </a>  </td>*@
+                                @*<td class="ZoneName_id">@item.ZoneName</td>*@
+
+                                <td class="TruckName">@item.TruckName</td>
+                                <td class="DriverName_id">@item.DriverName</td>
+                                <td hidden class="IsActive">@item.IsActive</td>
+
+                                @if (item.IsActive == false)
+                                {
+                                    <td>
+                                        <div class="badge badge-danger">Non-Active</div>
+
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td>
+                                        <div class="badge badge-success">Active</div>
+
+                                    </td>
+                                }
+
+
+                            </tr>
+                        }
+
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/assets/js/jquery-3.2.1.min.js"></script>
+
+

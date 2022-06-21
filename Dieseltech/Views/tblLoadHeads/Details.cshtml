@@ -1,0 +1,258 @@
+﻿@model Dieseltech.Models.tblLoadHead
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>tblLoadHead</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.LoaderNumber)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LoaderNumber)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CarrierId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CarrierId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CarrierHelperId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CarrierHelperId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.NumberToText)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.NumberToText)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IsSendText)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IsSendText)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TruckId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TruckId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CarrierRate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CarrierRate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LoadTypeId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LoadTypeId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Commodity)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Commodity)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LoadSubTypeId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LoadSubTypeId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Available)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Available)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Weight)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Weight)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.QuantityTypeId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.QuantityTypeId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Quantity)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Quantity)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DriverTypeId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DriverTypeId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CarrierInstructions)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CarrierInstructions)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CompanyId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CompanyId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.BrokerId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.BrokerId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.BrokerHelperId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.BrokerHelperId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.BrokerRate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.BrokerRate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ContactName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ContactName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ContactPhone)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ContactPhone)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Extension)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Extension)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ContactEmail)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ContactEmail)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.BrokerReference)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.BrokerReference)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.RegistrationDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RegistrationDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.User_ID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.User_ID)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.AgentGross)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AgentGross)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.AgentFlat)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AgentFlat)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.BranchFlat)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.BranchFlat)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.LoaderHeadId }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

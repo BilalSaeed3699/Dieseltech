@@ -1,0 +1,611 @@
+﻿
+@{
+    ViewBag.Title = "DriverLocations";
+}
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Load Locations</title>
+
+
+    <style>
+        #map_canvas img {
+            max-width: none
+        }
+    </style>
+
+    <!-- This css is to give a nice big popup "info window" when a marker is clicked on the map -->
+    <style>
+        .infoDiv {
+            height: 150px;
+            width: 220px;
+            -webkit-user-select: none;
+            background-color: white;
+        }
+    </style>
+</head>
+
+<div class="Container" style="margin-top:10px">
+    <div class="row">
+        <div class="col-md-8">
+            <h2><strong>Load Locations: @ViewBag.LoadNumber </strong> <small id="PickupandDelivery" style="display:none"> ( No Pickup and Delivery )</small> </h2>
+
+        </div>
+
+        <div class="col-md-2">
+            <img src="~/assets/img/Logistic-Truck_Pickup.png" /> <label> <strong>Pickup</strong></label>
+        </div>
+
+        <div class="col-md-2">
+            <img src="~/assets/img/Logistic-Truck_Delivery.png" /> <label><strong>Delivery</strong></label>
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <label style="color:orange" class="radio-inline">
+                <input checked onclick="ShowGoogleMap(1)" type="radio" name="optradio"> Pickup and Delivery
+            </label>
+            <label style="color:orange" class="radio-inline">
+                <input onclick="ShowGoogleMap(2)" type="radio" name="optradio"> Real Time Tracking
+            </label>
+
+        </div>
+        
+
+    </div>
+
+        <div class="col-md-12">
+            <div id="map_canvas" style="height:80%;">
+                
+                
+            </div>
+        </div>
+    
+</div>
+
+
+<input hidden value ="@ViewBag.LoadNumber" id="txtLoadNumber" />
+
+
+<script>
+
+    $(document).ready(function () {
+        setInterval(RealTimeTracking,10000);
+    });
+
+   
+
+
+    function initialize() {
+
+        //var data = [
+
+        //    { "Id": 1, "PlaceName": "Dubai - United Arab Emirates", "Test": "9-5, M-F", "GeoLong": "55.2707828", "GeoLat": "25.2048493" },
+        //    { "Id": 2, "PlaceName": "Dubai - United Arab Emirates ", "OpeningHours": "9-1,2-5, M-F", "GeoLong": "74.348080", "GeoLat": "25.2048493" },
+        //    { "Id": 3, "PlaceName": "Walker Art Galleryssss", "OpeningHours": "9-7, M-F", "GeoLong": "53.409839", "GeoLat": "-2.979447" },
+        //    { "Id": 4, "PlaceName": "National Conservation Centre", "OpeningHours": "10-6, M-F", "GeoLong": "53.407511", "GeoLat": "-2.984683" }
+        //];
+
+
+        var LoadNumber = $("#txtLoadNumber").val();
+
+
+        $.ajax({
+                    type: "GET",
+            url: "/Report/GetLoadLocations/?LoadNumber=" + LoadNumber+"",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+
+                if (data.length > 0) {
+
+                    var ltlng = [];
+                    var myLatlng1 = new google.maps.LatLng(data[0].Latitude, data[0].Longitude);
+                    var marker = "";
+                    var myOptions = {
+                        zoom: 12,
+                        center: myLatlng1,
+                        mapTypeId: google.maps.MapTypeId.ROADMAP
+                    }
+                    var map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+                    // Using the JQuery "each" selector to iterate through the JSON list and drop marker pins
+                    $.each(data, function (i, item) {
+
+
+                        ltlng.push(new google.maps.LatLng(data[i].Latitude, data[i].Longitude));
+
+
+                        var myLatlng = new google.maps.LatLng(data[i].Latitude, data[i].Longitude);
+
+                        //var myLatlng = new google.maps.LatLng(25.2048493, 55.2707828);
+
+
+
+                        marker = new google.maps.Marker({
+                            position: myLatlng,
+                            map: map,
+                            title: data[i].Address
+                        });
+
+                        if (data[i].Type == "P") {
+                            var img = document.createElement('img');
+                            img.src = "/assets/img/Logistic-Truck_Pickup.png";
+                            marker.setIcon(img.src)
+                        }
+
+                        else if (data[i].Type == "D") {
+                            var img = document.createElement('img');
+                            img.src = "/assets/img/Logistic-Truck_Delivery.png";
+                            marker.setIcon(img.src)
+                        }
+
+
+                        //***********ROUTING****************//
+
+
+
+
+
+                        // You can make markers different colors...  google it up!
+
+
+
+
+                        //// put in some information about each json object - in this case, the opening hours.
+                        //    var infowindow = new google.maps.InfoWindow({
+                        //        content: "<div class='infoDiv'><h2>Location:" + data[i].Address+"</h2>" + "</div>"
+
+                        //    //content: "<div class='infoDiv'><h2>" + item.PlaceName + "</h2>" + "<div><h4>Opening hours: " + item.OpeningHours + "</h4></div></div>"
+                        //});
+
+                        //// finally hook up an "OnClick" listener to the map so it pops up out info-window when the marker-pin is clicked!
+                        //google.maps.event.addListener(marker, 'click', function () {
+                        //    infowindow.open(map, marker);
+                        //});
+
+
+                    });
+
+
+                    //Intialize the Path Array
+                    var path = new google.maps.MVCArray();
+
+                    //Intialize the Direction Service
+                    var service = new google.maps.DirectionsService();
+
+
+                    var flightPath = new google.maps.Polyline({
+                        path: ltlng,
+                        geodesic: true,
+                        strokeColor: '#4986E7',
+                        strokeOpacity: 1.0,
+                        strokeWeight: 2
+                    });
+
+                    flightPath.setMap(map);
+
+
+
+                }
+                else {
+                    var myOptions = {
+                        zoom: 12,
+                        mapTypeId: google.maps.MapTypeId.ROADMAP
+                    }
+                    var map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+                    $("#PickupandDelivery").fadeIn();
+                }
+
+
+            }
+        });
+
+
+
+    }
+
+    function loadScript() {
+            var script = document.createElement("script");
+            script.type = "text/javascript";
+            script.src = "https://maps.google.com/maps/api/js?key=AIzaSyD-S-cuUziy083ZS2a2X_Btnr-msbXJFnw&callback=initialize";
+        document.body.appendChild(script);
+       
+        }
+
+ window.onload = loadScript;
+
+
+</script>
+
+
+
+
+
+<script>
+
+    function RealTimeTracking() {
+
+         //else if (value == 2) {
+        var LoadNumber = $("#txtLoadNumber").val();
+            $.ajax({
+                type: "GET",
+                url: "/Report/GetLoadLocationsReatlTracking/?LoadNumber=" + LoadNumber + "",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+
+                    if (data.length > 0) {
+
+                        var ltlng = [];
+                        var myLatlng1 = new google.maps.LatLng(data[0].Latitude, data[0].Longitude);
+                        var marker = "";
+                        var myOptions = {
+                            zoom: 12,
+                            center: myLatlng1,
+                            mapTypeId: google.maps.MapTypeId.ROADMAP
+                        }
+                        var map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+                        // Using the JQuery "each" selector to iterate through the JSON list and drop marker pins
+                        $.each(data, function (i, item) {
+
+
+                            ltlng.push(new google.maps.LatLng(data[i].Latitude, data[i].Longitude));
+
+
+                            var myLatlng = new google.maps.LatLng(data[i].Latitude, data[i].Longitude);
+
+                            //var myLatlng = new google.maps.LatLng(25.2048493, 55.2707828);
+
+
+
+                            marker = new google.maps.Marker({
+                                position: myLatlng,
+                                map: map,
+                                title: data[i].Address
+                            });
+
+
+                            var img = document.createElement('img');
+                            img.src = "/assets/img/Logistic-Truck_Pickup.png";
+                            marker.setIcon(img.src)
+
+
+                            //if (data[i].Type == "P") {
+                            //    var img = document.createElement('img');
+                            //    img.src = "/assets/img/Logistic-Truck_Pickup.png";
+                            //    marker.setIcon(img.src)
+                            //}
+
+                            //else if (data[i].Type == "D") {
+                            //    var img = document.createElement('img');
+                            //    img.src = "/assets/img/Logistic-Truck_Delivery.png";
+                            //    marker.setIcon(img.src)
+                            //}
+
+
+                            //***********ROUTING****************//
+
+
+
+
+
+                            // You can make markers different colors...  google it up!
+
+
+
+
+                            //// put in some information about each json object - in this case, the opening hours.
+                            //    var infowindow = new google.maps.InfoWindow({
+                            //        content: "<div class='infoDiv'><h2>Location:" + data[i].Address+"</h2>" + "</div>"
+
+                            //    //content: "<div class='infoDiv'><h2>" + item.PlaceName + "</h2>" + "<div><h4>Opening hours: " + item.OpeningHours + "</h4></div></div>"
+                            //});
+
+                            //// finally hook up an "OnClick" listener to the map so it pops up out info-window when the marker-pin is clicked!
+                            //google.maps.event.addListener(marker, 'click', function () {
+                            //    infowindow.open(map, marker);
+                            //});
+
+
+                        });
+
+
+                        //Intialize the Path Array
+                        var path = new google.maps.MVCArray();
+
+                        //Intialize the Direction Service
+                        var service = new google.maps.DirectionsService();
+
+
+                        var flightPath = new google.maps.Polyline({
+                            path: ltlng,
+                            geodesic: true,
+                            strokeColor: '#4986E7',
+                            strokeOpacity: 1.0,
+                            strokeWeight: 2
+                        });
+
+                        flightPath.setMap(map);
+
+
+
+                    }
+                    else {
+                        var myOptions = {
+                            zoom: 12,
+                            mapTypeId: google.maps.MapTypeId.ROADMAP
+                        }
+                        var map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+                        $("#PickupandDelivery").fadeIn();
+                    }
+
+
+                }
+            });
+        //}
+    }
+
+    function ShowGoogleMap(value) {
+
+        //var data = [
+
+        //    { "Id": 1, "PlaceName": "Dubai - United Arab Emirates", "Test": "9-5, M-F", "GeoLong": "55.2707828", "GeoLat": "25.2048493" },
+        //    { "Id": 2, "PlaceName": "Dubai - United Arab Emirates ", "OpeningHours": "9-1,2-5, M-F", "GeoLong": "74.348080", "GeoLat": "25.2048493" },
+        //    { "Id": 3, "PlaceName": "Walker Art Galleryssss", "OpeningHours": "9-7, M-F", "GeoLong": "53.409839", "GeoLat": "-2.979447" },
+        //    { "Id": 4, "PlaceName": "National Conservation Centre", "OpeningHours": "10-6, M-F", "GeoLong": "53.407511", "GeoLat": "-2.984683" }
+        //];
+
+
+        var LoadNumber = $("#txtLoadNumber").val();
+
+
+        if (value == 1) {
+            $.ajax({
+                type: "GET",
+                url: "/Report/GetLoadLocations/?LoadNumber=" + LoadNumber + "",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+
+                    if (data.length > 0) {
+
+                        var ltlng = [];
+                        var myLatlng1 = new google.maps.LatLng(data[0].Latitude, data[0].Longitude);
+                        var marker = "";
+                        var myOptions = {
+                            zoom: 10,
+                            center: myLatlng1,
+                            mapTypeId: google.maps.MapTypeId.ROADMAP
+                        }
+                        var map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+                        // Using the JQuery "each" selector to iterate through the JSON list and drop marker pins
+                        $.each(data, function (i, item) {
+
+
+                            ltlng.push(new google.maps.LatLng(data[i].Latitude, data[i].Longitude));
+
+
+                            var myLatlng = new google.maps.LatLng(data[i].Latitude, data[i].Longitude);
+
+                            //var myLatlng = new google.maps.LatLng(25.2048493, 55.2707828);
+
+
+
+                            marker = new google.maps.Marker({
+                                position: myLatlng,
+                                map: map,
+                                title: data[i].Address
+                            });
+
+                            if (data[i].Type == "P") {
+                                var img = document.createElement('img');
+                                img.src = "/assets/img/Logistic-Truck_Pickup.png";
+                                marker.setIcon(img.src)
+                            }
+
+                            else if (data[i].Type == "D") {
+                                var img = document.createElement('img');
+                                img.src = "/assets/img/Logistic-Truck_Delivery.png";
+                                marker.setIcon(img.src)
+                            }
+
+
+                            //***********ROUTING****************//
+
+
+
+
+
+                            // You can make markers different colors...  google it up!
+
+
+
+
+                            //// put in some information about each json object - in this case, the opening hours.
+                            //    var infowindow = new google.maps.InfoWindow({
+                            //        content: "<div class='infoDiv'><h2>Location:" + data[i].Address+"</h2>" + "</div>"
+
+                            //    //content: "<div class='infoDiv'><h2>" + item.PlaceName + "</h2>" + "<div><h4>Opening hours: " + item.OpeningHours + "</h4></div></div>"
+                            //});
+
+                            //// finally hook up an "OnClick" listener to the map so it pops up out info-window when the marker-pin is clicked!
+                            //google.maps.event.addListener(marker, 'click', function () {
+                            //    infowindow.open(map, marker);
+                            //});
+
+
+                        });
+
+
+                        //Intialize the Path Array
+                        var path = new google.maps.MVCArray();
+
+                        //Intialize the Direction Service
+                        var service = new google.maps.DirectionsService();
+
+
+                        var flightPath = new google.maps.Polyline({
+                            path: ltlng,
+                            geodesic: true,
+                            strokeColor: '#4986E7',
+                            strokeOpacity: 1.0,
+                            strokeWeight: 2
+                        });
+
+                        flightPath.setMap(map);
+
+
+
+                    }
+                    else {
+                        var myOptions = {
+                            zoom: 10,
+                            mapTypeId: google.maps.MapTypeId.ROADMAP
+                        }
+                        var map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+                        $("#PickupandDelivery").fadeIn();
+                    }
+
+
+                }
+            });
+        }
+        else if (value == 2) {
+
+        $.ajax({
+            type: "GET",
+            url: "/Report/GetLoadLocationsReatlTracking/?LoadNumber=" + LoadNumber + "",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+
+                if (data.length > 0) {
+
+                    var ltlng = [];
+                    var myLatlng1 = new google.maps.LatLng(data[0].Latitude, data[0].Longitude);
+                    var marker = "";
+                    var myOptions = {
+                        zoom: 12,
+                        center: myLatlng1,
+                        mapTypeId: google.maps.MapTypeId.ROADMAP
+                    }
+                    var map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+                    // Using the JQuery "each" selector to iterate through the JSON list and drop marker pins
+                    $.each(data, function (i, item) {
+
+
+                        ltlng.push(new google.maps.LatLng(data[i].Latitude, data[i].Longitude));
+
+
+                        var myLatlng = new google.maps.LatLng(data[i].Latitude, data[i].Longitude);
+
+                        //var myLatlng = new google.maps.LatLng(25.2048493, 55.2707828);
+
+
+
+                        marker = new google.maps.Marker({
+                            position: myLatlng,
+                            map: map,
+                            title: data[i].Address
+                        });
+
+
+                        var img = document.createElement('img');
+                        img.src = "/assets/img/Logistic-Truck_Pickup.png";
+                        marker.setIcon(img.src)
+
+
+                        //if (data[i].Type == "P") {
+                        //    var img = document.createElement('img');
+                        //    img.src = "/assets/img/Logistic-Truck_Pickup.png";
+                        //    marker.setIcon(img.src)
+                        //}
+
+                        //else if (data[i].Type == "D") {
+                        //    var img = document.createElement('img');
+                        //    img.src = "/assets/img/Logistic-Truck_Delivery.png";
+                        //    marker.setIcon(img.src)
+                        //}
+
+
+                        //***********ROUTING****************//
+
+
+
+
+
+                        // You can make markers different colors...  google it up!
+
+
+
+
+                        //// put in some information about each json object - in this case, the opening hours.
+                        //    var infowindow = new google.maps.InfoWindow({
+                        //        content: "<div class='infoDiv'><h2>Location:" + data[i].Address+"</h2>" + "</div>"
+
+                        //    //content: "<div class='infoDiv'><h2>" + item.PlaceName + "</h2>" + "<div><h4>Opening hours: " + item.OpeningHours + "</h4></div></div>"
+                        //});
+
+                        //// finally hook up an "OnClick" listener to the map so it pops up out info-window when the marker-pin is clicked!
+                        //google.maps.event.addListener(marker, 'click', function () {
+                        //    infowindow.open(map, marker);
+                        //});
+
+
+                    });
+
+
+                    //Intialize the Path Array
+                    var path = new google.maps.MVCArray();
+
+                    //Intialize the Direction Service
+                    var service = new google.maps.DirectionsService();
+
+
+                    var flightPath = new google.maps.Polyline({
+                        path: ltlng,
+                        geodesic: true,
+                        strokeColor: '#4986E7',
+                        strokeOpacity: 1.0,
+                        strokeWeight: 2
+                    });
+
+                    flightPath.setMap(map);
+
+
+
+                }
+                else {
+                    var myOptions = {
+                        zoom: 12,
+                        mapTypeId: google.maps.MapTypeId.ROADMAP
+                    }
+                    var map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+                    $("#PickupandDelivery").fadeIn();
+                }
+
+
+            }
+        });
+    }
+       
+      
+
+
+
+    }
+
+    function loadScript() {
+        var script = document.createElement("script");
+        script.type = "text/javascript";
+        script.src = "https://maps.google.com/maps/api/js?key=AIzaSyD-S-cuUziy083ZS2a2X_Btnr-msbXJFnw&callback=initialize";
+        document.body.appendChild(script);
+
+    }
+
+    window.onload = loadScript;
+
+
+</script>

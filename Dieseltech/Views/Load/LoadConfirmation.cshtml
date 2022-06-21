@@ -1,0 +1,2227 @@
+﻿@using Dieseltech.Models;
+
+@{
+    ViewBag.Title = "Broker";
+
+
+
+    //List<tblLoadHead> list = (List<tblLoadHead>)ViewBag.LoadInformation;
+    //List<tblLoadPickupDelivery> listPickDelivery = (List<tblLoadPickupDelivery>)ViewBag.LoadPickupDelivery;
+    //List<tblLoadCharge1> listLoadCharge = (List<tblLoadCharge1>)ViewBag.LoadCharges;
+
+    //List<tblLoadFilePath> listLoadDocument = (List<tblLoadFilePath>)ViewBag.LoadDocuments;
+    List<SP_Get_Load_Confirmation_Data_Result> LoadConfirmationData = (List<SP_Get_Load_Confirmation_Data_Result>)ViewBag.LoadConfirmation;
+
+
+}
+
+<head>
+
+    <style>
+        /*.nav-tabs.nav-tabs-solid > li > a.active, .nav-tabs.nav-tabs-solid > li > a.active:hover, .nav-tabs.nav-tabs-solid > li > a.active:focus {
+            background-color: #f1bb62 !important;
+            border-color: #f1bb62 !important;
+        }
+
+        th {
+            background-color: white;
+            color: black;
+        }
+*/
+        .select2-container {
+            width: 100% !important;
+        }
+    </style>
+</head>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <br />
+            <h3 name="LoaderNumber"> Load Number: @LoadConfirmationData[0].LoaderNumber</h3>
+
+
+        </div>
+        <div class="col-md-6 text-right">
+            <br />
+            @*<a target="_blank" class="btn btn-primary" href="@Url.Action("ReportPreview", "Report", new { LoaderNumber = list[0].LoaderNumber})" id="btnPrintConfirmation" type="button">Print Confirmation</a>*@
+            @*<a id="btnCopyLoad" data-toggle="modal" data-target="#Load_Copy" href="#" style="background-color: #f1bb62 !important" class="btn btn-primary"><i class="fa fa-copy"></i> Create Load Copy</a>*@
+            <a id="btnCopyLoad" href="@Url.Action("Index", "CopyLoad", new { LoadNumber = LoadConfirmationData[0].LoaderNumber })" style="        background-color: #4c5564 !important" class="btn btn-primary"><i class="fa fa-copy"></i> Copy Load</a>
+            <a id="btnEditLoad" href="@Url.Action("Index", "EditLoad", new { LoadNumber =LoadConfirmationData[0].LoaderNumber})" class="btn btn-primary" style=" background-color: orange !important;"><i class="fa fa-edit"></i> Edit Load</a>
+            <a id="btnPrintConfirmation" class="btn btn-primary ThemeColor"  href="@Url.Action("ReportPreview", "Report", new { LoadNumberModel =LoadConfirmationData[0].LoaderNumber})" >Print Confirmation</a>
+            @*<a id="btnPrintConfirmation" class="btn btn-primary ThemeColor" data-toggle="modal" data-target="#Print_Confirmation">Print Confirmation</a>*@
+        </div>
+
+
+    </div>
+</div>
+
+
+
+<div id="Print_Confirmation" class="modal fade delete-modal" role="dialog">
+    <div class="modal-dialog " style="width:500px !important">
+        @using (Html.BeginForm("ReportPreview", "Report", FormMethod.Post, new { target = "_blank" }))
+        {@Html.AntiForgeryToken()
+        <div class="modal-content">
+
+            <div class="modal-body text-center">
+                <input type="text" id="Brokerid" name="Brokerid" class="form-control" hidden />
+                <img src="~/assets/img/ok.png" alt="" width="50" height="46">
+                <h3>Do you want to see the load number on the carrier confirmation</h3>
+                <div class="m-t-20">
+                    <a href="#" class="btn btn-white" data-dismiss="modal">No</a>
+                    <input hidden type="text" value=@LoadConfirmationData[0].LoaderNumber name="LoadNumberModel" class="form-control" required="">
+                    <button id="btnConfirmPrint" type="submit" class="btn btn-success ThemeColor">Yes</button>
+                </div>
+            </div>
+        </div>
+    }
+    </div>
+
+</div>
+
+
+<div id="Load_Copy" class="modal fade delete-modal" role="dialog" >
+    <div class="modal-dialog " style="width:500px !important">
+        @*@using (Html.BeginForm("CreateLoadCopy", "Load", FormMethod.Post))
+        {@Html.AntiForgeryToken()*@
+        <div class="modal-content">
+
+            <div class="modal-body text-center">
+                <img src="~/assets/img/ok.png" alt="" width="50" height="46">
+                <h3>Do you want to Create Load Copy</h3>
+                <div class="m-t-20">
+                    <a href="#" class="btn btn-white" data-dismiss="modal">No</a>
+                    <input hidden type="text" id="txtLoadNumberCopyModel" value=@LoadConfirmationData[0].LoaderNumber name="LoadNumberCopyModel" class="form-control" required="">
+                    <button id="btnCreateCopyLoad" type="button" class="btn btn-success ThemeColor">Yes</button>
+                </div>
+            </div>
+        </div>
+    @*}*@
+    </div>
+
+</div>
+
+
+
+<div id="Load_Cancellation" class="modal fade delete-modal" role="dialog">
+    <div class="modal-dialog " style="max-width:500px;">
+
+        <div class="modal-content">
+
+            <div class="modal-body text-center">
+                <img src="~/assets/img/sent.png" alt="" width="50" height="46">
+                <h3>Do you want to cancel Load</h3>
+                <div class="m-t-20">
+                    <a href="#" class="btn btn-white" data-dismiss="modal">No</a>
+                    <input hidden type="text" value=@LoadConfirmationData[0].LoaderNumber name="LoadNumberModel" class="form-control" required="">
+                    <button id="btnCancelCompleteLoad" type="button" class="btn btn-warning ThemeColor">Yes</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+
+<div id="Load_MarkConfirmation" class="modal fade delete-modal" role="dialog">
+    <div class="modal-dialog " style="max-width:500px;">
+
+        <div class="modal-content">
+
+            <div class="modal-body text-center">
+                <img src="~/assets/img/ok.png" alt="" width="50" height="46">
+                <h3>Do you want to Mark Load Confirm</h3>
+                <div class="m-t-20">
+                    <a href="#" class="btn btn-white" data-dismiss="modal">No</a>
+                    <input hidden type="text" value=@LoadConfirmationData[0].LoaderNumber name="LoadNumberModel" class="form-control" required="">
+                    <button id="btnConfirmLoad" type="button" class="btn btn-warning ThemeColor">Yes</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+
+
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card-box">
+                <!-- Nav tabs -->
+                @*<ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active"><a href="#Section1" aria-controls="home" role="tab" data-toggle="tab">General</a></li>
+            <li role="presentation"><a href="#Section2" aria-controls="profile" role="tab" data-toggle="tab">Pickup And Delivery</a></li>
+            <li role="presentation"><a href="#Section3" aria-controls="messages" role="tab" data-toggle="tab">Charges</a></li>
+            <li role="presentation"><a href="#Section4" aria-controls="messages" role="tab" data-toggle="tab">Text Message</a></li>
+        </ul>*@
+
+
+                <ul class="nav nav-tabs nav-tabs-solid">
+                    <li class="nav-item"><a class="nav-link active " href="#Load" data-toggle="tab">Load</a></li>
+                    @*<li class="nav-item"><a class="nav-link" href="#Section2" data-toggle="tab">Pc and Del</a></li>*@
+                    @*<li class="nav-item"><a class="nav-link" href="#Section3" data-toggle="tab">Comments</a></li>*@
+                    <li class="nav-item Broker"><a class="nav-link" href="#BrokerConfo" data-toggle="tab">Customer Confo</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#CarrierConfo" data-toggle="tab">Carrier Confo</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#POD" data-toggle="tab">POD</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#Lumper" data-toggle="tab">Lumper</a></li>
+                </ul>
+
+                <br />
+                
+               
+                
+                <!-- Tab panes -->
+                <div class="tab-content tabs">
+
+                    <div role="tabpanel" class="tab-pane show active" id="Load">
+
+                        @using (Html.BeginForm("UpdateLoad", "Load", FormMethod.Post))
+                        {
+                            @Html.AntiForgeryToken()
+                            <form>
+                                <div class="row">
+
+                                    <div class="col-md-6">
+                                        @*<h3 name="LoaderNumber">@LoadConfirmationData[0].LoaderNumber</h3>*@
+
+                                        <input type="text" hidden  value="@LoadConfirmationData[0].LoaderNumber" id="txtLoadNumber" name="LoaderNumber" class="form-control" required>
+                                        
+                                        <div class="card-box shadow-none p-3 mb-5 bg-light rounded">
+
+
+
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <label>Load Number:</label>
+                                                        <input type="number" id="txtLoadNumberEdit" readonly value="@LoadConfirmationData[0].LoaderNumber" name="LoadNumberEdit" class="form-control" required>
+
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label>First Agent</label>
+                                                        <input readonly type="text" name="Available" value="@LoadConfirmationData[0].Agent" class="form-control" required>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label>Second Agent</label>
+                                                        <input readonly type="text" name="Weight" value="" class="form-control" required>
+                                                        @*<img src="~/assets/img/customer-service-agent.png" />*@
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <label>Customer ID:</label>
+                                                        <input type="number" readonly value="@LoadConfirmationData[0].BrokerId" name="LoadNumberEdit" class="form-control" required>
+
+                                                    </div>
+                                                    <div class="col-md-8">
+                                                        <label>Customer :</label>
+                                                        <input readonly type="text" name="Available" value="@LoadConfirmationData[0].Brokernanme" class="form-control" required>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <label>Rate:</label>
+                                                        <input type="number" readonly value="@LoadConfirmationData[0].BrokerRate" name="LoadNumberEdit" class="form-control" required>
+
+                                                    </div>
+                                                    <div class="col-md-8">
+                                                        <label>Company Profile :</label>
+                                                        <input readonly type="text" name="Available" value="@LoadConfirmationData[0].Profile" class="form-control" required>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <label>Receivable:</label>
+                                                        <input type="number" readonly value="@LoadConfirmationData[0].BrokerAmout" name="LoadNumberEdit" class="form-control" required>
+
+                                                    </div>
+                                                    <div class="col-md-8">
+                                                        <label>Contact Phone :</label>
+                                                        <input readonly type="text" name="Available" value="@LoadConfirmationData[0].BrokerPhone" class="form-control" required>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <label>Customer Reference:</label>
+                                                        <input readonly type="text" name="Available" value="@LoadConfirmationData[0].BrokerReference" class="form-control" required>
+
+
+                                                    </div>
+                                                    <div class="col-md-8">
+                                                        <label>Contact Name :</label>
+                                                        <input readonly type="text" name="Available" value="@LoadConfirmationData[0].BrokerContactName" class="form-control" required>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <label>Dispatcher Name:</label>
+                                                        <input readonly type="text" name="Available" value="@LoadConfirmationData[0].DispatcherName" class="form-control" required>
+
+
+                                                    </div>
+                                                    <div class="col-md-8">
+                                                        <label>Contact Number :</label>
+                                                        <input readonly type="text" name="Available" value="@LoadConfirmationData[0].DispatcherPhone" class="form-control" required>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+                                          
+
+                                          
+
+
+
+
+
+
+
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="card-box shadow-none p-3 mb-5 bg-light rounded">
+
+
+
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <label>Carrier ID:</label>
+                                                        <input type="number" readonly value="@LoadConfirmationData[0].CarrierId" name="LoadNumberEdit" class="form-control" required>
+
+                                                    </div>
+                                                    <div class="col-md-8">
+                                                        <label>Carrier :</label>
+                                                        <input readonly type="text" name="Available" value="@LoadConfirmationData[0].CarrierName" class="form-control" required>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <label>Driver Name:</label>
+                                                        <input type="text" readonly value="@LoadConfirmationData[0].DriverName"  class="form-control" required>
+
+                                                    </div>
+                                                    <div class="col-md-8">
+                                                        <label>Driver Number :</label>
+                                                        <input readonly type="text" value="@LoadConfirmationData[0].DriverPhone" class="form-control" required>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-md-8">
+                                                        <label>Load Detail:</label>
+                                                        @*<input type="number" readonly value="@LoadConfirmationData[0].LoadDetail" name="LoadNumberEdit" class="form-control" required>*@
+                                                        <input readonly type="text" name="Available" value="@LoadConfirmationData[0].LoadDetail" class="form-control" required>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label>Date</label>
+                                                        <input readonly type="text" name="Available" value="@LoadConfirmationData[0].RegistrationDate" class="form-control" required>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+
+
+
+
+
+
+
+
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <label>Rate</label>
+                                                        <input type="number" readonly value="@LoadConfirmationData[0].CarrierRate" name="LoadNumberEdit" class="form-control" required>
+
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <label>Payable</label>
+                                                        <input readonly type="text" value="@LoadConfirmationData[0].CarrierAmount" class="form-control" required>
+                                                    </div>
+
+                                                    <div class="col-md-3">
+                                                        <label>Paid</label>
+                                                        <input readonly type="text" name="Available" value="" class="form-control" required>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <label>Debit</label>
+                                                        <input readonly type="text" name="Available" value="" class="form-control" required>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <label>Agent Gross</label>
+                                                        @{Decimal AgentGross = Convert.ToDecimal(LoadConfirmationData[0].BrokerRate - LoadConfirmationData[0].CarrierRate);}
+                                                        <input type="number" readonly value="@AgentGross" name="LoadNumberEdit" class="form-control" required>
+
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <label>Comment</label>
+                                                        <a style="font-size:10px" class="btn btn-primary ThemeColor" href="" name="btnComment" id="btnComment" type="button">Comment </a>
+
+                                                    </div>
+                                                    @*<div class="col-md-3">
+                   <label></label>
+                </div>*@
+                                                    <div class="col-md-3">
+                                                        <label>Mark C.O.D</label>
+
+                                                        @if (LoadConfirmationData[0].COD == "Confirm")
+                                                        {
+                                                            <a style="font-size:10px" class="btn btn-primary ThemeColor"
+                                                               data-toggle="tooltip" data-placement="top" title="" data-original-title="Alread Marked C.O.D">
+                                                                <i class="fa fa-check"></i>
+                                                                Mark C.O.D
+                                                            </a>
+                                                        }
+                                                        else if (LoadConfirmationData[0].COD == "")
+                                                        {
+
+                                                            <a style="font-size:10px" data-toggle="modal" data-target="#Load_MarkConfirmation" class="btn btn-primary ThemeColor" href="" id="btnCOD" name="btnCOD" type="button">
+                                                                <i class="fa fa-check"></i>
+                                                                Mark C.O.D
+                                                            </a>
+                                                        }
+
+
+
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <label>Cancel Load</label>
+                                                        <a data-toggle="modal" data-target="#Load_Cancellation" style="font-size:10px" class="btn btn-primary ThemeColor" href="" id="btnCancelLoad" name="btnCancel" type="button">
+                                                            <i class="fa fa-times"></i>
+                                                            Cancel Load
+
+                                                            @*<a id="btnPrintConfirmation" class="btn btn-primary" data-toggle="modal" data-target="#Print_Confirmation">Print Confirmation</a>*@
+                                                        </a>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+
+
+
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </form>
+
+
+                        }
+
+                    </div>
+
+
+                    <div role="tabpanel" class="tab-pane" id="BrokerConfo">
+
+                        @using (Html.BeginForm("UpdateLoad", "Load", FormMethod.Post))
+                        {
+                            @Html.AntiForgeryToken()
+                            <form>
+                                <div class="row">
+
+
+                                    <div class="col-md-6">
+                                        @*<h3 name="LoaderNumber">@LoadConfirmationData[0].LoaderNumber</h3>*@
+
+                                        <input type="number" hidden value="@LoadConfirmationData[0].LoaderNumber" name="LoaderNumber" class="form-control" required>
+
+                                        <div class="card-box shadow-none p-3 mb-5 bg-light rounded">
+
+
+
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <label>Load Number:</label>
+                                                        <input type="number" readonly value="@LoadConfirmationData[0].LoaderNumber" name="LoadNumberEdit" class="form-control" required>
+
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label>First Agent</label>
+                                                        <input readonly type="text" name="Available" value="Jack" class="form-control" required>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label>Second Agent</label>
+                                                        <input readonly type="text" name="Weight" value="" class="form-control" required>
+                                                        @*<img src="~/assets/img/customer-service-agent.png" />*@
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <label>Customer ID:</label>
+                                                        <input type="number" readonly value="@LoadConfirmationData[0].LoaderNumber" name="LoadNumberEdit" class="form-control" required>
+
+                                                    </div>
+                                                    <div class="col-md-8">
+                                                        <label>Customer :</label>
+                                                        <input readonly type="text" name="Available" value="Jack" class="form-control" required>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <label>Rate:</label>
+                                                        <input type="number" readonly value="@LoadConfirmationData[0].LoaderNumber" name="LoadNumberEdit" class="form-control" required>
+
+                                                    </div>
+                                                    <div class="col-md-8">
+                                                        <label>Company Profile :</label>
+                                                        <input readonly type="text" name="Available" value="Jack" class="form-control" required>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <label>Receivable:</label>
+                                                        <input type="number" readonly value="@LoadConfirmationData[0].LoaderNumber" name="LoadNumberEdit" class="form-control" required>
+
+                                                    </div>
+                                                    <div class="col-md-8">
+                                                        <label>Contact Phone :</label>
+                                                        <input readonly type="text" name="Available" value="Jack" class="form-control" required>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <label>Customer Reference:</label>
+                                                        <input type="number" readonly value="@LoadConfirmationData[0].LoaderNumber" name="LoadNumberEdit" class="form-control" required>
+
+                                                    </div>
+                                                    <div class="col-md-8">
+                                                        <label>Contact Name :</label>
+                                                        <input readonly type="text" name="Available" value="Jack" class="form-control" required>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+
+
+
+
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="card-box shadow-none p-3 mb-5 bg-light rounded">
+
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <label>Branch</label>
+                                                        <input type="number" readonly value="@LoadConfirmationData[0].LoaderNumber" name="LoadNumberEdit" class="form-control" required>
+
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label>Date</label>
+                                                        <input readonly type="text" name="Available" value="@LoadConfirmationData[0].RegistrationDate" class="form-control" required>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+
+
+
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <label>Carrier ID:</label>
+                                                        <input type="number" readonly value="@LoadConfirmationData[0].LoaderNumber" name="LoadNumberEdit" class="form-control" required>
+
+                                                    </div>
+                                                    <div class="col-md-8">
+                                                        <label>Carrier :</label>
+                                                        <input readonly type="text" name="Available" value="Jack" class="form-control" required>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+                                            @*<div class="form-group">
+            <div class="row">
+                <div class="col-md-3">
+                    <label>Load Type</label>
+                    <input type="number" readonly value="@LoadConfirmationData[0].LoaderNumber" name="LoadNumberEdit" class="form-control" required>
+
+                </div>
+                <div class="col-md-3">
+                    <label>Full/Partial :</label>
+                    <input readonly type="text" name="Available" value="Jack" class="form-control" required>
+                </div>
+                <div class="col-md-3">
+                    <label>Driver Type :</label>
+                    <input readonly type="text" name="Available" value="Jack" class="form-control" required>
+                </div>
+                <div class="col-md-3">
+                    <label>Weight :</label>
+                    <input readonly type="text" name="Available" value="Jack" class="form-control" required>
+                </div>
+
+            </div>
+        </div>*@
+
+
+
+
+
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <label>Rate</label>
+                                                        <input type="number" readonly value="@LoadConfirmationData[0].LoaderNumber" name="LoadNumberEdit" class="form-control" required>
+
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <label>Payable</label>
+                                                        <input readonly type="text" name="Available" value="Jack" class="form-control" required>
+                                                    </div>
+
+                                                    <div class="col-md-3">
+                                                        <label>Paid</label>
+                                                        <input readonly type="text" name="Available" value="Jack" class="form-control" required>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <label>Debit</label>
+                                                        <input readonly type="text" name="Available" value="Jack" class="form-control" required>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <label>Agent Gross</label>
+                                                        <input type="number" readonly value="@LoadConfirmationData[0].LoaderNumber" name="LoadNumberEdit" class="form-control" required>
+
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <label>Comment</label>
+                                                        <a target="_blank" style="font-size:10px" class="btn btn-primary ThemeColor " href="" id="btn" type="button">Comment </a>
+
+                                                    </div>
+                                                    @*<div class="col-md-3">
+                   <label></label>
+                </div>*@
+                                                    <div class="col-md-3">
+                                                        <label>Mark C.O.D</label>
+                                                        <a style="font-size:10px" data-toggle="modal" data-target="#Load_MarkConfirmation" class="btn btn-primary ThemeColor" href="" id="btnCOD" name="btnCOD" type="button">
+                                                            <i class="fa fa-check"></i>
+                                                            Mark C.O.D
+                                                        </a>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <label>Cancel Load</label>
+                                                        <a data-toggle="modal" data-target="#Load_Cancellation" style="font-size:10px" class="btn btn-primary ThemeColor" href="" id="btnCancelLoad" name="btnCancel" type="button">
+                                                            <i class="fa fa-times"></i>
+                                                            Cancel Load
+
+                                                            @*<a id="btnPrintConfirmation" class="btn btn-primary" data-toggle="modal" data-target="#Print_Confirmation">Print Confirmation</a>*@
+                                                        </a>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                @*<input id="file-upload" type="file" class="file" data-upload-url="Load/UploadFiles/?LoaderName=@LoaderNumber"
+            multiple="multiple" name="files">*@
+
+                                                @*<input style="width:70% !important" id="file-upload-Broker" type="file"
+                   multiple="multiple" name="BrokerFiles">
+            <input type="button" id="btnUploadBroker" value="Upload Files" />*@
+                                                <h4 class="card-title">Document Upload   <strong id="customergif" style="float:right !important;display:none"> <img id='LoginLoader' style='Width: 34px!important; height: 30px!important' src='~/assets/img/loaders.gif' />... Please wait</strong> </h4>
+
+                                                <div class="input-group">
+                                                    @*<div class="input-group-prepend">
+                    <input type="button" id="btnUpload" value="Upload File" />
+                </div>*@
+                                                    <div class="custom-file">
+                                                        <input class="custom-file-input" id="file-upload-Broker" type="file"
+                                                               multiple="multiple" name="files"
+                                                               aria-describedby="inputGroupFileAddon01">
+                                                        <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+                                                    </div>
+                                                </div>
+
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                @*<div class="row">
+                            <div class="col-md-1">
+                                <img src="~/assets/img/folder.png" />
+                            </div>
+                            <div class="col-md-1">
+                                <img src="~/assets/img/file.png" />
+                            </div>
+                            <div class="col-md-1">
+                                <img src="~/assets/img/printer.png" />
+                            </div>
+                            <div class="col-md-2 text-right">
+                                <a target="_blank" style="font-size:12px" class="btn btn-primary" href="" id="btnBrokerConfirmation" type="button">Broker Confo </a>
+                            </div>
+
+
+                        </div>
+
+                        <br />
+                        <div class="row" id="DocumentPanel">
+
+
+
+                        </div>*@
+
+
+
+                            </form>
+
+
+                        }
+                        <footer>
+                            @*<div class="row">
+                                <div class="col-md-12">
+                                   
+                                </div>
+                            </div>
+                            <br />*@
+
+                            <div class="row" id="UploadedDocumentsBroker">
+                                @*@foreach (var item in ViewBag.LoadConfirmationDocuments)
+                                {
+                                    if (item.DocumentType == "Broker")
+                                    {
+                                        var path = @item.FilePath;
+                                        <div id="BrokerDocumentsColumn" class="col-md-4">
+                                            <a target="_blank" class="social-icon text-xs-center" href='@path'>
+                                                <img src="/assets/img/documentation.png">@item.FileName
+                                            </a>
+                                            <button type='button' onclick='DeleteBrokerDocument(@item.DocumentId)' id='btnRemoveBrokerDocument' class='close' aria-label='Close'>
+                                                <span aria-hidden='true'>&times;</span>
+                                            </button>
+                                        </div>
+                                    }
+
+                                }*@
+
+                                @foreach (var items in ViewBag.LoadDocuments)
+                                {
+                                        var path = @items.ImagePath;
+                                        <div id="DocumentsColumn" class="col-md-4">
+                                            <a target="_blank" class="social-icon text-xs-center" href='@path'>
+                                                <img src="/assets/img/documentation.png">@items.FileName
+                                            </a>
+                                            <button type='button' onclick='DeleteDocument(@items.FilePathId)' id='btnRemoveDocument' class='close' aria-label='Close'>
+                                                <span aria-hidden='true'>&times;</span>
+                                            </button>
+                                        </div>
+                                }
+
+
+
+                            </div>
+                        </footer>
+                    </div>
+
+                    <div role="tabpanel" class="tab-pane" id="CarrierConfo">
+
+                        @using (Html.BeginForm("UpdateLoad", "Load", FormMethod.Post))
+                        {
+                            @Html.AntiForgeryToken()
+                            <form>
+                                <div class="row">
+
+
+                                    <div class="col-md-6">
+                                        @*<h3 name="LoaderNumber">@LoadConfirmationData[0].LoaderNumber</h3>*@
+
+                                        <input type="number" hidden value="@LoadConfirmationData[0].LoaderNumber" name="LoaderNumber" class="form-control" required>
+
+                                        <div class="card-box shadow-none p-3 mb-5 bg-light rounded">
+
+
+
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <label>Load Number:</label>
+                                                        <input type="number" readonly value="@LoadConfirmationData[0].LoaderNumber" name="LoadNumberEdit" class="form-control" required>
+
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label>First Agent</label>
+                                                        <input readonly type="text" name="Available" value="Jack" class="form-control" required>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label>Second Agent</label>
+                                                        <input readonly type="text" name="Weight" value="" class="form-control" required>
+                                                        @*<img src="~/assets/img/customer-service-agent.png" />*@
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <label>Customer ID:</label>
+                                                        <input type="number" readonly value="@LoadConfirmationData[0].LoaderNumber" name="LoadNumberEdit" class="form-control" required>
+
+                                                    </div>
+                                                    <div class="col-md-8">
+                                                        <label>Customer :</label>
+                                                        <input readonly type="text" name="Available" value="Jack" class="form-control" required>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <label>Rate:</label>
+                                                        <input type="number" readonly value="@LoadConfirmationData[0].LoaderNumber" name="LoadNumberEdit" class="form-control" required>
+
+                                                    </div>
+                                                    <div class="col-md-8">
+                                                        <label>Company Profile :</label>
+                                                        <input readonly type="text" name="Available" value="Jack" class="form-control" required>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <label>Receivable:</label>
+                                                        <input type="number" readonly value="@LoadConfirmationData[0].LoaderNumber" name="LoadNumberEdit" class="form-control" required>
+
+                                                    </div>
+                                                    <div class="col-md-8">
+                                                        <label>Contact Phone :</label>
+                                                        <input readonly type="text" name="Available" value="Jack" class="form-control" required>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <label>Customer Reference:</label>
+                                                        <input type="number" readonly value="@LoadConfirmationData[0].LoaderNumber" name="LoadNumberEdit" class="form-control" required>
+
+                                                    </div>
+                                                    <div class="col-md-8">
+                                                        <label>Contact Name :</label>
+                                                        <input readonly type="text" name="Available" value="Jack" class="form-control" required>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+
+
+
+
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="card-box shadow-none p-3 mb-5 bg-light rounded">
+
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <label>Branch</label>
+                                                        <input type="number" readonly value="@LoadConfirmationData[0].LoaderNumber" name="LoadNumberEdit" class="form-control" required>
+
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label>Date</label>
+                                                        <input readonly type="text" name="Available" value=" @LoadConfirmationData[0].RegistrationDate" class="form-control" required>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+
+
+
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <label>Carrier ID:</label>
+                                                        <input type="number" readonly value="@LoadConfirmationData[0].LoaderNumber" name="LoadNumberEdit" class="form-control" required>
+
+                                                    </div>
+                                                    <div class="col-md-8">
+                                                        <label>Carrier :</label>
+                                                        <input readonly type="text" name="Available" value="Jack" class="form-control" required>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+                                            @*<div class="form-group">
+            <div class="row">
+                <div class="col-md-3">
+                    <label>Load Type</label>
+                    <input type="number" readonly value="@LoadConfirmationData[0].LoaderNumber" name="LoadNumberEdit" class="form-control" required>
+
+                </div>
+                <div class="col-md-3">
+                    <label>Full/Partial :</label>
+                    <input readonly type="text" name="Available" value="Jack" class="form-control" required>
+                </div>
+                <div class="col-md-3">
+                    <label>Driver Type :</label>
+                    <input readonly type="text" name="Available" value="Jack" class="form-control" required>
+                </div>
+                <div class="col-md-3">
+                    <label>Weight :</label>
+                    <input readonly type="text" name="Available" value="Jack" class="form-control" required>
+                </div>
+
+            </div>
+        </div>*@
+
+
+
+
+
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <label>Rate</label>
+                                                        <input type="number" readonly value="@LoadConfirmationData[0].LoaderNumber" name="LoadNumberEdit" class="form-control" required>
+
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <label>Payable</label>
+                                                        <input readonly type="text" name="Available" value="Jack" class="form-control" required>
+                                                    </div>
+
+                                                    <div class="col-md-3">
+                                                        <label>Paid</label>
+                                                        <input readonly type="text" name="Available" value="Jack" class="form-control" required>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <label>Debit</label>
+                                                        <input readonly type="text" name="Available" value="Jack" class="form-control" required>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <label>Agent Gross</label>
+                                                        <input type="number" readonly value="@LoadConfirmationData[0].LoaderNumber" name="LoadNumberEdit" class="form-control" required>
+
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <label>Comment</label>
+                                                        <a target="_blank" style="font-size:10px" class="btn btn-primary ThemeColor" href="" id="btn" type="button">Comment </a>
+
+                                                    </div>
+                                                    @*<div class="col-md-3">
+                   <label></label>
+                </div>*@
+                                                    <div class="col-md-3">
+                                                        <label>Mark C.O.D</label>
+                                                        <a style="font-size:10px" data-toggle="modal" data-target="#Load_MarkConfirmation" class="btn btn-primary ThemeColor" href="" id="btnCOD" name="btnCOD" type="button">
+                                                            <i class="fa fa-check"></i>
+                                                            Mark C.O.D
+                                                        </a>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <label>Cancel Load</label>
+                                                        <a data-toggle="modal" data-target="#Load_Cancellation" style="font-size:10px" class="btn btn-primary ThemeColor" href="" id="btnCancelLoad" name="btnCancel" type="button">
+                                                            <i class="fa fa-times"></i>
+                                                            Cancel Load
+
+                                                            @*<a id="btnPrintConfirmation" class="btn btn-primary" data-toggle="modal" data-target="#Print_Confirmation">Print Confirmation</a>*@
+                                                        </a>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        <h4 class="card-title">Document Upload <strong id="carriergif" style="float:right !important;display:none"> <img id='LoginLoader' style='Width: 34px!important; height: 30px!important' src='~/assets/img/loaders.gif' />... Please wait</strong></h4>
+
+                                                        @*<input style="width:70% !important" id="file-upload-Carrier" type="file"
+               multiple="multiple" name="CarrierFile">
+        <input type="button" id="btnUploadCarrier" value="Upload Files" />*@
+
+                                                        <div class="input-group">
+
+                                                            <div class="custom-file">
+                                                                <input class="custom-file-input" id="file-upload-Carrier" type="file"
+                                                                       multiple="multiple" name="files"
+                                                                       aria-describedby="inputGroupFileAddon01">
+                                                                <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </form>
+
+
+                        }
+                        <footer>
+                            
+
+                            <div class="row" id="UploadedDocumentsCarrier">
+                                @foreach (var item in ViewBag.LoadConfirmationDocuments)
+                                {
+                                    if (item.DocumentType == "Carrier")
+                                    {
+                                        var path = @item.FilePath;
+                                        <div id="CarrierDocumentsColumn" class="col-md-4">
+                                            <a target="_blank" class="social-icon text-xs-center" href='@path'>
+                                                <img src="/assets/img/documentation.png">@item.FileName
+                                            </a>
+                                            <button type='button' onclick='DeleteCarrierDocument(@item.DocumentId)' id='btnRemoveCarrierDocument' class='close' aria-label='Close'>
+                                                <span aria-hidden='true'>&times;</span>
+                                            </button>
+                                        </div>
+                                    }
+
+                                }
+                            </div>
+                        </footer>
+                    </div>
+                    <div role="tabpanel" class="tab-pane" id="POD">
+
+                        @using (Html.BeginForm("UpdateLoad", "Load", FormMethod.Post))
+                        {
+                            @Html.AntiForgeryToken()
+                            <form>
+                                <div class="row">
+
+
+                                    <div class="col-md-6">
+                                        @*<h3 name="LoaderNumber">@LoadConfirmationData[0].LoaderNumber</h3>*@
+
+                                        <input type="number" hidden value="@LoadConfirmationData[0].LoaderNumber" name="LoaderNumber" class="form-control" required>
+
+                                        <div class="card-box shadow-none p-3 mb-5 bg-light rounded">
+
+
+
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <label>Load Number:</label>
+                                                        <input type="number" readonly value="@LoadConfirmationData[0].LoaderNumber" name="LoadNumberEdit" class="form-control" required>
+
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label>First Agent</label>
+                                                        <input readonly type="text" name="Available" value="Jack" class="form-control" required>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label>Second Agent</label>
+                                                        <input readonly type="text" name="Weight" value="" class="form-control" required>
+                                                        @*<img src="~/assets/img/customer-service-agent.png" />*@
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <label>Customer ID:</label>
+                                                        <input type="number" readonly value="@LoadConfirmationData[0].LoaderNumber" name="LoadNumberEdit" class="form-control" required>
+
+                                                    </div>
+                                                    <div class="col-md-8">
+                                                        <label>Customer :</label>
+                                                        <input readonly type="text" name="Available" value="Jack" class="form-control" required>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <label>Rate:</label>
+                                                        <input type="number" readonly value="@LoadConfirmationData[0].LoaderNumber" name="LoadNumberEdit" class="form-control" required>
+
+                                                    </div>
+                                                    <div class="col-md-8">
+                                                        <label>Company Profile :</label>
+                                                        <input readonly type="text" name="Available" value="Jack" class="form-control" required>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <label>Receivable:</label>
+                                                        <input type="number" readonly value="@LoadConfirmationData[0].LoaderNumber" name="LoadNumberEdit" class="form-control" required>
+
+                                                    </div>
+                                                    <div class="col-md-8">
+                                                        <label>Contact Phone :</label>
+                                                        <input readonly type="text" name="Available" value="Jack" class="form-control" required>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <label>Customer Reference:</label>
+                                                        <input type="number" readonly value="@LoadConfirmationData[0].LoaderNumber" name="LoadNumberEdit" class="form-control" required>
+
+                                                    </div>
+                                                    <div class="col-md-8">
+                                                        <label>Contact Name :</label>
+                                                        <input readonly type="text" name="Available" value="Jack" class="form-control" required>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+
+
+
+
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="card-box shadow-none p-3 mb-5 bg-light rounded">
+
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <label>Branch</label>
+                                                        <input type="number" readonly value="@LoadConfirmationData[0].LoaderNumber" name="LoadNumberEdit" class="form-control" required>
+
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label>Date</label>
+                                                        <input readonly type="text" name="Available" value="@LoadConfirmationData[0].RegistrationDate" class="form-control" required>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+
+
+
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <label>Carrier ID:</label>
+                                                        <input type="number" readonly value="@LoadConfirmationData[0].LoaderNumber" name="LoadNumberEdit" class="form-control" required>
+
+                                                    </div>
+                                                    <div class="col-md-8">
+                                                        <label>Carrier :</label>
+                                                        <input readonly type="text" name="Available" value="Jack" class="form-control" required>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+                                            @*<div class="form-group">
+            <div class="row">
+                <div class="col-md-3">
+                    <label>Load Type</label>
+                    <input type="number" readonly value="@LoadConfirmationData[0].LoaderNumber" name="LoadNumberEdit" class="form-control" required>
+
+                </div>
+                <div class="col-md-3">
+                    <label>Full/Partial :</label>
+                    <input readonly type="text" name="Available" value="Jack" class="form-control" required>
+                </div>
+                <div class="col-md-3">
+                    <label>Driver Type :</label>
+                    <input readonly type="text" name="Available" value="Jack" class="form-control" required>
+                </div>
+                <div class="col-md-3">
+                    <label>Weight :</label>
+                    <input readonly type="text" name="Available" value="Jack" class="form-control" required>
+                </div>
+
+            </div>
+        </div>*@
+
+
+
+
+
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <label>Rate</label>
+                                                        <input type="number" readonly value="@LoadConfirmationData[0].LoaderNumber" name="LoadNumberEdit" class="form-control" required>
+
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <label>Payable</label>
+                                                        <input readonly type="text" name="Available" value="Jack" class="form-control" required>
+                                                    </div>
+
+                                                    <div class="col-md-3">
+                                                        <label>Paid</label>
+                                                        <input readonly type="text" name="Available" value="Jack" class="form-control" required>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <label>Debit</label>
+                                                        <input readonly type="text" name="Available" value="Jack" class="form-control" required>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <label>Agent Gross</label>
+                                                        <input type="number" readonly value="@LoadConfirmationData[0].LoaderNumber" name="LoadNumberEdit" class="form-control" required>
+
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <label>Comment</label>
+                                                        <a target="_blank" style="font-size:10px" class="btn btn-primary ThemeColor" href="" id="btn" type="button">Comment </a>
+
+                                                    </div>
+                                                    @*<div class="col-md-3">
+                   <label></label>
+                </div>*@
+                                                    <div class="col-md-3">
+                                                        <label>Mark C.O.D</label>
+                                                        <a style="font-size:10px" data-toggle="modal" data-target="#Load_MarkConfirmation" class="btn btn-primary ThemeColor" href="" id="btnCOD" name="btnCOD" type="button">
+                                                            <i class="fa fa-check"></i>
+                                                            Mark C.O.D
+                                                        </a>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <label>Cancel Load</label>
+                                                        <a data-toggle="modal" data-target="#Load_Cancellation" style="font-size:10px" class="btn btn-primary ThemeColor" href="" id="btnCancelLoad" name="btnCancel" type="button">
+                                                            <i class="fa fa-times"></i>
+                                                            Cancel Load
+
+                                                            @*<a id="btnPrintConfirmation" class="btn btn-primary" data-toggle="modal" data-target="#Print_Confirmation">Print Confirmation</a>*@
+                                                        </a>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+
+                                            <div class="form-group">
+                                                <h4 class="card-title">Document Upload <strong id="podgif" style="float:right !important;display:none"> <img id='LoginLoader' style='Width: 34px!important; height: 30px!important' src='~/assets/img/loaders.gif' />... Please wait</strong></h4>
+
+                                                <div class="input-group">
+                                   
+                                                    <div class="custom-file">
+                                                        <input class="custom-file-input" id="file-upload-POD" type="file"
+                                                               multiple="multiple" name="files"
+                                                               aria-describedby="inputGroupFileAddon01">
+                                                        <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+                                                    </div>
+                                                </div>
+
+
+
+                                            </div>
+
+
+
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </form>
+
+
+
+
+
+
+
+
+                        }
+
+
+
+                        <footer>
+
+                            <div class="row" id="UploadedDocumentsPOD">
+                                @foreach (var item in ViewBag.LoadConfirmationDocuments)
+                                {
+                                    if (item.DocumentType == "POD")
+                                    {
+                                        var path = @item.FilePath;
+                                        <div id="PODDocumentsColumn" class="col-md-4">
+                                            <a target="_blank" class="social-icon text-xs-center" href='@path'>
+                                                <img src="/assets/img/documentation.png">@item.FileName
+                                            </a>
+                                            <button type='button' onclick='DeletePODDocument(@item.DocumentId)' id='btnRemovePODDocument' class='close' aria-label='Close'>
+                                                <span aria-hidden='true'>&times;</span>
+                                            </button>
+                                        </div>
+                                    }
+
+                                }
+                            </div>
+                        </footer>
+                    </div>
+
+                    <div role="tabpanel" class="tab-pane" id="Lumper">
+
+                        @using (Html.BeginForm("UpdateLoad", "Load", FormMethod.Post))
+                        {
+                            @Html.AntiForgeryToken()
+                            <form>
+                                <div class="row">
+
+
+                                    <div class="col-md-6">
+                                        @*<h3 name="LoaderNumber">@LoadConfirmationData[0].LoaderNumber</h3>*@
+
+                                        <input type="number" hidden value="@LoadConfirmationData[0].LoaderNumber" name="LoaderNumber" class="form-control" required>
+
+                                        <div class="card-box shadow-none p-3 mb-5 bg-light rounded">
+
+
+
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <label>Load Number:</label>
+                                                        <input type="number" readonly value="@LoadConfirmationData[0].LoaderNumber" name="LoadNumberEdit" class="form-control" required>
+
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label>First Agent</label>
+                                                        <input readonly type="text" name="Available" value="Jack" class="form-control" required>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label>Second Agent</label>
+                                                        <input readonly type="text" name="Weight" value="" class="form-control" required>
+                                                        @*<img src="~/assets/img/customer-service-agent.png" />*@
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <label>Customer ID:</label>
+                                                        <input type="number" readonly value="@LoadConfirmationData[0].LoaderNumber" name="LoadNumberEdit" class="form-control" required>
+
+                                                    </div>
+                                                    <div class="col-md-8">
+                                                        <label>Customer :</label>
+                                                        <input readonly type="text" name="Available" value="Jack" class="form-control" required>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <label>Rate:</label>
+                                                        <input type="number" readonly value="@LoadConfirmationData[0].LoaderNumber" name="LoadNumberEdit" class="form-control" required>
+
+                                                    </div>
+                                                    <div class="col-md-8">
+                                                        <label>Company Profile :</label>
+                                                        <input readonly type="text" name="Available" value="Jack" class="form-control" required>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <label>Receivable:</label>
+                                                        <input type="number" readonly value="@LoadConfirmationData[0].LoaderNumber" name="LoadNumberEdit" class="form-control" required>
+
+                                                    </div>
+                                                    <div class="col-md-8">
+                                                        <label>Contact Phone :</label>
+                                                        <input readonly type="text" name="Available" value="Jack" class="form-control" required>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <label>Customer Reference:</label>
+                                                        <input type="number" readonly value="@LoadConfirmationData[0].LoaderNumber" name="LoadNumberEdit" class="form-control" required>
+
+                                                    </div>
+                                                    <div class="col-md-8">
+                                                        <label>Contact Name :</label>
+                                                        <input readonly type="text" name="Available" value="Jack" class="form-control" required>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+
+
+
+
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="card-box shadow-none p-3 mb-5 bg-light rounded">
+
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <label>Branch</label>
+                                                        <input type="number" readonly value="@LoadConfirmationData[0].LoaderNumber" name="LoadNumberEdit" class="form-control" required>
+
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label>Date</label>
+                                                        <input readonly type="text" name="Available" value="@LoadConfirmationData[0].RegistrationDate" class="form-control" required>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+
+
+
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <label>Carrier ID:</label>
+                                                        <input type="number" readonly value="@LoadConfirmationData[0].LoaderNumber" name="LoadNumberEdit" class="form-control" required>
+
+                                                    </div>
+                                                    <div class="col-md-8">
+                                                        <label>Carrier :</label>
+                                                        <input readonly type="text" name="Available" value="Jack" class="form-control" required>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+                                            @*<div class="form-group">
+            <div class="row">
+                <div class="col-md-3">
+                    <label>Load Type</label>
+                    <input type="number" readonly value="@LoadConfirmationData[0].LoaderNumber" name="LoadNumberEdit" class="form-control" required>
+
+                </div>
+                <div class="col-md-3">
+                    <label>Full/Partial :</label>
+                    <input readonly type="text" name="Available" value="Jack" class="form-control" required>
+                </div>
+                <div class="col-md-3">
+                    <label>Driver Type :</label>
+                    <input readonly type="text" name="Available" value="Jack" class="form-control" required>
+                </div>
+                <div class="col-md-3">
+                    <label>Weight :</label>
+                    <input readonly type="text" name="Available" value="Jack" class="form-control" required>
+                </div>
+
+            </div>
+        </div>*@
+
+
+
+
+
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <label>Rate</label>
+                                                        <input type="number" readonly value="@LoadConfirmationData[0].LoaderNumber" name="LoadNumberEdit" class="form-control" required>
+
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <label>Payable</label>
+                                                        <input readonly type="text" name="Available" value="Jack" class="form-control" required>
+                                                    </div>
+
+                                                    <div class="col-md-3">
+                                                        <label>Paid</label>
+                                                        <input readonly type="text" name="Available" value="Jack" class="form-control" required>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <label>Debit</label>
+                                                        <input readonly type="text" name="Available" value="Jack" class="form-control" required>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <label>Agent Gross</label>
+                                                        <input type="number" readonly value="@LoadConfirmationData[0].LoaderNumber" name="LoadNumberEdit" class="form-control" required>
+
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <label>Comment</label>
+                                                        <a target="_blank" style="font-size:10px" class="btn btn-primary ThemeColor" href="" id="btn" type="button">Comment </a>
+
+                                                    </div>
+                                                    @*<div class="col-md-3">
+                   <label></label>
+                </div>*@
+                                                    <div class="col-md-3">
+                                                        <label>Mark C.O.D</label>
+                                                        <a style="font-size:10px" data-toggle="modal" data-target="#Load_MarkConfirmation" class="btn btn-primary ThemeColor" href="" id="btnCOD" name="btnCOD" type="button">
+                                                            <i class="fa fa-check"></i>
+                                                            Mark C.O.D
+                                                        </a>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <label>Cancel Load</label>
+                                                        <a data-toggle="modal" data-target="#Load_Cancellation" style="font-size:10px" class="btn btn-primary ThemeColor" href="" id="btnCancelLoad" name="btnCancel" type="button">
+                                                            <i class="fa fa-times"></i>
+                                                            Cancel Load
+
+                                                            @*<a id="btnPrintConfirmation" class="btn btn-primary" data-toggle="modal" data-target="#Print_Confirmation">Print Confirmation</a>*@
+                                                        </a>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+
+                                            @*<div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+
+                    <input style="width:70% !important" id="file-upload-Lumper" type="file"
+                           multiple="multiple" name="LumperFile">
+                    <input type="button" id="btnUploadLumper" value="Upload Files" />
+                </div>
+            </div>
+        </div>*@
+
+
+
+                                            <div class="form-group">
+                                                <h4 class="card-title">Document Upload <strong id="lumpergif" style="float:right !important;display:none"> <img id='LoginLoader' style='Width: 34px!important; height: 30px!important' src='~/assets/img/loaders.gif' />... Please wait</strong></h4>
+
+                                                <div class="input-group">
+
+                                                    <div class="custom-file">
+                                                        <input class="custom-file-input" id="file-upload-Lumper" type="file"
+                                                               multiple="multiple" name="files"
+                                                               aria-describedby="inputGroupFileAddon01">
+                                                        <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+                                                    </div>
+                                                </div>
+
+
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </form>
+
+
+                        }
+                        <footer>
+                           
+                        
+
+                            <div class="row" id="UploadedDocumentsLumper">
+                                @foreach (var item in ViewBag.LoadConfirmationDocuments)
+                                {
+                                    if (item.DocumentType == "Lumper")
+                                    {
+                                        var path = @item.FilePath;
+                                        <div id="LumperDocumentsColumn" class="col-md-4">
+                                            <a target="_blank" class="social-icon text-xs-center" href='@path'>
+                                                <img src="/assets/img/documentation.png">@item.FileName
+                                            </a>
+                                            <button type='button' onclick='DeleteLumperDocument(@item.DocumentId)' id='btnRemoveLumperDocument' class='close' aria-label='Close'>
+                                                <span aria-hidden='true'>&times;</span>
+                                            </button>
+                                        </div>
+                                    }
+
+                                }
+                            </div>
+                        </footer>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@*//Broker Document Uploading*@
+<script type="text/javascript">
+
+
+    $(document).ready(function () {
+        var Formloadtype = @Html.Raw(Json.Encode(ViewBag.type));
+
+        if (Formloadtype == 1)
+
+        {
+            $('.nav-tabs a[href="#POD"]').tab('show');
+        }
+    });
+
+
+    $('#btnCreateCopyLoad').click(function () {
+        var LoadNumber = $("#txtLoadNumberCopyModel");
+        //alert(LoadNumber.val());
+
+        $.ajax({
+            url: '/Load/CreateLoadCopy?LoadNumber='+LoadNumber.val()+'',
+            type: "POST",
+            contentType: false, // Not to set any content header
+            processData: false, // Not to process data
+            success: function (result) {
+                $('#Load_Copy').modal('hide');
+                swal({ title: "New Load Number: " + result.data, text: "Load Copy Generated Successfully!", type: "success" },
+                    function () {
+                        window.location = result.url;
+                    }
+                    )
+            },
+            error: function (err) {
+                alert(err.statusText);
+            }
+        });
+    });
+
+    $('#btnConfirmPrint').click(function () {
+        $('#Print_Confirmation').modal('hide');
+    });
+
+    //Broker Confirmation Document Uploading
+    //$('#btnUploadBroker').click(function () {
+
+    $('#file-upload-Broker').change(function () {
+        document.getElementById("customergif").style.display = "block";
+
+        // Checking whether FormData is available in browser
+        if (window.FormData !== undefined) {
+
+            var fileUpload = $("#file-upload-Broker").get(0);
+            var files = fileUpload.files;
+
+            // Create FormData object
+            var fileData = new FormData();
+
+            // Looping over all files and add it to FormData object
+            for (var i = 0; i < files.length; i++) {
+                fileData.append(files[i].name, files[i]);
+            }
+            var LoaderName = $("#txtLoadNumber").val();
+
+            // Adding one more key to FormData object
+            fileData.append('LoaderName', LoaderName);
+
+
+            $.ajax({
+                url: '/EditLoad/UploadFiles',
+                type: "POST",
+                contentType: false, // Not to set any content header
+                processData: false, // Not to process data
+                data: fileData,
+                success: function (result) {
+                    document.getElementById("customergif").style.display = "none";
+                    var Documents;
+
+                    if (result != '1') {
+                        $("#UploadedDocumentsBroker div ").remove();
+                        for (var i = 0; i < result.length; i++) {
+                            var path = result[i].ImagePath;
+                            //var filepath = result[i].ImagePath.val();
+                            Documents = "<div id ='DocumentsColumn' class='col-md-4'><a target = '_blank' class='social-icon text-xs-center' href ='" + path + "' ><img src='/assets/img/documentation.png'>" + result[i].FileName + "</a> <button type='button' onclick='DeleteDocument(" + result[i].FilePathId + ")' id='btnRemoveDocument' class='close' aria-label='Close'><span aria-hidden='true'>&times;</span></button></div>";
+
+                            $('#UploadedDocumentsBroker').append(Documents);
+                        }
+                    }
+
+                },
+                error: function (err) {
+                    document.getElementById("customergif").style.display = "none";
+                    alert(err.statusText);
+                }
+            });
+        }
+        else
+        {
+            document.getElementById("customergif").style.display = "none";
+            alert("FormData is not supported.");
+        }
+
+
+
+
+
+
+
+
+
+        //Comment Hasan Bilal (2021-02-23)
+        // Checking whether FormData is available in browser
+        //if (window.FormData !== undefined) {
+
+
+        //    var fileUpload = $("#file-upload-Broker").get(0);
+        //    var files = fileUpload.files;
+
+        //    // Create FormData object
+        //    var fileData = new FormData();
+
+        //    // Looping over all files and add it to FormData object
+        //    for (var i = 0; i < files.length; i++) {
+        //        fileData.append(files[i].name, files[i]);
+        //    }
+
+        //    var LoadNumber = $("#txtLoadNumber");
+
+        //    // Adding one more key to FormData object
+        //    fileData.append('LoaderName', LoadNumber.val());
+
+        //    $.ajax({
+        //        url: '/Load/UploadBrokerConfirmationFiles',
+        //        type: "POST",
+        //        contentType: false, // Not to set any content header
+        //        processData: false, // Not to process data
+        //        data: fileData,
+        //        success: function (result) {
+
+        //            var Documents;
+
+        //            if (result != '1') {
+        //                $("#UploadedDocumentsBroker div ").remove();
+        //                for (var i = 0; i < result.length; i++) {
+        //                    var path = result[i].FilePath;
+        //                    //var filepath = result[i].ImagePath.val();
+        //                    Documents = "<div id='BrokerDocumentsColumn' class='col-md-4'><a target='_blank' class='social-icon text-xs-center' href='" + path + "'><img src='/assets/img/documentation.png'>" + result[i].FileName + "</a> <button type='button' onclick='DeleteBrokerDocument(" + result[i].DocumentId + ")' id='btnRemoveBrokerDocument' class='close' aria-label='Close'><span aria-hidden='true'>&times;</span></button></div>";
+        //                    $('#UploadedDocumentsBroker').append(Documents);
+        //                }
+        //            }
+
+        //        },
+        //        error: function (err) {
+        //            alert(err.statusText);
+        //        }
+        //    });
+        //} else {
+        //    alert("FormData is not supported.");
+        //}
+    });
+    function DeleteBrokerDocument(value) {
+
+        $("#file-upload-Broker").val("");
+        var LoadNumber = $("#txtLoadNumber");
+        $.ajax({
+            url: '/Load/DeleteBrokerDocument?FilePathId=' + value + '&LoadNumber=' + LoadNumber.val() + '',
+            type: "POST",
+            contentType: false, // Not to set any content header
+            processData: false, // Not to process data
+            success: function (result) {
+
+
+                var Documents;
+
+
+                $("#UploadedDocumentsBroker div ").remove();
+                for (var i = 0; i < result.length; i++) {
+
+                    var path = result[i].FilePath;
+                    //var filepath = result[i].ImagePath.val();
+                    Documents = "<div id='BrokerDocumentsColumn' class='col-md-4'><a target='_blank' class='social-icon text-xs-center' href='" + path + "'><img src='/assets/img/documentation.png'>" + result[i].FileName + "</a> <button type='button' onclick='DeleteBrokerDocument(" + result[i].DocumentId + ")' id='btnRemoveBrokerDocument' class='close' aria-label='Close'><span aria-hidden='true'>&times;</span></button></div>";
+
+                    $('#UploadedDocumentsBroker').append(Documents);
+                }
+            },
+            error: function (err) {
+                alert(err.statusText);
+            }
+        });
+    }
+
+
+</script>
+
+@*//Carrier Document Uploading*@
+<script type="text/javascript">
+    //Broker Confirmation Document Uploading
+    //$('#btnUploadCarrier').click(function () {
+
+    $('#file-upload-Carrier').change(function () {
+        document.getElementById("carriergif").style.display = "block";
+        // Checking whether FormData is available in browser
+        if (window.FormData !== undefined) {
+
+
+            var fileUpload = $("#file-upload-Carrier").get(0);
+            var files = fileUpload.files;
+
+            // Create FormData object
+            var fileData = new FormData();
+
+            // Looping over all files and add it to FormData object
+            for (var i = 0; i < files.length; i++) {
+                fileData.append(files[i].name, files[i]);
+            }
+
+            var LoadNumber = $("#txtLoadNumber");
+
+            // Adding one more key to FormData object
+            fileData.append('LoaderName', LoadNumber.val());
+
+            $.ajax({
+                url: '/Load/UploadCarrierConfirmationFiles',
+                type: "POST",
+                contentType: false, // Not to set any content header
+                processData: false, // Not to process data
+                data: fileData,
+                success: function (result) {
+                    document.getElementById("carriergif").style.display = "none";
+                    var Documents;
+
+                    if (result != '1') {
+                        $("#UploadedDocumentsCarrier div ").remove();
+                        for (var i = 0; i < result.length; i++) {
+                            var path = result[i].FilePath;
+                            //var filepath = result[i].ImagePath.val();
+                            Documents = "<div id='CarrierDocumentsColumn' class='col-md-4'><a target='_blank' class='social-icon text-xs-center' href='" + path + "'><img src='/assets/img/documentation.png'>" + result[i].FileName + "</a> <button type='button' onclick='DeleteCarrierDocument(" + result[i].DocumentId + ")' id='btnRemoveCarrierDocument' class='close' aria-label='Close'><span aria-hidden='true'>&times;</span></button></div>";
+                            $('#UploadedDocumentsCarrier').append(Documents);
+                        }
+                    }
+
+                },
+                error: function (err) {
+                    document.getElementById("carriergif").style.display = "none";
+                    alert(err.statusText);
+                }
+            });
+        } else {
+            document.getElementById("carriergif").style.display = "none";
+            alert("FormData is not supported.");
+        }
+    });
+    function DeleteCarrierDocument(value) {
+        $("#file-upload-Broker").val("");
+        var LoadNumber = $("#txtLoadNumber");
+        $.ajax({
+            url: '/Load/DeleteCarrierDocument?FilePathId=' + value + '&LoadNumber=' + LoadNumber.val() + '',
+            type: "POST",
+            contentType: false, // Not to set any content header
+            processData: false, // Not to process data
+            success: function (result) {
+
+
+                var Documents;
+
+
+                $("#UploadedDocumentsCarrier div ").remove();
+                for (var i = 0; i < result.length; i++) {
+
+                    var path = result[i].FilePath;
+                    //var filepath = result[i].ImagePath.val();
+                    Documents = "<div id='CarrierDocumentsColumn' class='col-md-4'><a target='_blank' class='social-icon text-xs-center' href='" + path + "'><img src='/assets/img/documentation.png'>" + result[i].FileName + "</a> <button type='button' onclick='DeleteCarrierDocument(" + result[i].DocumentId + ")' id='btnRemoveCarrierDocument' class='close' aria-label='Close'><span aria-hidden='true'>&times;</span></button></div>";
+
+                    $('#UploadedDocumentsCarrier').append(Documents);
+                }
+            },
+            error: function (err) {
+                alert(err.statusText);
+            }
+        });
+    }
+
+
+</script>
+
+
+
+
+@*//POD Document Uploading*@
+<script type="text/javascript">
+    //Broker Confirmation Document Uploading
+    //$('#btnUploadPOD').click(function () {
+
+
+        $('#file-upload-POD').change(function () {
+            document.getElementById("podgif").style.display = "block";
+        // Checking whether FormData is available in browser
+        if (window.FormData !== undefined) {
+
+
+            var fileUpload = $("#file-upload-POD").get(0);
+            var files = fileUpload.files;
+
+            // Create FormData object
+            var fileData = new FormData();
+
+            // Looping over all files and add it to FormData object
+            for (var i = 0; i < files.length; i++) {
+                fileData.append(files[i].name, files[i]);
+            }
+
+            var LoadNumber = $("#txtLoadNumber");
+
+            // Adding one more key to FormData object
+            fileData.append('LoaderName', LoadNumber.val());
+
+            $.ajax({
+                url: '/Load/UploadPODConfirmationFiles',
+                type: "POST",
+                contentType: false, // Not to set any content header
+                processData: false, // Not to process data
+                data: fileData,
+                success: function (result) {
+
+                    document.getElementById("podgif").style.display = "none";
+                    var Documents;
+
+                    if (result != '1') {
+                        $("#UploadedDocumentsPOD div ").remove();
+                        for (var i = 0; i < result.length; i++) {
+                            var path = result[i].FilePath;
+                            //var filepath = result[i].ImagePath.val();
+                            Documents = "<div id='PODDocumentsColumn' class='col-md-4'><a target='_blank' class='social-icon text-xs-center' href='" + path + "'><img src='/assets/img/documentation.png'>" + result[i].FileName + "</a> <button type='button' onclick='DeletePODDocument(" + result[i].DocumentId + ")' id='btnRemovePODDocument' class='close' aria-label='Close'><span aria-hidden='true'>&times;</span></button></div>";
+                            $('#UploadedDocumentsPOD').append(Documents);
+                        }
+                    }
+                   var link = "@Url.Action("LoadConfirmation", "Load",new{LoaderNumber="load",type="1"})";
+                link = link.replace('load', LoadNumber.val());
+                link = link.replace(/&amp;/g, '&');
+
+                       window.location.href = link;
+                },
+                error: function (err) {
+                    document.getElementById("podgif").style.display = "none";
+                    alert(err.statusText);
+                }
+            });
+        } else {
+            document.getElementById("podgif").style.display = "none";
+            alert("FormData is not supported.");
+        }
+    });
+    function DeletePODDocument(value) {
+
+        $("#file-upload-POD").val("");
+        var LoadNumber = $("#txtLoadNumber");
+        $.ajax({
+            url: '/Load/DeletePODDocument?FilePathId=' + value + '&LoadNumber=' + LoadNumber.val() + '',
+            type: "POST",
+            contentType: false, // Not to set any content header
+            processData: false, // Not to process data
+            success: function (result) {
+
+
+                var Documents;
+
+
+                $("#UploadedDocumentsPOD div ").remove();
+                for (var i = 0; i < result.length; i++) {
+
+                    var path = result[i].FilePath;
+                    //var filepath = result[i].ImagePath.val();
+                    Documents = "<div id='PODDocumentsColumn' class='col-md-4'><a target='_blank' class='social-icon text-xs-center' href='" + path + "'><img src='/assets/img/documentation.png'>" + result[i].FileName + "</a> <button type='button' onclick='DeletePODDocument(" + result[i].DocumentId + ")' id='btnRemovePODDocument' class='close' aria-label='Close'><span aria-hidden='true'>&times;</span></button></div>";
+
+                    $('#UploadedDocumentsPOD').append(Documents);
+                }
+
+                  var link = "@Url.Action("LoadConfirmation", "Load",new{LoaderNumber="load",type="1"})";
+                link = link.replace('load', LoadNumber.val());
+                link = link.replace(/&amp;/g, '&');
+
+                       window.location.href = link;
+            },
+            error: function (err) {
+                alert(err.statusText);
+            }
+        });
+    }
+
+
+</script>
+
+@*//Lumper Document Uploading*@
+<script type="text/javascript">
+    //Broker Confirmation Document Uploading
+    //$('#btnUploadLumper').click(function () {
+
+    $('#file-upload-Lumper').change(function () {
+        document.getElementById("lumpergif").style.display = "block";
+        // Checking whether FormData is available in browser
+        if (window.FormData !== undefined) {
+
+
+            var fileUpload = $("#file-upload-Lumper").get(0);
+            var files = fileUpload.files;
+
+            // Create FormData object
+            var fileData = new FormData();
+
+            // Looping over all files and add it to FormData object
+            for (var i = 0; i < files.length; i++) {
+                fileData.append(files[i].name, files[i]);
+            }
+
+            var LoadNumber = $("#txtLoadNumber");
+
+            // Adding one more key to FormData object
+            fileData.append('LoaderName', LoadNumber.val());
+
+            $.ajax({
+                url: '/Load/UploadLumperConfirmationFiles',
+                type: "POST",
+                contentType: false, // Not to set any content header
+                processData: false, // Not to process data
+                data: fileData,
+                success: function (result) {
+
+                    document.getElementById("lumpergif").style.display = "none";
+                    var Documents;
+
+                    if (result != '1') {
+                        $("#UploadedDocumentsLumper div ").remove();
+                        for (var i = 0; i < result.length; i++) {
+                            var path = result[i].FilePath;
+                            //var filepath = result[i].ImagePath.val();
+                            Documents = "<div id='LumperDocumentsColumn' class='col-md-4'><a target='_blank' class='social-icon text-xs-center' href='" + path + "'><img src='/assets/img/documentation.png'>" + result[i].FileName + "</a> <button type='button' onclick='DeleteLumperDocument(" + result[i].DocumentId + ")' id='btnRemoveLumperDocument' class='close' aria-label='Close'><span aria-hidden='true'>&times;</span></button></div>";
+                            $('#UploadedDocumentsLumper').append(Documents);
+                        }
+                    }
+
+                },
+                error: function (err) {
+                    document.getElementById("lumpergif").style.display = "none";
+                    alert(err.statusText);
+                }
+            });
+        } else {
+            document.getElementById("lumpergif").style.display = "none";
+            alert("FormData is not supported.");
+        }
+    });
+
+    function DeleteLumperDocument(value) {
+        
+
+
+        $("#file-upload-Lumper").val("");
+
+        var LoadNumber = $("#txtLoadNumber");
+        $.ajax({
+            url: '/Load/DeleteLumperDocument?FilePathId=' + value + '&LoadNumber=' + LoadNumber.val() + '',
+            type: "POST",
+            contentType: false, // Not to set any content header
+            processData: false, // Not to process data
+            success: function (result) {
+
+
+                var Documents;
+
+
+                $("#UploadedDocumentsLumper div ").remove();
+                for (var i = 0; i < result.length; i++) {
+
+                    var path = result[i].FilePath;
+                    //var filepath = result[i].ImagePath.val();
+                    Documents = "<div id='LumperDocumentsColumn' class='col-md-4'><a target='_blank' class='social-icon text-xs-center' href='" + path + "'><img src='/assets/img/documentation.png'>" + result[i].FileName + "</a> <button type='button' onclick='DeleteLumperDocument(" + result[i].DocumentId + ")' id='btnRemoveLumperDocument' class='close' aria-label='Close'><span aria-hidden='true'>&times;</span></button></div>";
+
+                    $('#UploadedDocumentsLumper').append(Documents);
+                }
+            },
+            error: function (err) {
+                alert(err.statusText);
+            }
+        });
+    }
+
+
+</script>
+
+<script type="text/javascript">
+    $('#btnCancelCompleteLoad').click(function () {
+
+        var LoadNumber = $("#txtLoadNumber");
+
+
+        $.ajax({
+
+
+            url: '/Load/CancelLoad?LoadNumber=' + LoadNumber.val() + '',
+            type: "POST",
+            contentType: false, // Not to set any content header
+            processData: false, // Not to process data
+            success: function (result) {
+                //Load_Cancellation
+                $('#Load_Cancellation').modal('hide');
+            },
+            error: function (err) {
+                alert(err.statusText);
+            }
+        });
+
+    });
+
+
+    $('#btnConfirmLoad').click(function () {
+
+    var LoadNumber = $("#txtLoadNumber");
+
+
+    $.ajax({
+
+
+        url: '/Load/MarkCodLoad?LoadNumber=' + LoadNumber.val() + '',
+        type: "POST",
+        contentType: false, // Not to set any content header
+        processData: false, // Not to process data
+        success: function (result) {
+            //Load_Cancellation
+            $('#Load_MarkConfirmation').modal('hide');
+        },
+        error: function (err) {
+            alert(err.statusText);
+        }
+    });
+
+    });
+
+    function DeleteDocument(value) {
+
+        $("#file-upload-Broker").val("");
+       
+        var LoaderName = $("#txtLoadNumber").val();
+        $.ajax({
+            url: '/EditLoad/DeleteDocument?FilePathId=' + value + '&LoadNumber=' + LoaderName + '',
+            type: "POST",
+            contentType: false, // Not to set any content header
+            processData: false, // Not to process data
+            success: function (result) {
+
+
+                var Documents;
+
+                $("#UploadedDocumentsBroker div ").remove();
+                for (var i = 0; i < result.length; i++) {
+
+                    var path = result[i].ImagePath;
+                    //var filepath = result[i].ImagePath.val();
+                    Documents = "<div id ='DocumentsColumn' class='col-md-4'><a target = '_blank' class='social-icon text-xs-center' href ='" + path + "' ><img src='/assets/img/documentation.png'>" + result[i].FileName + "</a> <button type='button' onclick='DeleteDocument(" + result[i].FilePathId + ")' id='btnRemoveDocument' class='close' aria-label='Close'><span aria-hidden='true'>&times;</span></button></div>";
+
+                    $('#UploadedDocumentsBroker').append(Documents);
+                }
+            },
+            error: function (err) {
+                alert(err.statusText);
+            }
+        });
+    }
+
+</script>

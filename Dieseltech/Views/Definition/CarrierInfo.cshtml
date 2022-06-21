@@ -1,0 +1,4304 @@
+﻿@using Dieseltech.Models;
+
+@{
+    ViewBag.Title = "Carrier Info";
+}
+
+@{
+
+    List<tblTruck> ListTruck = (List<tblTruck>)ViewBag.TruckDetails;
+
+    //List<tblLoadDocument> ListLoadDocument = (List<tblLoadDocument>)ViewBag.CarrierDocuments;
+
+    List<tblCarrier> ListCarrier = (List<tblCarrier>)ViewBag.CarrierDetials;
+    List<tblCarrier> AllListCarrier = (List<tblCarrier>)ViewBag.AllCarrierDetials;
+
+
+}
+<head>
+
+
+    <style>
+
+        .ui-autocomplete {
+            max-height: 200px;
+            overflow-y: auto;
+            /* prevent horizontal scrollbar */
+            overflow-x: hidden;
+            /* add padding to account for vertical scrollbar */
+            padding-right: 20px;
+        }
+
+        .nav-tabs.nav-tabs-solid > li > a.active, .nav-tabs.nav-tabs-solid > li > a.active:hover, .nav-tabs.nav-tabs-solid > li > a.active:focus {
+            background-color: #009efb;
+            border-color: #009efb;
+        }
+
+        /*  th {
+                    background-color: white;
+                    color: white;
+                }
+        */
+
+        .select2-container {
+            width: 100% !important;
+        }
+
+        #txtCarrierListSearch {
+            background-image: url('../../assets/img/searchicon.png');
+            background-position: 10px 10px;
+            background-repeat: no-repeat;
+            width: 100%;
+            font-size: 16px;
+            padding: 24px 20px 12px 40px;
+            border: 1px solid #ddd;
+            margin-bottom: 12px;
+        }
+
+        #tblCarriernfo {
+            padding: 15px;
+        }
+
+        .checked {
+            color: orange !important;
+        }
+
+        .unchecked {
+            color: black !important;
+        }
+    </style>
+</head>
+
+
+<div class="content">
+    <input id="RatingStar" hidden />
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card-box">
+                <div>
+
+
+
+                    @using (Html.BeginForm("SaveCarrierInformation", "Definition", FormMethod.Post, new
+                    {
+                        enctype = "multipart/form-data"
+                    }))
+                    {
+                        @Html.AntiForgeryToken()
+                    <form>
+
+
+                        @{string CarrierName = "";}
+                        @{string ContactName = "";}
+                        @{string Phonenumber = "";}
+                        @{string ContactName2 = "";}
+                        @{string Phonenumber2 = "";}
+                        @{string Email = "";}
+                        @{string MC_ = "";}
+                        @{Int32 CarrierCategoryId = 0;}
+                        @{Int32 OwnerOperator = 0;}
+                        @{bool IsOwnerOperator = false;}
+                        @{bool Isquickpay = false;}
+                        @{bool Isblacklist = false;}
+                        @{bool Istrailerinterchange = false;}
+                        @{double quickpaypercentage = 3;}
+                        @{DateTime InsuranceExpirationDate = DateTime.Now;}
+
+
+
+                        @if (ListCarrier != null && ListCarrier.Count != 0)
+                        {
+                            CarrierName = ListCarrier[0].CarrierName;
+                            ContactName = ListCarrier[0].ContactName;
+                            Phonenumber = ListCarrier[0].Phonenumber;
+                            ContactName2 = ListCarrier[0].ContactName2;
+                            Phonenumber2 = ListCarrier[0].Phonenumber2;
+                            Email = ListCarrier[0].Email;
+                            MC_ = ListCarrier[0].MC_;
+                            CarrierCategoryId = Convert.ToInt32(ListCarrier[0].CarrierCategoryId);
+                            CarrierCategoryId = Convert.ToInt32(ListCarrier[0].CarrierCategoryId);
+                            if (Convert.ToInt32(ListCarrier[0].IsOwnerOperator) == 1)
+                            {
+                                IsOwnerOperator = true;
+                            }
+                            else
+                            {
+                                IsOwnerOperator = false;
+                            }
+
+                            if (Convert.ToInt32(ListCarrier[0].IsQuickPay) == 1)
+                            {
+                                Isquickpay = true;
+                            }
+                            else
+                            {
+                                Isquickpay = false;
+                            }
+
+                            if (Convert.ToInt32(ListCarrier[0].IsBlackList) == 1)
+                            {
+                                Isblacklist = true;
+                            }
+                            else
+                            {
+                                Isblacklist = false;
+                            }
+
+                            if (Convert.ToInt32(ListCarrier[0].Istrailerinterchange) == 1)
+                            {
+                                Istrailerinterchange = true;
+                            }
+                            else
+                            {
+                                Istrailerinterchange = false;
+                            }
+
+
+                            quickpaypercentage = ListCarrier[0].Quickpaypercentage;
+
+                            InsuranceExpirationDate = Convert.ToDateTime(ListCarrier[0].InsuranceExpirationDate);
+                        }
+                        else if (ListCarrier == null || ListCarrier.Count == 0)
+                        {
+                            CarrierName = "";
+                            ContactName = "";
+                            Phonenumber = "";
+                            MC_ = "";
+                            Email = "";
+                            CarrierCategoryId = 0;
+                            IsOwnerOperator = false;
+                            Isquickpay = false;
+                            Isblacklist = false;
+                        }
+
+                        <div class="row" id="CarrierInformationSection">
+                            <div class="col-md-12">
+                                <div class="card-box shadow-none p-3  bg-light rounded">
+                                    <h4 class="card-title">
+                                        Carrier Information
+                                        <small id="lblCarrierName"></small>
+                                        &nbsp;
+                                        <a onclick="GetAllCarrierList()" style="background-color: #4c5564 !important" class="btn btn-primary"><i class="fa fa-address-card-o"></i> &nbsp; All Carriers</a>
+
+                                        <a onclick="ClearAllData()" id="NewCarrier" style="font-size: 10px;background-color: #4c5564 !important;float:right" class="btn btn-primary"><i class="fa fa-plus"></i> &nbsp; Add New Carrier</a>
+                                        <label id="lblCarrierSaveMessage" style="display:none;border-color:#c3e6cb; float:right;background-color: #d4edda;color: #155724;padding: 5px;margin-right:10px"> Carrier Information Updated</label> &nbsp;
+
+                                    </h4>
+
+
+                                    @*<a onclick="CarrierDataValidation()" class="btn btn-primary"><i class="fa fa-plus"></i> &nbsp; New </a>*@
+                                    <hr />
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-3">
+
+                                            </div>
+
+                                        </div>
+                                        <div class="row">
+
+                                            <div class="col-md-2">
+                                                <label>Assign ID</label>
+                                                <input type="text" value="@ViewBag.CarrierAssignID" id="txtAssignId" name="CarrierAssignId" readonly class="form-control" required="">
+
+                                            </div>
+                                            <div class="col-md-4">
+                                                <small id="lblCarrier" style="color: red; display: none;">* Select Carrier</small>
+                                                <label>
+                                                    Carrier Name  <small>* (Search By Type Name, AssignID, MC# )</small>
+                                                    @*<a  data-toggle="modal" data-target="#Show_Carrier" id="btnShowCarrierList" class="btn btn-sm btn-outline-secondary btn-square"><i class="fa fa-check"></i> Choose Existing</a>*@
+
+                                                </label>
+                                                <input type="text" id="txtCarrierName" value="@CarrierName" name="CarrierName" class="form-control" required="">
+                                            </div>
+
+                                            <div class="col-md-3">
+                                                <label>Contact Name <small id="lblContactName" style="color: red; display: none;"> Enter Contact Name </small></label>
+                                                <input type="text" id="txtContactName" value="@ContactName" name="ContactName" class="form-control" required="">
+                                            </div>
+
+                                            <div class="col-md-3">
+                                                <label>Phone Number <small id="lblPhoneNuber" style="color: red; display: none;"> Enter Phone Number </small></label>
+                                                <input type="text" id="txtPhoneNumber" value="@Phonenumber" name="PhoneNumber" class="form-control" required="">
+                                            </div>
+
+
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <label>Contact Name 2 <small id="lblContactName2" style="color: red; display: none;"> Enter Contact Name </small></label>
+                                                <input type="text" id="txtContactName2" value="@ContactName2" name="ContactName2" class="form-control">
+                                            </div>
+
+                                            <div class="col-md-3">
+                                                <label>Phone Number 2  <small id="lblPhoneNuber2" style="color: red; display: none;"> Enter Phone Number </small></label>
+                                                <input type="text" id="txtPhoneNumber2" value="@Phonenumber2" name="PhoneNumber2" class="form-control">
+                                            </div>
+
+                                            <div class="col-md-3">
+                                                <label>MC # <small id="lblMCNumber" style="color: red; display: none;"> Enter MC Number </small></label>
+                                                <input type="text" id="txtMCNumber" value="@MC_" name="ModernCarrier" class="form-control" required="">
+
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label>Email <small id="lblEmailNuber" style="color: red; display: none;"> Enter Email</small></label>
+                                                <input type="Email" id="txtCarrierEmail" value="@Email" name="Email" class="form-control">
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form-group">
+                                        <div class="row">
+
+                                            <div class="col-md-3">
+
+
+                                                <label>MC Authortiy <i class="fa fa-upload" aria-hidden="true"></i></label>
+                                                @*<input id="MCAuthorityDocument" name="MCAuthorityDocument"
+                                class="file" type="file" data-upload-url="/Definition/CarrierDocumentUpload">*@
+
+                                                <div class="input-group">
+                                                    <div class="custom-file">
+                                                        <input class="custom-file-input" id="MCAuthorityDocument" type="file"
+                                                               multiple="multiple" name="files"
+                                                               aria-describedby="inputGroupFileAddon01">
+                                                        <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+                                                    </div>
+                                                </div>
+
+
+
+                                                @*<input id="file-upload" type="file" class="file" data-upload-url="Load/UploadFiles/?LoaderName=@LoaderNumber"
+                                multiple="multiple" name="files">*@
+
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label>W9 <i class="fa fa-upload" aria-hidden="true"></i></label>
+                                                @*<input id="W9Document" name="W9Document" class="file" type="file" data-upload-url="/Definition/CarrierDocumentUpload">*@
+
+                                                <div class="input-group">
+                                                    <div class="custom-file">
+                                                        <input class="custom-file-input" id="W9Document" type="file"
+                                                               multiple="multiple" name="files"
+                                                               aria-describedby="inputGroupFileAddon01">
+                                                        <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+                                                    </div>
+                                                </div>
+
+
+
+
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label>Insurance <i class="fa fa-upload" aria-hidden="true"></i></label>
+                                                @*<input id="InsuranceDocument" name="InsuranceDocument" class="form-control" type="file" data-upload-url="/Definition/CarrierDocumentUpload">*@
+                                                <div class="input-group">
+                                                    <div class="custom-file">
+                                                        <input class="custom-file-input" id="InsuranceDocument" type="file"
+                                                               multiple="multiple" name="files"
+                                                               aria-describedby="inputGroupFileAddon01">
+                                                        <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="row">
+
+
+
+
+                                            @if (ViewBag.CarrierDocuments.Count > 0)
+                                            {
+                                                foreach (var item in ViewBag.CarrierDocuments)
+                                                {
+
+
+                                                    if (@item.IsMcAuthorityUploaded == 1)
+                                                    {
+                                                        <div class="col-md-3" id="McAuthorityDocumentdiv">
+                                                            <div id='DocumentsColumn' style="background-color:@Session["Color"] !important;padding:7px !important">
+                                                                <a style="color:white !important" target='_blank' class='social-icon text-xs-center' href="@item.McAuthorityFilePath">
+                                                                    <i class="fa fa-file"></i> @item.McAuthorityFileName
+                                                                </a>
+                                                                <button style="color:white !important" type="button" onclick="DeleteDocument('@item.CarrierAssignId','MC')" id="btnRemoveDocument" class="close" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                                            </div>
+
+                                                        </div>
+                                                    }
+                                                    else
+                                                    {
+                                                        <div class="col-md-3" id="McAuthorityDocumentdiv">
+
+                                                            <div></div>
+                                                        </div>
+                                                    }
+
+
+
+
+                                                }
+
+                                            }
+                                            else if (@ViewBag.CarrierDocuments.Count == 0)
+                                            {
+                                                <div class="col-md-3" id="McAuthorityDocumentdiv">
+
+                                                    <div></div>
+                                                </div>
+                                            }
+
+
+
+
+
+
+
+
+
+
+                                            @*<div class="col-md-3" id="W9DocumentExisting">
+                                @foreach (var item in ViewBag.CarrierDocuments)
+                                {
+
+                                    if (@item.IsW9Uploaded == 1)
+                                    {
+                                        <div id='DocumentsColumn' style="background-color:blue !important;padding:7px !important">
+                                            <a style="color:white !important" target='_blank' class='social-icon text-xs-center' href="@item.W9FilePath">
+                                                <i class="fa fa-file"></i> @item.W9FileName
+                                            </a>
+                                            <button style="color:white !important" type="button" onclick="DeleteDocument(4016)" id="btnRemoveDocument" class="close" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                        </div>
+                                    }
+
+                                }
+
+                            </div>*@
+
+
+                                            @if (ViewBag.CarrierDocuments.Count > 0)
+                                            {
+                                                foreach (var item in ViewBag.CarrierDocuments)
+                                                {
+
+
+                                                    if (@item.IsW9Uploaded == 1)
+                                                    {
+                                                        <div class="col-md-3" id="W9DocumentExisting">
+                                                            <div id='DocumentsColumn' style="background-color:@Session["Color"] !important;padding:7px !important">
+                                                                <a style="color:white !important" target='_blank' class='social-icon text-xs-center' href="@item.W9FilePath">
+                                                                    <i class="fa fa-file"></i> @item.W9FileName
+                                                                </a>
+                                                                <button style="color:white !important" type="button" onclick="DeleteDocument('@item.CarrierAssignId','W9')" id="btnRemoveDocument" class="close" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                                            </div>
+
+                                                        </div>
+                                                    }
+                                                    else
+                                                    {
+                                                        <div class="col-md-3" id="W9DocumentExisting">
+                                                            <div></div>
+                                                        </div>
+                                                    }
+
+
+
+
+                                                }
+
+                                            }
+                                            else if (@ViewBag.CarrierDocuments.Count == 0)
+                                            {
+                                                <div class="col-md-3" id="W9DocumentExisting">
+                                                    <div></div>
+                                                </div>
+                                            }
+
+
+
+
+
+
+
+
+                                            @*<div class="col-md-3" id="InsuranceFileNameDocument">
+                                @foreach (var item in ViewBag.CarrierDocuments)
+                                {
+
+                                    if (@item.IsInsuranceUploaded == 1)
+                                    {
+                                        <div id='DocumentsColumn' style="background-color:blue !important;padding:7px !important">
+                                            <a style="color:white !important" target='_blank' class='social-icon text-xs-center' href="@item.InsuranceFilePath">
+                                                <i class="fa fa-file"></i> @item.InsuranceFileName
+                                            </a>
+                                            <button style="color:white !important" type="button" onclick="DeleteDocument(4016)" id="btnRemoveDocument" class="close" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                        </div>
+                                    }
+
+                                }
+
+                            </div>*@
+
+
+
+                                            @if (ViewBag.CarrierDocuments.Count > 0)
+                                            {
+                                                foreach (var item in ViewBag.CarrierDocuments)
+                                                {
+
+
+                                                    if (@item.IsInsuranceUploaded == 1)
+                                                    {
+                                                        <div class="col-md-3" id="InsuranceFileNameDocument">
+                                                            <div id='DocumentsColumn' style="background-color:@Session["Color"] !important;padding:7px !important">
+                                                                <a style="color:white !important" target='_blank' class='social-icon text-xs-center' href="@item.InsuranceFilePath">
+                                                                    <i class="fa fa-file"></i> @item.InsuranceFileName
+                                                                </a>
+                                                                <button style="color:white !important" type="button" onclick="DeleteDocument('@item.CarrierAssignId','IN')" id="btnRemoveDocument" class="close" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                                            </div>
+
+                                                        </div>
+                                                    }
+
+                                                    else
+                                                    {
+                                                        <div class="col-md-3" id="InsuranceFileNameDocument">
+                                                            <div></div>
+                                                        </div>
+                                                    }
+
+
+                                                }
+
+                                            }
+                                            else if (@ViewBag.CarrierDocuments.Count == 0)
+                                            {
+                                                <div class="col-md-3" id="InsuranceFileNameDocument">
+                                                    <div></div>
+                                                </div>
+                                            }
+
+
+                                        </div>
+                                    </div>
+
+
+                                    @* Start New Document (Notice Assignment and void cheque)*@
+
+                                    <div class="form-group">
+                                        <div class="row">
+
+                                            <div class="col-md-4">
+
+
+                                                <label>Notice Of Assignment <i class="fa fa-upload" aria-hidden="true"></i></label>
+
+                                                <div class="input-group">
+                                                    <div class="custom-file">
+                                                        <input class="custom-file-input" id="AssignmentNoticeDocument" type="file"
+                                                               multiple="multiple" name="files"
+                                                               aria-describedby="inputGroupFileAddon01">
+                                                        <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+                                                    </div>
+                                                </div>
+
+
+
+                                                @*<input id="file-upload" type="file" class="file" data-upload-url="Load/UploadFiles/?LoaderName=@LoaderNumber"
+                                multiple="multiple" name="files">*@
+
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label>Void cheque for account information  <i class="fa fa-upload" aria-hidden="true"></i></label>
+                                                @*<input id="W9Document" name="W9Document" class="file" type="file" data-upload-url="/Definition/CarrierDocumentUpload">*@
+
+                                                <div class="input-group">
+                                                    <div class="custom-file">
+                                                        <input class="custom-file-input" id="VoidedChequeDocument" type="file"
+                                                               multiple="multiple" name="files"
+                                                               aria-describedby="inputGroupFileAddon01">
+                                                        <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+                                                    </div>
+                                                </div>
+
+
+
+
+                                            </div>
+
+
+
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="row">
+
+                                            @*<div class="col-md-4" id="NoticeAssignmentDocument">
+
+
+                                @foreach (var item in ViewBag.CarrierDocuments)
+                                {
+
+                                    if (@item.IsNoticeOfAssignment == 1)
+                                    {
+                                        <div id='DocumentsColumn' style="background-color:blue !important;padding:7px !important">
+                                            <a style="color:white !important" target='_blank' class='social-icon text-xs-center' href="@item.AssignmentFilePath">
+                                                <i class="fa fa-file"></i> @item.AssignmentFileName
+                                            </a>
+                                            <button style="color:white !important" type="button" onclick="DeleteDocument(4016)" id="btnRemoveDocument" class="close" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                        </div>
+                                    }
+
+                                }
+
+
+
+                            </div>*@
+
+
+                                            @if (ViewBag.CarrierDocuments.Count > 0)
+                                            {
+                                                foreach (var item in ViewBag.CarrierDocuments)
+                                                {
+
+
+                                                    if (@item.IsNoticeOfAssignment == 1)
+                                                    {
+                                                        <div class="col-md-4" id="NoticeAssignmentDocument">
+                                                            <div id='DocumentsColumn' style="background-color:@Session["Color"] !important;padding:7px !important">
+                                                                <a style="color:white !important" target='_blank' class='social-icon text-xs-center' href="@item.AssignmentFilePath">
+                                                                    <i class="fa fa-file"></i> @item.AssignmentFileName
+                                                                </a>
+                                                                <button style="color:white !important" type="button" onclick="DeleteDocument('@item.CarrierAssignId','NA')" id="btnRemoveDocument" class="close" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                                            </div>
+
+                                                        </div>
+                                                    }
+                                                    else
+                                                    {
+                                                        <div class="col-md-4" id="NoticeAssignmentDocument">
+                                                            <div></div>
+                                                        </div>
+                                                    }
+
+
+
+                                                }
+
+                                            }
+                                            else if (@ViewBag.CarrierDocuments.Count == 0)
+                                            {
+                                                <div class="col-md-4" id="NoticeAssignmentDocument">
+                                                    <div></div>
+                                                </div>
+                                            }
+
+
+
+
+                                            @*<div class="col-md-4" id="VoidedChequedocumentdiv">
+                                @foreach (var item in ViewBag.CarrierDocuments)
+                                {
+
+                                    if (@item.IsW9Uploaded == 1)
+                                    {
+                                        <div id='DocumentsColumn' style="background-color:blue !important;padding:7px !important">
+                                            <a style="color:white !important" target='_blank' class='social-icon text-xs-center' href="@item.W9FilePath">
+                                                <i class="fa fa-file"></i> @item.W9FileName
+                                            </a>
+                                            <button style="color:white !important" type="button" onclick="DeleteDocument(4016)" id="btnRemoveDocument" class="close" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                        </div>
+                                    }
+
+                                }
+
+                            </div>*@
+
+
+
+                                            @if (ViewBag.CarrierDocuments.Count > 0)
+                                            {
+                                                foreach (var item in ViewBag.CarrierDocuments)
+                                                {
+
+
+                                                    if (@item.IsVoidCheque == 1)
+                                                    {
+                                                        <div class="col-md-4" id="VoidedChequedocumentdiv">
+                                                            <div id='DocumentsColumn' style="background-color:@Session["Color"] !important;padding:7px !important">
+                                                                <a style="color:white !important" target='_blank' class='social-icon text-xs-center' href="@item.VoidChequeFilePath">
+                                                                    <i class="fa fa-file"></i> @item.VoidChequeFileName
+                                                                </a>
+                                                                <button style="color:white !important" type="button" onclick="DeleteDocument('@item.CarrierAssignId','VC')" id="btnRemoveDocument" class="close" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                                            </div>
+
+                                                        </div>
+                                                    }
+
+                                                    else
+                                                    {
+                                                        <div class="col-md-4" id="VoidedChequedocumentdiv">
+                                                            <div></div>
+                                                        </div>
+                                                    }
+
+
+                                                }
+
+                                            }
+                                            else if (@ViewBag.CarrierDocuments.Count == 0)
+                                            {
+                                                <div class="col-md-4" id="VoidedChequedocumentdiv">
+                                                    <div></div>
+                                                </div>
+                                            }
+
+
+
+                                        </div>
+                                    </div>
+
+
+                                    @* End New Document (Notice Assignment and void cheque)*@
+
+
+
+
+
+                                    <div class="form-group">
+                                        <div class="row">
+
+
+                                            <div class="col-md-2">
+                                                <label>Carrier Category <small id="lblCategoryError" style="color: red; display: none;"> Select Carrier Category </small></label>
+                                                <select id="CategoryId" required name="CategoryId" class="form-control js-example-basic-single">
+                                                    <option value="0">Select Category </option>
+                                                    @foreach (var item in ViewBag.CarrierCategory)
+                                                    {
+                                                        <text>
+                                                            <option value="@item.Value">@item.Text</option>
+
+                                                        </text>
+                                                    }
+                                                </select>
+
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label>Insurance Expiration Date  &nbsp;&nbsp;<i class="fa fa-calendar" aria-hidden="true"></i></label> <br />
+                                                <input id="txtInsuranceExpirtationDate" type="date" value="@InsuranceExpirationDate.ToString("yyyy-MM-dd")" name="InsuranceExpirationDate" class="form-control" required>
+
+                                                @*<input style="width:70% !important;min-height: 38px !important;" id="txtInsuranceExpirtationDate" type="date" value="" name="InsuranceExpirationDate" class="form-control" required>*@
+
+
+
+                                            </div>
+                                            <div class="col-md-2">
+                                                <label>Owner Operator <i class="fa fa-male" aria-hidden="true"></i></label> <br />
+                                                Owner Operator
+
+                                                @if (Isquickpay == true)
+                                                {
+                                                    <input checked id="chkIsOwnerOperator" name="OwnerOperator" style="font-size:15px !important" type="checkbox" />
+                                                }
+                                                else
+                                                {
+                                                    <input id="chkIsOwnerOperator" name="OwnerOperator" style="font-size:15px !important" type="checkbox" />
+                                                }
+
+
+
+
+                                            </div>
+
+
+                                            <div class="col-md-2">
+                                                <label>Quick Pay  <i class="fa fa-check-circle" aria-hidden="true"></i></label> <br />
+                                                Quick Pay  <input onclick="fniaquickpay()" id="chkIsQuickPay" name="IsQuickPay" style="font-size:15px !important"
+                                                                  type="checkbox" />
+                                                @if (Isquickpay == true)
+                                                {
+                                                    <input value="@quickpaypercentage" id="Quickpaypercentage" name="Quickpaypercentage" style="font-size:15px !important;width:40%"
+                                                           type="text" />
+                                                }
+                                                else
+                                                {
+                                                    <input value="@quickpaypercentage" disabled readonly id="Quickpaypercentage" name="Quickpaypercentage" style="font-size:15px !important;width:40%"
+                                                           type="text" />
+                                                }
+
+
+
+                                            </div>
+
+
+                                            <div class="col-md-2">
+                                                <label>Black List  <i class="fa fa-close" aria-hidden="true"></i></label> <br />
+                                                Black List
+
+                                                @if (Isblacklist == true)
+                                                {
+                                                    <input id="chkIsBlackList" name="IsBlackList" style="font-size:15px !important" type="checkbox" checked />
+                                                }
+                                                else
+                                                {
+                                                    <input id="chkIsBlackList" name="IsBlackList" style="font-size:15px !important" type="checkbox" />
+                                                }
+
+                                            </div>
+                                        </div>
+
+                                        <br />
+                                        <div class="row">
+                                            <div class="col-md-2">
+                                                <label>Trailer-Interchange  <i class="fa fa-exchange" aria-hidden="true"></i></label> <br />
+                                                Trailer-Interchange
+
+                                                @if (Istrailerinterchange == true)
+                                                {
+                                                    <input id="chkIstrailerinterchange" name="Istrailerinterchange" style="font-size:15px !important" type="checkbox" checked />
+                                                }
+                                                else
+                                                {
+                                                    <input id="chkIstrailerinterchange" name="Istrailerinterchange" style="font-size:15px !important" type="checkbox" />
+                                                }
+
+                                            </div>
+
+                                            <div class="col-md-2" id="deletediv" style="display:none">
+                                                <label> </label>
+                                                <a  style="background-color:red !important"  class ="btn btn-danger" onclick="deletecarrier()">Delete Carrier</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-md-12">
+
+                                <div class="table-responsive">
+                                    @*<table class="table table-border table-striped custom-table  g-dataTable mb-0">*@
+                                    <h4 class="card-title">
+                                        Truck Information
+                                        <a style="background-color: #4c5564 !important" onclick="CarrierDataValidation()" class="btn btn-primary"><i class="fa fa-plus"></i> &nbsp; Add Truck</a>
+                                        @*<a style="background-color: #4c5564 !important"  data-toggle="modal" data-target="#Add_Driver" class="btn btn-primary"><i class="fa fa-plus"></i> &nbsp; Add Driver</a>*@
+
+                                        @*<a onclick="CarrierDataValidation()" data-toggle="modal" data-target="#Add_Truck" class="btn btn-primary"><i class="fa fa-plus"></i> &nbsp; Add Truck</a>*@
+
+                                    </h4>
+                                    <table name="tblTruckList" style="font-size:12px;width:100%" class="table table-condensed table-fit table-sm table-striped tblTruck    mb-0" id="tblTruckInfo">
+
+                                        <thead>
+
+                                            <tr>
+                                                <th>Truck Id</th>
+                                                <th>Carrier Assign Id</th>
+                                                <th>Carrier Name</th>
+                                                <th>Truck Number</th>
+                                                <th>Truck Yard</th>
+                                                <th>Preferred Destination</th>
+                                                <th>Trailer No</th>
+                                                <th hidden>Trailer Type Id</th>
+                                                <th hidden>Trailer Type</th>
+                                                <th>Zip Code</th>
+                                                <th hidden>States</th>
+                                                <th hidden>City</th>
+                                                <th>Available Date</th>
+                                                <th hidden>Driver Id</th>
+                                                <th hidden>Driver Name</th>
+                                                <th hidden>Driver Phone</th>
+
+
+
+                                                <th hidden class="text-right">Edit</th>
+                                                <th hidden class="text-right">Delete</th>
+
+                                            </tr>
+                                        </thead>
+                                        <tbody id="truckBody">
+                                            @foreach (var item in ListTruck)
+                                            {
+                                                <tr>
+                                                    <td class="MC">  @item.TruckId</td>
+                                                    <td class="MC">  @item.CarrierAssignId </td>
+                                                    <td class="MC">  @item.CarrierAssignId </td>
+                                                    <td class="MC">  @item.TruckNo </td>
+                                                    <td class="ContactName">  @item.TruckYard </td>
+                                                    <td class="ContactName">  @item.PrefferedDestination </td>
+                                                    <td class="PhoneNumber">  @item.TrailerNo </td>
+                                                    <td class="PhoneNumber" hidden>  @item.TrailerTypeId </td>
+                                                    <td class="PhoneNumber" hidden>  @item.TrailerTypeId </td>
+                                                    <td class="PhoneNumber">  @item.ZipCode </td>
+                                                    <td class="PhoneNumber" hidden>  @item.ZipCode </td>
+                                                    <td class="PhoneNumber" hidden>  @item.ZipCode </td>
+                                                    <td class="PhoneNumber">  @item.AvailableDate.ToString("MM/dd/yyyy") </td>
+                                                    <td class="PhoneNumber" hidden>  @item.DriverId </td>
+                                                    <td class="PhoneNumber" hidden>  @item.DriverName </td>
+                                                    <td class="PhoneNumber" hidden>  @item.DriverPhone </td>
+
+                                                    <td hidden> <a id="remove" class="open-AddBookDialog" href="#" data-toggle="modal" data-target="#Edit_Carrier"><i class="remove fa fa-pencil m-r-5"></i> </a></td>
+                                                    <td hidden> <a id="remove" class="open-AddBookDialog" style="color:red;" href="#" data-toggle="modal" data-target="#Delete_Carrier"><i class="remove fa fa-trash-o m-r-5"></i> </a></td>
+                                                    @*<td class="text-right">
+                                        <a id="remove" class="open-AddBookDialog" href="#" data-toggle="modal" data-target="#Edit_Carrier"><i class="remove fa fa-pencil m-r-5"></i> </a>
+                                        <a id="remove" class="open-AddBookDialog" style="color:red;" href="#" data-toggle="modal" data-target="#Delete_Carrier"><i class="remove fa fa-trash-o m-r-5"></i> </a>
+
+                                    </td>*@
+
+                                                </tr>
+                                            }
+
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-md-12 text-right">
+                                <button type="submit" style="background-color: #4c5564 !important" id="btnSaveCarrierInformation" class="btn btn-primary">Save</button>
+
+                                @*<button type="button" onClick="window.location.reload()" style="background-color:red !important" class="btn btn-danger">Cancel</button>*@
+                                @*<a type="button" onClick="window.location.reload()" style="background-color:red !important" class="btn btn-danger">Cancel</a>*@
+                                <a style="background-color:red !important" class="btn btn-danger" href="@Url.Action("CarrierInfo", "Definition", new { CarrierAssignsId = "0" })">Cancel</a>
+
+
+                            </div>
+                        </div>
+
+
+
+                        <br />
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <h4 class="card-title">
+                                            <i class="fa fa-address-card-o"></i> Carriers List
+                                            &nbsp; &nbsp;
+
+                                            <label style="color:orange" class="radio-inline">
+                                                <input onclick="FilterCarrierList(1)" type="radio" name="optradio"> Inside Carrier
+                                            </label>
+                                            &nbsp;
+                                            <label style="color:brown" class="radio-inline">
+                                                <input onclick="FilterCarrierList(2)" type="radio" name="optradio"> Outside Carrier
+                                            </label>
+                                            &nbsp;
+                                            <label style="        color: #4c5564" class="radio-inline">
+                                                <input checked onclick="FilterCarrierList(0)" type="radio" name="optradio"> Both
+                                            </label>
+                                            @*<i class="fa fa-circle" style="color:orange" aria-hidden="true"> Inside Carrier</i>   &nbsp;
+                            <i class="fa fa-circle" style="color:brown" aria-hidden="true"> Outside Carrier</i>*@
+
+                                            &nbsp;  &nbsp;
+                                            <label style="        color: #4c5564" class="radio-inline">
+                                                <input id="blacklistfilter" onclick="FilterCarrierList(0)" type="checkbox"> Black List
+                                            </label>
+
+                                            &nbsp;  &nbsp;
+                                            <label style="        color: #4c5564" class="radio-inline">
+                                                <input id="OwnerOperatorfilter" onclick="FilterCarrierList(0)" type="checkbox"> Owner Operator
+                                            </label>
+
+                                        </h4>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input placeholder="Search" type="text" id="txtCarrierListSearch" value="" name="CarrierSearch" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="table-responsive">
+                                    @*<table class="table table-border table-striped custom-table  g-dataTable mb-0">*@
+
+
+
+                                    @*<table style="font-size:12px" id="DailyLoads" class="table table-border table-striped table-sm custom-table mb-0 g-dataTable">*@
+                                    <table name="tblCarrierList" style="font-size:12px;width:100%" class="table table-condensed table-fit table-sm table-striped tblCarrierList mb-0 " id="tblCarriernfo">
+
+                                        <thead>
+
+                                            <tr>
+                                                <th></th>
+                                                <th>Assign Id</th>
+                                                <th>Name</th>
+                                                <th>Rating</th>
+                                                <th>Category</th>
+                                                <th>Email</th>
+                                                <th>MC #</th>
+                                                <th>Contact Name</th>
+                                                <th>Phone</th>
+                                                <th>Truck No</th>
+
+                                                <th>Truck Yard</th>
+                                                <th>Zip Code</th>
+                                                <th>State Code</th>
+                                                <th>Driver Name</th>
+                                                <th>Driver Phone</th>
+                                                <th>Black List</th>
+                                                @*<th>Truck Yard</th>
+                                <th>Trailer No</th>
+                                <th hidden>Trailer Type Id</th>
+                                <th hidden>Trailer Type</th>
+                                <th>Zip Code</th>
+                                <th hidden>States</th>
+                                <th hidden>City</th>
+                                <th>Available Date</th>
+                                <th hidden>Driver Id</th>
+                                <th hidden>Driver Name</th>
+                                <th hidden>Driver Phone</th>
+
+
+
+                                <th hidden class="text-right">Edit</th>
+                                <th hidden class="text-right">Delete</th>*@
+
+                                            </tr>
+                                        </thead>
+                                        <tbody id="truckBody">
+                                            @foreach (var item in AllListCarrier)
+                                            {
+                                                <tr>
+                                                    <td class="MC">  @item.AssignID </td>
+                                                    <td class="MC">  @item.AssignID </td>
+                                                    <td class="MC">  @item.AssignID </td>
+                                                    <td class="MC" onclick="ShowCommentRating('@item.AssignID',0)">
+
+                                                        @for (int i = 1; i <= 10; i++)
+                                                        {
+                                                            if (i <= @item.Rating)
+                                                            {
+                                                                <a style="font-size:8px"><span class="fa fa-star checked"></span></a>
+                                                            }
+                                                            else if (i > @item.Rating && i <= 10)
+                                                            {
+                                                                <a style="font-size:8px"><span class="fa fa-star unchecked"></span></a>
+                                                            }
+                                                            //value = i;
+
+                                                        }
+                                                    </td>
+
+                                                    <td class="MC">  @item.AssignID </td>
+                                                    @*@*<td class="ContactName">  @item.TruckYard </td>
+                                    <td class="PhoneNumber">  @item.TrailerNo </td>
+                                    <td class="PhoneNumber" hidden>  @item.TrailerTypeId </td>
+                                    <td class="PhoneNumber" hidden>  @item.TrailerTypeId </td>
+                                    <td class="PhoneNumber">  @item.ZipCode </td>
+                                    <td class="PhoneNumber" hidden>  @item.ZipCode </td>
+                                    <td class="PhoneNumber" hidden>  @item.ZipCode </td>
+                                    <td class="PhoneNumber">  @item.AvailableDate </td>
+                                    <td class="PhoneNumber" hidden>  @item.DriverId </td>
+                                    <td class="PhoneNumber" hidden>  @item.DriverName </td>
+                                    <td class="PhoneNumber" hidden>  @item.DriverPhone </td>*@
+
+
+                                                </tr>
+                                            }
+
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                    </form>
+
+
+                    }
+
+                </div>
+
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<div id="Add_Truck" class="modal fade delete-modal" role="dialog">
+    <div class="modal-dialog ">
+        @using (Html.BeginForm("SaveCarrierInformation", "Definition", FormMethod.Post, new
+        {
+            enctype = "multipart/form-data"
+        }))
+        {@Html.AntiForgeryToken()
+
+
+        <div class="modal-content">
+            <!--Header-->
+            <div class="modal-header">
+                <p class="heading lead">Add Truck</p>
+
+                <button type="button" style="color:white" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" class="white-text">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="ModalBody">
+                <div class="row ">
+
+
+                    <div class="col-md-12">
+                        <div class="card-box shadow-none  bg-light rounded">
+                            <h4 class="card-title">
+                                Truck Information <small> ( Carrier Name : <a style="font-size:13px" id="txtShowCarrierNames"></a> ) </small>
+                                <label id="lblDriverSaveMessage" style="display:none;border-color:#c3e6cb; float:right;background-color: #d4edda;color: #155724;padding: 5px"> Driver Added Successfully</label>
+                            </h4>
+
+
+                            <hr />
+
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <label>Truck No. <small id="lblTruckNoError" style="color: red;display: none"> Enter Truck No. </small></label>
+                                        <input id="txtTruckNumber" type="text" name="TruckNumber" class="form-control" required="">
+                                        <input id="txtShowCarrierAssignId" type="text" name="ShowCarrierId" hidden class="form-control" required="">
+                                        <input id="txtCarrierCategoryId" type="text" name="ShowCarrierId" hidden class="form-control" required="">
+                                        <input id="txtIsOwnerOperator" type="text" name="ShowCarrierId" hidden class="form-control" required="">
+
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <label>Truck Yard  <small id="lblTruckYardError" style="color: red;display: none"> Enter Truck Yard  </small> </label>
+                                        <input id="txtTruckYard" type="text" name="TruckYard" class="form-control" required="">
+                                        <input id="txtShowCarrierName" type="text" name="ShowTruckName" hidden class="form-control" required="">
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <label>Trailer No. <small id="lblTrailerNoError" style="color: red;display: none"> Enter  Trailer No  </small></label>
+                                        <input type="text" id="txtTrailerNumber" name="TrailerNumber" class="form-control" required="">
+                                        <input id="txtShowContactName" type="text" name="ShowContactName" hidden class="form-control" required="">
+
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <label>Trailer Type   <small id="lblTrailerTypeError" style="color: red;display: none"> Select Trailer Type  </small></label>
+                                        <select id="TrailerTypeId" required name="TrailerTypeId" class="form-control js-example-basic-single">
+                                            <option value="0">Select Trailer </option>
+                                            @foreach (var item in ViewBag.LoadType)
+                                            {
+                                                <text>
+                                                    <option value="@item.Value">@item.Text</option>
+
+                                                </text>
+                                            }
+                                        </select>
+                                        <input id="txtShowPhoneNumber" type="text" name="ShowPhoneNumber" hidden class="form-control" required="">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <h6 class="card-title">Availability</h6>
+
+                            <div class="form-group">
+                                <div class="row">
+
+
+                                    <div class="col-md-3">
+                                        <label>Available Date</label>
+
+                                        <input id="AvailableDate" value="@DateTime.Now.ToString("yyyy-MM-dd")" name="AvailableDate" class="form-control" required>
+                                        <input id="txtShowMCNumber" type="text" name="ShowMCNumber" hidden class="form-control" required="">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label>Zip Code <small id="lblZipCodeError" style="color: red;display: none"> Enter Zip Code </small></label>
+                                        <input id="txtZipCode" type="number" name="ZipCode" class="form-control" onfocusout="GetStateCity()" required="">
+
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <label>State <small id="lblStateCodeError" style="color: red;display: none">Invalid State Code</small></label>
+
+                                        <input type="text" id="txtStates" name="State" class="form-control" required="">
+
+                                        @*<input type="text" id="txtStates" name="State" onfocusout="GetLocation('S')" class="form-control" required="">*@
+                                        <input type="text" hidden readonly id="txtStateCode" name="State" class="form-control" required="">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label>City <small id="lblCityCodeError" style="color: red;display: none">Invalid City Name</small> </label>
+                                        <input type="text" id="txtCity" name="City" class="form-control" required="" readonly>
+
+                                        @*<input type="text" id="txtCity" name="City" class="form-control" required="" onfocusout="GetLocation('C')">*@
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+                            <div class="form-group">
+                                <div class="row">
+
+
+                                    <div class="col-md-12">
+                                        <label>Preferred Destinations </label> <br />
+                                        <textarea id="txtPreferredDestinations" name="PreferredDestination" rows="3" style="width:100%"></textarea>
+
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <h4 class="card-title">
+                                Driver Information  &nbsp; <a style="font-size: 10px;background-color: #4c5564 !important;width: 14%;" data-toggle="modal" data-target="#Add_Driver" class="btn btn-primary">
+                                    <i class="fa fa-plus"></i> Add New  Driver
+                                </a>
+                            </h4>
+                            <hr />
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-md-3">
+
+
+                                        <label>
+                                            Driver Name
+                                            <small id="lblDriverNameError" style="color: red;display: none"> Select Driver</small>
+                                            @*<a data-toggle="modal" data-target="#add_Driver" class="btn btn-primary btn-rounded"><i class="fa fa-plus"></i></a>*@
+                                        </label>
+                                        @*<input type="text" name="DriverName" class="form-control" required="">*@
+
+                                        <select onchange="GetDriverDetails()" id="DriverId" required name="Driver" class="form-control js-example-basic-single">
+                                            <option value="0">Select Driver </option>
+                                            @foreach (var item in ViewBag.Driver)
+                                            {
+                                                <text>
+                                                    <option value="@item.Value">@item.Text</option>
+
+                                                </text>
+                                            }
+                                        </select>
+
+
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <label>Phone Number </label>
+                                        <input type="text" id="DriverNumber" readonly name="DriverNumber" class="form-control" required="">
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <label>Language</label>
+                                        <input type="text" id="DriverLanguage" readonly name="DriverLanguage" class="form-control" required="">
+
+                                    </div>
+
+
+                                    <div class="col-md-3" id="DriverLicense">
+                                        <label>License Document <i class="fa fa-upload" aria-hidden="true"></i> </label>
+                                        <br />
+                                        @*<img src="/assets/img/documentation.png"><a href="Index">Test</a>*@
+                                    </div>
+
+
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="text-right">
+                            @*<button type="submit" id="btnGeneralSubmit" class="btn btn-primary">Add Truck</button>*@
+
+
+                            <button style="background-color: #4c5564 !important" id="btnAddTruck" type="button" class="btn btn-primary"><i class="fa fa-plus"></i> &nbsp; Add</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    }
+    </div>
+
+
+    <div id="Add_Driver" class="modal fade delete-modal" role="dialog">
+        <div class="modal-dialog" style="max-width:500px">
+            @*@using (Html.BeginForm("SaveDriver", "Definition", FormMethod.Post, new
+                {
+                    enctype = "multipart/form-data"
+                }))
+                {@Html.AntiForgeryToken()*@
+
+
+            <div class="modal-content" style="margin-top:150px">
+                <!--Header-->
+                <div class="modal-header">
+                    <p class="heading lead">Add Driver</p>
+
+                    <button onclick="CloseDriverModel()" type="button" style="color:white" class="close" aria-label="Close">
+                        <span aria-hidden="true" class="white-text">&times;</span>
+                    </button>
+
+
+                    @*<button type="button" style="color:white" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true" class="white-text">&times;</span>
+                        </button>*@
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <form>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>
+                                                Driver Name  <small id="lblDriverName" style="display:none;color:red">
+                                                    Enter Driver Name
+                                                </small>
+                                            </label>
+                                            <input class="form-control" type="text" id="txtDriver" name="DriverName" required>
+
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>
+                                                Phone Number
+                                                <small id="lblDriverPhone" style="display:none;color:red">
+                                                    Enter Phone Number
+                                                </small>
+                                            </label>
+                                            <input class="form-control" type="text" id="txtDriverPhoneNumber" required name="DriverPhoneNumber">
+
+                                        </div>
+                                    </div>
+
+                                </div>
+
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>
+                                                Language
+                                                <small id="lblDriverLanguage" style="display:none;color:red">
+                                                    Enter Language
+                                                </small>
+                                            </label>
+                                            <input class="form-control" type="text" id="txtLanguage" name="Language">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>
+                                                License <i class="fa fa-upload" aria-hidden="true"></i>
+                                                <small id="lblDriverLicense" style="display:none;color:red">
+                                                    Upload  License
+                                                </small>
+                                            </label>
+                                            <input id="DriverLicense_Upload" name="DriverLicense" class="form-control" type="file">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+
+                                    <div class="col-sm-12">
+                                        <div class="m-t-5 text-right">
+                                            <a href="#" class="btn btn-white" onclick="CloseDriverModel()">Close</a>
+                                            <button type="button" id="btnAddDriver" class="btn btn-primary" style="color: white;background-color: #4c5564 !important;">Add</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            @*}*@
+        </div>
+
+    </div>
+</div>
+
+<div id="Carrier_Reviews" class="modal fade delete-modal" role="dialog">
+    <input id="CarrierAssignIdModal" hidden />
+    <div class="modal-dialog ">
+
+        <div class="modal-content">
+            <!--Header-->
+            <div class="modal-header" style="height: 35px !important;background-color: rgb(20,29,186) !important;">
+                <p class="heading lead" style="font-size: 15px !important;">Carrier Reviews</p>
+
+                <button type="button" style="color:white" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" class="white-text">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="ModalBody">
+
+                <div class="row">
+                    <div class="col-md-8"> <h5> Comments List  (<strong> Average Rating: </strong>  <small id="AverageRating"></small>  ) </h5></div>
+                    <div class="col-md-4">
+                        <button id="btnshowratingpanel" style="font-size:11px;width:40% !important" type="button" onclick="ShowRatingPanel()" class="btn btn-primary ThemeColor">
+                            <i class="fa fa-star"></i> &nbsp; Add Rating
+                        </button>
+                    </div>
+
+                </div>
+
+
+                <div class="row" id="RatingPanel" style="display:none !important">
+                    <div class="col-md-12">
+                        <div class="card-box shadow-none  bg-light rounded" style="padding:8px;">
+
+
+                            <h5> Rating <small id="lblCarrierSaveComment" style="display:none;border-color:#c3e6cb;color: #155724;padding: 5px;margin-right:10px"></small>  </h5>
+                            <hr>
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-md-9">
+                                        <label>Comment</label>
+
+                                        <textarea type="text" cols="5" rows="2" id="txtCarrierComment" name="CarrierComment" class="form-control" required=""></textarea>
+                                    </div>
+                                    <div class="col-md-3" id="RatingDiv">
+                                        <label>Mark Rating</label> <br>
+                                        <div>
+
+
+                                            <a href="#" style="font-size:15px" onclick="MarkRating(1)"><span class="fa fa-star unchecked"></span></a>
+                                            <a href="#" style="font-size:15px" onclick="MarkRating(2)"><span class="fa fa-star unchecked"></span></a>
+                                            <a href="#" style="font-size:15px" onclick="MarkRating(3)"><span class="fa fa-star unchecked"></span></a>
+                                            <a href="#" style="font-size:15px" onclick="MarkRating(4)"><span class="fa fa-star unchecked"></span></a>
+                                            <a href="#" style="font-size:15px" onclick="MarkRating(5)"><span class="fa fa-star unchecked"></span></a>
+                                            <a href="#" style="font-size:15px" onclick="MarkRating(6)"><span class="fa fa-star unchecked"></span></a>
+                                            <a href="#" style="font-size:15px" onclick="MarkRating(7)"><span class="fa fa-star unchecked"></span></a>
+                                            <a href="#" style="font-size:15px" onclick="MarkRating(8)"><span class="fa fa-star unchecked"></span></a>
+                                            <a href="#" style="font-size:15px" onclick="MarkRating(9)"><span class="fa fa-star unchecked"></span></a>
+                                            <a href="#" style="font-size:15px" onclick="MarkRating(10)"><span class="fa fa-star unchecked"></span></a>
+
+                                        </div>
+                                    </div>
+
+
+
+                                </div>
+                                <div class="row" style="margin-top:5px">
+                                    <div class="col-md-12">
+                                        <div class="text-right">
+                                            <button style="font-size: 11px;width: 13%;background-color: rgb(20,29,186) !important" id="btnSaveCarrierComment" onclick="SaveComment()" type="button" class="btn btn-primary ThemeColor">
+                                                Save Comment
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <div class="row">
+                    <div class="col-md-12">
+
+                        <div class="table-responsive">
+
+                            <table name="tblCarrierComments" style="        font-size: 12px;
+        width: 100%;
+       " class="table table-condensed table-fit table-sm table-striped tblComments    mb-0" id="tblComment">
+
+                                <thead>
+
+                                    <tr>
+                                        <th style="background-color: rgb(20,29,186) !important">Load Number</th>
+                                        <th style="background-color: rgb(20,29,186) !important">Rating</th>
+                                        <th style="background-color: rgb(20,29,186) !important">Comment</th>
+                                        <th style="background-color: rgb(20,29,186) !important"> By</th>
+                                        <th style="background-color: rgb(20,29,186) !important">On</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody id="CommentBody">
+
+
+
+
+
+                                    @*@foreach (var item in ListTruck)
+                                        {
+                                            <tr>
+                                                <td class="Comment">  @item.TruckId </td>
+                                                <td class="By">  @item.TruckNo</td>
+                                                <td class="On">  @item.AssignID </td>
+
+
+                                            </tr>
+                                        }*@
+
+
+
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+
+<div id="Loadsmodal" class="modal fade delete-modal" role="dialog">
+    <div class="modal-dialog ">
+
+        <div class="modal-content">
+            <!--Header-->
+            <div class="modal-header" style="height: 35px !important;
+        background-color: rgb(20,29,186) !important;
+    ">
+                <p class="heading lead" style="font-size: 15px !important;">Carrier Loads</p>
+
+                <button type="button" style="color:white" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" class="white-text">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="ModalBody">
+
+
+                <h5> Carrier Load List </h5>
+
+                <div class="row">
+                    <div class="col-md-12">
+
+                        <div class="table-responsive" style="height:500px ;overflow-y: scroll;">
+
+                            <table name="tblCarrierloads" style="font-size: 12px;width: 100%;
+       " class="table table-condensed table-fit table-lg table-striped tblCarrierloads  mb-0" id="tblCarrierloads">
+
+                                <thead>
+
+                                    <tr>
+                                        <th style="background-color: rgb(20,29,186) !important">Load Number</th>
+                                        <th style="background-color: rgb(20,29,186) !important">Broker Reference</th>
+                                        <th style="background-color: rgb(20,29,186) !important">Date</th>
+                                        <th style="background-color: rgb(20,29,186) !important"> Agent</th>
+                                        <th style="background-color: rgb(20,29,186) !important">Profile</th>
+                                        <th style="background-color: rgb(20,29,186) !important">Customer</th>
+                                        <th style="background-color: rgb(20,29,186) !important">Carrier ID</th>
+                                        <th style="background-color: rgb(20,29,186) !important">Carrier Name</th>
+                                        <th style="background-color: rgb(20,29,186) !important">Load Type</th>
+                                        <th style="background-color: rgb(20,29,186) !important">Broker Amount</th>
+                                        <th style="background-color: rgb(20,29,186) !important">Carrier Amount</th>
+                                        <th style="background-color: rgb(20,29,186) !important">Agent Amount</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody id="tblCarrierloadbody">
+
+
+
+
+
+                                    @*@foreach (var item in ListTruck)
+                                        {
+                                            <tr>
+                                                <td class="Comment">  @item.TruckId </td>
+                                                <td class="By">  @item.TruckNo</td>
+                                                <td class="On">  @item.AssignID </td>
+
+
+                                            </tr>
+                                        }*@
+
+
+
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+<script type="text/javascript">
+
+    function deletecarrier()
+    {
+
+
+        var assignid = $("#txtAssignId").val();
+        $.ajax({
+
+            type: "POST",
+            url: "/Definition/DeleteCarrier/?id=" + assignid + "",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+
+                var link = "@Url.Action("CarrierInfo", "Definition", new{ assignid = "CarrierAssignsId", vClientid = "Clientid", vSubcategoryid = "Subcategoryid", vProductId = "ProductId", vProductName = "ProductName"})";
+                link = link.replace('CarrierAssignsId', assignid);
+        link = link.replace(/&amp;/g, '&');
+        window.location.href = link;
+               
+                //$("#deletediv").fadeOut();
+                //ClearAllData();
+                //alert(data);
+                //if (data == "1") {
+                //    location.reload();
+
+                //}
+                //else {
+
+                //}
+
+
+            }
+
+
+
+
+        });
+    }
+    function fniaquickpay() {
+
+        var chkBox = document.getElementById('chkIsQuickPay');
+        if (chkBox.checked) {
+            document.getElementById("Quickpaypercentage").disabled = false;
+            document.getElementById('Quickpaypercentage').removeAttribute('readonly');
+        }
+        else
+        {
+            /*$("#Quickpaypercentage").val("0");*/
+            document.getElementById("Quickpaypercentage").disabled = true;
+            document.getElementById('Quickpaypercentage').addAttribute('readonly');
+
+        }
+
+    }
+
+    function SaveComment() {
+
+        var LoadNumber = "";
+        var Comment = $("#txtCarrierComment").val();
+        var CarrierAssignIdModal = $("#CarrierAssignIdModal").val();
+        var RatingStar = $("#RatingStar").val();
+
+        //var CarrierAssignId = $("#txtCarrierId").val();
+        if (Comment == "") {
+
+            document.getElementById('lblCarrierSaveComment').innerHTML = "Enter Comment";
+            document.getElementById('lblCarrierSaveComment').style.color = "Red";
+            //document.getElementById('lblCarrierSaveComment').style.backgroundColor = "Transparent";
+            //document.getElementById('lblCarrierSaveComment').style.borderColor = "Red";
+
+            $("#lblCarrierSaveComment").fadeIn();
+            $("#lblCarrierSaveComment").fadeOut(8000);
+            return;
+        }
+
+        $.ajax({
+            url: '/Truck/UpdateCarrierComments/?LoaderNumber=' + LoadNumber + '&Comment=' + Comment + '&CarrierAssignId=' + CarrierAssignIdModal +'&Ratings='+RatingStar,
+            type: "POST",
+            contentType: false, // Not to set any content header
+            processData: false, // Not to process data
+            //data: fileData,
+            success: function (result) {
+
+                $("#RatingStar").val(0);
+
+                document.getElementById('lblCarrierSaveComment').innerHTML = "Carrier Comments Updated";
+
+                $("#lblCarrierSaveComment").fadeIn();
+                $("#lblCarrierSaveComment").fadeOut(8000);
+
+
+                $("#tblComment tbody tr").remove();
+                //$('html,body').animate({
+                //    scrollTop: $("#Edit_Truck .modal-body .tblComments").sectionOffset.top - 30
+                //},
+                //    'slow');
+
+                $('#Edit_Truck').animate({ scrollTop: 200 }, 'fast');
+
+                //Append each row to html table
+                for (var i = 0; i < result.length; i++) {
+
+
+                    var RatingTd;
+                    var RatingDiv = '<td style="font-size: 8px">';
+
+
+                    var Rating = result[i].Rating;
+
+                    for (var j = 1; j <= 10; j++) {
+
+                        if (parseInt(Rating) > 0) {
+                            if (j <= parseInt(Rating)) {
+                                RatingDiv += "<span class='fa fa-star checked'></span>"
+                                //RatingDiv = "<div> <a target='_blank' class='social-icon text-xs-center' href = '" + MCAuthortiypath + "' > <i class='fa fa-file'></i> " + json[0].McAuthorityFileName + "</a > ";
+
+                            }
+                            else if (j > parseInt(Rating) && j <= 10) {
+
+                                RatingDiv += "<span class='fa fa-star unchecked'></span>"
+                                //RatingDiv = "<div> <a target='_blank' class='social-icon text-xs-center' href = '" + MCAuthortiypath + "' > <i class='fa fa-file'></i> " + json[0].McAuthorityFileName + "</a > ";
+
+                            }
+                        }
+                        else if (parseInt(Rating) == 0) {
+
+                            RatingDiv += "<span class='fa fa-star unchecked'></span>"
+                        }
+
+                    }
+
+                    RatingTd = RatingDiv + "</td>";
+
+                    tr = $('<tr/>');
+                    tr.append("<td>" + result[i].LoaderNumber + "</td>");
+                    tr.append(RatingTd);
+                    tr.append("<td>" + result[i].Comments + "</td>");
+                    tr.append("<td>" + result[i].UserName + "</td>");
+                    tr.append("<td>" + result[i].Date + "</td>");
+
+                    $('#tblComment').append(tr);
+                }
+
+                $("#txtCarrierComment").val("");
+
+
+
+            },
+            error: function (err) {
+                alert(err.statusText);
+            }
+        });
+    }
+    function MarkRating(value) {
+
+        var LoadNumber = "";
+
+
+
+        $("#RatingStar").val(value);
+
+
+
+                    $("#RatingDiv div a ").remove();
+
+                    for (var i = 1; i <= 10; i++) {
+                        var RatingDiv;
+                        if (i <= value) {
+
+
+                            RatingDiv = "<a href='#' style='font-size:18px' onclick='MarkRating(" + i + ")'><span class='fa fa-star checked'></span></a>"
+                            //RatingDiv = "<div> <a target='_blank' class='social-icon text-xs-center' href = '" + MCAuthortiypath + "' > <i class='fa fa-file'></i> " + json[0].McAuthorityFileName + "</a > ";
+                            $('#RatingDiv div').append(RatingDiv);
+                        }
+                        else if (i > value && i <= 10) {
+
+                            RatingDiv = "<a href='#' style='font-size:18px' onclick='MarkRating(" + i + ")'><span class='fa fa-star unchecked'></span></a>"
+                            //RatingDiv = "<div> <a target='_blank' class='social-icon text-xs-center' href = '" + MCAuthortiypath + "' > <i class='fa fa-file'></i> " + json[0].McAuthorityFileName + "</a > ";
+                            $('#RatingDiv div ').append(RatingDiv);
+                        }
+
+
+
+
+                    }
+
+
+        //$.ajax({
+        //    url: '/Truck/MarkCarrierRating/?LoaderNumber=' + LoadNumber + '&RatingID=' + value + '',
+        //    type: "POST",
+        //    contentType: false, // Not to set any content header
+        //    processData: false, // Not to process data
+        //    //data: fileData,
+        //    success: function (result) {
+        //        //alert(result);
+        //        var Documents;
+        //        if (result != null) {
+        //            //alert('Test');
+
+        //            $("#RatingDiv div a ").remove();
+
+        //            for (var i = 1; i <= 10; i++) {
+        //                var RatingDiv;
+        //                if (i <= result) {
+
+
+        //                    RatingDiv = "<a href='#' style='font-size:18px' onclick='MarkRating(" + i + ")'><span class='fa fa-star checked'></span></a>"
+        //                    //RatingDiv = "<div> <a target='_blank' class='social-icon text-xs-center' href = '" + MCAuthortiypath + "' > <i class='fa fa-file'></i> " + json[0].McAuthorityFileName + "</a > ";
+        //                    $('#RatingDiv div').append(RatingDiv);
+        //                }
+        //                else if (i > result && i <= 10) {
+
+        //                    RatingDiv = "<a href='#' style='font-size:18px' onclick='MarkRating(" + i + ")'><span class='fa fa-star unchecked'></span></a>"
+        //                    //RatingDiv = "<div> <a target='_blank' class='social-icon text-xs-center' href = '" + MCAuthortiypath + "' > <i class='fa fa-file'></i> " + json[0].McAuthorityFileName + "</a > ";
+        //                    $('#RatingDiv div ').append(RatingDiv);
+        //                }
+
+
+
+
+        //            }
+
+        //        }
+
+        //    },
+        //    error: function (err) {
+        //        alert(err.statusText);
+        //    }
+        //});
+
+    }
+
+
+        function ShowRatingPanel() {
+
+            var x = document.getElementById("RatingPanel");
+            if (x.style.display === "none") {
+                x.style.display = "block";
+            } else {
+                x.style.display = "none";
+            }
+        }
+
+        function DeleteDocument(AssignId, Type) {
+
+            $.ajax({
+                url: '/Definition/DeleteCarrierDocument/?CarrierAssignId=' + AssignId + '&DocumentType=' + Type+'',
+                type: "POST",
+                success: function (result) {
+
+                    if (Type == "MC") {
+                        $("#McAuthorityDocumentdiv div").remove();
+                    }
+                    else if (Type == "W9") {
+                        $("#W9DocumentExisting div").remove();
+                    }
+                    else if (Type == "IN") {
+                        $("#InsuranceFileNameDocument div").remove();
+                    }
+                    else if (Type == "NA") {
+
+                        $("#NoticeAssignmentDocument div").remove();
+                    }
+                    else if (Type == "VC") {
+
+                        $("#VoidedChequedocumentdiv div").remove();
+                    }
+
+
+                },
+                error: function (err) {
+                    alert(err.statusText);
+                }
+            });
+        }
+
+    function ShowCommentRating(AssignId,Ratings) {
+
+
+        $("#CarrierAssignIdModal").val(AssignId);
+        $.ajax({
+            url: '/Truck/GetCarrierCommentRating/?AssignId=' + AssignId + '',
+            type: "POST",
+            contentType: false, // Not to set any content header
+            processData: false, // Not to process data
+            //data: fileData,
+            success: function (result) {
+                //alert(result);
+                var Documents;
+
+
+
+                var RatingTd;
+                var Rating = Ratings;
+
+
+
+                var RatingDiv = "";
+                CarrierAssignId = "";
+                for (var j = 1; j <= 10; j++) {
+
+                    if (parseInt(Rating) > 0) {
+                        if (j <= parseInt(Rating)) {
+                            RatingDiv += "<span class='fa fa-star checked'></span>"
+                            //RatingDiv = "<div> <a target='_blank' class='social-icon text-xs-center' href = '" + MCAuthortiypath + "' > <i class='fa fa-file'></i> " + json[0].McAuthorityFileName + "</a > ";
+
+                        }
+                        else if (j > parseInt(Rating) && j <= 10) {
+
+                            RatingDiv += "<span class='fa fa-star unchecked'></span>"
+                            //RatingDiv = "<div> <a target='_blank' class='social-icon text-xs-center' href = '" + MCAuthortiypath + "' > <i class='fa fa-file'></i> " + json[0].McAuthorityFileName + "</a > ";
+
+                        }
+                    }
+                    else if (parseInt(Rating) == 0) {
+
+                        RatingDiv += "<span class='fa fa-star unchecked'></span>"
+                    }
+
+                }
+
+                document.getElementById("AverageRating").innerHTML = RatingDiv;
+
+
+
+                if (result.length > 0) {
+
+
+
+                    //$("#RatingDiv a").remove();
+                    //for (var j = 1; j <= 10; j++) {
+                    //    var RatingDiv;
+                    //    if (j <= result[0].Rating) {
+
+
+                    //        RatingDiv = "<a  style='font-size:18px' ><span class='fa fa-star checked'></span></a>"
+                    //        //RatingDiv = "<div> <a target='_blank' class='social-icon text-xs-center' href = '" + MCAuthortiypath + "' > <i class='fa fa-file'></i> " + json[0].McAuthorityFileName + "</a > ";
+                    //        $('#RatingDiv').append(RatingDiv);
+                    //    }
+                    //    else if (j > result[0].Rating && j <= 10) {
+
+                    //        RatingDiv = "<a  style='font-size:15px'><span class='fa fa-star unchecked'></span></a>"
+                    //        //RatingDiv = "<div> <a target='_blank' class='social-icon text-xs-center' href = '" + MCAuthortiypath + "' > <i class='fa fa-file'></i> " + json[0].McAuthorityFileName + "</a > ";
+                    //        $('#RatingDiv').append(RatingDiv);
+                    //    }
+
+
+
+
+                    //}
+
+
+
+
+                    $("#tblComment tbody tr").remove();
+                    //$('html,body').animate({
+                    //    scrollTop: $("#Edit_Truck .modal-body .tblComments").sectionOffset.top - 30
+                    //},
+                    //    'slow');
+
+                    var RatingTd;
+                    var RatingDiv;
+                    //Append each row to html table
+                    for (var i = 0; i < result.length; i++) {
+
+                        var RatingTd;
+                        var RatingDiv = '<td style="font-size: 8px">';
+
+
+                        var Rating = result[i].Rating;
+
+                        for (var j = 1; j <= 10; j++) {
+
+                            if (parseInt(Rating) > 0) {
+                                if (j <= parseInt(Rating)) {
+                                    RatingDiv += "<span class='fa fa-star checked'></span>"
+                                    //RatingDiv = "<div> <a target='_blank' class='social-icon text-xs-center' href = '" + MCAuthortiypath + "' > <i class='fa fa-file'></i> " + json[0].McAuthorityFileName + "</a > ";
+
+                                }
+                                else if (j > parseInt(Rating) && j <= 10) {
+
+                                    RatingDiv += "<span class='fa fa-star unchecked'></span>"
+                                    //RatingDiv = "<div> <a target='_blank' class='social-icon text-xs-center' href = '" + MCAuthortiypath + "' > <i class='fa fa-file'></i> " + json[0].McAuthorityFileName + "</a > ";
+
+                                }
+                            }
+                            else if (parseInt(Rating) == 0) {
+
+                                RatingDiv += "<span class='fa fa-star unchecked'></span>"
+                            }
+
+                        }
+
+                        RatingTd = RatingDiv + "</td>";
+
+                        tr = $('<tr/>');
+
+                        var url = '@Url.Action("ReportPreview", "Report")';
+                        var urlQuery = url + '?LoadNumberModel=' + result[i].LoaderNumber;
+                        tr.append("<td> <a style='pointer:cursor;color:deepskyblue' target='_blank' href='" + urlQuery + "'>" + result[i].LoaderNumber + "</a></td>");
+                        tr.append(RatingTd);
+                        tr.append("<td>" + result[i].Comments + "</td>");
+                        tr.append("<td>" + result[i].UserName + "</td>");
+                        tr.append("<td>" + result[i].Date + "</td>");
+                        $('#tblComment').append(tr);
+                    }
+
+                    $('#tblComment').DataTable({
+                        "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+                        "pageLength": 10
+                    });
+                    $('#Carrier_Reviews').modal('show');
+
+                }
+                else {
+
+
+                    $('#Carrier_Reviews').modal('show');
+                    $("#tblComment tbody tr").remove();
+                }
+
+
+            },
+            error: function (err) {
+                //alert(err.statusText);
+            }
+        });
+
+
+        }
+
+
+        function ShowCarrerLoads(AssignId) {
+
+
+            $.ajax({
+                url: '/Definition/Showcarrierloadlist/?AssignId=' + AssignId + '',
+                /*url: '/Truck/GetCarrierCommentRating/?AssignId=' + AssignId + '',*/
+                type: "POST",
+                contentType: false, // Not to set any content header
+                processData: false, // Not to process data
+                //data: fileData,
+                success: function (result) {
+
+                    if (result.length > 0) {
+
+                        var table = $('#tblCarrierloads').DataTable();
+                        table.destroy();
+
+                        $("#tblCarrierloads tbody tr").remove();
+
+                        //Append each row to html table
+                        for (var i = 0; i < result.length; i++) {
+
+
+
+                            tr = $('<tr/>');
+                            tr.append("<td>" + result[i].LoaderNumber + "</td>");
+                            tr.append("<td>" + result[i].BrokerReference + "</td>");
+                            tr.append("<td>" + result[i].RegistrationDate + "</td>");
+                            tr.append("<td>" + result[i].Agent + "</td>");
+                            tr.append("<td>" + result[i].Profile + "</td>");
+                            tr.append("<td>" + result[i].Customer + "</td>");
+                            tr.append("<td>" + result[i].AssignID + "</td>");
+                            tr.append("<td>" + result[i].CarrierName + "</td>");
+                            tr.append("<td>" + result[i].LoadTypeName + "</td>");
+                            tr.append("<td>" + result[i].BrokerRate + "</td>");
+                            tr.append("<td>" + result[i].CarrierRate + "</td>");
+                            tr.append("<td>" + result[i].Profit + "</td>");
+
+                            $('#tblCarrierloads').append(tr);
+                        }
+
+                        $('#tblCarrierloads').DataTable({
+                            "lengthMenu": [[10, 25, 50,-1], [10, 25, 50, "All"]],
+                            "pageLength": 10
+                        });
+                        $('#Loadsmodal').modal('show');
+
+                    }
+                    else {
+                        var table = $('#tblCarrierloads').DataTable();
+                        table.destroy();
+
+                        $('#Loadsmodal').modal('show');
+                        $("#tblCarrierloads tbody tr").remove();
+                        $('#tblCarrierloads').DataTable({
+                            "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+                            "pageLength": 10
+                        });
+                    }
+
+
+                },
+                error: function (err) {
+                    //alert(err.statusText);
+                }
+            });
+
+
+        }
+
+
+
+    jQuery(document).ready(function () {
+        //jQuery('#CategoryId').select2();
+
+
+
+        $("#txtCarrierListSearch").on("keyup", function () {
+            var value = $(this).val().toLowerCase();
+            $("#tblCarriernfo tr").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+
+
+        var date = new Date();
+        var day = date.getDate();
+        var month = date.getMonth() + 1;
+        var year = date.getFullYear();
+
+        if (month < 10) month = "0" + month;
+        if (day < 10) day = "0" + day;
+
+        var txtDateTimeShow = year + "-" + month + "-" + day;
+
+        //document.getElementById("txtDateTimeShow").value = txtDateTimeShow;
+
+        //var txtDateTime = year + "-" + month + "-" + day;
+
+        /*document.getElementById("txtInsuranceExpirtationDate").value = txtDateTimeShow;*/
+
+        $("#txtStates").autocomplete({
+            showHeader: true,
+            appendTo: "#ModalBody",
+            source: function (request, response) {
+
+                $.ajax({
+
+                    url: "/Load/GetStateCityName",
+
+                    type: "POST",
+
+                    dataType: "json",
+
+                    data: { prefix: request.term },
+
+                    success: function (data) {
+
+                        response($.map(data, function (item) {
+
+                            return {
+
+                                label: item.CityName + ', ' + item.StateCode + ', ' + item.ZipCode
+                                , ZipCode: item.ZipCode
+
+                                //label: 'Name: ' + item.CarrierName + ', ID: ' + item.AssignID + ', MC_: ' + item.MC_
+
+                                //, AssignID: item.AssignID
+
+
+                            };
+
+                        }))
+
+                    }
+
+                })
+
+            },
+
+            select: function (event, ui) {
+
+                //Call EmpDetails jsonResult Method
+                $.getJSON("/Load/GetState/?ZipCode=" + ui.item.ZipCode + " ",
+                    function (json) {
+                        var tr;
+
+                        $('#txtStates').val(json[0].StateCode);
+                        $('#txtCity').val(json[0].CityName);
+                        $('#txtZipCode').val(json[0].ZipCode);
+
+                    });
+
+            }
+        });
+
+
+
+
+
+
+
+        $.ajax({
+            type: "GET",
+            url: "/Definition/AllCarrierList",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                $("#tblCarriernfo tbody tr").remove();
+                //$('html,body').animate({
+                //    scrollTop: $(".tblCarrierList").offset().top
+                //},
+                //    'slow');
+
+                //Append each row to html table
+                for (var i = 0; i < response.length; i++) {
+
+                    var Color = "";
+                    tr = $('<tr/>');
+
+
+                    if (response[i].CarrierCategoryId == 1) {
+                        tr.append("<td><i class='fa fa-circle' style='color: orange;font-size: 15px;' aria-hidden='true'></i>" + Color + "</td>");
+                    }
+                    else if (response[i].CarrierCategoryId == 2) {
+                        tr.append("<td><i class='fa fa-circle' style='color:brown;font-size: 15px;' aria-hidden='true'></i>" + Color + "</td>");
+                    }
+                    else if (response[i].CarrierCategoryId == 0) {
+                        tr.append("<td>" + Color + "</td>");
+                    }
+
+                    var AssignId = response[i].AssignID;
+                    AssignId = "'" + AssignId + "'" + "";
+
+                    tr.append('<td><a onclick="ReloadCarrier(' + AssignId + ')" style="cursor:pointer;color:deepskyblue" >' + response[i].AssignID + '</a></td>');
+
+                    tr.append('<td><a onclick="ShowCarrerLoads(' + AssignId + ')" style="cursor:pointer;color:deepskyblue" >' + response[i].CarrierName + '</a></td>');
+                    AssignId = "";
+                    /*  tr.append("<td>" + response[i].CarrierName + "</td>");*/
+
+
+
+
+
+
+
+                    var RatingTd;
+                    var Rating = response[i].Rating;
+                    var CarrierAssignId = response[i].AssignID;
+                    CarrierAssignId = "'" + CarrierAssignId + "'" + "";
+
+
+
+                    var RatingDiv = '<td style="font-size: 8px" onclick="ShowCommentRating(' + CarrierAssignId + ',' + Rating+')">';
+                    CarrierAssignId = "";
+                    for (var j = 1; j <= 10; j++) {
+
+                        if (parseInt(Rating) > 0) {
+                            if (j <= parseInt(Rating)) {
+                                RatingDiv += "<span class='fa fa-star checked'></span>"
+                                //RatingDiv = "<div> <a target='_blank' class='social-icon text-xs-center' href = '" + MCAuthortiypath + "' > <i class='fa fa-file'></i> " + json[0].McAuthorityFileName + "</a > ";
+
+                            }
+                            else if (j > parseInt(Rating) && j <= 10) {
+
+                                RatingDiv += "<span class='fa fa-star unchecked'></span>"
+                                //RatingDiv = "<div> <a target='_blank' class='social-icon text-xs-center' href = '" + MCAuthortiypath + "' > <i class='fa fa-file'></i> " + json[0].McAuthorityFileName + "</a > ";
+
+                            }
+                        }
+                        else if (parseInt(Rating) == 0) {
+
+                            RatingDiv += "<span class='fa fa-star unchecked'></span>"
+                        }
+
+                    }
+
+                    RatingTd = RatingDiv + "</td>";
+
+                    tr.append(RatingTd);
+
+
+
+
+
+                    //var Rating  = "";
+                    //        for (var i = 1; i <= 10; i++)
+                    //        {
+                    //            alert('Test');
+                    //            if (i <= parseInt(response[i].Rating))
+                    //            {
+
+                    //            Rating += "<a style='font-size: 8px'><span class='fa fa-star checked'></span></a>";
+                    //        }
+                    //            else if (i > parseInt(response[i].Rating)  && i <=10)
+                    //        {
+                    //            Rating += "<a style='font-size: 8px'><span class='fa fa-star unchecked'></span></a>";
+                    //        //<a style="font-size:8px"><span class="fa fa-star unchecked"></span></a>
+                    //        }
+                    //        value = i;
+
+
+                    //}
+
+
+
+                    //var starttd = "<td>";
+                    //var endtd = "</td>";
+
+                    //tr.append("<td>" + Rating + "</td>");
+
+                    //tr.append(starttd + Rating + endtd);
+
+                    //tr.append(RatingDiv);
+                    //tr.append("<td><a style='font-size: 8px'><span class='fa fa-star checked'></span></a>" + response[i].CategoryName + "</td>");
+                    tr.append("<td>" + response[i].CategoryName + "</td>");
+                    tr.append("<td>" + response[i].Email + "</td>");
+                    tr.append("<td>" + response[i].MC_ + "</td>");
+
+                    tr.append("<td>" + response[i].ContactName + "</td>");
+                    tr.append("<td>" + response[i].Phonenumber + "</td>");
+                    tr.append("<td>" + response[i].TrailerNo + "</td>");
+                    tr.append("<td>" + response[i].TruckYard + "</td>");
+                    tr.append("<td>" + response[i].ZipCode + "</td>");
+                    tr.append("<td>" + response[i].StateCode + "</td>");
+                    tr.append("<td>" + response[i].DriverName + "</td>");
+                    tr.append("<td>" + response[i].DriverPhone + "</td>");
+
+                    if (response[i].IsBlackList == 1) {
+                        tr.append("<td>Yes</td>");
+                    }
+                    else if (response[i].IsBlackList == 0) {
+                        tr.append("<td>No</td>");
+                    }
+
+                    $('#tblCarriernfo').append(tr);
+                }
+
+                //}
+            },
+            failure: function (response) {
+                //alert("No Data");
+            },
+            error: function (response) {
+                //alert(response.responseText);
+            }
+        });
+    });
+
+    function GetAllCarrierList() {
+
+        $.ajax({
+            type: "GET",
+            url: "/Definition/AllCarrierList",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                $("#tblCarriernfo tbody tr").remove();
+                $('html,body').animate({
+                    scrollTop: $(".tblCarrierList").offset().top
+                },
+                    'slow');
+
+                //var Rating;
+                //var RatingDiv;
+                //var RatingTd;
+                //Append each row to html table
+                for (var i = 0; i < response.length; i++) {
+
+
+                    ////$("#RatingDiv div a ").remove();
+
+                    //Rating = response[i].Rating;
+
+                    ////var RatingStartTd = "<td>";
+                    ////var RatingEndTd = $('</td>');
+                    //td = $('<td style="font-size:8px">');
+
+
+                    // RatingDiv = "<td style='font-size: 8px'>";
+
+                    //for (var i = 1; i <= 10; i++) {
+
+                    //    if (i <= Rating) {
+
+
+                    //        RatingDiv += "<span class='fa fa-star checked'></span>"
+
+                    //    }
+                    //    else if (i > Rating && i <= 10) {
+
+                    //        RatingDiv += "<span class='fa fa-star unchecked'></span>"
+
+
+                    //    }
+
+                    //}
+
+                    //RatingTd = RatingDiv;
+
+
+
+
+
+
+                    var Color="";
+                    tr = $('<tr/>');
+
+
+                    if (response[i].CarrierCategoryId == 1) {
+                        tr.append("<td><i class='fa fa-circle' style='color: orange;font-size: 15px;' aria-hidden='true'></i>" + Color + "</td>");
+                    }
+                    else if (response[i].CarrierCategoryId == 2) {
+                        tr.append("<td><i class='fa fa-circle' style='color:brown;font-size: 15px;' aria-hidden='true'></i>" + Color + "</td>");
+                    }
+                    else if (response[i].CarrierCategoryId == 0) {
+                        tr.append("<td>"+Color+"</td>");
+                    }
+
+                    var AssignId =  response[i].AssignID;
+                    AssignId = "'"+AssignId+"'" +"";
+
+                    tr.append('<td><a onclick="ReloadCarrier('+AssignId+')" style="cursor:pointer;color:deepskyblue" >' + response[i].AssignID + '</a></td>');
+                    AssignId = "";
+                    tr.append("<td>" + response[i].CarrierName + "</td>");
+                    //tr.append(RatingDiv);
+                    tr.append("<td>" + response[i].CategoryName + "</td>");
+                    tr.append("<td>" + response[i].Email + "</td>");
+                    tr.append("<td>" + response[i].MC_ + "</td>");
+
+                    tr.append("<td>" + response[i].ContactName+ "</td>");
+                    tr.append("<td>" + response[i].Phonenumber + "</td>");
+                    tr.append("<td>" + response[i].TrailerNo+ "</td>");
+                    tr.append("<td>" + response[i].TruckYard + "</td>");
+                    tr.append("<td>" + response[i].ZipCode + "</td>");
+                    tr.append("<td>" + response[i].StateCode + "</td>");
+                    tr.append("<td>" + response[i].DriverName + "</td>");
+                    tr.append("<td>" + response[i].DriverPhone+ "</td>");
+                   $('#tblCarriernfo').append(tr);
+                    }
+
+                //}
+            },
+            failure: function (response) {
+                //alert("No Data");
+            },
+            error: function (response) {
+                //alert(response.responseText);
+            }
+        });
+    }
+
+    $('#MCAuthorityDocument').change(function () {
+
+
+
+        // Checking whether FormData is available in browser
+        if (window.FormData !== undefined) {
+
+            var fileUpload = $("#MCAuthorityDocument").get(0);
+            var files = fileUpload.files;
+
+            // Create FormData object
+            var fileData = new FormData();
+
+            // Looping over all files and add it to FormData object
+            for (var i = 0; i < files.length; i++) {
+                fileData.append(files[i].name, files[i]);
+            }
+
+            var CarrierAssignId = $("#txtAssignId").val();
+            // Adding one more key to FormData object
+            fileData.append('CarrierAssignId', CarrierAssignId);
+            fileData.append('DocumentType', 'MC');
+
+            $.ajax({
+                url: '/Definition/CarrierDocumentUpload',
+                type: "POST",
+                contentType: false, // Not to set any content header
+                processData: false, // Not to process data
+                data: fileData,
+                success: function (result) {
+
+                    var MCAuthortiypath = result[0].McAuthorityFilePath;
+                    ////var filepath = result[i].ImagePath.val();
+                    //Documents = "<div id ='DocumentsColumn' class='col-md-4'><a target = '_blank' class='social-icon text-xs-center' href ='" + path + "' ><img src='/assets/img/documentation.png'>" + LoadHeadDocument[i].FileName + "</a> <button type='button' onclick='DeleteDocument(" + LoadHeadDocument[i].FilePathId + ")' id='btnRemoveDocument' class='close' aria-label='Close'><span aria-hidden='true'>&times;</span></button></div>";
+
+                    //$('#UploadedDocuments').append(Documents);
+                    //document.getElementById("DocumentsColumn").style.backgroundColor = "blue";
+                    //document.getElementById("DocumentsColumn").style.color = "white";
+                    //document.getElementById("DocumentsColumn").style.padding = "7px";
+
+                    //$("#DocumentsColumn").style.backgroundColor = "blue";
+                    //$("#DocumentsColumn").style.color = "white";
+                    //$("#DocumentsColumn").style.padding = "7px";
+
+
+
+                    $("#McAuthorityDocumentdiv div").remove();
+                    //$("#McAuthorityDocumentdiv a").remove();
+                    //$("#McAuthorityDocumentdiv button").remove();
+                    if (MCAuthortiypath != "") {
+                        var MCAuhtority;
+                        MCAuhtority = "<div id='DocumentsColumn' style='background-color:@Session["Color"];padding:7px'>  <a style='color:white !Important' target='_blank' class='social-icon text-xs-center' href='" + MCAuthortiypath + "'> <i class='fa fa-file'></i> " + result[0].McAuthorityFileName + "</a >";
+                        MCAuhtority += '<button style="color:white !Important" type="button" onclick=DeleteDocument("' + result[0].CarrierAssignId + '","MC") id="btnRemoveDocument" class="close" aria-label="Close"><span aria-hidden="true">×</span></button> </div>';
+                        $('#McAuthorityDocumentdiv').append(MCAuhtority);
+
+                    }
+
+
+                },
+                error: function (err) {
+                    alert(err.statusText);
+                }
+            });
+        } else {
+            alert("FormData is not supported.");
+        }
+    });
+
+
+    $('#W9Document').change(function () {
+
+
+
+        // Checking whether FormData is available in browser
+        if (window.FormData !== undefined) {
+
+            var fileUpload = $("#W9Document").get(0);
+            var files = fileUpload.files;
+
+            // Create FormData object
+            var fileData = new FormData();
+
+            // Looping over all files and add it to FormData object
+            for (var i = 0; i < files.length; i++) {
+                fileData.append(files[i].name, files[i]);
+            }
+
+            var CarrierAssignId = $("#txtAssignId").val();
+            // Adding one more key to FormData object
+            fileData.append('CarrierAssignId', CarrierAssignId);
+            fileData.append('DocumentType', 'W9');
+
+            $.ajax({
+                url: '/Definition/CarrierDocumentUpload',
+                type: "POST",
+                contentType: false, // Not to set any content header
+                processData: false, // Not to process data
+                data: fileData,
+                success: function (result) {
+
+                    //var MCAuthortiypath = result[0].McAuthorityFilePath;
+                    ////var filepath = result[i].ImagePath.val();
+                    //Documents = "<div id ='DocumentsColumn' class='col-md-4'><a target = '_blank' class='social-icon text-xs-center' href ='" + path + "' ><img src='/assets/img/documentation.png'>" + LoadHeadDocument[i].FileName + "</a> <button type='button' onclick='DeleteDocument(" + LoadHeadDocument[i].FilePathId + ")' id='btnRemoveDocument' class='close' aria-label='Close'><span aria-hidden='true'>&times;</span></button></div>";
+
+                    //document.getElementById("W9DocumentExisting").style.backgroundColor = "blue";
+                    //document.getElementById("W9DocumentExisting").style.color = "white";
+                    //document.getElementById("W9DocumentExisting").style.padding = "7px";
+
+                  /*  $('#W9DocumentExisting a').remove();*/
+                    $('#W9DocumentExisting div').remove();
+                    var W9path = result[0].W9FilePath;
+                    if (W9path != "") {
+                        var W9;
+                        W9 = "  <div id='DocumentsColumn' style='background-color:@Session["Color"];padding:7px'><a  style='color:white !Important' target='_blank' class='social-icon text-xs-center' href='" + W9path + "'> <i class='fa fa-file'></i> " + result[0].W9FileName + "</a >";
+                        W9 += '<button style="color:white !Important" type="button" onclick=DeleteDocument("' + result[0].CarrierAssignId + '","W9") id="btnRemoveDocument" class="close" aria-label="Close"><span aria-hidden="true">×</span></button> </div>';
+                        $('#W9DocumentExisting').append(W9);
+
+
+
+
+                    }
+
+
+                },
+                error: function (err) {
+                    alert(err.statusText);
+                }
+            });
+        } else {
+            alert("FormData is not supported.");
+        }
+    });
+
+
+    $('#InsuranceDocument').change(function () {
+
+
+
+        // Checking whether FormData is available in browser
+        if (window.FormData !== undefined) {
+
+            var fileUpload = $("#InsuranceDocument").get(0);
+            var files = fileUpload.files;
+
+            // Create FormData object
+            var fileData = new FormData();
+
+            // Looping over all files and add it to FormData object
+            for (var i = 0; i < files.length; i++) {
+                fileData.append(files[i].name, files[i]);
+            }
+
+            var CarrierAssignId = $("#txtAssignId").val();
+            // Adding one more key to FormData object
+            fileData.append('CarrierAssignId', CarrierAssignId);
+            fileData.append('DocumentType', 'ID');
+
+            $.ajax({
+                url: '/Definition/CarrierDocumentUpload',
+                type: "POST",
+                contentType: false, // Not to set any content header
+                processData: false, // Not to process data
+                data: fileData,
+                success: function (result) {
+
+                    //var MCAuthortiypath = result[0].McAuthorityFilePath;
+                    ////var filepath = result[i].ImagePath.val();
+                    //Documents = "<div id ='DocumentsColumn' class='col-md-4'><a target = '_blank' class='social-icon text-xs-center' href ='" + path + "' ><img src='/assets/img/documentation.png'>" + LoadHeadDocument[i].FileName + "</a> <button type='button' onclick='DeleteDocument(" + LoadHeadDocument[i].FilePathId + ")' id='btnRemoveDocument' class='close' aria-label='Close'><span aria-hidden='true'>&times;</span></button></div>";
+
+                    var Insurance;
+
+
+                    $('#InsuranceFileNameDocument div').remove();
+                  /*  $('#InsuranceFileNameDocument button').remove();*/
+                    var InsuranceFilePath = result[0].InsuranceFilePath;
+                    if (InsuranceFilePath != "") {
+                        Insurance = "  <div id='DocumentsColumn' style='background-color:@Session["Color"];padding:7px'>  <a style='color:white !Important' target='_blank' class='social-icon text-xs-center' href='" + InsuranceFilePath + "'> <i class='fa fa-file'></i> " + result[0].InsuranceFileName + "</a >";
+                        Insurance += '<button style="color:white !Important" type="button" onclick=DeleteDocument("' + result[0].CarrierAssignId + '","IN") id="btnRemoveDocument" class="close" aria-label="Close"><span aria-hidden="true">×</span></button> </div>';
+                        $('#InsuranceFileNameDocument').append(Insurance);
+                    }
+
+
+
+
+
+
+
+                },
+                error: function (err) {
+                    alert(err.statusText);
+                }
+            });
+        } else {
+            alert("FormData is not supported.");
+        }
+    });
+
+
+    /*Notice of assignment document upload */
+
+    $('#AssignmentNoticeDocument').change(function () {
+
+
+
+        // Checking whether FormData is available in browser
+        if (window.FormData !== undefined) {
+
+            var fileUpload = $("#AssignmentNoticeDocument").get(0);
+            var files = fileUpload.files;
+
+            // Create FormData object
+            var fileData = new FormData();
+
+            // Looping over all files and add it to FormData object
+            for (var i = 0; i < files.length; i++) {
+                fileData.append(files[i].name, files[i]);
+            }
+
+            var CarrierAssignId = $("#txtAssignId").val();
+            // Adding one more key to FormData object
+            fileData.append('CarrierAssignId', CarrierAssignId);
+            fileData.append('DocumentType', 'AN');
+
+            $.ajax({
+                url: '/Definition/CarrierDocumentUpload',
+                type: "POST",
+                contentType: false, // Not to set any content header
+                processData: false, // Not to process data
+                data: fileData,
+                success: function (result) {
+
+                    //var MCAuthortiypath = result[0].McAuthorityFilePath;
+                    ////var filepath = result[i].ImagePath.val();
+                    //Documents = "<div id ='DocumentsColumn' class='col-md-4'><a target = '_blank' class='social-icon text-xs-center' href ='" + path + "' ><img src='/assets/img/documentation.png'>" + LoadHeadDocument[i].FileName + "</a> <button type='button' onclick='DeleteDocument(" + LoadHeadDocument[i].FilePathId + ")' id='btnRemoveDocument' class='close' aria-label='Close'><span aria-hidden='true'>&times;</span></button></div>";
+
+                    var AssignmentNotice;
+
+
+                    $('#NoticeAssignmentDocument div').remove();
+                    /*$('#NoticeAssignmentDocument button').remove();*/
+                    var AssignmentFilePath = result[0].AssignmentFilePath;
+                    if (AssignmentFilePath != "") {
+                        AssignmentNotice = " <div id='DocumentsColumn' style='background-color:@Session["Color"];padding:7px'> <a style='color:white !Important' target='_blank' class='social-icon text-xs-center' href='" + AssignmentFilePath + "'> <i class='fa fa-file'></i> " + result[0].AssignmentFileName + "</a >";
+                        AssignmentNotice += '<button style="color:white !Important" type="button" onclick=DeleteDocument("' + result[0].CarrierAssignId + '","NA") id="btnRemoveDocument" class="close" aria-label="Close"><span aria-hidden="true">×</span></button> </div>';
+                        $('#NoticeAssignmentDocument').append(AssignmentNotice);
+                    }
+
+
+
+                },
+                error: function (err) {
+                    alert(err.statusText);
+                }
+            });
+        } else {
+            alert("FormData is not supported.");
+        }
+    });
+
+
+
+
+    $('#VoidedChequeDocument').change(function () {
+
+
+
+        // Checking whether FormData is available in browser
+        if (window.FormData !== undefined) {
+
+            var fileUpload = $("#VoidedChequeDocument").get(0);
+            var files = fileUpload.files;
+
+            // Create FormData object
+            var fileData = new FormData();
+
+            // Looping over all files and add it to FormData object
+            for (var i = 0; i < files.length; i++) {
+                fileData.append(files[i].name, files[i]);
+            }
+
+            var CarrierAssignId = $("#txtAssignId").val();
+            // Adding one more key to FormData object
+            fileData.append('CarrierAssignId', CarrierAssignId);
+            fileData.append('DocumentType', 'VC');
+
+            $.ajax({
+                url: '/Definition/CarrierDocumentUpload',
+                type: "POST",
+                contentType: false, // Not to set any content header
+                processData: false, // Not to process data
+                data: fileData,
+                success: function (result) {
+
+                    //var MCAuthortiypath = result[0].McAuthorityFilePath;
+                    ////var filepath = result[i].ImagePath.val();
+                    //Documents = "<div id ='DocumentsColumn' class='col-md-4'><a target = '_blank' class='social-icon text-xs-center' href ='" + path + "' ><img src='/assets/img/documentation.png'>" + LoadHeadDocument[i].FileName + "</a> <button type='button' onclick='DeleteDocument(" + LoadHeadDocument[i].FilePathId + ")' id='btnRemoveDocument' class='close' aria-label='Close'><span aria-hidden='true'>&times;</span></button></div>";
+
+                    var VoidCheque;
+
+
+                    $('#VoidedChequedocumentdiv div').remove();
+                    /*$('#VoidedChequedocumentdiv button').remove();*/
+                    var VoidChequeFilePath = result[0].VoidChequeFilePath;
+                    if (VoidChequeFilePath != "") {
+                        VoidCheque = " <div id='DocumentsColumn' style='background-color:@Session["Color"];padding:7px'> <a  style='color:white !Important' target='_blank' class='social-icon text-xs-center' href='" + VoidChequeFilePath + "'> <i class='fa fa-file'></i> " + result[0].VoidChequeFileName + "</a >";
+
+                        VoidCheque += '<button style="color:white !Important" type="button" onclick=DeleteDocument("' + result[0].CarrierAssignId + '","VC") id="btnRemoveDocument" class="close" aria-label="Close"><span aria-hidden="true">×</span></button> </div>';
+                        $('#VoidedChequedocumentdiv').append(VoidCheque);
+                    }
+
+
+
+
+                },
+                error: function (err) {
+                    alert(err.statusText);
+                }
+            });
+        } else {
+            alert("FormData is not supported.");
+        }
+    });
+
+
+
+
+
+    $('#btnAddDriver').click(function () {
+
+        var DriverName = $("#txtDriver").val();
+        var DriverPhoneNumber = $("#txtDriverPhoneNumber").val();
+        var Language = $("#txtLanguage").val();
+        var CarrierAssignId = $("#txtShowCarrierAssignId").val();
+
+        // Checking whether FormData is available in browser
+        if (window.FormData !== undefined) {
+
+            var fileUpload = $("#DriverLicense_Upload").get(0);
+            var files = fileUpload.files;
+
+            // Create FormData object
+            var fileData = new FormData();
+
+            // Looping over all files and add it to FormData object
+            for (var i = 0; i < files.length; i++) {
+                fileData.append(files[i].name, files[i]);
+            }
+
+            // Adding one more key to FormData object
+            fileData.append('DriverName', DriverName);
+            fileData.append('DriverPhoneNumber', DriverPhoneNumber);
+            fileData.append('Language', Language);
+            fileData.append('CarrierAssignId', CarrierAssignId);
+
+            if (DriverName == "") {
+                $("#txtDriver").focus();
+                $("#lblDriverName").fadeIn();
+                $("#lblDriverName").fadeOut(3000);
+                return;
+            }
+
+            if (DriverPhoneNumber == "") {
+                $("#txtDriverPhoneNumber").focus();
+                $("#lblDriverPhone").fadeIn();
+                $("#lblDriverPhone").fadeOut(3000);
+                return;
+            }
+
+            if (Language == "") {
+                $("#txtLanguage").focus();
+                $("#lblDriverLanguage").fadeIn();
+                $("#lblDriverLanguage").fadeOut(3000);
+                return;
+            }
+
+
+            //20210123 Comment By Hasan Bilal (Vache requirement make driver license optional)
+            //var FilesCount = files.length;
+            //if (FilesCount == 0) {
+            //    //alert('Upload Driver License');
+            //    $("#lblDriverLicense").fadeIn();
+            //    $("#lblDriverLicense").fadeOut(3000);
+            //    return;
+            //}
+
+
+            $.ajax({
+                url: '/Definition/SaveDriver',
+                type: "POST",
+                contentType: false, // Not to set any content header
+                processData: false, // Not to process data
+                data: fileData,
+                success: function (result) {
+                    //alert(result);
+                var Documents;
+                    if (result != null) {
+                        //alert('Test');
+
+                   $("#txtDriver").val("");
+                   $("#txtDriverPhoneNumber").val("");
+                   $("#txtLanguage").val("");
+                   //$("#txtShowCarrierAssignId").val("");
+
+                        $("#DriverLicense_Upload").val('');
+
+                        $("#Add_Driver").modal('hide');
+                         $("#lblDriverSaveMessage").fadeIn();
+                        $("#lblDriverSaveMessage").fadeOut(5000);
+
+
+                        $("#DriverId").html("");
+                        $("#DriverId").append
+                            ($('<option></option>').val(null).html("Select Driver"));
+                        $.each($.parseJSON(result), function (i, driver) { $("#DriverId").append($('<option></option>').val(driver.Value).html(driver.Text)) })
+                        return
+
+                    }
+
+                },
+                error: function (err) {
+                    alert(err.statusText);
+                }
+            });
+        } else {
+            alert("FormData is not supported.");
+        }
+
+    });
+
+
+
+
+
+    function CloseDriverModel() {
+
+        $("#Add_Driver").modal('hide');
+    }
+
+    $(document).ready(function () {
+
+         //Load Head Section
+        var CarrierDetailObject = @Html.Raw(Json.Encode(ViewBag.CarrierDetials));
+
+        if (CarrierDetailObject.length > 0) {
+
+
+
+            //for (i = 0; i = CarrierDetailObject.length; i++) {
+
+            var Categoryid = CarrierDetailObject[0].CarrierCategoryId;
+
+
+
+                //$('#txtBrokerName').val(LoadHeadObject[i].BrokerName);
+            $('#CategoryId').val(Categoryid);
+            //return;
+                //alert(LoadHeadObject[i].IsOwnerOperator);
+
+            if (CarrierDetailObject[0].IsOwnerOperator == "0") {
+                    // Check
+
+                    $("#chkIsOwnerOperator").prop("checked", false);
+
+                }
+            else if (CarrierDetailObject[0].IsOwnerOperator == "1") {
+                    // Check
+                    $("#chkIsOwnerOperator").prop("checked", true);
+
+            }
+
+            if (CarrierDetailObject[0].IsQuickPay == "0") {
+                // Check
+
+                $("#chkIsQuickPay").prop("checked", false);
+
+            }
+            else if (CarrierDetailObject[0].IsQuickPay == "1") {
+                // Check
+                $("#chkIsQuickPay").prop("checked", true);
+
+            }
+
+            if (CarrierDetailObject[0].IsBlackList == "0") {
+                // Check
+
+                $("#chkIsBlackList").prop("checked", false);
+
+            }
+            else if (CarrierDetailObject[0].IsBlackList == "1") {
+                // Check
+                $("#chkIsBlackList").prop("checked", true);
+
+            }
+
+
+            //}
+        }
+
+
+        //var Categoryid = $("#CategoryId").find("option:selected").val();
+        //Categoryid ="1"
+        //alert(Categoryid);
+
+
+        //$("#CategoryId").val("2");
+
+        //$("#CategoryId").prop("selectedIndex", 2);
+
+        //var CarrierName = $("#txtCarrierName").val();
+
+    });
+    //Apply Select2 on dropdown
+    jQuery(document).ready(function () {
+        jQuery('#TrailerTypeId').select2();
+        jQuery('#DriverId').select2();
+        //jQuery('#CategoryId').select2();
+
+
+        //alert(CarrierName);
+
+        var CarrierName = $("#txtCarrierName").val();
+        if (CarrierName == "") {
+            $("#NewCarrier").hide();
+        }
+
+        else if (CarrierName != "") {
+            document.getElementById('lblCarrierName').innerHTML = " ( " + CarrierName + " ) ";
+
+            $("#lblCarrierSaveMessage").fadeIn();
+            $("#lblCarrierSaveMessage").fadeOut(5000);
+
+        }
+
+
+    });
+
+    //Set Date Format for truck availability
+    $("#AvailableDate").datepicker({
+        format: "mm/dd/yyyy"
+    });
+
+    //Function to get State and city against Zip Code
+    function GetStateCity() {
+        var ZipCode = document.getElementById("txtZipCode");
+        $.ajax({
+            type: "GET",
+            url: "/Definition/GetStateCity/?ZipCode=" + ZipCode.value + " ",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                if (response != null) {
+                    if (response.StateName == "0") {
+                        //alert("Invalid Zip Code");
+
+                        document.getElementById('lblZipCodeError').innerHTML = 'Invalid Zip Code';
+                        $("#lblZipCodeError").fadeIn();
+                        $("#lblZipCodeError").fadeOut(3000);
+
+                        //$('#txtZipCode').focus();
+                        $('#txtStates').val("");
+                        $('#txtCity').val("");
+                        $('#txtZipCode').val("");
+                        $('#txtStateCode').val("");
+
+
+                        return;
+                    }
+                    $('#txtStates').val(response.StateCode);
+                    $('#txtCity').val(response.CityName);
+                    $('#txtStateCode').val(response.StateCode);
+
+                } else {
+                    alert("Something went wrong");
+                }
+            },
+            failure: function (response) {
+                alert("No Data");
+            },
+            error: function (response) {
+                //alert(response.responseText);
+            }
+        });
+    }
+
+
+    //Function to get State and city against Zip Code
+    function GetLocation(type) {
+        var StateCityCode;
+        if (type == 'S') {
+            StateCityCode = $("#txtStates").val();
+        }
+        else if (type == 'C') {
+            StateCityCode = $("#txtCity").val();
+        }
+
+        //alert(StateCityCode);
+        //return;
+
+        $.ajax({
+            type: "GET",
+            url: "/Definition/GetStateCityInformation/?type='" + type + "'&Filter='"+StateCityCode+"' ",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                if (response != null) {
+                    if (response.StateName == "0") {
+                        //alert("Invalid Zip Code");
+
+                        document.getElementById('lblZipCodeError').innerHTML = 'Invalid Zip Code';
+
+                        if (type == 'S') {
+                            //$('#txtStates').focus();
+                            $("#lblStateCodeError").fadeIn();
+                            $("#lblStateCodeError").fadeOut(3000);
+                        }
+                        else if (type == 'C') {
+                            //$('#txtCity').focus();
+                            $("#lblCityCodeError").fadeIn();
+                            $("#lblCityCodeError").fadeOut(3000);
+                        }
+                         $('#txtStates').val("");
+                        $('#txtCity').val("");
+                        $('#txtZipCode').val("");
+                        $('#txtStateCode').val("");
+                        return;
+                    }
+                    $('#txtStates').val(response.StateCode);
+                    $('#txtCity').val(response.CityName);
+                    $('#txtStateCode').val(response.StateCode);
+                    $('#txtZipCode').val(response.ZipCode);
+
+                } else {
+                    alert("Something went wrong");
+                }
+            },
+            failure: function (response) {
+                alert("No Data");
+            },
+            error: function (response) {
+                //alert(response.responseText);
+            }
+        });
+    }
+
+
+
+    //Function to get Driver Details
+    function GetDriverDetails() {
+
+
+        var DriverId = document.getElementById("DriverId");
+        //alert(DriverId.value);
+        $.ajax({
+            type: "GET",
+            url: "/Definition/GetDriverDetail/?DriverId=" + DriverId.value + " ",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                if (response != null) {
+                    if (response.Phone == "0") {
+
+                        $('#DriverNumber').val("");
+                        $('#DriverLanguage').val("");
+                        return;
+                    }
+                    $('#DriverNumber').val(response.Phone);
+                    $('#DriverLanguage').val(response.Language);
+
+
+
+
+
+                    $("#DriverLicense a").remove();
+                    if (response.LicenseFileName != "") {
+                        var DriverLicensePath = response.LicenseFilePath;
+                        var DriverLicense;
+                        DriverLicense = " <a target='_blank' class='social-icon text-xs-center' href='" + DriverLicensePath + "'> <i class='fa fa-file'></i> " + response.LicenseFileName + "</a >";
+                        $('#DriverLicense').append(DriverLicense);
+                    }
+
+
+                } else {
+                    alert("Something went wrong");
+                }
+            },
+            failure: function (response) {
+                alert("No Data");
+            },
+            error: function (response) {
+                //alert(response.responseText);
+            }
+        });
+
+    }
+
+</script>
+@*Ajax Auto Complete Search*@
+<script>
+
+    $(document).ready(function () {
+
+        $("#txtCarrierName").autocomplete({
+            showHeader: true,
+            source: function (request, response) {
+
+                $.ajax({
+
+                    url: "/Load/GetRecord",
+
+                    type: "POST",
+
+                    dataType: "json",
+
+                    data: { prefix: request.term },
+
+                    success: function (data) {
+
+                        response($.map(data, function (item) {
+
+                            return {
+
+                                label: 'Name: ' + item.CarrierName + ', ID: ' + item.AssignID + ', MC_: ' + item.MC_
+
+
+                                //label: 'Carrier Name:' + item.CarrierName + ', AssignID:' + item.AssignID + ', ContactName:' + item.ContactName +
+                                // + ', Phonenumber:' + item.Phonenumber
+                                , AssignID: item.AssignID
+
+
+                            };
+
+                        }))
+
+                    }
+
+                })
+
+            },
+
+            select: function (event, ui) {
+                $("#tblTruckInfo tbody tr").remove();
+
+                $("#deletediv").fadeIn();
+                //Call EmpDetails jsonResult Method
+                $.getJSON("/Load/GetCarrierDetail/?AssignID=" + ui.item.AssignID + " ",
+                    function (json) {
+                        var tr;
+                        //$('#txtContactName').val(json[0].ContactName);
+                        $('#txtCarrierName').val("");
+                        $('#txtContactName').val(json[0].ContactName);
+                        $('#txtContactName2').val(json[0].ContactNametwo);
+                        $('#txtAssignId').val(json[0].AssignID);
+                        $('#txtPhoneNumber').val(json[0].Phonenumber);
+                        $('#txtPhoneNumber2').val(json[0].Phonenumbertwo);
+                        $('#txtMCNumber').val(json[0].MC_);
+                        $('#txtCarrierName').val(json[0].CarrierName);
+                        $('#txtCarrierEmail').val(json[0].Email);
+
+
+
+                        /*alert(json[0].InsuranceExpirationDate);*/
+
+
+                        var datevalue = new Date(parseInt(json[0].InsuranceExpirationDate.replace("/Date(", "").replace(")/", ""), 10));
+                        var todayDate = new Date(datevalue);
+
+                        var Month = todayDate.getMonth()+1;
+                        var day = todayDate.getDate();
+                        if (Month < 10) Month = "0" + Month;
+                        if (day < 10) day = "0" + day;
+
+                        var DateFrom = todayDate.getFullYear() + "-" + Month + "-" + day;
+
+                        document.getElementById("txtInsuranceExpirtationDate").value = DateFrom;
+
+
+                        
+                        if (json[0].IsOwnerOperator == 0) {
+                            // Check
+                            $("#chkIsOwnerOperator").prop("checked", false);
+
+                        }
+                        else if (json[0].IsOwnerOperator == 1) {
+                            // Check
+                            $("#chkIsOwnerOperator").prop("checked", true);
+
+                        }
+
+                /*        alert(json[0].IsQuickPay)*/
+                        if (json[0].IsQuickPay == 0) {
+                            // Check
+                            $("#chkIsQuickPay").prop("checked", false);
+
+                        }
+                        else if (json[0].IsQuickPay == 1) {
+                            // Check
+                            $("#chkIsQuickPay").prop("checked", true);
+
+                        }
+
+                        if (json[0].IsBlackList == 0) {
+                            // Check
+                            $("#chkIsBlackList").prop("checked", false);
+
+                        }
+                        else if (json[0].IsBlackList == 1) {
+                            // Check
+                            $("#chkIsBlackList").prop("checked", true);
+
+                        }
+                        
+
+                        if (json[0].Istrailerinterchange == 0) {
+                            // Check
+                            $("#chkIstrailerinterchange").prop("checked", false);
+
+                        }
+                        else if (json[0].Istrailerinterchange == 1) {
+                            // Check
+                            $("#chkIstrailerinterchange").prop("checked", true);
+
+                        }
+
+                       
+
+
+
+                        var Categoryid = json[0].CarrierCategoryId;
+
+                        //return;
+                        $('#CategoryId').val(Categoryid);
+
+                        //alert(json[0].CarrierCategoryId + json[0].IsOwnerOperator);
+                        //$('#CategoryId').val(json[0].CarrierCategoryId);
+
+                        //$('#CategoryId').val("1");
+                        //$('#OwnerOperator').val(json[0].IsOwnerOperator);
+                        document.getElementById('lblCarrierName').innerHTML = " ( " +  json[0].CarrierName + " ) ";
+
+                        $('#NewCarrier').show();
+
+                        @* <a target="_blank" class="social-icon text-xs-center" href="@item.ImagePath">
+                            <img src="~/assets/img/documentation.png" />
+                            <i class="fa fa-file"></i>
+                                                    @item.FileName
+                                                </a> *@
+
+                        var MCAuthortiypath = json[0].McAuthorityFilePath;
+                        ////var filepath = result[i].ImagePath.val();
+                        //Documents = "<div id ='DocumentsColumn' class='col-md-4'><a target = '_blank' class='social-icon text-xs-center' href ='" + path + "' ><img src='/assets/img/documentation.png'>" + LoadHeadDocument[i].FileName + "</a> <button type='button' onclick='DeleteDocument(" + LoadHeadDocument[i].FilePathId + ")' id='btnRemoveDocument' class='close' aria-label='Close'><span aria-hidden='true'>&times;</span></button></div>";
+
+                        //$('#UploadedDocuments').append(Documents);
+
+
+                        $("#McAuthorityDocumentdiv div").remove();
+                        //if (MCAuthortiypath != "") {
+                        //    var MCAuhtority;
+                        //    MCAuhtority = " <a target='_blank' class='social-icon text-xs-center' href='" + MCAuthortiypath + "'> <i class='fa fa-file'></i> " + json[0].McAuthorityFileName + "</a >";
+                        //    $('#McAuthorityDocument').append(MCAuhtority);
+                        //}
+
+
+                         if (MCAuthortiypath != "") {
+                        var MCAuhtority;
+                             MCAuhtority = "<div id='DocumentsColumn' style='background-color:@Session["Color"];padding:7px'>  <a style='color:white !Important' target='_blank' class='social-icon text-xs-center' href='" + MCAuthortiypath + "'> <i class='fa fa-file'></i> " + json[0].McAuthorityFileName + "</a >";
+                             MCAuhtority += '<button style="color:white !Important" type="button" onclick=DeleteDocument("' + ui.item.AssignID + '","MC") id="btnRemoveDocument" class="close" aria-label="Close"><span aria-hidden="true">×</span></button> </div>';
+                             $('#McAuthorityDocumentdiv').append(MCAuhtority);
+
+
+                    }
+
+
+                        $('#W9DocumentExisting div').remove();
+                        var W9path = json[0].W9FilePath;
+                        //if (W9path != "") {
+                        //    var W9;
+                        //    W9 = " <a target='_blank' class='social-icon text-xs-center' href='" + W9path + "'> <i class='fa fa-file'></i> " + json[0].W9FileName + "</a >";
+                        //    $('#W9DocumentExisting').append(W9);
+                        //}
+
+                         if (W9path != "") {
+                        var W9;
+                             W9 = "  <div id='DocumentsColumn' style='background-color:@Session["Color"];padding:7px'><a  style='color:white !Important' target='_blank' class='social-icon text-xs-center' href='" + W9path + "'> <i class='fa fa-file'></i> " + json[0].W9FileName + "</a >";
+                             W9 += '<button style="color:white !Important" type="button" onclick=DeleteDocument("' + ui.item.AssignID + '","W9") id="btnRemoveDocument" class="close" aria-label="Close"><span aria-hidden="true">×</span></button> </div>';
+                        $('#W9DocumentExisting').append(W9);
+
+
+
+
+                    }
+
+                        var Insurance;
+
+
+                        $('#InsuranceFileNameDocument div').remove();
+                        var InsuranceFilePath = json[0].InsuranceFilePath;
+                        //if (InsuranceFilePath != "") {
+                        //    Insurance = " <a target='_blank' class='social-icon text-xs-center' href='" + InsuranceFilePath + "'> <i class='fa fa-file'></i> " + json[0].InsuranceFileName + "</a >";
+                        //    $('#InsuranceFileNameDocument').append(Insurance);
+                        //}
+
+
+                         if (InsuranceFilePath != "") {
+                             Insurance = "  <div id='DocumentsColumn' style='background-color:@Session["Color"];padding:7px'>  <a style='color:white !Important' target='_blank' class='social-icon text-xs-center' href='" + InsuranceFilePath + "'> <i class='fa fa-file'></i> " + json[0].InsuranceFileName + "</a >";
+                             Insurance += '<button style="color:white !Important" type="button" onclick=DeleteDocument("' + ui.item.AssignID + '","IN") id="btnRemoveDocument" class="close" aria-label="Close"><span aria-hidden="true">×</span></button> </div>';
+                        $('#InsuranceFileNameDocument').append(Insurance);
+                    }
+
+
+                        var Assignment;
+
+
+                        $('#NoticeAssignmentDocument div').remove();
+                        var AssignmentFilePath = json[0].AssignmentFilePath;
+                        //if (AssignmentFilePath != "") {
+                        //    Assignment = " <a target='_blank' class='social-icon text-xs-center' href='" + AssignmentFilePath + "'> <i class='fa fa-file'></i> " + json[0].AssignmentFileName + "</a >";
+                        //    $('#NoticeAssignmentDocument').append(Assignment);
+                        //}
+
+                        if (AssignmentFilePath != "") {
+                            AssignmentNotice = " <div id='DocumentsColumn' style='background-color:@Session["Color"];padding:7px'> <a style='color:white !Important' target='_blank' class='social-icon text-xs-center' href='" + AssignmentFilePath + "'> <i class='fa fa-file'></i> " + json[0].AssignmentFileName + "</a >";
+                            AssignmentNotice += '<button style="color:white !Important" type="button" onclick=DeleteDocument("' + ui.item.AssignID + '","NA") id="btnRemoveDocument" class="close" aria-label="Close"><span aria-hidden="true">×</span></button> </div>';
+                        $('#NoticeAssignmentDocument').append(AssignmentNotice);
+                    }
+
+                        var Cheque;
+
+
+                        $('#VoidedChequedocumentdiv div').remove();
+                        var VoidChequeFilePath = json[0].VoidChequeFilePath;
+                        //if (VoidChequeFilePath != "") {
+                        //    Cheque = " <a target='_blank' class='social-icon text-xs-center' href='" + VoidChequeFilePath + "'> <i class='fa fa-file'></i> " + json[0].VoidChequeFileName + "</a >";
+                        //    $('#VoidedChequedocumentdiv').append(Cheque);
+                        //}
+
+                         if (VoidChequeFilePath != "") {
+                             VoidCheque = " <div id='DocumentsColumn' style='background-color:@Session["Color"];padding:7px'> <a  style='color:white !Important' target='_blank' class='social-icon text-xs-center' href='" + VoidChequeFilePath + "'> <i class='fa fa-file'></i> " + json[0].VoidChequeFileName + "</a >";
+
+                             VoidCheque += '<button style="color:white !Important" type="button" onclick=DeleteDocument("' + ui.item.AssignID + '","VC") id="btnRemoveDocument" class="close" aria-label="Close"><span aria-hidden="true">×</span></button> </div>';
+                        $('#VoidedChequedocumentdiv').append(VoidCheque);
+                    }
+
+
+
+
+
+
+
+                        //Append each row to html table
+                        for (var i = 0; i < json.length; i++) {
+                            if (json[i].TruckId != 0) {
+
+
+
+                                //var datevalue = new Date(parseInt(json[i].AvailableDate.replace("/Date(", "").replace(")/", ""), 10));
+                                //var todayDate = new Date(datevalue);
+                                //var format = "AM";
+                                //var hour = todayDate.getHours();
+                                //var min = todayDate.getMinutes();
+                                //if (hour > 11) { format = "PM"; }
+                                //if (hour > 12) { hour = hour - 12; }
+                                //if (hour == 0) { hour = 12; }
+                                //if (min < 10) { min = "0" + min; }
+                                //var Month = todayDate.getMonth() + 1;
+                                //var Month = todayDate.getMonth() + 1;
+                                //var AvailableDate = todayDate.getDate() + "/" + Month + "/" + todayDate.getFullYear() + "";
+
+                                //var AvailableDate = Month + "/" + todayDate.getDate() + "/" + todayDate.getFullYear() + " " + hour + ":" + min + " " + format;
+                                //if (json[i].AvailableDate = "01/01/1900") {
+                                //    json[i].AvailableDate = "";
+                                //    }
+
+                                tr = $('<tr/>');
+                                tr.append("<td>" + json[i].TruckId + "</td>");
+                                tr.append("<td>" + json[i].CarrierAssignId + "</td>");
+                                tr.append("<td>" + json[i].CarrierName + "</td>");
+                                tr.append("<td>" + json[i].TruckNo + "</td>");
+                                tr.append("<td>" + json[i].TruckYard + "</td>");
+                                tr.append("<td>" + json[i].PrefferedDestination + "</td>");
+                                tr.append("<td>" + json[i].TrailerNo + "</td>");
+                                tr.append("<td hidden>" + json[i].TrailerTypeId + "</td>");
+                                tr.append("<td hidden>" + json[i].TrailerTypeName + "</td>");
+                                tr.append("<td>" + json[i].ZipCode + "</td>");
+                                tr.append("<td hidden>" + json[i].StateName + "</td>");
+                                tr.append("<td hidden>" + json[i].CityName + "</td>");
+                                tr.append("<td >" + json[i].AvailableDate + "</td>");
+                                tr.append("<td hidden>" + json[i].DriverId + "</td>");
+                                tr.append("<td hidden>" + json[i].DriverName + "</td>");
+                                tr.append("<td hidden>" + json[i].DriverPhone + "</td>");
+                                tr.append("<td hidden><a id='remove' class='open-AddBookDialog' href='#' data-toggle='modal' data-target='#Edit_Carrier'><i class='remove fa fa-pencil m-r-5'></i> </a></td>");
+                                tr.append("<td hidden><a id='remove' class='open-AddBookDialog' style='color: red;'  href='#' data-toggle='modal' data-target='#Delete_Carrier'><i class='remove fa fa-trash-o m-r-5'></i> </a></td>");
+
+                                //<td> <a id="remove" class="open-AddBookDialog" href="#" data-toggle="modal" data-target="#Edit_Carrier"><i class="remove fa fa-pencil m-r-5"></i> </a></td>
+                                //    <td> <a id="remove" class="open-AddBookDialog" style="color:red;" href="#" data-toggle="modal" data-target="#Delete_Carrier"><i class="remove fa fa-trash-o m-r-5"></i> </a></td>
+                                $('#tblTruckInfo').append(tr);
+                            }
+
+                        }
+                    });
+
+            }
+        });
+    });
+
+
+
+
+
+
+
+</script>
+
+
+@*Add Truck Information*@
+<Script>
+    $("body").on("click", "#btnAddTruck", function () {
+
+        var Trucks = new Array();
+        var TrucksList = {};
+
+        //Get Truck Form Data
+        var CarrierAssignId = $("#txtShowCarrierAssignId");
+        var TruckNo = $("#txtTruckNumber");
+        var TruckYard = $("#txtTruckYard");
+        var TrailerNo = $("#txtTrailerNumber");
+        var TrailerTypeId = $("#TrailerTypeId").find("option:selected").val();
+        var TrailerTypeName = $("#TrailerTypeId").find("option:selected").text();
+        var AvailableDate = $("#AvailableDate");
+        var GetZipCode = $("#txtZipCode");
+        var State = $("#txtStates");
+        var City = $("#txtCity");
+        var StateCode = $("#txtStateCode");
+        var DriverId = $("#DriverId").find("option:selected").val();
+        var DriverName = $("#DriverId").find("option:selected").text();
+        var DriverPhone = $("#DriverNumber");
+        var DriverLanguage = $("#DriverLanguage");
+
+        var CarrierAssignsId = $("#txtShowCarrierAssignId");
+        var CarrierName = $("#txtShowCarrierName");
+        var Email = $("#txtCarrierEmail");
+        var ContactName = $("#txtShowContactName");
+        var PhoneNumber = $("#txtShowPhoneNumber");
+        var ContactName2 = $("#txtContactName2");
+        var PhoneNumber2 = $("#txtPhoneNumber2");
+        var InsuranceExpirationDate = $("#txtInsuranceExpirtationDate");
+        var MC_ = $("#txtShowMCNumber");
+        var CategoryId = $("#txtCarrierCategoryId");
+        var Quickpaypercentage = $("#Quickpaypercentage").val();
+        var IsOwnerOperator = 0;
+        var IsQuickPay = 0;
+        var IsBlackList = 0;
+        var Istrailerinterchange = 0;
+
+        var PrefferedDestinations = $("#txtPreferredDestinations").val();
+
+
+        var chkBox = document.getElementById('chkIsOwnerOperator');
+        if (chkBox.checked) {
+
+            IsOwnerOperator = 1
+
+        }
+        else {
+            IsOwnerOperator = 0
+        }
+
+        var chkBox = document.getElementById('chkIsQuickPay');
+        if (chkBox.checked) {
+
+            IsQuickPay = 1
+        }
+        else {
+            IsQuickPay = 0
+        }
+
+
+        var chkIsBlackList = document.getElementById('chkIsBlackList');
+        if (chkIsBlackList.checked) {
+
+            IsBlackList = 1
+        }
+        else {
+            IsBlackList = 0
+        }
+
+        var chkIstrailerinterchange = document.getElementById('chkIstrailerinterchange');
+        if (chkIstrailerinterchange.checked) {
+
+            Istrailerinterchange = 1
+        }
+        else {
+            Istrailerinterchange = 0
+        }
+
+
+
+
+        //var MC_ = $("#CategoryId");
+        //var MC_ = $("#txtShowMCNumber");
+
+        if (TruckNo.val() == "") {
+            //alert("Enter Truck Number");
+
+            $("#lblTruckNoError").fadeIn();
+            $("#lblTruckNoError").fadeOut(3000);
+            $("#txtTruckNumber").focus();
+            return;
+        }
+
+        if (TruckYard.val() == "") {
+            //alert("Enter Truck Yard");
+            $("#lblTruckYardError").fadeIn();
+            $("#lblTruckYardError").fadeOut(3000);
+
+            $("#txtTruckYard").focus();
+            return;
+        }
+        if (TrailerNo.val() == "") {
+            //alert("Enter Trailer No ");
+
+            $("#lblTrailerNoError").fadeIn();
+            $("#lblTrailerNoError").fadeOut(3000);
+            $("#txtTrailerNumber").focus();
+            return;
+        }
+        if (TrailerTypeId == "0") {
+            //alert("Select Trailer Type");
+
+            $("#lblTrailerTypeError").fadeIn();
+            $("#lblTrailerTypeError").fadeOut(3000);
+            $("#TrailerTypeId").focus();
+            return;
+        }
+        if (GetZipCode.val() == "") {
+            //alert("Enter Zip Code");
+
+            document.getElementById('lblZipCodeError').innerHTML = 'Enter Zip Code';
+            $("#lblZipCodeError").fadeIn();
+            $("#lblZipCodeError").fadeOut(3000);
+            $("#txtZipCode").focus();
+            return;
+        }
+        if (DriverId == "0") {
+            //alert("Select Driver");
+            $("#lblDriverNameError").fadeIn();
+            $("#lblDriverNameError").fadeOut(3000);
+            $("#DriverId").focus();
+            return;
+        }
+
+
+
+        TrucksList.CarrierAssignId = CarrierAssignId.val();
+        TrucksList.TruckNo = TruckNo.val();
+        TrucksList.TruckYard = TruckYard.val();
+        TrucksList.TrailerNo = TrailerNo.val();
+        TrucksList.TrailerTypeId = TrailerTypeId;
+        TrucksList.TrailerTypeName = TrailerTypeName;
+        TrucksList.AvailableDate = AvailableDate.val();
+        TrucksList.ZipCode = GetZipCode.val();
+        TrucksList.StateName = State.val();
+        TrucksList.CityName = City.val();
+        TrucksList.DriverId = DriverId;
+        TrucksList.DriverName = DriverName;
+        TrucksList.DriverPhone = DriverPhone.val();
+        TrucksList.DriverLanguage = DriverLanguage.val();
+        TrucksList.StateCode = StateCode.val();
+        TrucksList.PrefferedDestination = PrefferedDestinations;
+        Trucks.push(TrucksList);
+
+
+        var model = {
+            CarrierAssignsId: CarrierAssignsId.val(),
+            CarrierName: CarrierName.val(),
+            ContactName: ContactName.val(),
+            PhoneNumber: PhoneNumber.val(),
+            ContactName2: ContactName2.val(),
+            PhoneNumber2: PhoneNumber2.val(),
+            InsuranceExpirationDate: InsuranceExpirationDate.val(),
+            MC_: MC_.val(),
+            Email: Email.val(),
+            CarrierCategoryId: CategoryId.val(),
+            IsOwnerOperator: IsOwnerOperator,
+            IsQuickPay: IsQuickPay,
+            IsBlackList: IsBlackList,
+            Istrailerinterchange: Istrailerinterchange,
+            Quickpaypercentage: Quickpaypercentage,
+            TruckList: Trucks,
+        };
+
+        console.log(model);
+
+
+        //Send the JSON array to Controller using AJAX.
+        $.ajax({
+            url: "/Definition/SaveTruckList",
+            type: "POST",
+            data: JSON.stringify(model),
+            //data: JSON.stringify(formData),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+
+                location.reload(true);
+
+            }
+        });
+
+
+
+
+    });
+
+</Script>
+
+@*Save Truck Information*@
+@*<script>
+        $("body").on("click", "#btnSaveCarrierInformation", function () {
+
+
+
+            //Loop through the Table rows and build a JSON array.
+            var Trucks = new Array();
+            var CarrierAssignsId = $("#txtAssignId");
+            var CarrierName = $("#txtCarrierName");
+            var ContactName = $("#txtContactName");
+            var PhoneNumber = $("#txtPhoneNumber");
+            var MC_ = $("#txtMCNumber");
+
+            if (CarrierName.val() == "") {
+                alert("Enter or Select Carrier Name");
+                $("#txtCarrierName").focus();
+                return;
+            }
+
+            if (ContactName.val() == "") {
+                alert("Enter Contact Name");
+                $("#txtContactName").focus();
+                return;
+            }
+
+            if (PhoneNumber.val() == "") {
+                alert("Enter Phone Name");
+                $("#txtPhoneNumber").focus();
+                return;
+            }
+
+            if (MC_.val() == "") {
+                alert("Enter MC Number");
+                $("#txtMCNumber").focus();
+                return;
+            }
+
+
+
+            $("#tblTruckInfo TBODY TR ").each(function () {
+                var row = $(this);
+                var TrucksList = {};
+
+                //TrucksList.TruckId = row.find("TD").eq(1).html();
+                TrucksList.CarrierAssignId = row.find("TD").eq(1).html();
+                TrucksList.TruckNo = row.find("TD").eq(2).html();
+                TrucksList.TruckYard = row.find("TD").eq(3).html();
+                TrucksList.TrailerNo = row.find("TD").eq(4).html();
+                TrucksList.TrailerTypeId = row.find("TD").eq(5).html();
+                TrucksList.ZipCode = row.find("TD").eq(7).html();
+                TrucksList.AvailableDate = row.find("TD").eq(10).html();
+                TrucksList.DriverName = row.find("TD").eq(11).html();
+                TrucksList.DriverPhone = row.find("TD").eq(12).html();
+                TrucksList.DriverLanguage = row.find("TD").eq(12).html();
+                TrucksList.DriverId = row.find("TD").eq(11).html();
+                TrucksList.IsActive = row.find("TD").eq(13).html();
+                Trucks.push(TrucksList);
+
+
+            });
+
+            var model = {
+                CarrierAssignsId: CarrierAssignsId.val(),
+                CarrierName : CarrierName.val(),
+                ContactName : ContactName.val(),
+                PhoneNumber : PhoneNumber.val(),
+                MC_ : MC_.val(),
+            };
+
+            //Send the JSON array to Controller using AJAX.
+            $.ajax({
+
+                type: "POST",
+                url: "/Definition/SaveCarrierInfo",
+                data: JSON.stringify(model),
+                //data: JSON.stringify(formData),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (r) {
+                    alert(r + " record(s) inserted.");
+                }
+            });
+        });
+
+
+    </script>*@
+
+
+<script>
+    //$("#MCAuthorityDocument").fileinput();
+    //$("#InsuranceDocument").fileinput();
+    //$("#W9Document").fileinput();
+
+    function CarrierDataValidation() {
+
+        var CarrierAssignId = $("#txtAssignId");
+        var CarrierName = $("#txtCarrierName");
+        var ContactName = $("#txtContactName");
+        var PhoneNumber = $("#txtPhoneNumber");
+        var MCNumber = $("#txtMCNumber");
+
+        var CarrierCategoryId = $("#CategoryId").val();
+
+        var IsOwnerOperator;
+
+        if (document.getElementById("chkIsOwnerOperator").checked == true) {
+            IsOwnerOperator = 1;
+        }
+        else if (document.getElementById("chkIsOwnerOperator").checked == false) {
+            IsOwnerOperator = 0;
+        }
+
+
+        if (CarrierName.val() == "") {
+            //alert("Enter or Select Carrier Name");
+
+            $("#lblCarrier").fadeIn();
+            $("#lblCarrier").fadeOut(3000);
+            $("#txtCarrierName").focus();
+            return;
+        }
+
+        if (ContactName.val() == "") {
+            //alert("Enter Contact Name");
+
+            $("#lblContactName").fadeIn();
+            $("#lblContactName").fadeOut(3000);
+            $("#txtContactName").focus();
+            return;
+        }
+
+        if (PhoneNumber.val() == "") {
+            $("#lblPhoneNuber").fadeIn();
+            $("#lblPhoneNuber").fadeOut(3000);
+            //alert("Enter Phone Name");
+            $("#txtPhoneNumber").focus();
+            return;
+        }
+
+        if (MCNumber.val() == "") {
+            //alert("Enter MC Number");
+
+            $("#lblMCNumber").fadeIn();
+            $("#lblMCNumber").fadeOut(3000);
+            $("#txtMCNumber").focus();
+            return;
+        }
+        if (CarrierCategoryId== "0") {
+            //alert("Enter MC Number");
+
+            $("#lblCategoryError").fadeIn();
+            $("#lblCategoryError").fadeOut(3000);
+            $("#CategoryId").focus();
+            return;
+        }
+
+
+
+        if (CarrierName.val() != "") {
+            $('#Add_Truck').modal('show');
+            document.getElementById("txtShowCarrierAssignId").value = CarrierAssignId.val();
+            document.getElementById("txtShowCarrierName").value = CarrierName.val();
+            document.getElementById("txtShowContactName").value = ContactName.val();
+            document.getElementById("txtShowPhoneNumber").value = PhoneNumber.val();
+            document.getElementById("txtShowMCNumber").value = MCNumber.val();
+
+            document.getElementById("txtShowCarrierNames").innerHTML = CarrierName.val();
+            document.getElementById("txtCarrierCategoryId").value = CarrierCategoryId;
+
+            document.getElementById("txtIsOwnerOperator").value = IsOwnerOperator;
+
+
+
+            $.ajax({
+                type: "GET",
+                url: "/Definition/GetCarrierDrivers/?CarrierAssignId='" + $("#txtShowCarrierAssignId").val() +"'",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    if (response != null) {
+                        $("#DriverId").html("");
+                        $("#DriverId").append
+                        ($('<option></option>').val(0).html("Select Driver"));
+                        $.each($.parseJSON(response), function (i, driver) { $("#DriverId").append($('<option></option>').val(driver.Value).html(driver.Text))})
+
+
+                        return;
+                    }
+                },
+                failure: function (response) {
+                    //alert("No Data");
+                },
+                error: function (response) {
+                    //alert(response.responseText);
+                }
+            });
+
+
+            return;
+        }
+
+
+    }
+
+    function ClearAllData() {
+
+        $("#deletediv").fadeOut();
+
+        var date = new Date();
+        var day = date.getDate();
+        var month = date.getMonth() + 1;
+        var year = date.getFullYear();
+
+        if (month < 10) month = "0" + month;
+        if (day < 10) day = "0" + day;
+
+        var txtDateTimeShow = year + "-" + month + "-" + day;
+
+        document.getElementById("txtInsuranceExpirtationDate").value = txtDateTimeShow;
+        //document.getElementById("txtDateTimeShow").value = txtDateTimeShow;
+
+        //var txtDateTime = year + "-" + month + "-" + day;
+
+        
+
+
+        $("#tblTruckInfo tbody tr").remove();
+        $('#txtCarrierName').val("");
+        $('#txtContactName').val("");
+        $('#txtAssignId').val("");
+        $('#txtPhoneNumber').val("");
+        $('#txtMCNumber').val("");
+        $('#txtCarrierName').val("");
+        $("#txtCarrierEmail").val("");
+        $('#NewCarrier').hide();
+
+        $('#txtContactName2').val("");
+        $('#txtPhoneNumber2').val("");
+        $("#Quickpaypercentage").val("3");
+        document.getElementById('lblCarrierName').innerHTML = "";
+
+
+        //MCAuhtority = " <a target='_blank' class='social-icon text-xs-center' href=" + json[0].McAuthorityFilePath + "> <i class='fa fa - file'></i>" + json[0].McAuthorityFileName + "</a >";
+        $('#McAuthorityDocumentdiv div').remove();
+
+        $('#W9DocumentExisting div').remove();
+
+        $('#InsuranceFileNameDocument div').remove();
+
+        $('#NoticeAssignmentDocument div').remove();
+
+        $('#VoidedChequedocumentdiv div').remove();
+
+
+        document.getElementById("chkIsOwnerOperator").checked = false;
+
+        document.getElementById("chkIsQuickPay").checked = false;
+
+        document.getElementById("chkIsBlackList").checked = false;
+
+        document.getElementById("chkIstrailerinterchange").checked = false;
+
+        $("#CategoryId").val(0);
+        $.ajax({
+            type: "GET",
+            url: "/Definition/GetNewAssignId/",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                if (response != null) {
+                    $('#txtAssignId').val(response.AssignID);
+                        return;
+                    }
+
+
+
+            },
+            failure: function (response) {
+                alert("No Data");
+            },
+            error: function (response) {
+                alert(response.responseText);
+            }
+        });
+
+
+    }
+
+    //Function to select Carrier from Carrier table list
+    function ReloadCarrier(CarrierAssignID) {
+        $("#tblTruckInfo tbody tr").remove();
+
+        $("#deletediv").fadeIn();
+        //Call EmpDetails jsonResult Method
+        $.getJSON("/Load/GetCarrierDetail/?AssignID=" + CarrierAssignID + " ",
+            function (json) {
+
+
+
+                $('html,body').animate({
+                    scrollTop: $("#CarrierInformationSection").offset().top
+                },
+                    'slow');
+
+                $("txtCarrierName").focus();
+                var tr;
+                //$('#txtContactName').val(json[0].ContactName);
+                $('#txtCarrierName').val("");
+                $('#txtContactName').val(json[0].ContactName);
+                $('#txtContactName2').val(json[0].ContactNametwo);
+                $('#txtAssignId').val(json[0].AssignID);
+                $('#txtPhoneNumber').val(json[0].Phonenumber);
+                $('#txtPhoneNumber2').val(json[0].Phonenumbertwo);
+                $('#txtMCNumber').val(json[0].MC_);
+                $('#txtCarrierName').val(json[0].CarrierName);
+                $('#txtCarrierEmail').val(json[0].Email);
+                /*alert(json[0].InsuranceExpirationDate);*/
+                $('#txtInsuranceExpirtationDate').val(json[0].InsuranceExpirationDate);
+                //alert(json[0].CarrierCategoryId + "1" + json[0].IsOwnerOperator);
+
+                $('#Quickpaypercentage').val(json[0].quickpaypercentage);
+
+                
+
+                var datevalue = new Date(parseInt(json[0].InsuranceExpirationDate.replace("/Date(", "").replace(")/", ""), 10));
+                var todayDate = new Date(datevalue);
+
+                var Month = todayDate.getMonth() + 1;
+                var day = todayDate.getDate();
+                if (Month < 10) Month = "0" + Month;
+                if (day < 10) day = "0" + day;
+
+                var DateFrom = todayDate.getFullYear() + "-" + Month + "-" + day;
+
+                document.getElementById("txtInsuranceExpirtationDate").value = DateFrom;
+
+
+
+                if (json[0].IsOwnerOperator == 0) {
+                    // Check
+                    $("#chkIsOwnerOperator").prop("checked", false);
+
+                }
+                else if (json[0].IsOwnerOperator == 1) {
+                    // Check
+                    $("#chkIsOwnerOperator").prop("checked", true);
+
+                }
+
+    
+
+                if (json[0].IsQuickPay == 0) {
+                    // Check
+                    $("#chkIsQuickPay").prop("checked", false);
+                    document.getElementById("Quickpaypercentage").disabled = true;
+                    document.getElementById('Quickpaypercentage').setAttribute('readonly',true);
+
+                }
+                else if (json[0].IsQuickPay == 1) {
+                    // Check
+                    $("#chkIsQuickPay").prop("checked", true);
+                    document.getElementById("Quickpaypercentage").disabled = false;
+                    document.getElementById('Quickpaypercentage').setAttribute('readonly', false);
+
+                }
+
+
+                if (json[0].IsBlackList == 0) {
+                    // Check
+                    $("#chkIsBlackList").prop("checked", false);
+
+                }
+                else if (json[0].IsBlackList == 1) {
+                    // Check
+                    $("#chkIsBlackList").prop("checked", true);
+
+                }
+
+                
+
+                if (json[0].Istrailerinterchange == 0) {
+                    // Check
+                    $("#chkIstrailerinterchange").prop("checked", false);
+
+                }
+                else if (json[0].Istrailerinterchange == 1) {
+                    // Check
+                    $("#chkIstrailerinterchange").prop("checked", true);
+
+                }
+
+
+               
+
+                var Categoryid = json[0].CarrierCategoryId;
+
+                //return;
+                $('#CategoryId').val(Categoryid);
+
+                //alert(json[0].CarrierCategoryId + json[0].IsOwnerOperator);
+                //$('#CategoryId').val(json[0].CarrierCategoryId);
+
+                //$('#CategoryId').val("1");
+                //$('#OwnerOperator').val(json[0].IsOwnerOperator);
+                document.getElementById('lblCarrierName').innerHTML = " ( " + json[0].CarrierName + " ) ";
+
+                $('#NewCarrier').show();
+
+                @* <a target="_blank" class="social-icon text-xs-center" href="@item.ImagePath">
+                    <img src="~/assets/img/documentation.png" />
+                    <i class="fa fa-file"></i>
+                                                    @item.FileName
+                                                </a> *@
+
+                        var MCAuthortiypath = json[0].McAuthorityFilePath;
+                ////var filepath = result[i].ImagePath.val();
+                //Documents = "<div id ='DocumentsColumn' class='col-md-4'><a target = '_blank' class='social-icon text-xs-center' href ='" + path + "' ><img src='/assets/img/documentation.png'>" + LoadHeadDocument[i].FileName + "</a> <button type='button' onclick='DeleteDocument(" + LoadHeadDocument[i].FilePathId + ")' id='btnRemoveDocument' class='close' aria-label='Close'><span aria-hidden='true'>&times;</span></button></div>";
+
+                //$('#UploadedDocuments').append(Documents);
+
+
+
+                $("#McAuthorityDocumentdiv div").remove();
+                if (MCAuthortiypath != "") {
+                    var MCAuhtority;
+                    MCAuhtority = "  <div id='DocumentsColumn' style='background-color:@Session["Color"];padding:7px'> <a style='color:white !Important' target='_blank' class='social-icon text-xs-center' href='" + MCAuthortiypath + "'> <i class='fa fa-file'></i> " + json[0].McAuthorityFileName + "</a >";
+                    MCAuhtority += '<button style="color:white !Important" type="button" onclick=DeleteDocument("' + CarrierAssignID+'","MC") id="btnRemoveDocument" class="close" aria-label="Close"><span aria-hidden="true">×</span></button> </div>';
+                    $('#McAuthorityDocumentdiv').append(MCAuhtority);
+                }
+
+
+                $('#W9DocumentExisting div').remove();
+                var W9path = json[0].W9FilePath;
+                if (W9path != "") {
+                    var W9;
+                    W9 = " <div id='DocumentsColumn' style='background-color:@Session["Color"];padding:7px'>  <a style='color:white !Important'  target='_blank' class='social-icon text-xs-center' href='" + W9path + "'> <i class='fa fa-file'></i> " + json[0].W9FileName + "</a >";
+                    W9 += '<button style="color:white !Important" type="button" onclick=DeleteDocument("' +CarrierAssignID + '","W9") id="btnRemoveDocument" class="close" aria-label="Close"><span aria-hidden="true">×</span></button> </div>';
+                    $('#W9DocumentExisting').append(W9);
+                }
+
+
+                var Insurance;
+
+
+                $('#InsuranceFileNameDocument div').remove();
+                var InsuranceFilePath = json[0].InsuranceFilePath;
+                if (InsuranceFilePath != "") {
+                    Insurance = " <div id='DocumentsColumn' style='background-color:@Session["Color"];padding:7px'> <a  style='color:white !Important' target='_blank' class='social-icon text-xs-center' href='" + InsuranceFilePath + "'> <i class='fa fa-file'></i> " + json[0].InsuranceFileName + "</a >";
+                    Insurance += '<button style="color:white !Important" type="button" onclick=DeleteDocument("' + CarrierAssignID + '","IN") id="btnRemoveDocument" class="close" aria-label="Close"><span aria-hidden="true">×</span></button> </div>';
+                    $('#InsuranceFileNameDocument').append(Insurance);
+                }
+
+                var AssignmentNotice;
+                $('#NoticeAssignmentDocument div').remove();
+                var AssignmentNoticePath = json[0].AssignmentFilePath;
+                if (AssignmentNoticePath != "") {
+                    AssignmentNotice = " <div id='DocumentsColumn' style='background-color:@Session["Color"];padding:7px'> <a style='color:white !Important' target='_blank' class='social-icon text-xs-center' href='" + AssignmentNoticePath + "'> <i class='fa fa-file'></i> " + json[0].AssignmentFileName + "</a >";
+                    AssignmentNotice += '<button style="color:white !Important" type="button" onclick=DeleteDocument("' + CarrierAssignID + '","NA") id="btnRemoveDocument" class="close" aria-label="Close"><span aria-hidden="true">×</span></button> </div>';
+                    $('#NoticeAssignmentDocument').append(AssignmentNotice);
+                }
+
+
+                var Voidcheque;
+                $('#VoidedChequedocumentdiv div').remove();
+                var VoidchequePath = json[0].VoidChequeFilePath;
+                if (VoidchequePath != "") {
+                    Voidcheque = "  <div id='DocumentsColumn' style='background-color:@Session["Color"];padding:7px'><a style='color:white !Important' target='_blank' class='social-icon text-xs-center' href='" + VoidchequePath + "'> <i class='fa fa-file'></i> " + json[0].VoidChequeFileName + "</a >";
+                    Voidcheque += '<button style="color:white !Important" type="button" onclick=DeleteDocument("' + CarrierAssignID + '","VC") id="btnRemoveDocument" class="close" aria-label="Close"><span aria-hidden="true">×</span></button> </div>';
+                    $('#VoidedChequedocumentdiv').append(Voidcheque);
+                }
+
+
+
+
+
+
+
+                //Append each row to html table
+                for (var i = 0; i < json.length; i++) {
+                    if (json[i].TruckId != 0) {
+
+
+
+                        //var datevalue = new Date(parseInt(json[i].AvailableDate.replace("/Date(", "").replace(")/", ""), 10));
+                        //var todayDate = new Date(datevalue);
+                        //var format = "AM";
+                        //var hour = todayDate.getHours();
+                        //var min = todayDate.getMinutes();
+                        //if (hour > 11) { format = "PM"; }
+                        //if (hour > 12) { hour = hour - 12; }
+                        //if (hour == 0) { hour = 12; }
+                        //if (min < 10) { min = "0" + min; }
+                        //var Month = todayDate.getMonth() + 1;
+                        //var AvailableDate = todayDate.getDate() + "/" + Month + "/" + todayDate.getFullYear() + "";
+
+                        //var AvailableDate = Month + "/" + todayDate.getDate() + "/" + todayDate.getFullYear() + " " + hour + ":" + min + " " + format;
+                        //if (json[i].AvailableDate = "01/01/1900") {
+                        //    json[i].AvailableDate = "";
+                        //    }
+
+                        tr = $('<tr/>');
+                        tr.append("<td>" + json[i].TruckId + "</td>");
+                        tr.append("<td>" + json[i].CarrierAssignId + "</td>");
+                        tr.append("<td>" + json[i].CarrierName + "</td>");
+                        tr.append("<td>" + json[i].TruckNo + "</td>");
+                        tr.append("<td>" + json[i].TruckYard + "</td>");
+                        tr.append("<td>" + json[i].PrefferedDestination + "</td>");
+                        tr.append("<td>" + json[i].TrailerNo + "</td>");
+                        tr.append("<td hidden>" + json[i].TrailerTypeId + "</td>");
+                        tr.append("<td hidden>" + json[i].TrailerTypeName + "</td>");
+                        tr.append("<td>" + json[i].ZipCode + "</td>");
+                        tr.append("<td hidden>" + json[i].StateName + "</td>");
+                        tr.append("<td hidden>" + json[i].CityName + "</td>");
+                        tr.append("<td >" + json[i].AvailableDate + "</td>");
+                        tr.append("<td hidden>" + json[i].DriverId + "</td>");
+                        tr.append("<td hidden>" + json[i].DriverName + "</td>");
+                        tr.append("<td hidden>" + json[i].DriverPhone + "</td>");
+                        tr.append("<td hidden><a id='remove' class='open-AddBookDialog' href='#' data-toggle='modal' data-target='#Edit_Carrier'><i class='remove fa fa-pencil m-r-5'></i> </a></td>");
+                        tr.append("<td hidden><a id='remove' class='open-AddBookDialog' style='color: red;'  href='#' data-toggle='modal' data-target='#Delete_Carrier'><i class='remove fa fa-trash-o m-r-5'></i> </a></td>");
+
+                        //<td> <a id="remove" class="open-AddBookDialog" href="#" data-toggle="modal" data-target="#Edit_Carrier"><i class="remove fa fa-pencil m-r-5"></i> </a></td>
+                        //    <td> <a id="remove" class="open-AddBookDialog" style="color:red;" href="#" data-toggle="modal" data-target="#Delete_Carrier"><i class="remove fa fa-trash-o m-r-5"></i> </a></td>
+                        $('#tblTruckInfo').append(tr);
+                    }
+
+                }
+            });
+    }
+
+    function myFunction() {
+
+        //Search by single Column
+        var input, filter, table, tr, td, i, txtValue;
+        input = document.getElementById("txtCarrierListSearch");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("tblCarriernfo");
+        tr = table.getElementsByTagName("tr");
+        for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[2];
+            if (td) {
+                txtValue = td.textContent || td.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+
+
+        //Search for multiple column
+        //input = document.getElementById("txtCarrierListSearch");
+        //var value = input.value.toLowerCase();
+        //$("#tblCarriernfo tr").filter(function () {
+        //    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        //});
+
+
+
+    }
+
+    function FilterCarrierList(CarrierFilterType) {
+
+        var chkBox = document.getElementById('blacklistfilter');
+        var Blacklist;
+            if (chkBox.checked) {
+                Blacklist = 1;
+            }
+            else {
+                Blacklist = 0;
+        }
+
+        var chkBoxoperator = document.getElementById('OwnerOperatorfilter');
+        var operatorlist;
+        if (chkBoxoperator.checked) {
+            operatorlist = 1;
+        }
+        else {
+            operatorlist = 0;
+        }
+
+
+
+        $.ajax({
+            type: "GET",
+            url: "/Definition/AllCarrierListWithFilter/?FilterType=" + CarrierFilterType + "&BlackList=" + Blacklist + "&operatorlist="+operatorlist+"",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                $("#tblCarriernfo tbody tr").remove();
+
+                for (var i = 0; i < response.length; i++) {
+
+
+                    var Color = "";
+                    tr = $('<tr/>');
+
+
+                    if (response[i].CarrierCategoryId == 1) {
+                        tr.append("<td><i class='fa fa-circle' style='color: orange;font-size: 15px;' aria-hidden='true'></i>" + Color + "</td>");
+                    }
+                    else if (response[i].CarrierCategoryId == 2) {
+                        tr.append("<td><i class='fa fa-circle' style='color:brown;font-size: 15px;' aria-hidden='true'></i>" + Color + "</td>");
+                    }
+                    else if (response[i].CarrierCategoryId == 0) {
+                        tr.append("<td>" + Color + "</td>");
+                    }
+
+                    var AssignId = response[i].AssignID;
+                    AssignId = "'" + AssignId + "'" + "";
+
+                    tr.append('<td><a onclick="ReloadCarrier(' + AssignId + ')" style="cursor:pointer;color:deepskyblue" >' + response[i].AssignID + '</a></td>');
+                    tr.append('<td><a onclick="ShowCarrerLoads(' + AssignId + ')" style="cursor:pointer;color:deepskyblue" >' + response[i].CarrierName + '</a></td>');
+                    AssignId = "";
+                    /*tr.append("<td>" + response[i].CarrierName + "</td>");*/
+                    //tr.append(RatingDiv);
+
+
+
+
+
+                    var RatingTd;
+                    var Rating = response[i].Rating;
+                    var CarrierAssignId = response[i].AssignID;
+                    CarrierAssignId = "'" + CarrierAssignId + "'" + "";
+                    var RatingDiv = '<td style="font-size: 8px" onclick="ShowCommentRating(' + CarrierAssignId + ',' + Rating+')">';
+                    CarrierAssignId = "";
+                    for (var j = 1; j <= 10; j++) {
+
+                        if (parseInt(Rating) > 0) {
+                            if (j <= parseInt(Rating)) {
+                                RatingDiv += "<span class='fa fa-star checked'></span>"
+                                //RatingDiv = "<div> <a target='_blank' class='social-icon text-xs-center' href = '" + MCAuthortiypath + "' > <i class='fa fa-file'></i> " + json[0].McAuthorityFileName + "</a > ";
+
+                            }
+                            else if (j > parseInt(Rating) && j <= 10) {
+
+                                RatingDiv += "<span class='fa fa-star unchecked'></span>"
+                                //RatingDiv = "<div> <a target='_blank' class='social-icon text-xs-center' href = '" + MCAuthortiypath + "' > <i class='fa fa-file'></i> " + json[0].McAuthorityFileName + "</a > ";
+
+                            }
+                        }
+                        else if (parseInt(Rating) == 0) {
+
+                            RatingDiv += "<span class='fa fa-star unchecked'></span>"
+                        }
+
+                    }
+
+                    RatingTd = RatingDiv + "</td>";
+
+                    tr.append(RatingTd);
+
+
+
+
+
+
+                    tr.append("<td>" + response[i].CategoryName + "</td>");
+                    tr.append("<td>" + response[i].Email + "</td>");
+                    tr.append("<td>" + response[i].MC_ + "</td>");
+
+                    tr.append("<td>" + response[i].ContactName + "</td>");
+                    tr.append("<td>" + response[i].Phonenumber + "</td>");
+                    tr.append("<td>" + response[i].TrailerNo + "</td>");
+                    tr.append("<td>" + response[i].TruckYard + "</td>");
+                    tr.append("<td>" + response[i].ZipCode + "</td>");
+                    tr.append("<td>" + response[i].StateCode + "</td>");
+                    tr.append("<td>" + response[i].DriverName + "</td>");
+                    tr.append("<td>" + response[i].DriverPhone + "</td>");
+
+                    if (response[i].IsBlackList == 1) {
+                        tr.append("<td>Yes</td>");
+                    }
+                    else if (response[i].IsBlackList == 0) {
+                        tr.append("<td>No</td>");
+                    }
+
+                    $('#tblCarriernfo').append(tr);
+                }
+
+                //}
+            },
+            failure: function (response) {
+                //alert("No Data");
+            },
+            error: function (response) {
+                //alert(response.responseText);
+            }
+        });
+    }
+
+</script>
+
+

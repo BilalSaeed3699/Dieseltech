@@ -1,0 +1,196 @@
+﻿
+@{
+    ViewBag.Title = "Leaderboard";
+}
+
+
+<head>
+    <style>
+        .alert {
+            display: none;
+        }
+
+        div#tblannualtotals_filter {
+            position: sticky;
+            top: 0;
+            padding: 5px;
+            z-index: 100;
+            background: darkblue;
+        }
+
+        /*  #Loadshead {
+            position: sticky;
+            top: 0;
+            padding: 5px;
+            z-index: 100;
+        }*/
+
+        div#tblannualtotals_length {
+            position: sticky !important;
+            top: 0 !important;
+            padding: 5px !important;
+            z-index: 100 !important;
+            background: darkblue !important;
+            color: white !important;
+            width: 79.5% !important;
+            /*height: 4.5% !important;*/
+        }
+
+        select {
+            color: white !important;
+        }
+
+        option {
+            color: black !important;
+        }
+
+        label {
+            color: white !important
+        }
+
+        input[type="search"] {
+            color: white !important;
+        }
+    </style>
+
+</head>
+<div class="content">
+    <div class="row">
+        <div class="col-md-2">
+            <h4 class="page-title">User Extension <i onclick="RefereshList()" class="fa fa-refresh"></i></h4>
+            <span style="color:red;" id="fademsg">@ViewBag.error</span>
+        </div>
+
+
+    </div>
+
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="table-responsive">
+                @*<table class="table table-border table-striped custom-table  g-dataTable mb-0">*@
+
+                <table style="font-size:12px;width:100%" class="table table-condensed table-fit table-sm table-striped g-dataTable  mb-0" id="tblannualtotals">
+                    <thead>
+                        <tr>
+
+                            <th>User Name </th>
+                            <th>ALKAIOS TRANSPORTATION EXTENSION </th>
+                            <th>JETLINE TRANSPORT EXTENSION</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in @ViewBag.Userextensionlist)
+                        {
+                            <tr>
+
+                                <td>@item.Profile_name</td>
+
+                                <td><input onblur="updateextension('@item.Profile_name',@item.User_ID,1,this)" style="padding:5px" value="@item.ALKAIOS_TRANSPORTATION" /></td>
+                                <td><input onblur="updateextension('@item.Profile_name',@item.User_ID,3,this)" style="padding:5px" value="@item.JETLINE_TRANSPORT" /></td>
+
+                            </tr>
+                        }
+
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+
+        </div>
+        <div class="col-md-4">
+            <div id="Alertdiv" class="myAlert-bottom alert alert-success">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong id="Message"></strong>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+
+    function updateextension(Username,Userid, companyid, extension) {
+
+        $.ajax({
+
+            type: "POST",
+            url: "/User/UpdateExtenstion/?Userid=" + Userid + "&companyid=" + companyid + "&extension=" + extension.value+"",
+
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                if (data == "1") {
+             
+                    if (extension.value != "") {
+                        document.getElementById("Message").innerHTML = "User '" + Username + "' Extension Updated ";
+                        document.getElementById("Message").style.color = "#3c763d";
+                        document.getElementById("Alertdiv").style.backgroundColor = '#d4edda';
+                        document.getElementById("Alertdiv").style.borderColor = "#c3e6cb";
+                        $("#Alertdiv").fadeIn();
+                        $("#Alertdiv").fadeOut(8000);
+
+                        /*dummyfield*/
+                    }
+                }
+                else {
+
+                }
+
+
+            }
+
+
+
+
+        });
+
+
+
+
+        //$('#Update_Load_Invoice').modal('show');
+
+
+
+    }
+
+    jQuery(document).ready(function () {
+
+          var JqueryTableSearchValue = @Html.Raw(Json.Encode(ViewBag.JqueryTableSearchValue));
+
+        var carrierscroll = @Html.Raw(Json.Encode(ViewBag.carrierscroll));
+
+
+
+        var row = $('tr');
+        var table = $('table');
+        var w = $(window);
+        var row = table.find('tr').eq(carrierscroll);
+
+        if (row.length) {
+            w.scrollTop(row.offset().top - (w.height() / 2));
+        }
+
+
+
+        jQuery('#ddlyear').select2();
+        $('#tblannualtotals').DataTable({
+            "search": {
+                "search": JqueryTableSearchValue
+            },
+           "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+            "pageLength": -1
+        });
+    });
+    function RefereshList() {
+        location.reload();
+    }
+
+
+</script>

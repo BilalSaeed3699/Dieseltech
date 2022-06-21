@@ -1,0 +1,540 @@
+﻿
+@using Dieseltech.Models;
+@model Dieseltech.Models.sp_Get_Carrier_Helper_List_Result
+@{
+    ViewBag.Title = "State";
+
+    List<sp_Get_Country_State_Result> list = (List<sp_Get_Country_State_Result>)ViewBag.StateList;
+}
+<head>
+
+
+    @*<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>*@
+
+    <link rel="stylesheet" type="text/css" href="/assets/css/font-awesome.min.css">
+
+    <link rel="stylesheet" type="text/css" href="/assets/css/style.css">
+    <!--[if lt IE 9]>
+        <script src="assets/js/html5shiv.min.js"></script>
+        <script src="assets/js/respond.min.js"></script>
+    <![endif]-->
+
+    <style>
+        label {
+           /* color: #00539CFF;*/
+        }
+    </style>
+</head>
+
+<div class="content">
+    <div class="row">
+        <div class="col-sm-4 col-3">
+            <h4 class="page-title">State</h4>
+        </div>
+        <div class="col-sm-8 col-9 text-right m-b-20">
+
+
+            <a id="remove" style="color: white;background-color: #e80000;" href="#" data-toggle="modal" data-target="#add_recipentEmail" class=" open-AddBookDialog btn btn-primary btn-rounded float-right"><i class="fa fa-plus"></i> Add State</a>
+
+
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="table-responsive">
+                <table id="tblState" class="table table-border table-striped  custom-table g-dataTable  mb-0">
+                    <thead>
+                        <tr>
+                            <th hidden></th>
+                            <th class="carrier_helper_id" hidden>StateId</th>
+                            <th class="carrier__id" hidden>CountryId</th>
+                            <th class="Zone__id" hidden>ZoneId</th>
+                            <th>Country Name</th>
+                            <th>Zone Name</th>
+                            <th>State Name </th>
+
+                            <th>Active </th>
+
+                            <th class="text-right">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        @foreach (var item in list)
+                        {
+                        <tr>
+                            <td class="recipient_id" hidden>@item.CountryId</td>
+                            <td class="CarrierHelper_id" hidden>@item.StateID</td>
+                            <td class="Zone_id" hidden>@item.ZoneID</td>
+                            <td hidden class="IsActive">@item.IsActive</td>
+                            <td class="CarrierHelperName_id">@item.CountryName</td>
+                            <td class="ZoneName_id">@item.ZONENAME</td>
+                            <td class="CarrierName_id">@item.StateName</td>
+
+
+
+                            @if (item.IsActive == false)
+                            {
+                                <td>
+                                    <div class="badge badge-danger">Non-Active</div>
+
+                                </td>
+                            }
+                            else
+                            {
+                                <td>
+                                    <div class="badge badge-success">Active</div>
+
+                                </td>
+                            }
+
+
+                            <td class="text-right">
+                                <a id="remove" class="open-AddBookDialog " href="#" data-toggle="modal" data-target="#Edit_CarrierHelper"><i class="remove fa fa-pencil m-r-5"></i> </a>
+                                <a id="remove" class="open-AddBookDialog " href="#" style="color:red;" data-toggle="modal" data-target="#delete_agenda"><i class="remove fa fa-trash-o m-r-5"></i> </a>
+                          
+                            </td>
+
+                        </tr>
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="delete_agenda" class="modal fade delete-modal" role="dialog">
+    <div class="modal-dialog ">
+        @using (Html.BeginForm("DeleteState", "Definition", FormMethod.Post))
+        {@Html.AntiForgeryToken()
+        <div class="modal-content">
+            <div class="modal-body text-center">
+                <input type="text" id="CarrierHelperId" name="CarrierHelperId" class="form-control" hidden />
+                <img src="~/assets/img/sent.png" alt="" width="50" height="46">
+                <h3>Are you sure want to delete this?</h3>
+                <div class="m-t-20">
+                    <a href="#" class="btn btn-white" data-dismiss="modal">Close</a>
+
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </div>
+            </div>
+        </div>
+    }
+    </div>
+
+</div>
+
+
+
+<div id="Edit_CarrierHelper" class="modal fade delete-modal" role="dialog">
+    <div class="modal-dialog ">
+
+
+        @using (Html.BeginForm("Editstate", "Definition", FormMethod.Post))
+        {@Html.AntiForgeryToken()
+        <div class="modal-content">
+            <!--Header-->
+            <div class="modal-header">
+                <p class="heading lead">Modify State</p>
+
+                <button type="button" style="color:white" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" class="white-text">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <form>
+
+                            <input type="text" id="id" name="id" class="form-control" hidden />
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label>Country</label>
+                                    <div class="input-group">
+                                        @*<div class="input-group-prepend">
+                                                <span class="input-group-text">
+                                                    <a id="remove" class="open-AddBookDialog " href="#" data-toggle="modal" data-target="#add_recipent"><i class="fa fa-plus"></i> </a>
+                                                </span>
+                                            </div>*@
+
+                                        <select id="CountryId" required name="CountryId" class="form-control js-example-basic-single">
+                                            <option value="0">Select Country</option>
+                                            @foreach (var item in ViewBag.countries)
+                                            {
+                                                <text>
+                                                    <option value="@item.Value">@item.Text</option>
+
+                                                </text>
+                                            }
+                                        </select>
+
+                                        @*@Html.DropDownList("CountryId", ViewBag.countries as IEnumerable<SelectListItem>, "Select Country Name", new { @class = "form-control" })*@
+                                    </div>
+
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label>Country</label>
+                                    <div class="input-group">
+
+                                        <select id="ZoneListId" name="ZoneListId" class="form-control js-example-basic-single">
+                                            <option value="0">Select Zone</option>
+                                            @foreach (var item in ViewBag.ZoneList)
+                                            {
+                                                <text>
+                                                    <option value="@item.Value">@item.Text</option>
+
+                                                </text>
+                                            }
+                                        </select>
+
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label>State Name</label>
+                                    <div class="form-group">
+                                        <input class="form-control" type="text" id="carrier_Helpers" name="CarrierName_id" placeholder="State Name" required>
+                                        @*<label  name ="UserId" id="UserId" hidden>@Session["User_id"]/</label>*@
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label>Active</label>
+                                    <div class="form-group">
+
+                                        <input class="form-control" style="width: 18px;height: 18px" id="Actives" name="IsActives" checked="checked" value="true" type="checkbox">
+
+                                        @*<label><input class="form-control" style="width:12px;height:12px" id="Active" name="IsActive" checked="checked" value="true" type="checkbox">Actives</label>*@
+                                    </div>
+                                </div>
+
+                            </div>
+
+
+
+                            @*<div class="row">
+                                    <input type="text" id="id" name="id" class="form-control" hidden />
+                                    <div class="col-md-6">
+                                        <div class="form-group" id="ddlCarrierHelperID">
+                                                @Html.DropDownListFor(model => model.CarrierID, ViewBag.carriers as IEnumerable<SelectListItem>, "Select Carrier Name", new { @class = "form-control" })
+                                        </div>
+
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Carrier Helper </label>
+                                            <input class="form-control" type="text" id="CarrierName_id" name="CarrierName_id">
+                                        </div>
+                                    </div>
+
+
+                                </div>*@
+                            <div class="row">
+
+
+                                <div class="col-md-12">
+                                    <label></label>
+                                    <div class="m-t-5 text-right">
+                                        <a href="#" class="btn btn-white" data-dismiss="modal">Close</a>
+                                        <button type="submit" onclick=" return sendform('E')" class="btn btn-primary" style="color: white;background-color: #e80000;">Update</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    }
+    </div>
+
+</div>
+
+
+
+
+<div id="add_recipent" class="modal fade delete-modal" role="dialog">
+    <div class="modal-dialog ">
+        @using (Html.BeginForm("Index", "Recipient", FormMethod.Post))
+        {@Html.AntiForgeryToken()
+        <div class="modal-content">
+            <div class="modal-body ">
+                <div class="row">
+                    <div class="col-lg-12  ">
+                        <form>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>Recipent Title</label>
+                                        <input class="form-control" type="text" id="recipientName" name="recipientName">
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="m-t-5 text-right">
+                                        <a href="#" class="btn btn-white" data-dismiss="modal">Close</a>
+                                        <button type="submit" class="btn btn-primary" style="color:white;background-color: #e80000;">Add</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    }
+    </div>
+</div>
+
+
+<div id="add_recipentEmail" class="modal fade delete-modal" role="dialog">
+    <div class="modal-dialog ">
+        @using (Html.BeginForm("Savestate", "Definition", FormMethod.Post))
+        {@Html.AntiForgeryToken()
+        <div class="modal-content">
+            <!--Header-->
+            <div class="modal-header">
+                <p class="heading lead">Add State</p>
+
+                <button type="button" style="color:white" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" class="white-text">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body ">
+                <div class="row">
+                    <div class="col-lg-12  ">
+                        <form>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label>Country</label>
+                                    <div class="input-group">
+                                        @*<div class="input-group-prepend">
+                                                <span class="input-group-text">
+                                                    <a id="remove" class="open-AddBookDialog " href="#" data-toggle="modal" data-target="#add_recipent"><i class="fa fa-plus"></i> </a>
+                                                </span>
+                                            </div>*@
+                                        @*@Html.DropDownList("CountryId", ViewBag.countries as IEnumerable<SelectListItem>, "Select Country Name", new { @class = "form-control" })*@
+
+                                        <select id="CountrysId" name="CountryId" class="form-control js-example-basic-single">
+                                            <option value="0">Select Country</option>
+                                            @foreach (var item in ViewBag.countries)
+                                            {
+                                                <text>
+                                                    <option value="@item.Value">@item.Text</option>
+
+                                                </text>
+                                            }
+                                        </select>
+
+
+                                    </div>
+
+                                </div>
+                                <div class="col-md-6">
+                                    <label>Country</label>
+                                    <div class="input-group">
+
+                                        <select id="ZoneListId" name="ZoneListId" class="form-control js-example-basic-single">
+                                            <option value="0">Select Zone</option>
+                                            @foreach (var item in ViewBag.ZoneList)
+                                            {
+                                                <text>
+                                                    <option value="@item.Value">@item.Text</option>
+
+                                                </text>
+                                            }
+                                        </select>
+
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+                            <br />
+                            <div class="row">
+
+                                <div class="col-md-6">
+                                    <label>State Name</label>
+                                    <div class="form-group">
+                                        <input class="form-control" type="text" id="state_Name" name="stateName" placeholder="State Name" required>
+                                        @*<label  name ="UserId" id="UserId" hidden>@Session["User_id"]/</label>*@
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Active</label>
+                                        <input class="form-control" style="width: 18px;height: 18px" id="Active" maxlength="8" name="IsActive" checked="checked" value="true" type="checkbox">
+
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12">
+
+                                    <label></label>
+                                    <div class="m-t-5 text-right">
+                                        <a href="#" class="btn btn-white" data-dismiss="modal">Close</a>
+                                        <button type="submit" onclick=" return sendform('S')" class="btn btn-primary" style="color:white;background-color: #e80000;">Add</button>
+                                    </div>
+
+                                </div>
+
+
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    }
+    </div>
+</div>
+
+
+
+<script>
+
+    $(document).on("click", ".open-AddBookDialog", function () {
+
+
+        //alert($(this).children('td').eq(0).is(':checked'));
+
+        var myModal = $('#Edit_CarrierHelper');
+
+
+
+        var recipient_id = $(this).closest('tr').find('.recipient_id').text().trim();
+
+        var ZoneListId = $(this).closest('tr').find('.Zone_id').text().trim();
+
+        $("#CountryId").val(recipient_id);
+
+
+
+        $("#ZoneListId").val(ZoneListId);
+
+
+        var country_id = $(this).closest('tr').find('.CarrierHelper_id').text().trim();
+        var CountryName = $(this).closest('tr').find('.CarrierName_id').text().trim();
+
+        var CarrierHelperName_id = $(this).closest('tr').find('.CarrierHelperName_id').text().trim();
+
+        //var CarrierID = $(this).closest('tr').find('.recipient_id').text().trim();
+
+        var activestatus = $(this).closest('tr').find('.IsActive').text().trim();
+        var IsActive;
+
+        console.log(activestatus);
+        if (activestatus == 'False') {
+
+            $("#Actives").attr('checked', false);
+        }
+        if (activestatus == 'True') {
+            $("#Actives").attr('checked', true);
+        }
+
+
+        $("#id", myModal).val(country_id);
+        $("#CarrierName_id", myModal).val(CarrierHelperName_id);
+        $("#carrier_Helpers", myModal).val(CountryName);
+
+
+        $("#Active", myModal).val(IsActive);
+
+    });
+</script>
+
+<script type="text/javascript">
+    function sendform(type) {
+        var selectedText;
+        var selectedValue;
+        if (type == 'S') {
+
+            selectedText = $("#CountrysId").find("option:selected").text();
+            selectedValue = $("#CountrysId").val();
+
+            if (selectedValue == "0") {
+                alert("Select Country");
+                return false;
+
+            }
+
+            selectedText = $("#ZoneListId").find("option:selected").text();
+            selectedValue = $("#ZoneListId").val();
+
+            if (selectedValue == "0") {
+                alert("Select Zone");
+                return false;
+
+            }
+
+
+            //alert((document.getElementById('Name').value == ""));
+            if (document.getElementById('Name').value == "") {
+                return false;
+
+            }
+
+        }
+        else if (type == 'E') {
+
+            selectedText = $("#CountryId").find("option:selected").text();
+            selectedValue = $("#CountryId").val();
+            //alert("Selected Text: " + selectedText + " Value: " + selectedValue);
+            if (selectedValue == "0") {
+                alert("Select Country");
+                return false;
+
+            }
+
+
+
+        }
+
+
+    }
+
+</script>
+
+
+<script>
+
+    $(document).on("click", ".open-AddBookDialog", function () {
+        var myModal = $('#delete_agenda');
+        var CarrierHelperId = $(this).closest('tr').find('.CarrierHelper_id').text();
+        $("#CarrierHelperId", myModal).val(CarrierHelperId);
+    });
+</script>
+@*<script>
+    $(document).ready(function () {
+        $('#tblState').DataTable();
+    });
+
+</script>*@
+
+@*<script src="/assets/js/jquery-3.2.1.min.js"></script>*@
+
+
+

@@ -1,0 +1,959 @@
+﻿@using Dieseltech.Models;
+@{
+    ViewBag.Title = "InvoicingDetail";
+    List<Sp_Get_Invoice_Load_List_Result> listInvoice = (List<Sp_Get_Invoice_Load_List_Result>)ViewBag.LoadDetailsMonth;
+}
+<style>
+    .FilterButton {
+        margin: 5px;
+    }
+
+    .CheckedImageSize {
+        font-size: 14px !important;
+    }
+
+    img.CheckedImageSize {
+        width: 20px !important;
+    }
+
+    .myAlert-bottom
+    {
+        position: fixed;
+        bottom: 5px;
+        width: 35%;
+        left: 75%;
+    }
+
+    .alert {
+        display: none;
+    }
+
+    div#LoadInvoiceList_filter {
+        position: sticky;
+        top: 0;
+        padding: 5px;
+        z-index: 100;
+        background: darkblue;
+    }
+
+    /*  #Loadshead {
+            position: sticky;
+            top: 0;
+            padding: 5px;
+            z-index: 100;
+        }*/
+
+    div#LoadInvoiceList_length {
+        position: sticky !important;
+        top: 0 !important;
+        padding: 5px !important;
+        z-index: 100 !important;
+        background: darkblue !important;
+        color: white !important;
+        width: 79.5% !important;
+        /*height: 4.5% !important;*/
+    }
+
+    select {
+        color: white !important;
+    }
+
+    option {
+        color: black !important;
+    }
+
+    label {
+        color: white !important
+    }
+
+    input[type="search"] {
+        color: white !important;
+    }
+</style>
+
+
+
+
+<div class="content">
+    @Html.AntiForgeryToken()
+    <form>
+        <div class="row">
+
+            <div class="col-sm-2">
+                <h4 class="page-title">Invoicing Detail  </h4>
+                <span style="color:red;" id="fademsg">@ViewBag.error</span>
+            </div>
+
+            <div class="col-md-10">
+                <div style="float:right !important">
+                    Advance Search <input required name="cwhere" value="@ViewBag.cwhere" />
+                    <button type="submit" name="Filter" href="@Url.Action("InvoicingDetail", "Report", new {userid =@ViewBag.UserId,Filter ="S", Type = @ViewBag.LoadType, FilterDateFroms = ViewBag.LoadFilterDateFrom, FilterDateTos = ViewBag.LoadFilterDateTo })" style="background-color: darkblue   !important" class="btn btn-primary FilterButton">
+                        <i class="fa fa-search"></i> Search
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        @*@using (Html.BeginForm("InvoicingDetail", "Report", FormMethod.Post))
+            {*@
+
+        <div class="row">
+            <div class="col-sm-12 col-md-12">
+                @*<div class="form-group" >
+                        <select class="form-control" name="Filter" id="ddlLoadType" style="height: 35px !important;">
+                            <option value="0">Select Load</option>
+                            <option value="D">Daily</option>
+                            <option value="W">Weekly</option>
+                            <option value="M">Monthly</option>
+                        </select>
+                    </div>*@
+
+                <!--<div class="controls">
+                <label><bold> Load Filter: </bold></label>
+                <div class="btn-group">
+                    <button name="Filter" value="D" onclick="GetFilterTypeValue('D')" class="btn btn-primary FilterButton">Daily</button>
+                    <button name="Filter" value="W" onclick="GetFilterTypeValue('W')" class="btn btn-primary FilterButton">Weekly</button>
+                    <button name="Filter" value="M" onclick="GetFilterTypeValue('M')" class="btn btn-primary FilterButton">Monthly</button>
+                    <button name="Filter" value="0" onclick="GetFilterTypeValue('0')" class="btn btn-primary FilterButton">All</button>
+                </div>-->
+                @*<input type="date" name="FilterDateFrom" value="@ViewBag.DateFrom.ToString("yyyy-MM-dd")" id="txtdatefrom" />
+                    <input type="date" name="FilterDateTo" value="@ViewBag.DateTo.ToString("yyyy-MM-dd")" id="txtdateto" />*@
+
+                <!--<button name="Filter" value="2" class="btn btn-primary FilterButton">Apply</button>-->
+                @*<label class="radio-inline" style="font-size:18px">
+                        <input type="radio" id="rdbDaily" onchange="GetFilterTypeValue('D')" name="Filter" value="D">
+                        Daily
+                    </label>
+                    <label class="radio-inline" style="font-size:18px">
+                        <input type="radio" id="rdbWeekly" name="Filter" onchange="GetFilterTypeValue('W')" value="W">
+                        Weekly
+                    </label>
+                    <label class="radio-inline" style="font-size:18px">
+                        <input type="radio" id="rdbMonthly" name="Filter" onchange="GetFilterTypeValue('M')" value="M">
+                        Monthly
+                    </label>
+                    <label class="radio-inline" style="font-size:18px">
+                        <input type="radio" id="rdbAll" name="Filter" onchange="GetFilterTypeValue('0')" value="0">
+                        All
+                    </label>
+                    <button id="btnAddSearch" href="#"
+                            class="btn btn-secondary" style="background-color: #4c5564 !important">
+                        <i class="fa fa-search"></i>Search
+                    </button>*@
+                <!--<input type="text" id="FilterType" name="Type" value="0" class="form-control" hidden />
+                </div>-->
+
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <a href="@Url.Action("InvoicingDetail", "Report", new {userid =@ViewBag.UserId,Filter ="A", Type = @ViewBag.LoadType, AdvanceFilterDateFroms = ViewBag.AdvanceFilterDateFroms, AdvanceFilterDateTo = ViewBag.AdvanceFilterDateTo,FilterDateFroms = ViewBag.LoadFilterDateFrom, FilterDateTos = ViewBag.LoadFilterDateTo })" style="width:100% !important;height:100%">
+                            <div class="col-md-12" style="background-color: rgb(20,29,186) !important;height:100% !important;width:31%">
+
+                                <h3 style="color:White" id="FilterPeriodType">@ViewBag.LoadType</h3>
+
+                                @*<h5 style="color:White">@DateTime.Now.ToString("MM/dd/yyyy")</h5>*@
+                                <h5 style="color:White">
+                                    @if (ViewBag.LoadType == "Daily")
+                                    {
+                                        @ViewBag.LoadFilterDateFrom.ToString("MM/dd/yyyy")
+                                    }
+
+                                    else if (ViewBag.LoadType == "Weekly")
+                                    {
+                                        @ViewBag.LoadFilterDateFrom.ToString("MM/dd/yyyy")
+                                        <label> - @ViewBag.LoadFilterDateTo.ToString("MM/dd/yyyy")</label>
+                                    }
+                                    else if (ViewBag.LoadType == "Monthly")
+                                    {
+                                        @ViewBag.MonthDetails
+                                    }
+
+                                </h5>
+
+                                @*@if (ViewBag.LoadType == "Weekly")
+                                    {
+                                        <h5 style="color:White">@ViewBag.LoadFilterDateTo.ToString("MM/dd/yyyy")</h5>
+                                    }*@
+
+
+
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="btn-group" style="float:right">
+                            @*<i class="fa fa-circle" style="color:darkorange;font-size:15px" aria-hidden="true"> Confo</i>
+        &nbsp;
+        <i class="fa fa-circle" style="color:darkgreen;font-size:15px" aria-hidden="true"> Confo POD</i>
+        &nbsp;
+        <i class="fa fa-circle" style="color:blue;font-size:15px" aria-hidden="true"> Confo POD,Invoice</i>*@
+
+                            <a style="background-color: deepskyblue !important" class="btn btn-primary FilterButton"><i onclick="RefereshList()" style="font-size:19px !important" class="fa fa-refresh"></i></a>
+
+                            <a name="Filter" target="_blank"
+                               style="background-color: darkgreen !important" class="btn btn-secondary FilterButton"
+                               href="@Url.Action("collection", "Report")">
+
+                                <i class="fa fa-plus"></i>
+                               Collection
+                            </a>
+                            <a name="Filter" href="@Url.Action("InvoicingDetail", "Report", new {userid =@ViewBag.UserId,Filter ="M", Type = @ViewBag.LoadType,AdvanceFilterDateFroms = ViewBag.AdvanceFilterDateFroms, AdvanceFilterDateTo = ViewBag.AdvanceFilterDateTo, FilterDateFroms = ViewBag.LoadFilterDateFrom, FilterDateTos = ViewBag.LoadFilterDateTo })" style="background-color: orange !important" class="btn btn-primary FilterButton"><i class="fa fa-futbol-o"></i> Future Load Manager</a>
+                            <a name="Filter" href="@Url.Action("InvoicingDetail", "Report", new {userid =@ViewBag.UserId,Filter ="F", Type = @ViewBag.LoadType,AdvanceFilterDateFroms = ViewBag.AdvanceFilterDateFroms, AdvanceFilterDateTo = ViewBag.AdvanceFilterDateTo, FilterDateFroms = ViewBag.LoadFilterDateFrom, FilterDateTos = ViewBag.LoadFilterDateTo })" style="background-color: #6c757d !important" class="btn btn-secondary FilterButton"><i class="fa fa-history"></i> Future Loads</a>
+                            <a name="Filter" href="@Url.Action("InvoicingDetail", "Report", new {userid =@ViewBag.UserId,Filter ="AC", Type = @ViewBag.LoadType,AdvanceFilterDateFroms = ViewBag.AdvanceFilterDateFroms, AdvanceFilterDateTo = ViewBag.AdvanceFilterDateTo, FilterDateFroms = ViewBag.LoadFilterDateFrom, FilterDateTos = ViewBag.LoadFilterDateTo })" style="background-color: #218838 !important" class="btn btn-success FilterButton"><i class="fa fa-check"></i> Active</a>
+                            @*<a name="Filter" href="@Url.Action("InvoicingDetail", "Report", new {Filter ="C", Type = @ViewBag.LoadType, FilterDateFroms = ViewBag.LoadFilterDateFrom, FilterDateTos = ViewBag.LoadFilterDateTo })" style="background-color: #e6294b !important" class="btn btn-primary FilterButton"><i class="fa fa-window-close"></i> Canceled</a>*@
+
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-10">
+                        <a href="@Url.Action("InvoicingDetail","Report",new {userid =@ViewBag.UserId,Filter ="A", Type = @ViewBag.LoadType,previous=1,Next=0,AdvanceFilterDateFroms = ViewBag.AdvanceFilterDateFroms, AdvanceFilterDateTo = ViewBag.AdvanceFilterDateTo,FilterDateFroms = ViewBag.LoadFilterDateFrom,FilterDateTos = ViewBag.LoadFilterDateTo})" name="Filter" value="D" onclick="GetFilterTypeValue('D')" class="btn btn-primary FilterButton">Previous</a>
+                        <a name="Filter" href="@Url.Action("InvoicingDetail","Report",new {userid =@ViewBag.UserId,Filter ="A", Type = @ViewBag.LoadType,previous=0,Next=1,AdvanceFilterDateFroms = ViewBag.AdvanceFilterDateFroms, AdvanceFilterDateTo = ViewBag.AdvanceFilterDateTo,FilterDateFroms = ViewBag.LoadFilterDateFrom,FilterDateTos = ViewBag.LoadFilterDateTo })" value="W" onclick="GetFilterTypeValue('W')" class="btn btn-primary">
+                            Next
+                        </a>
+
+
+                        <input type="date" value="@ViewBag.AdvanceFilterDateFroms.ToString("yyyy-MM-dd")" name="AdvanceFilterDateFroms" id="AdvanceFilterDateFroms" />
+                        <input type="date" value="@ViewBag.AdvanceFilterDateTo.ToString("yyyy-MM-dd")" name="AdvanceFilterDateTo" id="AdvanceFilterDateTo" />
+
+                        <input hidden value="@ViewBag.LoadFilterDateFrom.ToString("yyyy-MM-dd")" name="FilterDateFroms" />
+                        <input hidden value="@ViewBag.LoadFilterDateTo.ToString("yyyy-MM-dd")" name="FilterDateTos" />
+
+                        <a name="Filter"
+                           @*href="@Url.Action("Index","Report",new {Filter ="A", Type = @ViewBag.LoadType,AdvanceFilterDateFroms = ViewBag.AdvanceFilterDateFroms, AdvanceFilterDateTo = ViewBag.AdvanceFilterDateTo,
+                                FilterDateFroms = ViewBag.LoadFilterDateFrom,FilterDateTos = ViewBag.LoadFilterDateTo,Custom=1 })"*@
+                           value="W" onclick="Advancesearch('@ViewBag.UserId','A','@ViewBag.LoadType','@ViewBag.AdvanceFilterDateFroms','@ViewBag.AdvanceFilterDateTo',
+                                '@ViewBag.LoadFilterDateFrom','@ViewBag.LoadFilterDateTo',1)" class="btn btn-info" style="background-color: darkgray !important;border:1px solid darkgray !important">
+                            Search
+                        </a>
+                        @if (ViewBag.AccessLevel == 1)
+                        {
+                            <strong>   Agent List </strong>
+                            <select style="width:20% !important" id="userid" required name="userid"
+                                    onchange="ReloadList(this,'D','@ViewBag.LoadType','@ViewBag.AdvanceFilterDateFroms','@ViewBag.AdvanceFilterDateTo',
+                                '@ViewBag.LoadFilterDateFrom','@ViewBag.LoadFilterDateTo')" class="form-control js-example-basic-single">
+
+                                @foreach (var item in ViewBag.AgentList)
+                                {
+                                    <text>
+                                        @if (item.User_ID == ViewBag.UserId)
+                                        {
+                                            <option selected value="@item.User_ID">@item.UserName</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@item.User_ID">@item.UserName</option>
+                                        }
+
+
+
+
+                                    </text>
+                                }
+                            </select>
+                        }
+
+                    </div>
+
+                </div>
+
+
+                <br />
+
+
+            </div>
+            <br />
+            <!--<div class="col-sm-2 col-md-2 float-left" >-->
+            @*<button id="btnAddSearch" type="button" class="btn btn-success btn-block"> Search </button>*@
+            <!--<button onclick="changeLabel('P')" id="btnAddSearch" href="#"
+                        class="btn btn-secondary">
+                    <i class="fa fa-search"></i>Search
+                </button>
+
+            </div>-->
+            <input id="dummyfield" hidden />
+        </div>
+        <br />
+        <br />
+        <div class="row">
+            <div class="col-md-12">
+                <div class="table-responsive" style="overflow: auto !important; height: 700px !important">
+                    @*<div class="table-responsive" style="overflow: auto !important; height: 700px !important">*@
+                    <table style="font-size:10px !important" id="LoadInvoiceList" class="table table-border table-striped table-sm custom-table mb-0 g-dataTable searchable">
+                        <thead>
+                            <tr>
+
+                                <th>Load Number </th>
+                                <th>C.O.D</th>
+                                <th>Date</th>
+                                <th>Agent </th>
+                                <th>Profile </th>
+                                <th>Customer </th>
+                                <th>Carrier </th>
+                                <th>Quick pay  </th>
+                                <th>Quick pay %</th>
+                                <th>Invoice Number</th>
+                                <th>Fuel Advance </th>
+                                <th>Fuel Advance Amount </th>
+                                <th>Adjusted Carrier Rate ($) </th>
+                                <th>Invoice Customer</th>
+                                <th>Payment Recieved</th>
+                                <th>Paid Carrier </th>
+                                <th>POD Uploaded</th>
+                                <th>Customer Conf</th>
+                                <th>POD Document</th>
+                                <th>View </th>
+
+
+
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            @foreach (var item in listInvoice)
+                            {
+                                <tr id="@item.LoaderNumber">
+                                    <td class="LoadNumber" style="width: 6% !important;"> <a> @item.LoaderNumber</a></td>
+                                    <td>@item.COD</td>
+                                    <td>@item.RegistrationDate</td>
+                                    <td>
+                                        @item.Agent
+                                    </td>
+                                    <td>@item.Profile</td>
+                                    <td>@item.Brokernanme</td>
+
+                                    @*<td class="LoadReportNumber">  @item.CarrierName</td>*@
+
+                                    <td class="LoadReportNumber"> <a style="color: #009efb" target="_blank" href="@Url.Action("LoadConfirmation", "Load", new { LoaderNumber = @item.LoaderNumber })"> @item.CarrierName</a></td>
+
+
+                                    @if (@item.isquickpay == 0)
+                                    {
+
+                                        <td>
+                                            <a onclick="UpdateLoadQuickPay(this,1,'QP','@item.LoaderNumber','txtquickpayperctenage_@item.LoaderNumber')"><img class="CheckedImageSize" src="~/assets/img/Unchecked.png" /></a>
+
+
+                                        </td>
+                                    }
+                                    else if (@item.isquickpay == 1)
+                                    {
+                                        <td>
+                                            <a onclick="UpdateLoadQuickPay(this,0,'QP','@item.LoaderNumber',@item.QuickPaypercentage,'txtquickpayperctenage_@item.LoaderNumber')"> <img class="CheckedImageSize" src="~/assets/img/checkbox.png" /></a>
+                                        </td>
+                                    }
+
+                                    @*quick pay percentage*@
+                                    @if (@item.isquickpay == 0)
+                                        {
+
+                                            <td>
+                                                <input   id="txtquickpayperctenage_@item.LoaderNumber" disabled value="@item.QuickPaypercentage"  type="number" style="height:25px;font-size:12px;width:60px !important" />
+
+
+                                            </td>
+                                        }
+                                        else if (@item.isquickpay == 1)
+                                        {
+                                            <td>
+                                                <input onblur="UpdateLoadQuickPay(this,1,'QP','@item.LoaderNumber','txtquickpayperctenage_@item.LoaderNumber')" id="txtquickpayperctenage_@item.LoaderNumber" value="@item.QuickPaypercentage" type="number" style="height:25px;font-size:12px;width:60px !important" />
+                                            </td>
+                                        }
+
+
+
+
+                                    @if (@item.InvoiceNumber == null)
+                                    {
+
+                                        <td><input onblur="UpdateLoadInvoiceNumber(this,'@item.LoaderNumber')" value=" " type="text" style="height:25px;font-size:12px;width:65px !important" /></td>
+                                    }
+                                    else if (@item.InvoiceNumber != null)
+                                    {
+
+                                        <td><input onblur="UpdateLoadInvoiceNumber(this,'@item.LoaderNumber')" value="@item.InvoiceNumber" type="text" style="height:25px;font-size:12px;width:65px  !important" /></td>
+                                    }
+
+
+
+
+
+
+
+
+
+                                    @if (@item.IsFuelAdvance == 0)
+                                    {
+
+                                        <td>
+                                            <a onclick="UpdateLoadInvoicing(this,1,'FA','@item.LoaderNumber')"><img class="CheckedImageSize" src="~/assets/img/Unchecked.png" /></a>
+
+                                            @*<i class="fa fa-check-square" style="font-size: 25px;color: #218838"></i>*@
+
+                                        </td>
+                                    }
+                                    else if (@item.IsFuelAdvance == 1)
+                                    {
+                                        @*<td onclick="LoadApprovalStatus(@item.IsInvoiceCustomer,'@item.LoaderNumber')">*@
+
+                                        <td>
+
+
+                                            <a onclick="UpdateLoadInvoicing(this,0,'FA','@item.LoaderNumber')"> <img class="CheckedImageSize" src="~/assets/img/checkbox.png" /></a>
+
+                                        </td>
+                                    }
+
+
+                                    @{Int32 FuelAmount;}
+
+                                    @if (@item.FuelAdvanceAmount == null)
+                                    {
+                                        FuelAmount = 0;
+                                    }
+                                    else
+                                    {
+                                        FuelAmount = item.FuelAdvanceAmount;
+
+                                    }
+
+
+                                    @if (@item.IsFuelAdvance == 0)
+                                    {
+
+                                        <td><input id="LoadFuelAmount" value="0" disabled type="number" style="height:25px;font-size:12px;width:65px !important" /></td>
+
+                                    }
+                                    else if (@item.IsFuelAdvance == 1)
+                                    {
+                                        <td>
+                                            <input onblur="UpdateLoadFuelAmount(this,'@item.LoaderNumber','F_@item.LoaderNumber','txtquickpayperctenage_@item.LoaderNumber')" id="F_@item.LoaderNumber" value="@FuelAmount" type="number"
+                                                   style="height:25px;font-size:12px;width:65px !important" />
+                                        </td>
+
+                                    }
+
+                                    <td><input id="txtAdjustedCarrierRate" value="@item.AdjustedCarrierRate" disabled type="number" style="height:25px;font-size:12px;width:65px !important" /></td>
+
+
+                                    @if (@item.IsInvoiceCustomer == 0)
+                                    {
+
+                                        <td>
+                                            <a onclick="UpdateLoadInvoicing(this,1,'IC','@item.LoaderNumber')"><img class="CheckedImageSize" src="~/assets/img/Unchecked.png" /></a>
+
+                                            @*<i class="fa fa-check-square" style="font-size: 25px;color: #218838"></i>*@
+
+                                        </td>
+                                    }
+                                    else if (@item.IsInvoiceCustomer == 1)
+                                    {
+                                        @*<td onclick="LoadApprovalStatus(@item.IsInvoiceCustomer,'@item.LoaderNumber')">*@
+
+                                        <td>
+
+
+                                            <a onclick="UpdateLoadInvoicing(this,0,'IC','@item.LoaderNumber')"> <img class="CheckedImageSize" src="~/assets/img/checkbox.png" /></a>
+
+                                        </td>
+                                    }
+
+
+
+                                    @if (@item.IsPaymentRecieved == 0)
+                                    {
+
+                                        <td>
+                                            <a onclick="UpdateLoadInvoicing(this,1,'PR','@item.LoaderNumber')"><img class="CheckedImageSize" src="~/assets/img/Unchecked.png" /></a>
+
+                                            @*<i class="fa fa-check-square" style="font-size: 25px;color: #218838"></i>*@
+
+                                        </td>
+                                    }
+                                    else if (@item.IsPaymentRecieved == 1)
+                                    {
+                                        <td>
+                                            @*<i class="fa fa-window-close" style="font-size: 25px;color:Red"></i>*@
+
+                                            <a onclick="UpdateLoadInvoicing(this,0,'PR','@item.LoaderNumber')"> <img class="CheckedImageSize" src="~/assets/img/checkbox.png" /></a>
+
+                                        </td>
+                                    }
+
+
+                                    @if (@item.IsPaidCarrier == 0)
+                                    {
+
+                                        <td>
+                                            <a onclick="UpdateLoadInvoicing(this,1,'PC','@item.LoaderNumber')"><img class="CheckedImageSize" src="~/assets/img/Unchecked.png" /></a>
+
+                                            @*<i class="fa fa-check-square" style="font-size: 25px;color: #218838"></i>*@
+
+                                        </td>
+                                    }
+                                    else if (@item.IsPaidCarrier == 1)
+                                    {
+                                        <td>
+                                            @*<i class="fa fa-window-close" style="font-size: 25px;color:Red"></i>*@
+
+                                            <a onclick="UpdateLoadInvoicing(this,0,'PC','@item.LoaderNumber')"> <img class="CheckedImageSize" src="~/assets/img/checkbox.png" /></a>
+
+                                        </td>
+                                    }
+
+
+
+
+
+                                    @if (@item.IsPod == 0)
+                                    {
+
+                                        <td>
+                                            <a style="pointer-events:none"><img class="CheckedImageSize" src="~/assets/img/Unchecked.png" /></a>
+
+                                            @*<i class="fa fa-check-square" style="font-size: 25px;color: #218838"></i>*@
+
+                                        </td>
+                                    }
+                                    else if (@item.IsPod == 1)
+                                    {
+                                        <td>
+                                            @*<i class="fa fa-window-close" style="font-size: 25px;color:Red"></i>*@
+
+                                            <a style="pointer-events:none"> <img class="CheckedImageSize" src="~/assets/img/checkbox.png" /></a>
+
+                                        </td>
+                                    }
+
+
+
+                                    @if (item.CustomerConfFileName != "")
+                                    {
+                                        <td class="AssurityBond"><a target="_blank" class="social-icon text-xs-center" style="color:#009efb !important" href="@item.CustomerConfFilePath"> <i class='fa fa-file'></i> @item.CustomerConfFileName</a></td>
+                                    }
+                                    else if (item.CustomerConfFileName == "")
+                                    {
+                                        <td class="AssurityBond">No Document Upload</td>
+                                    }
+
+
+                                    @if (item.PODFileName != "")
+                                    {
+                                        <td class="AssurityBond"><a target="_blank" class="social-icon text-xs-center" style="color:#009efb !important" href="@item.PODFilePath"> <i class='fa fa-file'></i> @item.PODFileName</a></td>
+                                    }
+                                    else if (item.PODFileName == "")
+                                    {
+                                        <td class="AssurityBond">No Document Upload</td>
+                                    }
+
+
+                                    <td style="width:7%">
+                                        <a id="btnView" target="_blank" href="@Url.Action("ReportPreview", "Report", new { LoadNumberModel = @item.LoaderNumber })" class="btn btn-sm bg-info-light">
+                                            <i class="fa fa-eye"></i> View
+                                        </a>
+                                    </td>
+
+
+
+
+
+                                </tr>
+
+
+
+                            }
+
+
+
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-md-4">
+
+            </div>
+            <div class="col-md-8">
+                <div id="Alertdiv" class="myAlert-bottom alert alert-success">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <strong id="Message"></strong>
+                </div>
+
+            </div>
+        </div>
+    </form>
+    @*}*@
+</div>
+
+
+<div id="Update_Load_Invoice" class="modal fade Load-modal" role="dialog">
+    <div class="modal-dialog " style="max-width:500px">
+
+        <div class="modal-content">
+            <div class="modal-header">
+                <p class="heading lead">Update Invoice</p>
+
+                <button onclick="CloseModel()" type="button" style="color:white" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" class="white-text">×</span>
+                </button>
+
+
+
+            </div>
+            <div class="modal-body text-center">
+                <input type="text" id="LoadNumber" name="LoadNumber" class="form-control" hidden />
+                <input type="text" id="LoadStatus" name="LoadStatus" class="form-control" hidden />
+                <input type="text" id="LoadType" name="LoadType" class="form-control" hidden />
+                @*<img src="~/assets/img/sent.png" alt="" width="50" height="46">*@
+                <h3 id="MessageHeading"></h3>
+                <div class="m-t-20">
+                    <a href="#" class="btn btn-white" data-dismiss="modal">No</a>
+
+                    <button type="button" id="btnUpdatLoadInvoice" style="background-color: #4c5564 !important;border: 1px solid #4c5564" class="btn btn-danger">Yes</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+<script>
+    function RefereshList() {
+        location.reload();
+    }
+
+      function ReloadList(userid, Filter, Type, AdvanceFilterDateFroms,AdvanceFilterDateTo,FilterDateFroms,FilterDateTos) {
+
+        var userid = userid.value;
+          $.ajax({
+            url: '@Url.Action("AgentInvoicingDetailsList", "Report")',
+            type: "POST",
+            dataType: 'JSON',
+              data: { userid: userid, Filter: Filter, Type:Type,FilterDateFroms: FilterDateFroms, FilterDateTos: FilterDateTos, AdvanceFilterDateFroms: AdvanceFilterDateFroms, AdvanceFilterDateTo: AdvanceFilterDateTo},
+              success: function (result) {
+                  window.location = result.url;
+              }
+        });
+    }
+
+
+
+      function Advancesearch(Userid,Filter, Type, AdvanceFilterDateFroms, AdvanceFilterDateTo, FilterDateFroms, FilterDateTos, Custom) {
+
+
+        AdvanceFilterDateFroms=  $("#AdvanceFilterDateFroms").val();
+        AdvanceFilterDateTo=  $("#AdvanceFilterDateTo").val();
+
+
+          var model = {
+              userid: Userid,
+            Filter: Filter,
+            Type: Type,
+            AdvanceFilterDateFroms: AdvanceFilterDateFroms,
+            AdvanceFilterDateTo: AdvanceFilterDateTo,
+            FilterDateFroms: FilterDateFroms,
+            FilterDateTos: FilterDateTos,
+            Custom: Custom
+        };
+
+          $.ajax({
+            type: "POST",
+            url: '@Url.Action("AdvanceInvoicingdetailsearch", "Report")',
+              data: JSON.stringify(model),
+              contentType: "application/json; charset=utf-8",
+              dataType: "json",
+            success: function (result) {
+                window.location = result.url;
+            }
+        });
+
+
+    }
+
+
+    function UpdateLoadInvoiceNumber(InvoiceNumber, LoaderNumber) {
+        var JqueryTableSearchValue = $("#LoadInvoiceList_filter input").val();
+
+        $.ajax({
+
+            type: "POST",
+            url: "/Report/UpdateLoadInvoiceNumber/?LoadNumber=" + LoaderNumber + "&InvoiceNumber=" + InvoiceNumber.value + "&JqueryTableSearchValue=" + JqueryTableSearchValue +"",
+
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                if (data == "1") {
+
+
+                    if (InvoiceNumber.value != "") {
+                        document.getElementById("Message").innerHTML = "Invoice Number Updated For Load: " + LoaderNumber + "";
+                        document.getElementById("Message").style.color = "#3c763d";
+                        document.getElementById("Alertdiv").style.backgroundColor = '#d4edda';
+                        document.getElementById("Alertdiv").style.borderColor = "#c3e6cb";
+                        $("#Alertdiv").fadeIn();
+                        $("#Alertdiv").fadeOut(8000);
+
+                        /*dummyfield*/
+                    }
+
+                }
+                else {
+
+                }
+
+
+            }
+
+
+
+
+        });
+
+    }
+
+
+    function UpdateLoadFuelAmount(rowindex,LoaderNumber,FuelAmount,Quickpaypercentage)
+    {
+
+        var rowJavascript = rowindex.parentNode.parentNode;
+        var rowjQuery = $(rowindex).closest("tr");
+        var rowid = rowjQuery[0].rowIndex - 1;
+        var JqueryTableSearchValue = $("#LoadInvoiceList_filter input").val();
+
+        var fuelamount = $("#"+FuelAmount).val();
+       // alert("L" + LoaderNumber + ", " + fuelamount + " , " + rowid + ", " + JqueryTableSearchValue);
+        var Quickpercentagevalue = $("#txtquickpayperctenage_"+LoaderNumber).val();
+
+        $.ajax({
+
+            type: "POST",
+            url: "/Report/UpdateLoadFuelAmount/?LoadNumber=" + LoaderNumber + "&rowindex=" + rowid + "&FuelAmount=" + fuelamount + "&JqueryTableSearchValue=" + JqueryTableSearchValue + "&quickpaypercentage=" + Quickpercentagevalue+"",
+
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                if (data == "1") {
+                    document.getElementById("Message").innerHTML = "Fuel Amount Updated For Load Number: " + LoaderNumber+"";
+                    document.getElementById("Message").style.color = "#3c763d";
+                    document.getElementById("Alertdiv").style.backgroundColor = '#d4edda';
+                    document.getElementById("Alertdiv").style.borderColor = "#c3e6cb";
+                    $("#Alertdiv").fadeIn();
+                    $("#Alertdiv").fadeOut(8000);
+                    location.reload();
+                }
+                else {
+
+                }
+
+
+            }
+
+
+
+
+        });
+
+    }
+
+    $(document).ready(function () {
+        var JqueryTableSearchValue = @Html.Raw(Json.Encode(ViewBag.JqueryTableSearchValue));
+
+        var LoadNumberscroll = @Html.Raw(Json.Encode(ViewBag.LoadNumberscroll));
+
+        var rownumber = @Html.Raw(Json.Encode(ViewBag.Rownumber));
+
+        var rows = document.querySelectorAll('#LoadInvoiceList tr');
+        if (rownumber == "") {
+            rows[0].scrollIntoView({
+                behavior: 'smooth',
+                block: 'center'
+            });
+
+        }
+        else {
+            rows[rownumber].scrollIntoView({
+                behavior: 'smooth',
+                block: 'center'
+            });
+        }
+
+        //var row = $('tr');
+        //var table = $('table');
+        //var w = $(window);
+        //var row = table.find('tr').eq(LoadNumberscroll);
+
+        //if (row.length) {
+        //    w.scrollTop(row.offset().top - (w.height() / 2));
+        //}
+
+
+
+
+        /*var temp = "2142";*/
+        jQuery('#userid').select2();
+        $('#LoadInvoiceList').DataTable({
+             "search": {
+                "search": JqueryTableSearchValue
+            },
+            "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+            "pageLength": -1
+        });
+
+
+
+
+    });
+
+
+    function CloseDriverModel() {
+
+        $("#Update_Load_Invoice").modal('hide');
+    }
+
+    //Function to update load invoicing
+    function UpdateLoadInvoicing(rowindex,status, Type, LoadNumber) {
+
+        var JqueryTableSearchValue = $("#LoadInvoiceList_filter input").val();
+
+        var rowJavascript = rowindex.parentNode.parentNode;
+        var rowjQuery = $(rowindex).closest("tr");
+        var rowid = rowjQuery[0].rowIndex - 1;
+
+        if (status == 0) {
+            document.getElementById("MessageHeading").innerHTML = "Are you sure you want to Un-Check  Mark Load#: " + LoadNumber + " ";
+            $("#LoadStatus").val(1);
+        }
+        else if (status == 1) {
+            document.getElementById("MessageHeading").innerHTML = "Are you sure you want to Check Mark Load#: " + LoadNumber + " ";
+            $("#LoadStatus").val(0);
+        }
+
+        $("#LoadNumber").val(LoadNumber);
+        $("#LoadStatus").val(status);
+        $("#LoadType").val(Type);
+
+        var LoadNumber = $("#LoadNumber").val();
+        var LoadStatus = $("#LoadStatus").val();
+        var LoadType = $("#LoadType").val();
+
+
+        $.ajax({
+
+            type: "POST",
+            url: "/Report/UpdateInvoice/?LoadNumber=" + LoadNumber + "&rowindex=" + rowid +"&LoadStatus=" + LoadStatus + "&LoadType=" + LoadType + "&JqueryTableSearchValue=" + JqueryTableSearchValue +"",
+
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                if (data == "1") {
+                    location.reload();
+
+                }
+                else {
+
+                }
+
+
+            }
+
+
+
+
+        });
+
+
+
+
+        //$('#Update_Load_Invoice').modal('show');
+
+
+
+    }
+
+
+
+
+    function UpdateLoadQuickPay(rowindex,status, Type, LoadNumber,QuickPaypercentage) {
+
+        var JqueryTableSearchValue = $("#LoadInvoiceList_filter input").val();
+
+        var rowJavascript = rowindex.parentNode.parentNode;
+        var rowjQuery = $(rowindex).closest("tr");
+        var rowid = rowjQuery[0].rowIndex - 1;
+
+        var Quickpercentagevalue = $("#txtquickpayperctenage_" + LoadNumber).val();
+        
+        $.ajax({
+
+            type: "POST",
+            url: "/Report/UpdateQuickPay/?LoadNumber=" + LoadNumber + "&rowindex=" + rowid + "&LoadStatus=" + status + "&LoadType=" + Type + "&JqueryTableSearchValue=" + JqueryTableSearchValue + "&QuickPaypercentage=" + Quickpercentagevalue+"",
+
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                if (data == "1") {
+                    location.reload();
+
+                }
+                else {
+
+                }
+
+
+            }
+
+
+
+
+        });
+
+
+
+
+        //$('#Update_Load_Invoice').modal('show');
+
+
+
+    }
+
+
+
+    $('#btnUpdatLoadInvoice').click(function () {
+
+        var LoadNumber = $("#LoadNumber").val();
+        var LoadStatus = $("#LoadStatus").val();
+        var LoadType = $("#LoadType").val();
+
+
+        $.ajax({
+
+            type: "POST",
+            url: "/Report/UpdateInvoice/?LoadNumber=" + LoadNumber + "&LoadStatus=" + LoadStatus + "&LoadType=" + LoadType + "",
+
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                if (data == "1") {
+                    location.reload();
+
+                }
+                else {
+
+                }
+
+
+            }
+
+
+
+
+        });
+
+
+    });
+
+</script>

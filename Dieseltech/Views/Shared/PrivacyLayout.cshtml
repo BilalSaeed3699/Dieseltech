@@ -1,0 +1,165 @@
+﻿
+@using Dieseltech.Models;
+@{
+    ViewBag.Title = "Index";
+
+
+}
+
+<!-- index22:59-->
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+    <link rel="shortcut icon" type="image/x-icon" href="~/assets/img/Logo_2.png">
+    
+
+    <title>Diesel Tech</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="~/assets/css/bootstrap.min.css">
+    <link href="~/assets/css/jquery.minicolors.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-colorpicker/2.5.3/css/bootstrap-colorpicker.css"
+          rel="stylesheet">
+    @*<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css">*@
+    <link href="~/assets/css/jquery.dataTables.min.css" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="~/assets/fonts/glyphicons-halflings-regular.ttf">
+
+    @*<link href="~/assets/css/bootstrap.min.css" rel="stylesheet" />*@
+
+
+    <link href="~/assets/css/fileinput.css" rel="stylesheet" />
+
+    @*<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.4.5/css/fileinput.min.css" media="all" rel="stylesheet" type="text/css" />*@
+    @*<link href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css" />*@
+
+    <link rel="stylesheet" type="text/css" href="~/assets/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="~/assets/css/style.css">
+    @*<link href="~/assets/css/RadioButton.css" rel="stylesheet" />*@
+    <link rel="stylesheet" type="text/css" href="~/assets/css/select2.min.css">
+
+
+    @*<link href="~/assets/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />*@
+    @*<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">*@
+    <link href="~/assets/css/jquery-ui.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css">
+
+    <link href="~/assets/css/alert-bangtidy.css" rel="stylesheet" />
+    <link href="~/assets/css/alert-blackgloss.css" rel="stylesheet" />
+    @*<script src="~/assets/js/jquery-3.2.1.min.js"></script>*@
+    @*<script src="//code.jquery.com/jquery-1.10.2.js"></script>*@
+    <script src="~/assets/js/jquery-1.10.2.js"></script>
+    <script src="~/assets/js/jquery.minicolors.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-colorpicker/2.5.3/js/bootstrap-colorpicker.js"></script>
+
+    @*<script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.2/modernizr.js"></script>*@
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
+    @*<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>*@
+    <script src="~/assets/js/jquery-ui.js"></script>
+
+    <script src="~/assets/js/jquery.mcautocomplete.js"></script>
+    <script src="~/assets/js/app.js"></script>
+    <script src="~/assets/js/popper.min.js"></script>
+    <script src="~/assets/js/bootstrap.min.js"></script>
+
+    <script src="~/assets/js/colorpalettepicker.js"></script>
+    <script src="~/assets/js/select2.min.js"></script>
+    <script src="~/assets/js/fileinput.js"></script>
+    <script src="~/assets/js/jquery.slimscroll.js"></script>
+    <script src="~/assets/js/Chart.bundle.js"></script>
+
+    <script src="~/assets/js/jquery.dataTables.min.js"></script>
+
+    <script src="~/assets/js/jscolor.js"></script>
+    
+    
+
+    <style>
+        input.form-control {
+            font-size: 13px !important;
+            height: 19px !important;
+            min-height: 30px;
+        }
+
+        th {
+            /*background-color: #f1bb62 !important;*/
+
+            color: white;
+        }
+
+        /*.modal-header {
+            background-color: #f1bb62 !important;
+        }*/
+
+        .ThemeColor {
+            background-color: #4c5564 !important;
+        }
+
+        .footer {
+          /*  position: fixed;*/
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            background-color: #15558d;
+            color: white;
+            text-align: Left;
+            padding:10px;
+        }
+
+
+    </style>
+</head>
+<body>
+
+
+    <div class="main-wrapper">
+        <div class="header" style="        background-color: #15558d !important;">
+            <div class="header-left">
+                <a href="@Url.Action("Home", "Privacy")" class="logo">
+                    <img src="~/assets/img/Logo_2.png" width="35" height="35" alt="">
+                    <span>Dieseltech</span>
+                </a>
+            </div>
+
+            <a href="@Url.Action("Index","Account")" class="btn btn-primary float-right" style="        margin-left: 7px !important;
+        background-color: #cdb453 !important;margin:8px
+">Login</a>
+            <a href="@Url.Action("Register","Account")" class="btn btn-primary float-right" style="        background-color: #cdb453 !important;
+        margin: 8px
+">Register</a>
+
+
+        </div>
+
+        <div class="page-wrapper">
+
+            @RenderBody()
+
+        </div>
+        <div class="footer">
+            <div class="container-fluid">
+                <img src="~/assets/img/Logo_2.png" width="100" height="100" alt="">
+                
+
+                <a href="@Url.Action("Index","Account")" class="btn btn-primary float-right" style="        margin-left: 22px !important;
+        background-color: #cdb453 !important
+">Login</a>
+                <a href="@Url.Action("Register","Account")" class="btn btn-primary float-right"  style="background-color: #cdb453 !important">Register</a>
+            </div>
+        </div>
+    </div>
+
+    
+
+
+
+
+
+
+
+
+
+</body>
+
+
+
+

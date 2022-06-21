@@ -1,0 +1,373 @@
+﻿
+@{
+    ViewBag.Title = "Collection";
+}
+
+
+<head>
+    <style>
+        .alert {
+            display: none;
+        }
+
+        div#tblannualtotals_filter {
+            position: sticky;
+            top: 0;
+            padding: 5px;
+            z-index: 100;
+            background: darkblue;
+        }
+
+        /*  #Loadshead {
+            position: sticky;
+            top: 0;
+            padding: 5px;
+            z-index: 100;
+        }*/
+
+        div#tblannualtotals_length {
+            position: sticky !important;
+            top: 0 !important;
+            padding: 5px !important;
+            z-index: 100 !important;
+            background: darkblue !important;
+            color: white !important;
+            width: 79.5% !important;
+            /*height: 4.5% !important;*/
+        }
+
+        select {
+            color: white !important;
+        }
+
+        option {
+            color: black !important;
+        }
+
+        label {
+            color: white !important
+        }
+
+        input[type="search"] {
+            color: white !important;
+        }
+    </style>
+
+</head>
+<div class="content">
+    <div class="row">
+        <div class="col-md-3">
+            <h4 class="page-title">Collection <i onclick="RefereshList()" class="fa fa-refresh"></i></h4>
+            <span style="color:red;" id="fademsg">@ViewBag.error</span>
+        </div>
+        <div class="col-9 text-right m-b-20">
+            <a id="remove" href="#" data-toggle="modal"
+               data-target="#add_collection" class=" open-AddBookDialog btn btn-primary  float-right"
+               style="background-color: #4c5564 !important;"><i class="fa fa-plus"></i> Add Collection</a>
+
+
+        </div>
+
+    </div>
+
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="table-responsive">
+                @*<table class="table table-border table-striped custom-table  g-dataTable mb-0">*@
+
+                <table style="font-size:12px;width:100%" class="table table-condensed table-fit table-sm table-striped g-dataTable  mb-0" id="tblannualtotals">
+                    <thead>
+                        <tr>
+
+                            <th>Id </th>
+                            <th>Type </th>
+                            <th>Name </th>
+                            <th>Amount</th>
+                            <th>Paid</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in @ViewBag.Collectionlist)
+                        {
+                        <tr>
+
+                            <td>@item.assignid</td>
+                            <td>@item.type</td>
+                            <td>@item.Name</td>
+
+
+                            <td>
+                                <input disabled readonly id="txtquickpayperctenage" value="@item.amount" type="number" style="height:25px;font-size:12px;width:60px !important" />
+                            </td>
+
+
+                            @if (@item.ispaid == 0)
+                            {
+
+                                <td>
+                                    <a onclick="Updateispaid(@item.id,1,'@item.type')"><img class="CheckedImageSize" src="~/assets/img/Unchecked.png" /></a>
+
+
+                                </td>
+                            }
+                            else if (@item.ispaid == 1)
+                            {
+                                <td>
+                                    <a onclick="Updateispaid(@item.id,0,'@item.type')"> <img class="CheckedImageSize" src="~/assets/img/checkbox.png" /></a>
+                                </td>
+                            }
+
+                        </tr>
+                        }
+
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+
+        </div>
+        <div class="col-md-4">
+            <div id="Alertdiv" class="myAlert-bottom alert alert-success">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong id="Message"></strong>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+<div id="add_collection" class="modal fade delete-modal " role="dialog">
+    <div class="modal-dialog" style="width:600px !important;">
+        @using (Html.BeginForm("savecollection", "Report", FormMethod.Post, new
+        {
+            enctype = "multipart/form-data"
+        }))
+        {@Html.AntiForgeryToken()
+        <div class="modal-content">
+            <!--Header-->
+            <div class="modal-header">
+                <p class="heading lead">Add Collection</p>
+
+                <button type="button" style="color:white" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" class="white-text">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body ">
+                <div class="row">
+                    <div class="col-lg-12  ">
+                        <form>
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label style="color: black !important">Collection type </label>
+                                        <select onchange="showddl(this)" style="width:100%"  id="ddlcollectiontype" required="" name="ddlcollectiontype" class="form-control js-example-basic-single">
+                                            <option value="0">Select Collection Type </option>
+                                            <option value="1">Customer</option>
+                                            <option value="2">Carrier</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-8">
+                                    
+                                    <div class="form-group" id="ddlcustomersection" style="display:none">
+                                        <label style="color: black !important">Customer list </label>
+                                        <select style="width:100%" id="ddlcustomer" required="" name="ddlcustomer" class="form-control js-example-basic-single">
+                                            <option value="0">Select Customer </option>
+                                            @foreach (var item in ViewBag.customerlist)
+                                            {
+                                                <text>
+                                                    <option  value="@item.AssignID">@item.Name</option>
+                                                </text>
+                                            }
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group" id="ddlcarriersection" style="display:none">
+                                        <label style="color:black !important">Carrier list</label>
+                                        <select style="width:100%" id="ddlcarrier" required="" name="ddlcarrier" class="form-control js-example-basic-single">
+                                            <option value="0">Select Carrier</option>
+                                            @foreach (var item in ViewBag.carrierlist)
+                                            {
+                                                <text>
+                                                    <option value="@item.AssignID">@item.CarrierName</option>
+                                                </text>
+                                            }
+                                        </select>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="row" style="display:none" id="amountsection">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label style="color:black !important">Amount</label>
+                                        <input class="form-control" type="number" id="MC" required name="amount">
+                                    </div>
+                                </div>
+                                
+                            </div>
+
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="m-t-5 text-right">
+                                        <br />
+                                        <a href="#" class="btn btn-white" data-dismiss="modal">Close</a>
+                                        <button type="submit" onclick=" return sendform('s')" class="btn btn-primary" style="color: white;background-color: #4c5564 !important;">add</button>
+                                        @*<button type="submit" class="btn btn-primary" style="color: white;background-color: #e80000;">Add</button>*@
+
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    }
+    </div>
+
+</div>
+
+<script>
+
+
+    function Updateispaid(id,status,type) {
+
+
+        $.ajax({
+
+            type: "POST",
+            url: "/Report/UpdateIspaid/?id="+id+"&status="+status+"&type="+type+"",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                if (data == "1") {
+                    location.reload();
+                }
+                else {
+                }
+            }
+        });
+
+
+
+    }
+
+    function showddl(type) {
+
+        if (type.value == 1)
+        {
+            $("#ddlcarriersection").fadeOut();
+            $("#ddlcustomersection").fadeIn();
+            $("#amountsection").fadeIn();
+        }
+        else if (type.value == 2) {
+            $("#ddlcustomersection").fadeOut();
+            $("#ddlcarriersection").fadeIn();
+            $("#amountsection").fadeIn();
+        }
+        else if (type.value == 0) {
+            $("#ddlcustomersection").fadeOut();
+            $("#ddlcarriersection").fadeOut();
+            $("#amountsection").fadeOut();
+        }
+
+        
+    }
+
+    function updateextension(Username,Userid, companyid, extension) {
+
+        $.ajax({
+
+            type: "POST",
+            url: "/User/UpdateExtenstion/?Userid=" + Userid + "&companyid=" + companyid + "&extension=" + extension.value+"",
+
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                if (data == "1") {
+
+                    if (extension.value != "") {
+                        document.getElementById("Message").innerHTML = "User '" + Username + "' Extension Updated ";
+                        document.getElementById("Message").style.color = "#3c763d";
+                        document.getElementById("Alertdiv").style.backgroundColor = '#d4edda';
+                        document.getElementById("Alertdiv").style.borderColor = "#c3e6cb";
+                        $("#Alertdiv").fadeIn();
+                        $("#Alertdiv").fadeOut(8000);
+
+                        /*dummyfield*/
+                    }
+                }
+                else {
+
+                }
+
+
+            }
+
+
+
+
+        });
+
+
+
+
+        //$('#Update_Load_Invoice').modal('show');
+
+
+
+    }
+
+    jQuery(document).ready(function () {
+
+        jQuery('#ddlcollectiontype').select2();
+        jQuery('#ddlcustomer').select2();
+        jQuery('#ddlcarrier').select2();
+          var JqueryTableSearchValue = @Html.Raw(Json.Encode(ViewBag.JqueryTableSearchValue));
+
+        var carrierscroll = @Html.Raw(Json.Encode(ViewBag.carrierscroll));
+
+
+
+        var row = $('tr');
+        var table = $('table');
+        var w = $(window);
+        var row = table.find('tr').eq(carrierscroll);
+
+        if (row.length) {
+            w.scrollTop(row.offset().top - (w.height() / 2));
+        }
+
+
+
+        jQuery('#ddlyear').select2();
+        $('#tblannualtotals').DataTable({
+            "search": {
+                "search": JqueryTableSearchValue
+            },
+           "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+            "pageLength": -1
+        });
+    });
+    function RefereshList() {
+        location.reload();
+    }
+
+
+</script>

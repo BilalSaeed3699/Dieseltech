@@ -1,0 +1,678 @@
+﻿﻿
+@{
+
+    Layout = null;
+}
+@using Dieseltech.Models;
+@{
+    ViewBag.Title = "Load Report";
+
+    List<Sp_Get_LoadHeadInformation_Edit_Result> listLoadHeadInformation = (List<Sp_Get_LoadHeadInformation_Edit_Result>)ViewBag.LoadHead;
+
+
+    List<tblLoadHead> list = (List<tblLoadHead>)ViewBag.LoadInformation;
+    //List<tblLoadPickupDelivery> listPickDelivery = (List<tblLoadPickupDelivery>)ViewBag.LoadPickupDelivery;
+    List<tblLoadCharge1> listLoadCharge = (List<tblLoadCharge1>)ViewBag.LoadCharges;
+
+
+    List<PickupDeliveryInformation> LoadPickuplist = (List<PickupDeliveryInformation>)ViewBag.LoadPickup;
+    List<PickupDeliveryInformation> LoadDeliverylist = (List<PickupDeliveryInformation>)ViewBag.LoadDelivery;
+
+
+    List<tblCarrier> CarrierList = (List<tblCarrier>)ViewBag.CarrierInformation;
+
+}
+@*<!DOCTYPE html>
+    <html lang="en">*@
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+    <link rel="shortcut icon" type="image/x-icon" href="~/assets/img/Logo_2.png">
+    <title>Report Preview</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="~/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" type="text/css" href="~/assets/fonts/glyphicons-halflings-regular.ttf">
+    <link href="~/assets/css/fileinput.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="~/assets/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="~/assets/css/style.css">
+    <link rel="stylesheet" type="text/css" href="~/assets/css/select2.min.css">
+    <link href="~/assets/css/jquery-ui.css" rel="stylesheet" />
+
+    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+    <script src="~/assets/js/app.js"></script>
+    <script src="~/assets/js/popper.min.js"></script>
+    <script src="~/assets/js/bootstrap.min.js"></script>
+    <script src="~/assets/js/select2.min.js"></script>
+    <script src="~/assets/js/fileinput.js"></script>
+    <script src="~/assets/js/jquery.slimscroll.js"></script>
+    <script src="~/assets/js/Chart.bundle.js"></script>
+    <script src="//cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+
+    <style>
+
+
+        input.form-control {
+            font-size: 13px !important;
+            height: 19px !important;
+            min-height: 30px;
+        }
+
+        th {
+            background-color: rgb(189, 183, 107) !important;
+            Color: white;
+        }
+        .paragraphstyle {
+            margin-bottom: 0rem;
+        }
+        body
+        {
+            background-color:white;
+        }
+        /*body {
+  margin: 0;
+  padding: 0;*/
+/*  background-color: #FAFAFA;*/
+  /*font: 12pt "Tahoma";
+}
+
+*{
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+}
+
+.page {
+  width: 21cm;
+  min-height: 29.7cm;
+  padding: 2cm;
+  margin: 1cm auto;
+  border: 1px #D3D3D3 solid;
+  border-radius: 5px;
+  background: white;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.subpage {
+  padding: 1cm;
+  border: 5px red solid;
+  height: 256mm;
+  outline: 2cm #FFEAEA solid;
+}*/
+
+@*@page {
+  size: A4;
+  margin: 0;
+}*@
+
+@*@media print {
+  .page {
+    margin: 0;
+    border: initial;
+    border-radius: initial;
+    width: initial;
+    min-height: initial;
+    box-shadow: initial;
+    background: initial;
+    page-break-after: always;
+  }
+}*@
+
+      /* body {
+            background: rgb(204,204,204);
+        }*/
+
+        page {
+            background: white;
+            display: block;
+            margin: 0 auto;
+            margin-bottom: 0.5cm;
+        }
+        td{
+            font-size:14px !important;
+        }
+
+          /*  page[size="A4"] {
+                width: 28cm;
+                height: 29.7cm;
+            }*/
+            @@media print {
+  body, page {
+    margin: 0;
+    box-shadow: 0;
+  }
+    #cmd{
+    display:none;}
+
+    #btnsendemail {
+    display: none;
+    }
+                #Header, #Footer {
+                    display: none !important;
+                }
+
+               /* page[size="A4"] {
+                    width: 28cm;
+                    height: 29.7cm;
+                }*/
+
+}
+    </style>
+</head>
+
+<page size="A4">
+    <body>
+
+
+
+        @*<P>@ViewBag.RequestURL</P>*@
+        <input id="LoadNumber" hidden value="@ViewBag.LoadNumber" />
+        <div id="Grid">
+
+            <div id="LoadPreview" >
+                <div >
+
+
+                    @*<div id="LoadPreview" class="container">
+                        <div class="col-md-12">*@
+
+
+                    <div >
+
+                        @*<div class="row">
+                            <div class="col-md-12">*@
+                                <div >
+                                    <div >
+                                        <div>
+                                            <div >
+                                                @*<td>@listLoadHeadInformation[0].CarrierName</td>
+                                <td>@listLoadHeadInformation[0].Phonenumber</td>
+                                <td></td>
+                                <td>@listLoadHeadInformation[0].Weight</td>
+                                <td>@listLoadHeadInformation[0].Equipment</td>
+                                <td>$@listLoadHeadInformation[0].CarrierAmount</td>*@
+                                                <div class="row">
+                                                    <div class="col-md-6">
+
+                                                        <h4 class="paragraphstyle" style="text-align:center;background-color:rgb(189, 183, 107) !important;color:white; border:3px solid rgb(189, 183, 107) !important;width:50%;font-weight:bold;padding:5px">Load# @list[0].LoaderNumber</h4>
+                                                        <br />
+
+                                                        <h4 style="font-weight:bold">To Carrier: @CarrierList[0].CarrierName</h4>
+                                                        <img style="max-height:150px !important;float:right" src="~/assets/img/Logo_1.png" />
+                                                        <p class="paragraphstyle"><strong>Tel:</strong> @CarrierList[0].Phonenumber </p>
+                                                        <p class="paragraphstyle"><strong>MC#:</strong> @CarrierList[0].MC_ </p>
+                                                        <p class="paragraphstyle"><strong>Contact Name:</strong> @CarrierList[0].ContactName </p>
+
+                                                        @*<hr />*@
+                                                        <p class="paragraphstyle"><strong>Equip Type: </strong> @listLoadHeadInformation[0].Equipment </p>
+                                                        <p class="paragraphstyle"><strong>Total Weight: </strong> @listLoadHeadInformation[0].Weight </p>
+                                                        <p class="paragraphstyle"><strong>Quantity: </strong> @CarrierList[0].ContactName </p>
+
+                                                        <p class="paragraphstyle"><strong>Agreed Amount: </strong> $@listLoadHeadInformation[0].CarrierAmount </p>
+                                                    </div>
+
+                                                    <hr />
+                                                    <div class="col-md-6">
+
+                                                        @*<h4 style="font-weight:bold">To Carrier: @CarrierList[0].CarrierName</h4>
+                                        <p class="paragraphstyle"><strong>Tel:</strong> @CarrierList[0].Phonenumber </p>
+                                        <p class="paragraphstyle"><strong>MC#:</strong> @CarrierList[0].MC_ </p>
+                                        <p class="paragraphstyle"><strong>Contact Name:</strong> @CarrierList[0].ContactName </p>*@
+
+
+                                                        <table style="width:100%">
+
+                                                            @*<img style="max-height:120px !important;float:right" src="~/assets/img/Logo_1.png" />
+        <br />*@
+                                                            <tr>
+                                                                <td><strong>Dispatcher:</strong></td>
+                                                                @*<td>@list[0].DispatcherName</td>*@
+                                                                <td>   @ViewBag.agentname</td>
+                                                            </tr>
+
+                                                            <tr>
+                                                                <td><strong>Phone#:</strong></td>
+                                                                <td>@ViewBag.agentphone</td>
+                                                                @*<td>469-651-9059</td>*@
+                                                            </tr>
+
+                                                            <tr>
+                                                                <td><strong>Driver:</strong></td>
+                                                                <td>@list[0].DriverName</td>
+                                                            </tr>
+
+                                                            <tr>
+                                                                <td><strong>Phone#:</strong></td>
+                                                                <td>@list[0].DriverPhone</td>
+                                                            </tr>
+
+                                                            <tr>
+                                                                <td><strong>Email#:</strong></td>
+                                                                <td>@ViewBag.agentemail</td>
+                                                                @*<td>Jack@Alkaiostransportation.Com</td>*@
+                                                            </tr>
+
+                                                            <tr>
+                                                                <td></td>
+                                                                @*<td><strong>
+                                                                    Please send all original bill of ladings to the
+                                                                    address listed below
+                                                                    </strong></td>*@
+                                                            </tr>
+                                                            <tr>
+                                                                <td><strong>Address:</strong></td>
+                                                                <td>
+                                                                    Alkaios Transportation Inc.<br />
+                                                                    1209 N Goliad Street, Rockwall, TX 75087
+                                                                </td>
+                                                            </tr>
+
+                                                            <tr>
+
+                                                                <td></td>
+                                                                <td>
+                                                                    <br />
+                                                                    Please send all invoices to <br />
+                                                                    <strong>invoicing@alkaiostransportation.com</strong>
+
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+
+
+
+
+                                                    </div>
+
+                                                </div>
+
+
+                                            </div>
+
+
+
+                                            <br />
+                                            <div class="table-responsive">
+                                                <table class="table table-striped table-sm table-hover" style="font-size:11px !important">
+                                                    <thead>
+                                                        <tr class="Heading">
+                                                            <th class="text-left">Pickup</th>
+                                                            <th class="text-left">Departure Date From</th>
+                                                            <th class="text-left">Departure Date To</th>
+                                                            <th class="text-left">Phone</th>
+                                                            <th class="text-left">Pickup Number</th>
+                                                            <th class="text-left">Comment</th>
+                                                        </tr>
+                                                    </thead>
+
+
+
+                                                    <tbody>
+                                                        @foreach (var PD in LoadPickuplist)
+                                                        {
+                                                        <tr>
+                                                            <td style="width:30%">
+                                                                @PD.Name  @PD.ShipperName <br />
+                                                                @PD.ShipperAddress <br />
+                                                                @PD.CityName, @PD.StateCode, @PD.ZipCode
+                                                            </td>
+                                                            <td>@PD.DateTime</td>
+                                                            <td>@PD.DateTimeTo</td>
+                                                            <td>@PD.ShipperPhone</td>
+                                                            <td>@PD.PickupNumber</td>
+                                                            <td>@PD.Comment</td>
+                                                        </tr>
+
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                            </div>
+
+                                            <div class="table-responsive">
+                                                <table class="table table-striped table-sm table-hover" style="font-size:11px !important">
+                                                    <thead>
+                                                        <tr class="Heading">
+                                                            <th class="text-left">Delivery</th>
+                                                            <th class="text-left">Arrival Date From</th>
+                                                            <th class="text-left">Arrival Date To</th>
+                                                            <th class="text-left">Phone</th>
+                                                            <th class="text-left">Pickup Number</th>
+                                                            <th class="text-left">Comment</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach (var PD in LoadDeliverylist)
+                                                        {
+
+                                                        <tr>
+                                                            <td style="width:30%">
+                                                                @PD.Name  @PD.ShipperName <br />
+                                                                @PD.ShipperAddress <br />
+                                                                @PD.CityName, @PD.StateCode, @PD.ZipCode
+                                                            </td>
+                                                            <td>@PD.DateTime</td>
+                                                            <td>@PD.DateTimeTo</td>
+                                                            <td>@PD.ShipperPhone</td>
+                                                            <td>@PD.PickupNumber</td>
+                                                            <td>@PD.Comment</td>
+                                                        </tr>
+
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                            </div>
+
+                                            <div>
+
+                                                <div class="invoice-info">
+                                                    <p style="font-weight:bold" class="text-uppercase">
+                                                        Carrier Instructions : @listLoadHeadInformation[0].CarrierInstructions
+                                                    </p>
+
+                                                    <p><strong>“MUST MAINTAIN GOOD COMMUNICATION AND MUST SEND POD RIGHT AFTER YOU DELIVER OR $$$FEES$$$ MAY APPLY!!!”</strong></p>
+                                                </div>
+                                            </div>
+
+
+                                            <div>
+
+                                                <div class="invoice-info">
+                                                    <p style="font-size:14px" class="text-uppercase">
+                                                        1) if agreed services are not fulfilled  Rates are negotiable.<br />
+                                                        2) if LOAD is doubled brokered rate is void. <br />
+                                                        3) Provide the information required below . <br />
+                                                        4) Call Dispatch when LOADED and Unloaded
+
+                                                    </p>
+                                                </div>
+                                            </div>
+
+                                            <div>
+                                                <label style="text-align:left"><strong>Load Accepted By</strong></label>&nbsp;&nbsp;_______________________
+                                                &nbsp;&nbsp; <label><strong>Date</strong></label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_______________________
+
+
+                                            </div>
+
+                                            <div>
+                                                <label style="text-align:left"><strong>Driver Name 1</strong></label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_______________________
+                                                &nbsp;&nbsp;  <label><strong> Phone Number</strong></label>&nbsp;&nbsp;&nbsp;&nbsp;_______________________
+
+                                            </div>
+                                            <div>
+                                                <label style="text-align:left"><strong> Driver Name 2</strong></label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;_______________________
+                                                &nbsp;&nbsp; <label><strong> Phone Number</strong></label>&nbsp;&nbsp;&nbsp;&nbsp;_______________________
+
+                                            </div>
+
+                                            <div>
+                                                <label style="text-align:left"><strong>Truck&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </strong></label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_______________________
+                                                &nbsp;&nbsp;     <label style="text-align:left"><strong> Trailer</strong></label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_______________________
+
+
+                                            </div>
+                                            <div>
+                                                <label style="text-align:left"><strong>Signature</strong></label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_______________________
+
+                                            </div>
+
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            @*</div>*@
+                            @*</div>
+            </div>*@
+                        </div>
+
+                    </div>
+
+                </div>
+            <div id="editor"></div>
+
+
+
+        </div>
+
+
+
+
+        <div id="Send_Email" class="modal fade delete-modal" role="dialog">
+            <div class="modal-dialog" style="max-width:500px">
+                @*@using (Html.BeginForm("SaveDriver", "Definition", FormMethod.Post, new
+                    {
+                        enctype = "multipart/form-data"
+                    }))
+                    {@Html.AntiForgeryToken()*@
+
+
+                <div class="modal-content" style="margin-top:150px">
+                    <!--Header-->
+                    <div class="modal-header">
+                        <p class="heading lead">Send Email</p>
+
+                        <button onclick="CloseDriverModel()" type="button" style="color:white" class="close" aria-label="Close">
+                            <span aria-hidden="true" class="white-text">&times;</span>
+                        </button>
+
+
+                        @*<button type="button" style="color:white" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true" class="white-text">&times;</span>
+                            </button>*@
+                    </div>
+                    <div class="modal-body">
+                        <div id="wait" style="display:none;width:18%;height:50%;position:absolute;top:51%;left:40%;padding:2px;">
+                            <img src="~/assets/img/demo_wait.gif" style="width:70%;height:70%" />
+                            <br>Wait...
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div id="EmailSendMessage" style="display:none;" class="alert alert-success alert-dismissible fade show" role="alert">
+                                    <strong>Success!</strong> Your <a href="#" class="alert-link">Email</a> has been sent successfully.
+
+                                </div>
+
+                                <div id="EmailFailedMessage" style="display:none;" class="alert alert-danger alert-dismissible fade show" role="alert">
+                                    <strong>Alert!</strong><a href="#" class="alert-link">Email</a>sending failed.
+
+                                </div>
+                                <form>
+
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label>
+                                                    Subject  <small id="lblSubject" style="display:none;color:red">
+                                                        Enter Subject
+                                                    </small>
+                                                </label>
+                                                <input class="form-control" type="text" id="txtSubject" name="Subject" required>
+
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label>
+                                                    Email
+                                                    <small id="lblEmail" style="display:none;color:red">
+                                                        Enter Email
+                                                    </small>
+                                                </label>
+                                                <input class="form-control" type="text" id="txtEmail" required name="Email">
+
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+
+
+                                    <div class="row">
+
+                                        <div class="col-sm-12">
+                                            <div class="m-t-5 text-right">
+                                                <a href="#" class="btn btn-white" onclick="CloseEmailModel()">Close</a>
+                                                <a onclick="SendPDFEmail()" id="btnAddDriver" class="btn btn-primary" style="color: white;background-color: #4c5564 !important;">Send</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                @*}*@
+            </div>
+
+        </div>
+
+
+
+    </body>
+
+</page>
+
+@*</html>*@
+
+<script>
+    function CloseEmailModel() {
+
+        $("#Send_Email").modal('hide');
+    }
+    jQuery(document).ready(function () {
+        var str = "Alkaios Transportation Inc";
+        var matches = str.match(/\b(\w)/g); // ['J','S','O','N']
+        var acronym = matches.join(''); // JSON
+        //alert(acronym.toLocaleUpperCase());
+
+        document.getElementById("CompanyName").textContent = acronym.toLocaleUpperCase();
+
+    });
+
+
+</script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.2/jspdf.min.js"></script>
+<script>
+
+    function SendPDFEmail() {
+        var LoadNumber = $("#LoadNumber").val();
+        var Subject = $("#txtSubject").val();
+        var Email = $("#txtEmail").val();
+
+        $("#wait").css("display", "block");
+
+
+        $.ajax({
+            type: "POST",
+            url: "/Report/ConvertToPdf/?LoadNumber=" + LoadNumber + "&Subject=" + Subject + "&Email=" + Email + " ",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+
+
+                if (response == "1") {
+                    $("#wait").css("display", "none");
+
+                    $("#EmailSendMessage").fadeIn();
+                    $("#EmailSendMessage").fadeOut(3000);
+
+                    //var Subject = $("#txtSubject").val();
+                    //var Email = $("#txtEmail").val();
+
+                    setTimeout(function () {
+                        $("#Send_Email").modal('hide')
+                    }, 1000);
+
+
+                    $("#txtSubject").val("");
+                    $("#txtEmail").val("");
+                    //var Subject = $("#txtSubject").val();
+                    //var Email = $("#txtEmail").val();
+                }
+                else if (response == "0") {
+
+                    $("#wait").css("display", "none");
+                    $("#EmailFailedMessage").fadeIn();
+                    $("#EmailFailedMessage").fadeOut(3000);
+
+
+                    setTimeout(function () {
+                        $("#Send_Email").modal('hide')
+                    }, 5000);
+
+
+                    $("#txtSubject").val("");
+                    $("#txtEmail").val("");
+                }
+            },
+            failure: function (response) {
+                //alert("No Data");
+            },
+            error: function (response) {
+                //alert(response.responseText);
+            }
+        });
+    }
+
+    var doc = new jsPDF();
+    var specialElementHandlers = {
+        '#editor': function (element, renderer) {
+            return true;
+        }
+    };
+
+    //$('#cmd').click(function () {
+
+    //    doc.fromHTML($('#LoadPreview').html(), 15, 15, {
+    //        'width': 1500,
+    //        'elementHandlers': specialElementHandlers
+    //    });
+    //    doc.save('sample-file.pdf');
+
+
+
+
+    //});
+
+    function PrintCommand() {
+        //alert('TEst');
+        window.print();
+
+    }
+    function SendEmail() {
+        var doc = new jsPDF();
+        var specialElementHandlers = {
+            '#editor': function (element, renderer) {
+                return true;
+            }
+        };
+
+        doc.fromHTML($('#LoadPreview').html(), 300, 15, {
+            'width': 500,
+            'elementHandlers': specialElementHandlers
+        });
+        doc.save('sample-file.pdf');
+
+
+    }
+
+
+
+
+
+
+
+
+</script>
+
+@*<script type="text/javascript">
+        $(function () {
+            $("#btnSubmit").click(function () {
+                $("input[name='GridHtml']").val($("#Grid").html());
+            });
+        });
+    </script>*@

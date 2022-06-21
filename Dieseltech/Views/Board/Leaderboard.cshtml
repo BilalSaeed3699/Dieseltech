@@ -1,0 +1,162 @@
+﻿
+@{
+    ViewBag.Title = "Leaderboard";
+}
+
+
+
+
+<div class="content">
+    <div class="row">
+        <div class="col-sm-2 col-3">
+            <h4 class="page-title">Leader Board <i onclick="RefereshList()" class="fa fa-refresh"></i></h4>
+            <span style="color:red;" id="fademsg">@ViewBag.error</span>
+        </div>
+        <div class="col-md-2">
+
+            <select id="ddlyear" required name="ddlyear" onchange="ReloadList()" class="form-control js-example-basic-single">
+                @*<option selected value="0">Select Year</option>*@
+                @foreach (var item in ViewBag.ddlYears)
+                {
+
+                    <text>
+
+                        @if (item.Value == Convert.ToString(@ViewBag.CurrentYear))
+                        {
+                            <option selected value="@item.Value">@item.Value</option>
+                        }
+                        else
+                        {
+                            <option value="@item.Value">@item.Value</option>
+                        }
+
+
+                    </text>
+                }
+            </select>
+        </div>
+
+        <div class="col-md-2">
+
+            <select id="ddlmonth" required name="ddlmonth" onchange="ReloadList()" class="form-control js-example-basic-single">
+                <option selected value="0">Select Month</option>
+                @foreach (var item in ViewBag.Days)
+                {
+                    
+                    <text>
+                        @if (item.ID == Convert.ToString(@ViewBag.CurrentMonth))
+                        {
+                            <option selected value="@item.ID">@item.Day</option>
+                        }
+                        else
+                        {
+                            <option value="@item.ID">@item.Day</option>
+                        }
+
+
+                    </text>
+                }
+
+            </select>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="table-responsive">
+                @*<table class="table table-border table-striped custom-table  g-dataTable mb-0">*@
+
+                <table style="font-size:12px;width:100%" class="table table-condensed table-fit table-sm table-striped g-dataTable  mb-0" id="tblBroker">
+                    <thead>
+                        <tr>
+                            <th hidden>Carrier ID </th>
+                            <th>Agent Name </th>
+                            <th>Customer Name </th>
+                            <th>Total Load </th>
+                            <th>Total Profit </th>
+                            <th>Average Profit Margin </th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in @ViewBag.LoaderBoard)
+                        {
+                        <tr>
+                            <td hidden>@item.User_ID</td>
+                            <td>@item.UserName</td>
+                            <td>@item.Name</td>
+                            <td>  @item.TotalLoads   </td>
+                            <td> @Convert.ToInt64(@item.Profit) </td>
+                            <td> @Convert.ToInt64(@item.AverageProfitmargin) </td>
+
+
+                        </tr>
+                        }
+
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+    @*<div class="row">
+            @foreach (var item in @ViewBag.LoaderBoard)
+            {
+                <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
+                    <h5 style="font-weight:Bold">@item.CarrierName (@item.AssignID)</h5>
+                    <div class="dash-widget" style="background-color: #7a92a3">
+                        <span class="dash-widget-bg1" style="background-color:transparent"><i class="fa fa-user" aria-hidden="true"></i></span>
+                        <div class="dash-widget-info text-right">
+                            <h3 style="color:white" id="DispatcherName"> Total Loads @item.TotalLoads</h3>
+                            <span style="font-size: 14px;background-color: white;color: #7a92a3;font-weight: bold" class="widget-title1">
+                                Total Profit    @Convert.ToInt32(@item.Profit)
+
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>*@
+</div>
+
+<script>
+    jQuery(document).ready(function () {
+        jQuery('#ddlyear').select2();
+        jQuery('#ddlmonth').select2();
+    });
+    function RefereshList() {
+        location.reload();
+    }
+
+
+     function ReloadList() {
+
+         var year =$("#ddlyear").val();
+         var month = $("#ddlmonth").val();
+
+         if (year == null) {
+             year = 0;
+         }
+         if (month == null) {
+             month = 0;
+         }
+         var model = {
+             ddlyear: year,
+             ddlmonth: month
+         };
+
+         $.ajax({
+            url: '@Url.Action("ReloadLeaderBoard", "Board")',
+            type: "POST",
+             data: JSON.stringify(model),
+             contentType: "application/json; charset=utf-8",
+             dataType: "json",
+              success: function (result) {
+                  window.location = result.url;
+              }
+        });
+    }
+</script>

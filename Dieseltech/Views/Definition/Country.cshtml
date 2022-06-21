@@ -1,0 +1,299 @@
+﻿
+@using Dieseltech.Models;
+@{
+    ViewBag.Title = "Country";
+
+    List<tblCountry> list = (List<tblCountry>)ViewBag.tblCountry;
+}
+<head>
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+
+    <!--[if lt IE 9]>
+        <script src="assets/js/html5shiv.min.js"></script>
+        <script src="assets/js/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<div class="content">
+    <div class="row">
+        <div class="col-sm-4 col-3">
+            <h4 class="page-title">Country</h4>
+            <span style="color:red;" id="fademsg">@ViewBag.error</span>
+        </div>
+        <div class="col-sm-8 col-9 text-right m-b-20">
+            <a id="remove" href="#" data-toggle="modal" data-target="#add_Recipent" class=" open-AddBookDialog btn btn-primary btn-rounded float-right" style="background-color: #e80000;"><i class="fa fa-plus"></i> Add Country</a>
+
+
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="table-responsive">
+                <table class="table table-border table-striped custom-table datatable mb-0">
+                    <thead>
+                        <tr>
+                            <th class="country_id" hidden>id</th>
+                            <th>Country Name </th>
+                            <th hidden>Active Flag </th>
+                            <th>Active </th>
+                            <th class="text-right">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in list)
+                        {
+                        <tr>
+                            <td class="country_id" hidden>@item.CountryId</td>
+                            <td class="CountryName">  @item.CountryName   </td>
+                            <td hidden class="IsActive">@item.IsActive</td>
+
+                            @if (item.IsActive == false)
+                            {
+                                <td>
+                                    <div class="badge badge-danger">Non-Active</div>
+
+                                </td>
+                            }
+                            else
+                            {
+                                <td>
+                                    <div class="badge badge-success">Active</div>
+
+                                </td>
+                            }
+
+
+                            <td class="text-right">
+                                @*<div class="dropdown dropdown-action">
+                <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
+                <div class="dropdown-menu dropdown-menu-right">
+
+                    <a id="remove" class="open-AddBookDialog dropdown-item" href="#" data-toggle="modal" data-target="#Edit_Country"><i class="remove fa fa-pencil m-r-5"></i> Edit</a>
+                    <a id="remove" class="open-AddBookDialog dropdown-item" href="#" data-toggle="modal" data-target="#Delete_Country"><i class="remove fa fa-trash-o m-r-5"></i> Delete</a>
+                </div>
+            </div>*@
+                                <a id="remove" class="open-AddBookDialog " href="#" data-toggle="modal" data-target="#Edit_Country"><i class="remove fa fa-pencil m-r-5"></i> </a>
+                                <a id="remove" class="open-AddBookDialog " href="#" style="color:red;" data-toggle="modal" data-target="#Delete_Country"><i class="remove fa fa-trash-o m-r-5"></i> </a>
+                            </td>
+
+                        </tr>
+                        }
+
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="Delete_Country" class="modal fade delete-modal" role="dialog">
+    <div class="modal-dialog ">
+        @using (Html.BeginForm("DeleteCountry", "Definition", FormMethod.Post))
+        {@Html.AntiForgeryToken()
+        <div class="modal-content">
+            <div class="modal-body text-center">
+                <input type="text" id="id" name="id" class="form-control" hidden />
+                <img src="~/assets/img/sent.png" alt="" width="50" height="46">
+                <h3>Are you sure want to delete this?</h3>
+                <div class="m-t-20">
+                    <a href="#" class="btn btn-white" data-dismiss="modal">Close</a>
+
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </div>
+            </div>
+        </div>
+    }
+    </div>
+
+</div>
+
+<div id="Edit_Country" class="modal fade delete-modal" role="dialog">
+    <div class="modal-dialog ">
+
+
+        @using (Html.BeginForm("EditCountry", "Definition", FormMethod.Post))
+        {@Html.AntiForgeryToken()
+        <div class="modal-content">
+            <!--Header-->
+            <div class="modal-header">
+                <p class="heading lead">Modify Country</p>
+
+                <button type="button" style="color:white" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" class="white-text">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <form>
+                            <input type="text" id="id" name="id" class="form-control" hidden />
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Country Title</label>
+                                        <input required class="form-control" type="text" id="Name" name="CountryName">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Active</label>
+                                        <input class="form-control" style="width: 18px;height: 18px" id="Actives" name="IsActives" checked="checked" value="true" type="checkbox">
+
+                                        @*<label><input class="form-control" style="width:12px;height:12px" id="Active" name="IsActive" checked="checked" value="true" type="checkbox">Actives</label>*@
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+
+                                <div class="col-sm-12">
+                                    <div class="m-t-5 text-right">
+                                        <a href="#" class="btn btn-white" data-dismiss="modal">Close</a>
+                                        <button type="submit" class="btn btn-primary" style="color: white;background-color: #e80000;">Update</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    }
+    </div>
+
+</div>
+
+
+
+
+<div id="add_Recipent" class="modal fade delete-modal" role="dialog">
+    <div class="modal-dialog ">
+        @using (Html.BeginForm("CreateCountry", "Definition", FormMethod.Post))
+        {@Html.AntiForgeryToken()
+        <div class="modal-content">
+            <!--Header-->
+            <div class="modal-header">
+                <p class="heading lead">Add Country</p>
+
+                <button type="button" style="color:white" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" class="white-text">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body ">
+                <div class="row">
+                    <div class="col-lg-12  ">
+                        <form>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Country Title</label>
+                                        <input  required class="form-control" type="text" id="Name" name="CountryName">
+
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Active</label>
+                                        <input class="form-control" style="width: 18px;height: 18px" id="Active" name="IsActive" checked="checked" value="true" type="checkbox">
+
+                                        @*<label><input class="form-control" style="width:12px;height:12px" id="Active" name="IsActive" checked="checked" value="true" type="checkbox">Actives</label>*@
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+
+                                <div class="col-sm-12">
+                                    <div class="m-t-5 text-right">
+                                        <a href="#" class="btn btn-white" data-dismiss="modal">Close</a>
+                                        <button type="submit" class="btn btn-primary" style="color: white;background-color: #e80000;">Add</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    }
+    </div>
+
+</div>
+
+
+<script>
+
+    $(document).on("click", ".open-AddBookDialog", function () {
+
+        var myModal = $('#Edit_Country');
+        var country_id = $(this).closest('tr').find('.country_id').text().trim();
+        var CountryName = $(this).closest('tr').find('.CountryName').text().trim();
+        var activestatus = $(this).closest('tr').find('.IsActive').text().trim();
+        var IsActive;
+
+        console.log(activestatus);
+        if (activestatus == 'False') {
+
+            $("#Actives").attr('checked', false);
+        }
+        if (activestatus == 'True') {
+            //$("#Actives").attr('checked', true);
+            $("#Actives").prop("checked", true);
+        }
+
+
+        //alert(activestatus);
+
+
+        //if (typeof boolValue == activestatus) {
+        //    bool = "is a string";
+        //} else {
+        //    bool = "is not a string";
+        //    alert(bool);
+        //    $("#Active").attr('checked', boolValue);
+        //}
+
+        //alert(activestatus);
+        //if ($('#Active').is(":checked")) {
+        //    // it is checked
+        //    var IsActive = true;
+        //}
+        //else {
+        //    var IsActive = false;
+        //}
+
+
+
+        $("#id", myModal).val(country_id);
+        $("#Name", myModal).val(CountryName);
+        $("#Active", myModal).val(IsActive);
+
+        // As pointed out in comments,
+        // it is unnecessary to have to manually call the modal.
+        // $('#addBookDialog').modal('show');
+    });
+</script>
+<script>
+
+    $(document).on("click", ".open-AddBookDialog", function () {
+        var myModal = $('#Delete_Country');
+        var country_id = $(this).closest('tr').find('.country_id').text();
+        $("#id", myModal).val(country_id);
+
+        // As pointed out in comments,
+        // it is unnecessary to have to manually call the modal.
+        // $('#addBookDialog').modal('show');
+    });
+</script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#fademsg").fadeOut(5000);
+    });
+</script>

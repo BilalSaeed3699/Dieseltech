@@ -1,0 +1,24 @@
+[23:27, 10/10/2020] 🍷: 
+<script type="text/javascript">
+
+    function remove(el) {
+        var element = el.target;
+        element.parentNode.remove();
+    }
+
+    updateList = function () {
+        var input = document.getElementById('file');
+        var output = document.getElementById('fileList');
+        var children = "";
+        for (var i = 0; i < input.files.length; ++i) {
+            children += '<li>  <a href="' + input.files.item(i).mozFullPath + '">' + input.files.item(i).name + '</a> <a class="activity-delete" onclick="remove(event)" title="Delete">&times;</a> </li>';
+
+        }
+        output.innerHTML = output.innerHTML + children;
+        //output.innerHTML = '<ul class="activity-list">' + children + '</ul>';
+    }
+</script>
+[23:27, 10/10/2020] 🍷: <div class="custom-file col-md-12">
+                        <input type="file" class="custom-file-input" id="file" name="file" multiple onchange="javascript:updateList()">
+                        <label class="custom-file-label" for="customFile">Choose files</label>
+                    </div>

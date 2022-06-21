@@ -1,0 +1,489 @@
+﻿@using Dieseltech.Models;
+
+@{
+    ViewBag.Title = "Agent Statistics";
+
+    List<Sp_Get_Agent_Statistics_New_Result> ListAgentStats = (List<Sp_Get_Agent_Statistics_New_Result>)ViewBag.LoadDetailsMonth;
+
+}
+
+@{decimal grossprofit = @ListAgentStats[0].GrossProfit;}
+
+@{decimal AgentCommission = grossprofit / 100 * ViewBag.Agentcommissionpercentage;}
+
+@{decimal AverageProfitPerLoad = 0;}
+
+@if (ListAgentStats[0].GrossProfit != 0 && ListAgentStats[0].TotalQuanity != 0)
+{
+    { AverageProfitPerLoad = ListAgentStats[0].GrossProfit / ListAgentStats[0].TotalQuanity; }
+}
+
+<head>
+    <style>
+        .FilterButton {
+            margin: 5px;
+        }
+
+        .fa-check-square {
+        }
+
+        #btnView {
+            font-size: 12px !important;
+        }
+
+        .hiddenRow {
+            padding: 0 !important;
+        }
+
+        th {
+            cursor: pointer;
+        }
+
+        .delete-modal .modal-body .btn {
+            width: 26%;
+        }
+
+        .select2-container {
+            width: 100% !important;
+        }
+
+        .myAlert-bottom {
+            position: fixed;
+            bottom: 5px;
+            width: 35%;
+            left: 75%;
+        }
+
+        .alert {
+            display: none;
+        }
+    </style>
+</head>
+
+<div class="content">
+    <div class="row">
+        <div class="col-sm-6">
+            <h4 class="page-title"> <strong>Agent Statistics (@ViewBag.UserName)</strong></h4>
+            <span style="color:red;" id="fademsg">@ViewBag.error</span>
+        </div>
+
+    </div>
+
+
+    @Html.AntiForgeryToken()
+    <form>
+        <div class="row">
+            <div class="col-sm-12 col-md-12">
+
+
+
+                <div class="row">
+
+                    <div class="col-md-3">
+                        <a href="@Url.Action("Index", "AgentStatistics", new { Filter = "A", Type = @ViewBag.LoadType, FilterDateFroms = ViewBag.LoadFilterDateFrom, FilterDateTos = ViewBag.LoadFilterDateTo, ddlAgent = ViewBag.UserId })" style="width:100% !important;height:100%">
+                            <div class="col-md-12" style="background-color: rgb(20,29,186) !important;height:100% !important;width:50%;padding:5px">
+
+                                <h3 style="color:White" id="FilterPeriodType">@ViewBag.LoadType</h3>
+
+                                @*<h5 style="color:White">@DateTime.Now.ToString("MM/dd/yyyy")</h5>*@
+                                <h5 style="color:White">
+                                    @if (ViewBag.LoadType == "Daily")
+                                    {
+                                        @ViewBag.LoadFilterDateFrom.ToString("MM/dd/yyyy")
+                                    }
+
+                                    else if (ViewBag.LoadType == "Weekly")
+                                    {
+                                        @ViewBag.LoadFilterDateFrom.ToString("MM/dd/yyyy")
+                                        <label> - @ViewBag.LoadFilterDateTo.ToString("MM/dd/yyyy")</label>
+                                    }
+                                    else if (ViewBag.LoadType == "Monthly")
+                                    {
+                                        @ViewBag.MonthDetails
+                                    }
+
+                                </h5>
+
+
+
+
+
+                            </div>
+                        </a>
+                    </div>
+
+
+                    @{string display = "";}
+                    @if (Convert.ToInt32(@Session["User_id"]) != 2)
+                    {
+                        display = "hidden";
+                    }
+                    else if (Convert.ToInt32(@Session["User_id"]) == 2)
+                    { display = "visible"; }
+
+
+                    <div class="col-md-2" style="float:right !important;visibility:@display">
+                        <div class="form-group">
+                            <label><strong>Agent List</strong></label>
+                            @*<select id="ddlAgent" required name="ddlAgent"  class="form-control js-example-basic-single">*@
+                            <select id="ddlAgent" required name="ddlAgent" onchange="ReloadAgentStats('@ViewBag.Filter','@ViewBag.LoadType','@ViewBag.LoadFilterDateFrom','@ViewBag.LoadFilterDateTo',this)" class="form-control js-example-basic-single">
+
+                                @foreach (var item in ViewBag.AgentList)
+                                {
+                                    <text>
+                                        @if (item.User_ID == ViewBag.UserId)
+                                        {
+                                            <option selected value="@item.User_ID">@item.UserName</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@item.User_ID">@item.UserName</option>
+                                        }
+
+
+                                    </text>
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3" style="max-width:16%">
+                        <label><strong>Agent Commission (%) </strong></label>
+                        <input id="commissionpercentage" value="@ViewBag.Agentcommissionpercentage" type="number" style="width:90%;height:35px !important" />
+                        
+                    </div>
+
+                    <div class="col-md-1">
+                        <label><strong>Salary </strong></label>
+                        <input id="txtsalrary" value="@ViewBag.salary" type="number" style="width:100%; height: 35px !important" />
+                    </div>
+
+                    <div class="col-md-1">
+                        <label><strong>Action </strong></label>
+                        <a style="font-size:11px" onclick="Addagentcommission()" class="btn btn-primary"> <i class="fa fa-plus"></i> Update </a>
+                    </div>
+
+                    <div class="col-md-2">
+                        <div class="btn-group" style="float:right">
+                            <label style="visibility:hidden"><strong>Salary </strong></label>
+                            
+                            <a name="Filter" href="@Url.Action("Index", "Report", new { FilterDateFroms = DateTime.Now.ToString("MM/dd/yyyy"), FilterDateTos = DateTime.Now.ToString("MM/dd/yyyy") })" style="background-color: #6c757d !important" class="btn btn-secondary FilterButton"><i class="fa fa-history"></i> Back</a>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-10">
+                        <a href="@Url.Action("Index", "AgentStatistics", new { Filter = "A", Type = @ViewBag.LoadType, previous = 1, Next = 0, FilterDateFroms = ViewBag.LoadFilterDateFrom, FilterDateTos = ViewBag.LoadFilterDateTo, ddlAgentvalue = ViewBag.UserId })" name="Filter" value="D" onclick="GetFilterTypeValue('D')" class="btn btn-primary FilterButton">Previous</a>
+                        <a name="Filter" href="@Url.Action("Index", "AgentStatistics", new { Filter = "A", Type = @ViewBag.LoadType, previous = 0, Next = 1, FilterDateFroms = ViewBag.LoadFilterDateFrom, FilterDateTos = ViewBag.LoadFilterDateTo, ddlAgentvalue = ViewBag.UserId })" value="W" onclick="GetFilterTypeValue('W')" class="btn btn-primary">
+                            Next
+                        </a>
+                        <input hidden value="@ViewBag.LoadFilterDateFrom.ToString("yyyy-MM-dd")" name="FilterDateFroms" />
+                        <input hidden value="@ViewBag.LoadFilterDateTo.ToString("yyyy-MM-dd")" name="FilterDateTos" />
+
+
+                        <input id="ddlAgentvalue" name="ddlAgentvalue" value="@ViewBag.UserId" hidden />
+                        <input hidden value="@Session["User_id"]" />
+                    </div>
+
+                </div>
+
+
+                <br />
+
+                @*<div class="row">
+
+                        <div class="col-md-2">
+                            <label style="font-weight:bold">Agent</label>
+                            <p>@ListAgentStats[0].DispatcherName</p>
+                        </div>
+                        <div class="col-md-2">
+                            <label style="font-weight:bold">Total Quantity</label>
+                            <p>@ListAgentStats[0].TotalQuanity</p>
+                        </div>
+                        <div class="col-md-2">
+                            <label style="font-weight:bold">Gross Profit</label>
+                            <p>@ListAgentStats[0].GrossProfit</p>
+                        </div>
+                    </div>*@
+
+                <div class="content">
+                    <div class="row">
+                        <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
+                            <h3 style="font-weight:Bold">Agent Name</h3>
+                            <div class="dash-widget" style="        background-color: #7a92a3
+">
+                                <span class="dash-widget-bg1" style="background-color:transparent"><i class="fa fa-user" aria-hidden="true"></i></span>
+                                <div class="dash-widget-info text-right">
+                                    <h3 style="color:white" id="DispatcherName">@ListAgentStats[0].DispatcherName</h3>
+                                    <span style="        font-size: 14px;
+        background-color: white;
+        color: #7a92a3;
+        font-weight: bold
+" class="widget-title1">
+                                        Agent
+                                        <i style="        background-color: #7a92a3;
+        color: white" class="fa fa-check" aria-hidden="true"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                        <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
+                            <h3 style="font-weight:Bold">Total Quantity</h3>
+                            <div class="dash-widget" style="        background-color: #55ce63
+">
+                                <span class="dash-widget-bg2"><i class="fa fa-dot-circle-o" aria-hidden="true"></i></span>
+                                <div class="dash-widget-info text-right">
+                                    <h3 style="color:white" id="TotalQuanity">@ListAgentStats[0].TotalQuanity</h3>
+                                    <span style="        font-size: 14px;
+        background-color: white;
+        color: #55ce63;font-weight:bold" class="widget-title2">
+                                        Total Quantity
+                                        <i style="        background-color: #55ce63;
+        color: white" class="fa fa-check" aria-hidden="true"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
+                            <h3 style="font-weight:Bold">Gross Profit</h3>
+                            <div class="dash-widget" style="    background-color: #ffbc35
+    ">
+                                <span class="dash-widget-bg3" style="        background-color: #ffbc35
+"><i class="fa fa-money" aria-hidden="true"></i></span>
+                                <div class="dash-widget-info text-right">
+                                    <h3 style="color:white" id="GrossProfit">@ListAgentStats[0].GrossProfit</h3>
+                                    <input id="Grossprofitvalue" value="@ListAgentStats[0].GrossProfit" hidden />
+                                    <span style="font-size: 14px;
+        background-color: white;
+        color: #ffbc35;font-weight:bold
+" class="widget-title3">
+                                        Gross Profit <i style="        background-color: #ffbc35;
+        color: white" class="fa fa-check" aria-hidden="true"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
+                            <h3 style="font-weight:Bold">Agent Commission</h3>
+                            <div class="dash-widget" style="        background-color: darkgreen !important
+    ">
+                                <span class="dash-widget-bg3" style="        background-color: darkgreen !important
+"><i class="fa fa-money" aria-hidden="true"></i></span>
+                                <div class="dash-widget-info text-right">
+                                    <h3 style="color:white" id="agentcommissionvalue">@AgentCommission.ToString("0.00")</h3>
+                                    <span style="        font-size: 14px;
+        background-color: white;
+        color: darkgreen !important;
+        font-weight: bold
+" class="widget-title3">
+                                        Agent Commission <i style="        background-color: darkgreen !important;
+        color: white" class="fa fa-check" aria-hidden="true"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                        @*<div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
+                                <div class="dash-widget">
+                                    <span class="dash-widget-bg2"><i class="fa fa-user-o"></i></span>
+                                    <div class="dash-widget-info text-right">
+                                        <h3>@ListAgentStats[0].TotalQuanity</h3>
+                                        <span class="widget-title2">Total Quantity <i class="fa fa-check" aria-hidden="true"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
+                                <div class="dash-widget">
+                                    <span class="dash-widget-bg3"><i class="fa fa-truck" aria-hidden="true"></i></span>
+                                    <div class="dash-widget-info text-right">
+                                        <h3>@ListAgentStats[0].GrossProfit</h3>
+                                        <span class="widget-title3">Gross Profit <i class="fa fa-check" aria-hidden="true"></i></span>
+                                    </div>
+                                </div>
+                            </div>*@
+
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
+                            <h3 style="font-weight:Bold">Average profit / load</h3>
+                            <div class="dash-widget" style="        background-color: orange">
+                                <span class="dash-widget-bg1" style="background-color:transparent"><i class="fa fa-user" aria-hidden="true"></i></span>
+                                <div class="dash-widget-info text-right">
+                                    <h3 style="color:white" id="DispatcherName">@AverageProfitPerLoad.ToString("0.00")</h3>
+                                    <span style="font-size: 14px;background-color: white;color: orange;font-weight: bold" class="widget-title1">
+                                        Average profit / load
+                                        <i style="background-color: orange;color: white" class="fa fa-check" aria-hidden="true"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+        </div>
+        <br />
+
+
+        <div class="row">
+            <div class="col-md-4">
+
+            </div>
+            <div class="col-md-8">
+                <div id="Alertdiv" class="myAlert-bottom alert alert-success">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <strong id="Message"></strong>
+                </div>
+
+            </div>
+        </div>
+    </form>
+
+</div>
+
+
+<script>
+    // In your Javascript (external .js resource or <script> tag)
+    jQuery(document).ready(function () {
+        jQuery('#ddlAgent').select2();
+    });
+
+
+    //$('#ddlagent').change(function () {
+    //    var ddlAgent = $("#ddlagent").val();
+    //    alert(ddlAgent);
+    //    return;
+    //        $.ajax({
+    //            url: '/AgentStatistics/ReloadAgentStatistics?ddlAgent=' + ddlAgent + '',
+    //            type: "GET",
+    //            contentType: false, // Not to set any content header
+    //            processData: false, // Not to process data
+    //            success: function (result) {
+    //                window.location = result.url;
+
+    //            },
+    //            error: function (err) {
+    //                alert(err.statusText);
+    //            }
+    //        });
+
+
+
+    //});
+
+
+    function Addagentcommission() {
+        var agentvalue = $("#ddlAgent").val();
+        var agentcommissionpercentage = $("#commissionpercentage").val();
+        var salary = $("#txtsalrary").val();
+        var GrossProfit = $("#Grossprofitvalue").val();
+        var agentcommissiioncalculation;
+
+
+        if (agentcommissionpercentage == "") {
+            document.getElementById("Message").innerHTML = "Enter Agent  Commission %";
+            document.getElementById("Message").style.color = "white";
+            document.getElementById("Alertdiv").style.backgroundColor = '#ff6666';
+            document.getElementById("Alertdiv").style.borderColor = "#ff6666";
+            $("#Alertdiv").fadeIn();
+
+            return;
+        }
+        else {
+            $("#Alertdiv").fadeOut();
+
+
+            agentcommissiioncalculation = parseInt(GrossProfit) / 100 * parseInt(agentcommissionpercentage);
+            //alert(parseInt(GrossProfit) + ", " + parseInt(agentcommissionpercentage) + "," + agentcommissiioncalculation);
+            //return;
+
+        }
+
+        if (salary == "") {
+            salary = 0;
+        }
+
+
+        $.ajax({
+
+            type: "POST",
+            url: "/AgentStatistics/UpdateAgentCommission/?Agentid=" + agentvalue + "&agentcommissionpercentage=" + agentcommissionpercentage + "&salary="+salary+"",
+
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                if (data == "1") {
+                    document.getElementById("Message").innerHTML = "Agent Info Updated";
+                    document.getElementById("Message").style.color = "#3c763d";
+                    document.getElementById("Alertdiv").style.backgroundColor = '#d4edda';
+                    document.getElementById("Alertdiv").style.borderColor = "#c3e6cb";
+                    $("#Alertdiv").fadeIn();
+                    $("#Alertdiv").fadeOut(8000);
+                    /*$("#").val(agentcommissiioncalculation)*/
+                    document.getElementById("agentcommissionvalue").innerHTML = agentcommissiioncalculation;
+
+                }
+                else {
+
+                }
+
+
+            }
+
+
+
+
+        });
+
+
+    }
+
+
+
+</script>
+
+
+<script type="text/javascript">
+
+    function ReloadAgentStats(Filter, Loadtype, Datefrom, Dateto, Agentid) {
+
+        $("#ddlAgentvalue").val(Agentid.value);
+        var Agent = Agentid.value;
+          $.ajax({
+            url: '@Url.Action("ReloadAgentStatistics", "AgentStatistics")',
+            type: "POST",
+            dataType: 'JSON',
+              data: { Filter: Filter, Type: Loadtype, FilterDateFroms: Datefrom, FilterDateTos: Dateto, ddlAgent: Agent},
+              success: function (result) {
+                ///*  alert(result.url);*/
+                //window.location = result.url;
+
+                  document.getElementById("DispatcherName").innerHTML = result[0].DispatcherName;
+                  document.getElementById("TotalQuanity").innerHTML = parseFloat(result[0].TotalQuanity).toFixed(2);
+                  document.getElementById("GrossProfit").innerHTML = parseFloat(result[0].GrossProfit).toFixed(2);
+                  location.reload();
+              }
+        });
+    }
+
+</script>
+
+
+

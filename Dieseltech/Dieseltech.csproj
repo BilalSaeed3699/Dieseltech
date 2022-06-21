@@ -1,0 +1,854 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{D07B9C61-3548-4E53-B10E-B023756AF1D3}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Dieseltech</RootNamespace>
+    <AssemblyName>Dieseltech</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+    <UseIISExpress>true</UseIISExpress>
+    <Use64BitIISExpress />
+    <IISExpressSSLPort>44330</IISExpressSSLPort>
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="BouncyCastle.Crypto, Version=1.8.6.0, Culture=neutral, PublicKeyToken=0e99375e54769942">
+      <HintPath>..\packages\BouncyCastle.1.8.6.1\lib\BouncyCastle.Crypto.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="HiQPdf, Version=12.0.0.0, Culture=neutral, PublicKeyToken=acd8b62594985b24, processorArchitecture=MSIL">
+      <HintPath>..\packages\hiqpdf.12.0.0\lib\net40\HiQPdf.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="itextsharp, Version=5.5.13.2, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <HintPath>..\packages\iTextSharp.5.5.13.2\lib\itextsharp.dll</HintPath>
+    </Reference>
+    <Reference Include="itextsharp.xmlworker, Version=5.5.13.2, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <HintPath>..\packages\itextsharp.xmlworker.5.5.13.2\lib\itextsharp.xmlworker.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Rotativa, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Rotativa.1.7.3\lib\net461\Rotativa.dll</HintPath>
+    </Reference>
+    <Reference Include="Select.HtmlToPdf, Version=20.2.0.0, Culture=neutral, PublicKeyToken=e0ae9f6e27a97018, processorArchitecture=MSIL">
+      <HintPath>..\packages\Select.HtmlToPdf.20.2.0\lib\net40\Select.HtmlToPdf.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.7\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Http, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.7\lib\net45\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.WebHost, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.5.2.7\lib\net45\System.Web.Http.WebHost.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http">
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest">
+    </Reference>
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.7\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Optimization">
+      <HintPath>..\packages\Microsoft.AspNet.Web.Optimization.1.1.3\lib\net40\System.Web.Optimization.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.7\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="WebGrease">
+      <Private>True</Private>
+      <HintPath>..\packages\WebGrease.1.6.0\lib\WebGrease.dll</HintPath>
+    </Reference>
+    <Reference Include="Antlr3.Runtime">
+      <Private>True</Private>
+      <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform">
+      <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AjaxSearch.asmx.cs">
+      <DependentUpon>AjaxSearch.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="App_Start\BundleConfig.cs" />
+    <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\AccessLevelController.cs" />
+    <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\AgentStatisticsController.cs" />
+    <Compile Include="Controllers\BoardController.cs" />
+    <Compile Include="Controllers\CarrierController.cs" />
+    <Compile Include="Controllers\CopyLoadController.cs" />
+    <Compile Include="Controllers\customerController.cs" />
+    <Compile Include="Controllers\DefinitionController.cs" />
+    <Compile Include="Controllers\EditLoadController.cs" />
+    <Compile Include="Controllers\EmailController.cs" />
+    <Compile Include="Controllers\ErrorController.cs" />
+    <Compile Include="Controllers\FileUpload.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\InsuranceexpirationController.cs" />
+    <Compile Include="Controllers\LoadController.cs" />
+    <Compile Include="Controllers\PrivacyController.cs" />
+    <Compile Include="Controllers\ProfileController.cs" />
+    <Compile Include="Controllers\ReportController.cs" />
+    <Compile Include="Controllers\revenueController.cs" />
+    <Compile Include="Controllers\tblLoadHeadsController.cs" />
+    <Compile Include="Controllers\TruckController.cs" />
+    <Compile Include="Controllers\UserController.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Models\AgentStats.cs" />
+    <Compile Include="Models\Carrier.cs" />
+    <Compile Include="Models\CarrierComments.cs" />
+    <Compile Include="Models\City.cs" />
+    <Compile Include="Models\Comment.cs" />
+    <Compile Include="Models\Customexception.cs" />
+    <Compile Include="Models\Days.cs" />
+    <Compile Include="Models\DieselTech.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DieselTech.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DieselTech.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DieselTech.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DieselTech.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DriverLicense.cs" />
+    <Compile Include="Models\getAccessMenus_Result.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\LoadConfirmation.cs" />
+    <Compile Include="Models\LoadLocations.cs" />
+    <Compile Include="Models\ModelHelper.cs" />
+    <Compile Include="Models\PickupDelivery.cs" />
+    <Compile Include="Models\PickupDeliveryInformation.cs" />
+    <Compile Include="Models\Shipper.cs" />
+    <Compile Include="Models\sp_Broker_List_Result.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_Driver_List_Result.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_getAccessMenusUser1_Result.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_getAccessMenusUser_Result.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_getAccessMenusUser_Result1.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_getAccessMenusUser_Result2.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_getAccessMenus_Result.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_getAccessMenus_Result1.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Sp_GetAll_Truck_List_Result.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Sp_Get_Agents_List_Result.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Sp_Get_Agent_Statistics_New_Result.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Sp_Get_All_Carrier_List_Filter_Result.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Sp_Get_All_Carrier_List_Result.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Sp_Get_Annual_Totals_Result.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_Get_Broker_Helper_List_Result.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Sp_Get_CarrierTrucks_Result.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Sp_Get_CarrierTruck_Information_Result.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_Get_Carrier_Helper_List_Result.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_Get_Carrier_List_Result.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Sp_Get_Carrier_LoadList_Result.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_Get_City_List_Result.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Sp_get_collection_list_Result.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Sp_Get_Company_Revenue_Result.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Sp_Get_Company_Summary_Revenue_Result.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_Get_Country_State_Result.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Sp_get_Customer_Month_Comparison_Result.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Sp_Get_Dashboard_Stats_Result.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Sp_Get_Invoice_Load_List_Result.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Sp_Get_Leader_Board_Result.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Sp_Get_LoadDetails_Result.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Sp_Get_LoadDetails_Result1.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Sp_Get_LoadDetails_Result2.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Sp_Get_LoadDetail_FilterMonthWise_Result.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Sp_Get_LoadDetail_FilterWise_Result.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Sp_Get_LoadDetail_PickupDelivery_WithAllFilter_Result.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Sp_Get_LoadDetail_WithAllFilter_Result.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Sp_Get_LoadHeadInformation_Edit_Result.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Sp_Get_LoadPickupDelivery_Detail_FilterWise_Result.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SP_Get_Load_Confirmation_Data_Result.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Sp_Get_Truck_Detailed_List_Result.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Sp_Get_Truck_List_Result.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Sp_Get_Truck_List_Result1.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Sp_Get_Truck_List_Result2.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Sp_Get_Truck_List_Result3.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Sp_Get_User_Extensions_List_Result.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Sp_Get_ZoneList_Result.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_Get_Zone_List_Result.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Sp_Get_Zone_States_Result.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Sp_Search_Autocomplete_TruckInfo_Result.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Sp_Show_TruckDetails_Result.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Sp_TruckBoard_Truck_List_Result.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SP_Verify_UserLogin_Result.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tblAccess_Level.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tblAccess_Level_Menu.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tblActivationCode.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tblAgentcommission.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tblBroker.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tblBrokerHelper.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tblCarrier.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tblCarrierCategory.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tblcarriercollection.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tblCarrierDocument.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tblCarrierHelper.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tblCity.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tblComment.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tblCompany.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tblCountry.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tblcustomercollection.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tblDriver.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tblDriverLicense.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tblDriverLocation.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tblDriverType.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tblEmailHistory.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tblEmailSetting.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tblForgetPassword.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tblLoadCharge1.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tblLoadConfirmationDocument.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tblLoadDelivery.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tblLoadDocument.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tblLoadFilePath.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tblLoadFilePathTemp.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tblLoadHead.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tblLoadPickup.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tblLoadPickupDelivery.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tblLoadSubType.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tblLoadType.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tblMenu.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tblNotification.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tblPackage.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tblProfile.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tblQuantityType.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tblShipper.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tblState.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tblStateCityData.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tblThemeColor.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tblTruck.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tblUser.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tblUser_Rights.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tblZone.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tblZoneList.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utility.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="AjaxSearch.asmx" />
+    <Content Include="assets\css\alert-bangtidy.css" />
+    <Content Include="assets\css\alert-blackgloss.css" />
+    <Content Include="assets\css\bootstrap-datetimepicker.min.css" />
+    <Content Include="assets\css\bootstrap.min.css" />
+    <Content Include="assets\css\dataTables.bootstrap4.min.css" />
+    <Content Include="assets\css\fileinput.css" />
+    <Content Include="assets\css\font-awesome.min.css" />
+    <Content Include="assets\css\fullcalendar.min.css" />
+    <Content Include="assets\css\jquery-ui.css" />
+    <Content Include="assets\css\jquery.dataTables.min.css" />
+    <Content Include="assets\css\jquery.minicolors.css" />
+    <Content Include="assets\css\RadioButton.css" />
+    <Content Include="assets\css\select2.min.css" />
+    <Content Include="assets\css\style.css" />
+    <Content Include="assets\css\tagsinput.css" />
+    <Content Include="assets\Error\Error.css" />
+    <Content Include="assets\fonts\fontawesome-webfont3e6e.html" />
+    <Content Include="assets\fonts\fontawesome-webfont3e6e.svg" />
+    <Content Include="assets\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="assets\img\attachment.png" />
+    <Content Include="assets\img\blog\blog-01.jpg" />
+    <Content Include="assets\img\blog\blog-02.jpg" />
+    <Content Include="assets\img\blog\blog-03.jpg" />
+    <Content Include="assets\img\blog\blog-04.jpg" />
+    <Content Include="assets\img\blog\blog-thumb-01.jpg" />
+    <Content Include="assets\img\blog\blog-thumb-02.jpg" />
+    <Content Include="assets\img\blog\blog-thumb-03.jpg" />
+    <Content Include="assets\img\blog\blog-thumb-04.jpg" />
+    <Content Include="assets\img\checkbox.png" />
+    <Content Include="assets\img\demo_wait.gif" />
+    <Content Include="assets\img\Loader.gif" />
+    <Content Include="assets\img\calander.png" />
+    <Content Include="assets\img\clock.png" />
+    <Content Include="assets\img\customer-service-agent.png" />
+    <Content Include="assets\img\doctor-03.jpg" />
+    <Content Include="assets\img\doctor-thumb-01.jpg" />
+    <Content Include="assets\img\doctor-thumb-02.jpg" />
+    <Content Include="assets\img\doctor-thumb-03.jpg" />
+    <Content Include="assets\img\doctor-thumb-04.jpg" />
+    <Content Include="assets\img\doctor-thumb-05.jpg" />
+    <Content Include="assets\img\doctor-thumb-06.jpg" />
+    <Content Include="assets\img\doctor-thumb-07.jpg" />
+    <Content Include="assets\img\doctor-thumb-08.jpg" />
+    <Content Include="assets\img\doctor-thumb-09.jpg" />
+    <Content Include="assets\img\doctor-thumb-10.jpg" />
+    <Content Include="assets\img\doctor-thumb-11.jpg" />
+    <Content Include="assets\img\doctor-thumb-12.jpg" />
+    <Content Include="assets\img\documentation.png" />
+    <Content Include="assets\img\documents.png" />
+    <Content Include="assets\img\favicon.ico" />
+    <Content Include="assets\img\file.png" />
+    <Content Include="assets\img\folder.png" />
+    <Content Include="assets\img\LoaderEmail.gif" />
+    <Content Include="assets\img\Logistic-Truck_Delivery.png" />
+    <Content Include="assets\img\Logistic-Truck_Pickup.png" />
+    <Content Include="assets\img\logo-dark.png" />
+    <Content Include="assets\img\logo.jpg" />
+    <Content Include="assets\img\logo.png" />
+    <Content Include="assets\img\Logo1.png" />
+    <Content Include="assets\img\Logo_1.png" />
+    <Content Include="assets\img\Logo_2.png" />
+    <Content Include="assets\img\Logo_3.png" />
+    <Content Include="assets\img\Main_Logo.png" />
+    <Content Include="assets\img\ok.png" />
+    <Content Include="assets\img\patient-thumb-01.jpg" />
+    <Content Include="assets\img\patient-thumb-02.jpg" />
+    <Content Include="assets\img\placeholder-thumb.jpg" />
+    <Content Include="assets\img\placeholder.jpg" />
+    <Content Include="assets\img\Preloader_2.gif" />
+    <Content Include="assets\img\printer.png" />
+    <Content Include="assets\img\searchicon.png" />
+    <Content Include="assets\img\sent.png" />
+    <Content Include="assets\img\Unchecked.png" />
+    <Content Include="assets\img\user-02.jpg" />
+    <Content Include="assets\img\user-03.jpg" />
+    <Content Include="assets\img\user-04.jpg" />
+    <Content Include="assets\img\user-05.jpg" />
+    <Content Include="assets\img\user-06.jpg" />
+    <Content Include="assets\img\user.jpg" />
+    <Content Include="assets\img\video-call.jpg" />
+    <Content Include="assets\js\app.js" />
+    <Content Include="assets\js\bootstrap-datetimepicker.min.js" />
+    <Content Include="assets\js\bootstrap.min.js" />
+    <Content Include="assets\js\Chart.bundle.js" />
+    <Content Include="assets\js\chart.js" />
+    <Content Include="assets\js\colorpalettepicker.js" />
+    <Content Include="assets\js\dataTables.bootstrap4.min.js" />
+    <Content Include="assets\js\fileinput.js" />
+    <Content Include="assets\js\fullcalendar.min.js" />
+    <Content Include="assets\js\jquery-1.10.2.js" />
+    <Content Include="assets\js\jquery-3.2.1.min.js" />
+    <Content Include="assets\js\jquery-ui.js" />
+    <Content Include="assets\js\jquery-ui.min.html" />
+    <Content Include="assets\js\jquery.dataTables.min.js" />
+    <Content Include="assets\js\jquery.fullcalendar.js" />
+    <Content Include="assets\js\jquery.mcautocomplete.js" />
+    <Content Include="assets\js\jquery.minicolors.min.js" />
+    <Content Include="assets\js\jquery.slimscroll.js" />
+    <Content Include="assets\js\jscolor.js" />
+    <Content Include="assets\js\modernizr.js" />
+    <Content Include="assets\js\moment.min.js" />
+    <Content Include="assets\js\popper.min.js" />
+    <Content Include="assets\js\select2.min.js" />
+    <Content Include="assets\js\tagsinput.js" />
+    <Content Include="assets\plugins\light-gallery\css\lightgallery.min.css" />
+    <Content Include="assets\plugins\light-gallery\fonts\lgd641.svg" />
+    <Content Include="assets\plugins\light-gallery\img\loading.gif" />
+    <Content Include="assets\plugins\light-gallery\img\video-play.png" />
+    <Content Include="assets\plugins\light-gallery\img\vimeo-play.png" />
+    <Content Include="assets\plugins\light-gallery\img\youtube-play.png" />
+    <Content Include="assets\plugins\light-gallery\js\lightgallery-all.min.js" />
+    <Content Include="assets\plugins\summernote\dist\summernote-bs4.css" />
+    <Content Include="assets\plugins\summernote\dist\summernote-bs4.min.js" />
+    <Content Include="Content\bootstrap-theme.css" />
+    <Content Include="Content\bootstrap-theme.min.css" />
+    <Content Include="Content\bootstrap.css" />
+    <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\bootstrap.min.js" />
+    <Content Include="Content\jquery-3.2.1.min.js" />
+    <Content Include="favicon.ico" />
+    <Content Include="fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Global.asax" />
+    <Content Include="Content\Site.css" />
+    <Content Include="Models\DieselTech.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>DieselTech.edmx</DependentUpon>
+      <LastGenOutput>DieselTech.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="Models\DieselTech.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>DieselTech.edmx</DependentUpon>
+      <LastGenOutput>DieselTech.cs</LastGenOutput>
+    </Content>
+    <Content Include="ProfileImg\Jack.jpg" />
+    <Content Include="Rotativa\help-wkhtmltoimage.txt" />
+    <Content Include="Rotativa\help-wkhtmltopdf.txt" />
+    <Content Include="Rotativa\wkhtmltoimage.exe" />
+    <Content Include="Rotativa\wkhtmltopdf.exe" />
+    <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="assets\fonts\fontawesome-webfont3e6e.eot" />
+    <Content Include="assets\fonts\fontawesome-webfont3e6e.ttf" />
+    <Content Include="assets\fonts\fontawesome-webfont3e6e.woff" />
+    <Content Include="assets\fonts\fontawesome-webfontd41d.eot" />
+    <Content Include="assets\plugins\light-gallery\fonts\lgd41d.eot" />
+    <Content Include="assets\plugins\light-gallery\fonts\lgd641.eot" />
+    <Content Include="assets\plugins\light-gallery\fonts\lgd641.ttf" />
+    <Content Include="assets\plugins\light-gallery\fonts\lgd641.woff" />
+    <Content Include="assets\plugins\summernote\dist\font\summernote4c4d.eot" />
+    <Content Include="assets\plugins\summernote\dist\font\summernote4c4d.ttf" />
+    <Content Include="assets\plugins\summernote\dist\font\summernote4c4d.woff" />
+    <Content Include="assets\plugins\summernote\dist\font\summernoted41d.eot" />
+    <EntityDeploy Include="Models\DieselTech.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>DieselTech.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="Models\DieselTech.edmx.diagram">
+      <DependentUpon>DieselTech.edmx</DependentUpon>
+    </Content>
+    <Content Include="LoaderViewBackup\Index.cshtml" />
+    <Content Include="assets\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="assets\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="assets\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="assets\fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="App_Browsers\qt.browser" />
+    <Content Include="assets\img\checkbox-images.rar" />
+    <None Include="Scripts\jquery-3.4.1.intellisense.js" />
+    <Content Include="Scripts\jquery-3.4.1.js" />
+    <Content Include="Scripts\jquery-3.4.1.min.js" />
+    <Content Include="Scripts\jquery-3.4.1.slim.js" />
+    <Content Include="Scripts\jquery-3.4.1.slim.min.js" />
+    <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.validate.js" />
+    <Content Include="Scripts\jquery.validate.min.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Uploads\Broker\0001\DropDownQueries.sql" />
+    <Content Include="Web.config" />
+    <Content Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Views\Web.config" />
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Views\Shared\Error.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Home\About.cshtml" />
+    <Content Include="Views\Home\Contact.cshtml" />
+    <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Account\Index.cshtml" />
+    <Content Include="Views\Account\Register.cshtml" />
+    <Content Include="Views\Account\ForgetPassword.cshtml" />
+    <Content Include="Views\Error\ExceptionPage.cshtml" />
+    <Content Include="Views\Account\ChangePassword.cshtml" />
+    <Content Include="Views\Definition\Customer.cshtml" />
+    <Content Include="Views\Definition\Country.cshtml" />
+    <Content Include="Views\Definition\Index.cshtml" />
+    <Content Include="Views\Definition\Carrier.cshtml" />
+    <Content Include="Views\Definition\CarrierHelper.cshtml" />
+    <Content Include="Views\Definition\CarrierHelper - Copy.cshtml" />
+    <Content Include="Views\Definition\State.cshtml" />
+    <Content Include="Views\Definition\City.cshtml" />
+    <Content Include="Views\Definition\Zone.cshtml" />
+    <Content Include="Views\Definition\Driver.cshtml" />
+    <Content Include="Views\Definition\Truck.cshtml" />
+    <Content Include="Views\Definition\BrokerHelper.cshtml" />
+    <Content Include="Views\AccessLevel\Index.cshtml" />
+    <Content Include="Views\AccessLevel\Edit.cshtml" />
+    <Content Include="Views\Profile\Index.cshtml" />
+    <Content Include="Views\Profile\EditIndex.cshtml" />
+    <Content Include="Views\Profile\Edit.cshtml" />
+    <Content Include="Views\Profile\UserProfiles.cshtml" />
+    <Content Include="Views\User\Create.cshtml" />
+    <Content Include="Views\User\Index.cshtml" />
+    <Content Include="Views\User\Edit.cshtml" />
+    <Content Include="Views\Account\changepasswordnew.cshtml" />
+    <Content Include="Views\User\ResetPassword.cshtml" />
+    <Content Include="Views\Definition\TruckDetail.cshtml" />
+    <Content Include="Views\Load\Index.cshtml" />
+    <Content Include="Views\tblLoadHeads\Create.cshtml" />
+    <Content Include="Views\tblLoadHeads\Delete.cshtml" />
+    <Content Include="Views\tblLoadHeads\Details.cshtml" />
+    <Content Include="Views\tblLoadHeads\Edit.cshtml" />
+    <Content Include="Views\tblLoadHeads\Index.cshtml" />
+    <Content Include="Views\Report\Index.cshtml" />
+    <Content Include="Views\Load\EditLoad.cshtml" />
+    <Content Include="Views\Report\ReportPreview.cshtml" />
+    <Content Include="Views\Load\LoadConfirmation.cshtml" />
+    <Content Include="Views\Definition\CarrierInfo.cshtml" />
+    <Content Include="Views\Truck\TruckBoard.cshtml" />
+    <Content Include="Views\Report\Upload.cshtml" />
+    <Content Include="Views\EditLoad\Index.cshtml" />
+    <Content Include="Views\CopyLoad\Index.cshtml" />
+    <Content Include="Views\Home\ChangeThemeColor.cshtml" />
+    <Content Include="Views\Email\Index.cshtml" />
+    <Content Include="Views\Report\ReportPdfDownload.cshtml" />
+    <Content Include="Views\Email\EmailHistory.cshtml" />
+    <Content Include="Views\Report\DriverLocations.cshtml" />
+    <Content Include="Views\Report\LoadDetail.cshtml" />
+    <Content Include="Views\Report\InvoicingDetail.cshtml" />
+    <Content Include="Views\Privacy\Index.cshtml" />
+    <Content Include="Views\Shared\PrivacyLayout.cshtml" />
+    <Content Include="Views\AgentStatistics\Index.cshtml" />
+    <Content Include="Views\Insuranceexpiration\Index.cshtml" />
+    <Content Include="Views\Board\Leaderboard.cshtml" />
+    <Content Include="Views\Carrier\Index.cshtml" />
+    <Content Include="Views\Carrier\AnnualTotal.cshtml" />
+    <Content Include="Views\User\Userextension.cshtml" />
+    <Content Include="Views\customer\monthcomparison.cshtml" />
+    <Content Include="Views\Report\collection.cshtml" />
+    <Content Include="Views\revenue\companyrevenue.cshtml" />
+    <Content Include="Uploads\Broker\0001\Delivery Management System.docx" />
+    <Content Include="Uploads\Broker\0001\Development Task List.docx" />
+    <Content Include="Uploads\Broker\0001\Dieseltech Queries 20201014.docx" />
+    <Content Include="Uploads\Broker\0001\DieselTech Requirement.docx" />
+    <Content Include="Uploads\Broker\0001\DieselTech.bak" />
+    <Content Include="Uploads\Broker\0001\Drivers.docx" />
+    <Content Include="Uploads\Broker\0001\MC Authority.docx" />
+    <Content Include="Uploads\Broker\0001\Queries.docx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+    <Folder Include="Definition\" />
+    <Folder Include="Uploads\Carrier\" />
+    <Folder Include="Uploads\Loads\LoaderNumbers\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Content\bootstrap.min.css.map" />
+    <Content Include="Content\bootstrap.css.map" />
+    <Content Include="Content\bootstrap-theme.min.css.map" />
+    <Content Include="Content\bootstrap-theme.css.map" />
+    <None Include="packages.config" />
+    <Content Include="Scripts\jquery-3.4.1.slim.min.map" />
+    <Content Include="Scripts\jquery-3.4.1.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>56052</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>https://localhost:44330/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
+  </Target>
+  <PropertyGroup>
+    <PreBuildEvent>tasklist /fi "imagename eq iisexpress.exe" |find ":" &gt; nul
+if errorlevel 1 taskkill /f /im "iisexpress.exe"</PreBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target> -->
+</Project>

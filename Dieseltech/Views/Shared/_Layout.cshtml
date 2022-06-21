@@ -1,0 +1,972 @@
+﻿@*<!DOCTYPE html>*@
+@*<html lang="en">*@
+@using Dieseltech.Models;
+@{
+    ViewBag.Title = "Index";
+    List<tblThemeColor> ListThemeColor = (List<tblThemeColor>)ViewBag.ThemeColor;
+    List<sp_getAccessMenusUser_Result2> list = (List<sp_getAccessMenusUser_Result2>)Session["Menu"];
+    List<tblNotification> NotificationList = (List<tblNotification>)Session["CarrierInsuranceExpirationList"];
+    List<tblNotification> AlkoisNotificationList = (List<tblNotification>)Session["AlkaiosnotifyList"];
+    List<tblNotification> JetlineNotificationList = (List<tblNotification>)Session["JetlinenotifyList"];
+
+
+}
+@{int TotalUnreadNotifications = 0;}
+@{int AlkoisUnreadNotifications = 0;}
+@{int JetlineUnreadNotifications = 0;}
+<!-- index22:59-->
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+    <link rel="shortcut icon" type="image/x-icon" href="~/assets/img/Logo_2.png">
+
+
+    <title>Diesel Tech</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="~/assets/css/bootstrap.min.css">
+    <link href="~/assets/css/jquery.minicolors.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-colorpicker/2.5.3/css/bootstrap-colorpicker.css"
+          rel="stylesheet">
+    @*<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css">*@
+    <link href="~/assets/css/jquery.dataTables.min.css" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="~/assets/fonts/glyphicons-halflings-regular.ttf">
+
+    @*<link href="~/assets/css/bootstrap.min.css" rel="stylesheet" />*@
+
+
+    <link href="~/assets/css/fileinput.css" rel="stylesheet" />
+
+    @*<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.4.5/css/fileinput.min.css" media="all" rel="stylesheet" type="text/css" />*@
+    @*<link href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css" />*@
+
+    <link rel="stylesheet" type="text/css" href="~/assets/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="~/assets/css/style.css">
+    @*<link href="~/assets/css/RadioButton.css" rel="stylesheet" />*@
+    <link rel="stylesheet" type="text/css" href="~/assets/css/select2.min.css">
+
+
+    @*<link href="~/assets/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />*@
+    @*<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">*@
+    <link href="~/assets/css/jquery-ui.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css">
+
+    <link href="~/assets/css/alert-bangtidy.css" rel="stylesheet" />
+    <link href="~/assets/css/alert-blackgloss.css" rel="stylesheet" />
+    @*<script src="~/assets/js/jquery-3.2.1.min.js"></script>*@
+    @*<script src="//code.jquery.com/jquery-1.10.2.js"></script>*@
+    <script src="~/assets/js/jquery-1.10.2.js"></script>
+    <script src="~/assets/js/jquery.minicolors.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-colorpicker/2.5.3/js/bootstrap-colorpicker.js"></script>
+
+    @*<script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.2/modernizr.js"></script>*@
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
+    @*<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>*@
+    <script src="~/assets/js/jquery-ui.js"></script>
+    <script src="~/assets/js/popper.min.js"></script>
+    <script src="~/assets/js/jquery.slimscroll.js"></script>
+    <script src="~/assets/js/jquery.mcautocomplete.js"></script>
+
+    <script src="~/assets/js/app.js"></script>
+    
+    <script src="~/assets/js/bootstrap.min.js"></script>
+
+    <script src="~/assets/js/colorpalettepicker.js"></script>
+    <script src="~/assets/js/select2.min.js"></script>
+    <script src="~/assets/js/fileinput.js"></script>
+
+    <script src="~/assets/js/Chart.bundle.js"></script>
+    @*<script src="//cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>*@
+
+    <script src="~/assets/js/jquery.dataTables.min.js"></script>
+
+    <script src="~/assets/js/jscolor.js"></script>
+    @*File input libararies*@
+    @*<script src="~/assets/js/jquery-3.2.1.min.js"></script>*@
+    @*<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>*@
+
+    @*<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">*@
+
+
+    @*<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.4.5/js/fileinput.min.js"></script>*@
+    @*<script src="~/assets/js/bootstrap-datetimepicker.min.js"></script>*@
+
+
+
+    @*<script src="~/assets/js/chart.js"></script>*@
+
+
+
+
+    @*<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>*@
+    @*<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.4.5/js/plugins/piexif.min.js" type="text/javascript"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.4.5/js/plugins/sortable.min.js" type="text/javascript"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.4.5/js/plugins/purify.min.js" type="text/javascript"></script>*@
+    @*<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>*@
+    @*<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>*@
+
+
+    @*<script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>*@
+
+
+
+    <!--[if lt IE 9]>
+        <script src="~/assets/js/html5shiv.min.js"></script>
+        <script src="~/assets/js/respond.min.js"></script>
+    <![endif]-->
+
+    <style>
+        input.form-control {
+            font-size: 13px !important;
+            height: 19px !important;
+            min-height: 30px;
+        }
+
+        th {
+            /*background-color: #f1bb62 !important;*/
+            background-color: @Session["Color"] !important;
+            color: white;
+        }
+
+        /*.modal-header {
+            background-color: #f1bb62 !important;
+        }*/
+
+        .ThemeColor {
+            background-color: #4c5564 !important;
+        }
+
+        .header {
+            background-color: @Session["Color"] !important;
+        }
+
+
+        .nav-tabs.nav-tabs-solid > li > a.active, .nav-tabs.nav-tabs-solid > li > a.active:hover, .nav-tabs.nav-tabs-solid > li > a.active:focus {
+            /*background-color: #f1bb62;
+            border-color: #f1bb62;*/
+            background-color: @Session["Color"] !important;
+            border-color: @Session["Color"] !important;
+        }
+
+        .modal-header {
+            /*background-color: #f1bb62 !important;*/
+            background-color: @Session["Color"] !important;
+            /*background-color: orange !important;*/
+        }
+
+        .StateHover:hover {
+            cursor: pointer !important;
+            border-bottom: 1px solid @Session["Color"] !important;
+            background-color: @Session["Color"] !important;
+            color: white;
+        }
+        .Choose
+        {
+            background-color: @Session["Color"] !important;
+        }
+
+        /* Paste this css to your style sheet file or under head tag */
+        /* This only works with JavaScript,
+        if it's not present, don't show loader */
+        /*.no-js #loader {
+            display: none;
+        }
+
+        .js #loader {
+            display: block;
+            position: absolute;
+            left: 100px;
+            top: 0;
+        }
+
+        .se-pre-con {
+            position: fixed;
+            left: 0px;
+            top: 0px;
+            width: 100%;
+            height: 100%;
+            z-index: 9999;
+            background: url(../../assets/img/Preloader_1.gif) center no-repeat #fff;*/
+        /*background-image: url('../../assets/img/Preloader_2.gif');*/
+        /*}*/
+    </style>
+</head>
+<body>
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
+         aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document" style="max-width:400px !important">
+            @using (Html.BeginForm("ChangeThemeColor", "Home", FormMethod.Post, new
+            {
+                enctype = "multipart/form-data"
+            }))
+            {@Html.AntiForgeryToken()
+
+
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Change Color Theme</h5>
+                    <button type="button" style="color:white" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="test">
+                    <input name="HexaColor" id="cp15" type="text" class="form-control input-lg" value="#6D2781" />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </div>
+        }
+        </div>
+    </div>
+    @*<div class="se-pre-con"></div>*@
+
+    <div class="main-wrapper">
+        <div class="header" style="background-color: #e80000;">
+            <div class="header-left">
+                <a href="@Url.Action("Index", "Home")" class="logo">
+                    <img src="~/assets/img/Logo_2.png" width="35" height="35" alt="">
+                    <span>Dieseltech</span>
+                </a>
+            </div>
+            <a id="toggle_btn" href="javascript:void(0);"><i class="fa fa-bars"></i></a>
+            <a id="mobile_btn" class="mobile_btn float-left" href="#sidebar"><i class="fa fa-bars"></i></a>
+            <ul class="nav user-menu float-right">
+                @*<li class="nav-item dropdown d-none d-sm-block">
+            <a href="javascript:void(0);" id="open_msg_box" class="hasnotifications nav-link"><i class="fa fa-comment-o"></i> <span class="badge badge-pill bg-danger float-right">8</span></a>
+        </li>
+        <li class="nav-item dropdown d-none d-sm-block">
+            <a data-toggle="modal" data-target="#exampleModal">
+                <i style="font-size:20px" class="fa fa-paint-brush"></i> Change Color
+            </a>
+        </li>*@
+
+                <li class="nav-item dropdown d-none d-sm-block">
+                    @*<a id="colorpalettediv" style="background-color:@Session["Color"] !important">
+                <i style="font-size:20px" class="fa fa-paint-brush"></i> Choose Color
+            </a>*@
+
+                    <input id="ChangeColor" style="width:10% !important;float:right;margin-top:12px" value="@Session["Color"]" data-jscolor=""> <i style="padding-right:5px; font-size:20px;float:right;padding-top:15px;color:White" class="fa fa-paint-brush"></i>
+
+                </li>
+
+                @*Alkaois notification*@
+                <li class="nav-item dropdown d-none d-sm-block">
+                    @*data-toggle="tooltip" title="ALKAIOS TRANSPORTATION!"*@
+                    <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown" aria-expanded="false">
+                        <i class="fa fa-bell-o"></i>
+                        @foreach (var notifylist in AlkoisNotificationList)
+                        {
+                            if (notifylist.IsRead == 0)
+                            {
+                                AlkoisUnreadNotifications = AlkoisUnreadNotifications + 1;
+                            }
+                        }
+
+                        @if (AlkoisUnreadNotifications > 0)
+                        {
+                            <span id="NotificaionCount" class="badge badge-pill bg-danger float-right">@AlkoisUnreadNotifications</span>
+                        }
+
+                    </a>
+                    <div class="dropdown-menu notifications" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 50px, 0px);">
+                        <div class="topnav-dropdown-header">
+                            <span>ALKAIOS TRANSPORTATION</span>
+                        </div>
+                        <div class="drop-scroll">
+                            <ul class="notification-list">
+                                @foreach (var notifylist in AlkoisNotificationList)
+                                {
+                                    <li class="notification-message">
+                                        <a>
+                                            <div class="media">
+                                                <span class="avatar">
+                                                    <img alt="John Doe" src="/assets/img/user.jpg" class="img-fluid">
+                                                </span>
+
+                                                @if (notifylist.NotificationType == "P")
+                                                {
+
+                                                    <div class="media-body">
+                                                        <p class="noti-details">load #<span class="noti-title">  @notifylist.NotificationReferenceName</span>  ready to be invoiced</p>
+                                                        <div>
+                                                            <p class="noti-time">
+                                                                <label style="color:black">Date: </label><span class="notification-time">@notifylist.CreateDate.ToString("MM/dd/yyyy")</span>
+                                                                @if (notifylist.IsRead == 0)
+                                                                {
+                                                                    <small id=""
+                                                                           onclick="MarkAllRead(@notifylist.NotificationId)" style="float:right;border:1px solid red;background-color:red;color:white;padding:4px;font-size:12px">
+                                                                        Unread
+                                                                    </small>
+                                                                }
+                                                                else if (notifylist.IsRead == 1)
+                                                                {
+                                                                    <small style="cursor:default; float: right; border: 1px solid green; background-color: green; color: white; padding: 4px; font-size: 12px">
+                                                                        Read
+                                                                    </small>
+                                                                }
+
+
+
+                                                            </p>
+
+                                                        </div>
+                                                    </div>
+                                                }
+                                                else
+                                                {
+                                                    <div class="media-body">
+                                                        <p class="noti-details"><span class="noti-title">@notifylist.NotificationReferenceName</span> Insurance expired</p>
+                                                        <div>
+                                                            <p class="noti-time">
+                                                                <label style="color:black">Expiration Date: </label><span class="notification-time">@notifylist.InsuranceExpirationDate.ToString("MM/dd/yyyy")</span>
+
+
+
+                                                                @if (notifylist.IsRead == 0)
+                                                                {
+                                                                    <small id=""
+                                                                           onclick="MarkAllRead(@notifylist.NotificationId)" style="float:right;border:1px solid red;background-color:red;color:white;padding:4px;font-size:12px">
+                                                                        Unread
+                                                                    </small>
+                                                                }
+                                                                else if (notifylist.IsRead == 1)
+                                                                {
+                                                                    <small style="cursor:default; float: right; border: 1px solid green; background-color: green; color: white; padding: 4px; font-size: 12px">
+                                                                        Read
+                                                                    </small>
+                                                                }
+
+
+
+                                                            </p>
+
+                                                        </div>
+                                                    </div>
+                                                }
+
+                                            </div>
+                                        </a>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                        @*<div class="topnav-dropdown-footer">
+                    <a href="activities.html">View all Notifications</a>
+                </div>*@
+                    </div>
+                </li>
+
+
+
+                @*data-toggle="tooltip" title="JETLINE TRANSPORT!"*@
+                <li class="nav-item dropdown d-none d-sm-block">
+                    <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown" aria-expanded="false">
+                        <i class="fa fa-bell-o"></i>
+                        @foreach (var notifylist in JetlineNotificationList)
+                        {
+
+                            if (notifylist.IsRead == 0)
+                            {
+                                JetlineUnreadNotifications = JetlineUnreadNotifications + 1;
+                            }
+                        }
+
+                        @if (JetlineUnreadNotifications > 0)
+                        {
+                            <span id="NotificaionCount" class="badge badge-pill bg-danger float-right">@JetlineUnreadNotifications</span>
+                        }
+
+                    </a>
+                    <div class="dropdown-menu notifications" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 50px, 0px);">
+                        <div class="topnav-dropdown-header">
+                            <span>JETLINE TRANSPORT</span>
+                        </div>
+                        <div class="drop-scroll">
+                            <ul class="notification-list">
+                                @foreach (var notifylist in JetlineNotificationList)
+                                {
+                                    <li class="notification-message">
+                                        <a>
+                                            <div class="media">
+                                                <span class="avatar">
+                                                    <img alt="John Doe" src="/assets/img/user.jpg" class="img-fluid">
+                                                </span>
+
+                                                @if (notifylist.NotificationType == "P")
+                                                {
+
+                                                    <div class="media-body">
+                                                        <p class="noti-details">load #<span class="noti-title">  @notifylist.NotificationReferenceName</span>  ready to be invoiced</p>
+                                                        <div>
+                                                            <p class="noti-time">
+                                                                <label style="color:black">Date: </label><span class="notification-time">@notifylist.CreateDate.ToString("MM/dd/yyyy")</span>
+                                                                @if (notifylist.IsRead == 0)
+                                                                {
+                                                                    <small id=""
+                                                                           onclick="MarkAllRead(@notifylist.NotificationId)" style="float:right;border:1px solid red;background-color:red;color:white;padding:4px;font-size:12px">
+                                                                        Unread
+                                                                    </small>
+                                                                }
+                                                                else if (notifylist.IsRead == 1)
+                                                                {
+                                                                    <small style="cursor:default; float: right; border: 1px solid green; background-color: green; color: white; padding: 4px; font-size: 12px">
+                                                                        Read
+                                                                    </small>
+                                                                }
+
+
+
+                                                            </p>
+
+                                                        </div>
+                                                    </div>
+                                                }
+                                                else
+                                                {
+                                                    <div class="media-body">
+                                                        <p class="noti-details"><span class="noti-title">@notifylist.NotificationReferenceName</span> Insurance expired</p>
+                                                        <div>
+                                                            <p class="noti-time">
+                                                                <label style="color:black">Expiration Date: </label><span class="notification-time">@notifylist.InsuranceExpirationDate.ToString("MM/dd/yyyy")</span>
+
+
+
+                                                                @if (notifylist.IsRead == 0)
+                                                                {
+                                                                    <small id=""
+                                                                           onclick="MarkAllRead(@notifylist.NotificationId)" style="float:right;border:1px solid red;background-color:red;color:white;padding:4px;font-size:12px">
+                                                                        Unread
+                                                                    </small>
+                                                                }
+                                                                else if (notifylist.IsRead == 1)
+                                                                {
+                                                                    <small style="cursor:default; float: right; border: 1px solid green; background-color: green; color: white; padding: 4px; font-size: 12px">
+                                                                        Read
+                                                                    </small>
+                                                                }
+
+
+
+                                                            </p>
+
+                                                        </div>
+                                                    </div>
+                                                }
+
+                                            </div>
+                                        </a>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                        @*<div class="topnav-dropdown-footer">
+                    <a href="activities.html">View all Notifications</a>
+                </div>*@
+                    </div>
+                </li>
+
+
+                <li class="nav-item dropdown d-none d-sm-block">
+                    @*data-toggle="tooltip" title="INSURANCE  EXPIRATION!"*@
+                    <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown" aria-expanded="false">
+                        <i class="fa fa-bell-o"></i>
+                        @foreach (var notifylist in NotificationList)
+                        {
+
+                            if (notifylist.IsRead == 0)
+                            {
+
+                                TotalUnreadNotifications = TotalUnreadNotifications + 1;
+                            }
+                        }
+
+                        @if (TotalUnreadNotifications > 0)
+                        {
+                            <span id="NotificaionCount" class="badge badge-pill bg-danger float-right">@TotalUnreadNotifications</span>
+                        }
+
+                    </a>
+                    <div class="dropdown-menu notifications" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 50px, 0px);">
+                        <div class="topnav-dropdown-header">
+                            <span>INSURANCE EXPIRATION</span>
+                        </div>
+                        <div class="drop-scroll">
+                            <ul class="notification-list">
+                                @foreach (var notifylist in NotificationList)
+                                {
+                                    <li class="notification-message">
+                                        <a>
+                                            <div class="media">
+                                                <span class="avatar">
+                                                    <img alt="John Doe" src="/assets/img/user.jpg" class="img-fluid">
+                                                </span>
+
+                                                @if (notifylist.NotificationType == "P")
+                                                {
+
+                                                    <div class="media-body">
+                                                        <p class="noti-details">load #<span class="noti-title">  @notifylist.NotificationReferenceName</span>  ready to be invoiced</p>
+                                                        <div>
+                                                            <p class="noti-time">
+                                                                <label style="color:black">Date: </label><span class="notification-time">@notifylist.CreateDate.ToString("MM/dd/yyyy")</span>
+                                                                @if (notifylist.IsRead == 0)
+                                                                {
+                                                                    <small id=""
+                                                                           onclick="MarkAllRead(@notifylist.NotificationId)" style="float:right;border:1px solid red;background-color:red;color:white;padding:4px;font-size:12px">
+                                                                        Unread
+                                                                    </small>
+                                                                }
+                                                                else if (notifylist.IsRead == 1)
+                                                                {
+                                                                    <small style="cursor:default; float: right; border: 1px solid green; background-color: green; color: white; padding: 4px; font-size: 12px">
+                                                                        Read
+                                                                    </small>
+                                                                }
+
+
+
+                                                            </p>
+
+                                                        </div>
+                                                    </div>
+                                                }
+                                                else
+                                                {
+                                                    <div class="media-body">
+                                                        <p class="noti-details"><span class="noti-title">@notifylist.NotificationReferenceName</span> Insurance expired</p>
+                                                        <div>
+                                                            <p class="noti-time">
+                                                                <label style="color:black">Expiration Date: </label><span class="notification-time">@notifylist.InsuranceExpirationDate.ToString("MM/dd/yyyy")</span>
+
+
+
+                                                                @if (notifylist.IsRead == 0)
+                                                                {
+                                                                    <small id=""
+                                                                           onclick="MarkAllRead(@notifylist.NotificationId)" style="float:right;border:1px solid red;background-color:red;color:white;padding:4px;font-size:12px">
+                                                                        Unread
+                                                                    </small>
+                                                                }
+                                                                else if (notifylist.IsRead == 1)
+                                                                {
+                                                                    <small style="cursor:default; float: right; border: 1px solid green; background-color: green; color: white; padding: 4px; font-size: 12px">
+                                                                        Read
+                                                                    </small>
+                                                                }
+
+
+
+                                                            </p>
+
+                                                        </div>
+                                                    </div>
+                                                }
+
+                                            </div>
+                                        </a>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                        @*<div class="topnav-dropdown-footer">
+                    <a href="activities.html">View all Notifications</a>
+                </div>*@
+                    </div>
+                </li>
+                <li class="nav-item dropdown has-arrow">
+                    <a href="#" class="dropdown-toggle nav-link user-link" data-toggle="dropdown">
+                        <span class="user-img">
+                            <img class="rounded-circle" src="@Session["image"]" width="24" alt="Admin">
+
+                            <span class="status online"></span>
+                        </span>
+                        <span>@Session["type"]</span>
+                    </a>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="@Url.Action("UserProfiles", "Profile" ,new { id = Convert.ToInt32(Session["User_id"])})">My Profile</a>
+                        <a class="dropdown-item" href="@Url.Action("EditIndex", "Profile")">Edit Profile</a>
+                        <a class="dropdown-item" href="@Url.Action("changepasswordnew", "Account")">Change Password</a>
+                        <a class="dropdown-item" href="@Url.Action("Index", "Account")">Logout</a>
+                    </div>
+                </li>
+            </ul>
+            <div class="dropdown mobile-user-menu float-right">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
+                <div class="dropdown-menu dropdown-menu-right">
+                    <a class="dropdown-item" href="@Url.Action("UserProfiles", "Profile" ,new { id = Convert.ToInt32(Session["User_id"])})">My Profile</a>
+                    <a class="dropdown-item" href="@Url.Action("EditIndex", "Profile")">Edit Profile</a>
+                    <a class="dropdown-item" href="@Url.Action("changepasswordnew", "Account")">Change Password</a>
+                    <a class="dropdown-item" href="@Url.Action("Index", "Account")">Logout</a>
+                </div>
+            </div>
+        </div>
+        <div class="notification-box" style="background-color:white;height:20%;border:1px solid @Session["Color"] ">
+            <div class="color" style="background-color:@Session["Color"] !important;color:white;text-align:center;font-size:17px !important">
+                <p><strong> Choose Color</strong></p>
+            </div>
+
+            <div class="ColorPicker" style="height:30%;text-align:center">
+                Click &nbsp; <input name="HexaColor" style="height: 100%;width: 80%" type="color" value=@Session["Color"] id="colorPicker">
+            </div>
+            <br />
+            <div class="ColorPicker" style="height:20%;text-align:center;color:white">
+                <a href="@Url.Action("ChangeThemeColor", "Home")" style="background-color:@Session["Color"] !important;color:white;width:50%;height:120%;border:1px solid @Session["Color"] ">Save</a>
+                <a id="btnCopyLoad" href="@Url.Action("ChangeThemeColor", "Home", new { LoadNumber = ViewBag.LoadNumber })" style="        background-color: #4c5564 !important" class="btn btn-primary"><i class="fa fa-copy"></i> Copy Load</a>
+            </div>
+
+
+            @*<div class="row">
+                    <div class="col-sm-4">
+                        <div id="box">
+                            <label for="colorPicker">Border color:</label>
+                            <input style="height:50%;width:50%" type="color" value="#8888ff" id="colorPicker">
+                            <p id="output"></p>
+                            <input id="colors" type="text">
+                        </div>
+
+                    </div>
+
+                </div>*@
+            @*<div class="msg-sidebar notifications msg-noti" style="max-height:40% !important">
+                    <div style="background-color:@Session["Color"] !important;color:white" class="topnav-dropdown-header">
+                        <span>Change Color</span>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <div id="box">
+                                <label for="colorPicker">Border color:</label>
+                                <input style="height:50%;width:50%" type="color" value="#8888ff" id="colorPicker">
+                                <p id="output"></p>
+                                <input id="colors" type="text">
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                </div>*@
+        </div>
+        <div class="sidebar" id="sidebar">
+
+            <div class="slimScrollDiv" >
+                <div class="sidebar-inner slimscroll" >
+                    <div id="sidebar-menu" class="sidebar-menu">
+                        <ul>
+
+                            <li class="">
+                                <a href="@Url.Action("Index", "Home")" style="color: @Session["Color"];"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a>
+                            </li>
+                            @foreach (var parent in list)
+                            {
+                                if (@parent.IsParent == 1)
+                                {
+                                    Int32 ParentId = Convert.ToInt32(@parent.Page_ID);
+
+                                    if (@parent.Count == 0)
+
+                                    {
+                                        if (parent.Controller_name == "Report" && parent.Action_name == "Index")
+                                        {
+                                            <li>
+                                                <a href="@Url.Action(parent.Action_name, parent.Controller_name,new {AdvanceFilterDateFroms= DateTime.Now.ToString("MM/dd/yyyy") , AdvanceFilterDateTo =  DateTime.Now.ToString("MM/dd/yyyy"), FilterDateFroms= DateTime.Now.ToString("MM/dd/yyyy") , FilterDateTos =  DateTime.Now.ToString("MM/dd/yyyy") })"><i class="@parent.Icon_Class"></i> <span>@parent.Page_Name</span></a>
+                                            </li>
+                                        }
+                                        else if (parent.Controller_name == "Report" && parent.Action_name == "LoadDetail")
+                                        {
+                                            <li>
+                                                <a href="@Url.Action(parent.Action_name, parent.Controller_name,new { AdvanceFilterDateFroms= DateTime.Now.ToString("MM/dd/yyyy") , AdvanceFilterDateTo =  DateTime.Now.ToString("MM/dd/yyyy"), FilterDateFroms= DateTime.Now.ToString("MM/dd/yyyy") , FilterDateTos =  DateTime.Now.ToString("MM/dd/yyyy") })"><i class="@parent.Icon_Class"></i> <span>@parent.Page_Name</span></a>
+                                            </li>
+                                        }
+                                        else if (parent.Controller_name == "Report" && parent.Action_name == "InvoicingDetail")
+                                        {
+                                            <li>
+                                                <a href="@Url.Action(parent.Action_name, parent.Controller_name,new {statemaintain=1, AdvanceFilterDateFroms= DateTime.Now.ToString("MM/dd/yyyy") , AdvanceFilterDateTo =  DateTime.Now.ToString("MM/dd/yyyy"), FilterDateFroms= DateTime.Now.ToString("MM/dd/yyyy") , FilterDateTos =  DateTime.Now.ToString("MM/dd/yyyy") })"><i class="@parent.Icon_Class"></i> <span>@parent.Page_Name</span></a>
+                                            </li>
+                                        }
+                                        else
+                                        {
+                                            <li>
+                                                <a href="@Url.Action(parent.Action_name, parent.Controller_name)"><i class="@parent.Icon_Class"></i> <span>@parent.Page_Name</span></a>
+                                            </li>
+                                        }
+
+
+                                    }
+                                    else
+                                    {
+                                        <li class="submenu">
+
+                                            <a href="#"><i class="@parent.Icon_Class"></i> <span>@parent.Page_Name</span><span class="menu-arrow"></span></a>
+
+                                            <ul>
+                                                @foreach (var child in list)
+                                                {
+                                                    //if (@parent.IsParent == 0)
+                                                    //{
+                                                    if (@child.ParentId == ParentId)
+                                                    {
+
+                                                        if (child.Action_name == "CarrierInfo")
+                                                        {
+                                                            //child.Action_name = "CarrierInfo/?CarrierAssignsId='1'";
+                                                            <li><a href="@Url.Action(child.Action_name, child.Controller_name,new { CarrierAssignsId ="1"} )"><i class="@child.Icon_Class"></i> <span>@child.Page_Name</span></a></li>
+                                                        }
+                                                        else
+                                                        {
+                                                            <li><a href="@Url.Action(child.Action_name, child.Controller_name)"><i class="@child.Icon_Class"></i> <span>@child.Page_Name</span></a></li>
+                                                        }
+
+
+
+                                                    }
+
+                                                    //}
+
+                                                }
+                                            </ul>
+                                        </li>
+                                    }
+
+
+
+
+
+
+                                }
+
+
+
+
+
+                            }
+
+
+                            @*<li class="submenu">
+                        <a href="#"><i class="fa fa-user-secret"></i> <span> Profile </span> <span class="menu-arrow"></span></a>
+                        <ul style="display: none;">
+                            <li><a href="@Url.Action("UserProfiles", "Profile" ,new { id = Convert.ToInt32(Session["User_id"])})">My Profile</a></li>
+                            <li><a href="@Url.Action("EditIndex", "Profile")">Edit Profile</a></li>
+
+                        </ul>
+                    </li>
+                    <li class="submenu">
+                        <a href="#"><i class="fa fa-user"></i> <span> Recipents </span> <span class="menu-arrow"></span></a>
+                        <ul style="display: none;">
+                            <li><a href="@Url.Action("Index", "Recipient")">Recipents List</a></li>
+                            <li><a href="@Url.Action("RecipentEmails", "Recipient")">Recipents Emails</a></li>
+
+                        </ul>
+                    </li>
+                    <li class="submenu">
+                        <a href="#"><i class="fa fa-envelope"></i> <span> Email </span> <span class="menu-arrow"></span></a>
+                        <ul style="display: none;">
+                            <li><a href="@Url.Action("Index", "Compose")">Compose</a></li>
+                            <li><a href="leaves.html">Sent</a></li>
+
+                        </ul>
+                    </li>
+                    <li class="submenu">
+                        <a href="#"><i class="fa fa-cog"></i> <span> Settings </span> <span class="menu-arrow"></span></a>
+                        <ul style="display: none;">
+                            <li><a href="@Url.Action("Index", "Setting")">Email Setting</a></li>
+                            <li><a href="@Url.Action("zipfile", "fileCompress")">Zip File Name</a></li>
+                            <li><a href="@Url.Action("changepasswordnew", "Account")">Change Password</a></li>
+
+                        </ul>
+                    </li>*@
+
+
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+        <div class="page-wrapper">
+
+            @RenderBody()
+
+        </div>
+    </div>
+    <div class="sidebar-overlay" data-reff=""></div>
+
+    <script type="text/javascript">
+
+        function MarkAllRead(NotificationId) {
+
+            //Send the JSON array to Controller using AJAX.
+            $.ajax({
+
+
+
+                type: "POST",
+                url: "/Home/UpdateNotification/?Notificationid=" + NotificationId + " ",
+
+                //data: JSON.stringify(formData),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    location.reload();
+                    /*document.getElementById("NotificaionCount").style.display = "none";*/
+                }
+            });
+        }
+        $("#ChangeColor").change(function () {
+            //alert($(this).val());
+            var Color = $(this).val();
+
+            if (Color != "") {
+
+                //Send the JSON array to Controller using AJAX.
+                $.ajax({
+
+                    type: "POST",
+                    url: "/Home/ChangeThemeColor/?HexaColor='" + Color + "'",
+
+                    //data: JSON.stringify(formData),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (data) {
+                        //alert(data);
+                        if (data.result == 'Redirect')
+                            window.location = data.url;
+
+
+
+                    }
+                });
+            }
+
+
+
+
+
+
+        });
+
+
+
+        $('#colorpalettediv').colorPalettePicker({
+            lines: 1,
+            onSelected: function (color) {
+                //alert(color);
+
+
+                //Send the JSON array to Controller using AJAX.
+                $.ajax({
+
+                    type: "POST",
+                    url: "/Home/ChangeThemeColor/?HexaColor='" + color + "'",
+
+                    //data: JSON.stringify(formData),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (data) {
+                        //alert(data);
+                        if (data.result == 'Redirect')
+                            window.location = data.url;
+
+
+
+                    }
+                });
+
+
+
+
+
+
+
+
+            }
+        });
+    </script>
+    <script>
+
+
+
+
+
+
+
+
+        $(function () {
+            var colpick = $('.demo').each(function () {
+                $(this).minicolors({
+                    control: $(this).attr('data-control') || 'hue',
+                    inline: $(this).attr('data-inline') === 'true',
+                    letterCase: 'lowercase',
+                    opacity: false,
+                    change: function (hex, opacity) {
+                        if (!hex) return;
+                        if (opacity) hex += ', ' + opacity;
+                        try {
+                            console.log(hex);
+                        } catch (e) { }
+                        $(this).select();
+                    },
+                    theme: 'bootstrap'
+                });
+            });
+
+            var $inlinehex = $('#inlinecolorhex h3 small');
+            $('#inlinecolors').minicolors({
+                inline: true,
+                theme: 'bootstrap',
+                change: function (hex) {
+                    if (!hex) return;
+                    $inlinehex.html(hex);
+
+                }
+            });
+        });
+        $(function () {
+            $('#test').colorpicker();
+        });
+    </script>
+
+    <script>
+
+        $(document).ready(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+
+            $(".modal-header").css("background-color", "red", "important");
+            $('.g-dataTable').DataTable();
+            //$('.g-dataTable').DataTable().makeEditable();
+        });
+
+                                    //$(window).load(function () {
+                                    //    // Animate loader off screen
+                                    //    $(".se-pre-con").fadeOut("slow");
+                                    //});
+
+                                    //$("#test").change(function () {
+                                    //    alert($(this).val());
+
+                                    //});
+    </script>
+
+    @*<script src="~/assets/js/jquery-3.2.1.min.js"></script>
+        <script src="~/assets/js/popper.min.js"></script>
+        <script src="~/assets/js/bootstrap.min.js"></script>
+        <script src="~/assets/js/jquery.slimscroll.js"></script>
+
+        <script src="~/assets/js/app.js"></script>*@
+
+    @*<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>*@
+    <script>
+
+
+    </script>
+</body>
+
+<!-- index22:59-->
+</html>
+
+

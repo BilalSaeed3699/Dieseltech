@@ -1,0 +1,187 @@
+﻿
+@{
+    ViewBag.Title = "Month Over Comparison";
+}
+
+
+<head>
+    <style>
+
+
+        div#tblannualtotals_filter {
+            position: sticky;
+            top: 0;
+            padding: 5px;
+            z-index: 100;
+            background: darkblue;
+        }
+
+        /*  #Loadshead {
+            position: sticky;
+            top: 0;
+            padding: 5px;
+            z-index: 100;
+        }*/
+
+        div#tblannualtotals_length {
+            position: sticky !important;
+            top: 0 !important;
+            padding: 5px !important;
+            z-index: 100 !important;
+            background: darkblue !important;
+            color: white !important;
+            width: 79.5% !important;
+            /*height: 4.5% !important;*/
+        }
+
+        select {
+            color: black !important;
+        }
+
+        option {
+            color: black !important;
+        }
+
+        label {
+            color: black !important
+        }
+
+        input[type="search"] {
+            color: black !important;
+        }
+    </style>
+
+</head>
+<div class="content">
+    <div class="row">
+        <div class="col-md-3">
+            <h4 class="page-title">Month Comparison <i onclick="RefereshList()" class="fa fa-refresh"></i></h4>
+            <span style="color:red;" id="fademsg">@ViewBag.error</span>
+        </div>
+        <div class="col-md-2">
+
+            <select id="ddlcustomers" required name="ddlcustomers" onchange="ReloadList(this)" class="form-control js-example-basic-single">
+                <option value="0">Select Customer</option>
+                @foreach (var item in ViewBag.customerlist)
+                {
+                    <text>
+                        @if (item.AssignID == Convert.ToString(ViewBag.Customer))
+                        {
+                            <option selected value="@item.AssignID">@item.Name</option>
+                        }
+                        else
+                        {
+                            <option value="@item.AssignID">@item.Name</option>
+                        }
+
+
+                    </text>
+                }
+            </select>
+        </div>
+
+    </div>
+
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="table-responsive">
+                @*<table class="table table-border table-striped custom-table  g-dataTable mb-0">*@
+                @{string customername =""; }
+                <table style="font-size:12px;width:100%" class="table table-condensed table-fit table-sm table-striped g-dataTable  mb-0" id="tblcomparison">
+                    <thead>
+                        <tr>
+                            @*<th>Customer</th>*@
+                            <th>Year </th>
+                            <th>Jan </th>
+                            <th>Feb </th>
+                            <th>Mar </th>
+                            <th>Apr </th>
+                            <th>May </th>
+                            <th>Jun </th>
+                            <th>Jul </th>
+                            <th>Aug </th>
+                            <th>Sep </th>
+                            <th>Oct </th>
+                            <th>Nov </th>
+                            <th>Dec </th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in @ViewBag.comparisonlist)
+                        {
+
+                            
+                            if (customername != @item.Name)
+                            {
+                                <tr class="subhead"><th style="background-color:#a6a6a6 !important ;font-size:15px" colspan=1>@item.Name</th></tr>
+                            }
+                            customername = @item.Name;
+                            <tr>
+
+                                <td style="font-weight:bold"> @item.loadyear</td>
+                                <td>@item.Jan</td>
+                                <td>@item.Feb</td>
+                                <td>@item.Mar</td>
+                                <td>@item.Apr</td>
+                                <td>@item.May</td>
+                                <td>@item.Jun</td>
+                                <td>@item.Jul</td>
+                                <td>@item.Aug</td>
+                                <td>@item.Sep</td>
+                                <td>@item.Oct</td>
+                                <td>@item.Nov</td>
+                                <td>@item.Dec</td>
+
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+
+    jQuery(document).ready(function () {
+
+
+        jQuery('#ddlcustomers').select2();
+        $('#tblcomparison').DataTable({
+           "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+            "pageLength": -1
+        });
+    });
+    function RefereshList() {
+        location.reload();
+    }
+
+    function ReloadList(year) {
+
+        /*var year = year.value;*/
+        var customer = $("#ddlcustomers").val();
+
+        if (customer == null) {
+            customer = 0;
+        }
+        
+        var model = {
+            ddlcustomers: customer
+        };
+
+          $.ajax({
+            url: '@Url.Action("Reloadcomparison", "customer")',
+            type: "POST",
+              data: JSON.stringify(model),
+              contentType: "application/json; charset=utf-8",
+              dataType: "json",
+              success: function (result) {
+                  window.location = result.url;
+              }
+        });
+    }
+</script>

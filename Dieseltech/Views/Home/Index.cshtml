@@ -1,0 +1,214 @@
+﻿@using Dieseltech.Models;
+
+@{ 
+
+    List<Sp_Get_Dashboard_Stats_Result> DashboardStats = (List<Sp_Get_Dashboard_Stats_Result>)ViewBag.DashboardStats;
+}
+
+<div class="content">
+    <div class="content">
+        <div class="row">
+            <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
+                <div class="dash-widget">
+                    <span class="dash-widget-bg1"><i class="fa fa-users" aria-hidden="true"></i></span>
+                    <div class="dash-widget-info text-right">
+                        <h3>@DashboardStats[0].BrokerCount</h3>
+                        <span class="widget-title1">Brokers <i class="fa fa-check" aria-hidden="true"></i></span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
+                <div class="dash-widget">
+                    <span class="dash-widget-bg2"><i class="fa fa-user-o"></i></span>
+                    <div class="dash-widget-info text-right">
+                        <h3>@DashboardStats[0].CarrierCount</h3>
+                        <span class="widget-title2">Carriers <i class="fa fa-check" aria-hidden="true"></i></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
+                <div class="dash-widget">
+                    <span class="dash-widget-bg3"><i class="fa fa-truck" aria-hidden="true"></i></span>
+                    <div class="dash-widget-info text-right">
+                        <h3>@DashboardStats[0].TruckCount</h3>
+                        <span class="widget-title3">Trucks <i class="fa fa-check" aria-hidden="true"></i></span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
+                <div class="dash-widget">
+                    <span class="dash-widget-bg4"><i class="fa fa-id-card" aria-hidden="true"></i></span>
+                    <div class="dash-widget-info text-right">
+                        <h3>@DashboardStats[0].DriverCount</h3>
+                        <span class="widget-title4">Drivers <i class="fa fa-check" aria-hidden="true"></i></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @*<div class="row">
+                <div class="col-12 col-md-6 col-lg-8 col-xl-8">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title d-inline-block">New Patients </h4> <a href="patients.html" class="btn btn-primary float-right">View all</a>
+                        </div>
+                        <div class="card-block">
+                            <div class="table-responsive">
+                                <table class="table mb-0 new-patient-table">
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <img width="28" height="28" class="rounded-circle" src="assets/img/user.jpg" alt="">
+                                                <h2>John Doe</h2>
+                                            </td>
+                                            <td>Johndoe21@gmail.com</td>
+                                            <td>+1-202-555-0125</td>
+                                            <td><button class="btn btn-primary btn-primary-one float-right">Fever</button></td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <img width="28" height="28" class="rounded-circle" src="assets/img/user.jpg" alt="">
+                                                <h2>Richard</h2>
+                                            </td>
+                                            <td>Richard123@yahoo.com</td>
+                                            <td>202-555-0127</td>
+                                            <td><button class="btn btn-primary btn-primary-two float-right">Cancer</button></td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <img width="28" height="28" class="rounded-circle" src="assets/img/user.jpg" alt="">
+                                                <h2>Villiam</h2>
+                                            </td>
+                                            <td>Richard123@yahoo.com</td>
+                                            <td>+1-202-555-0106</td>
+                                            <td><button class="btn btn-primary btn-primary-three float-right">Eye</button></td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <img width="28" height="28" class="rounded-circle" src="assets/img/user.jpg" alt="">
+                                                <h2>Martin</h2>
+                                            </td>
+                                            <td>Richard123@yahoo.com</td>
+                                            <td>776-2323 89562015</td>
+                                            <td><button class="btn btn-primary btn-primary-four float-right">Fever</button></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6 col-lg-4 col-xl-4">
+                    <div class="hospital-barchart">
+                        <h4 class="card-title d-inline-block">Hospital Management</h4>
+                    </div>
+                    <div class="bar-chart">
+                        <div class="legend">
+                            <div class="item">
+                                <h4>Level1</h4>
+                            </div>
+
+                            <div class="item">
+                                <h4>Level2</h4>
+                            </div>
+                            <div class="item text-right">
+                                <h4>Level3</h4>
+                            </div>
+                            <div class="item text-right">
+                                <h4>Level4</h4>
+                            </div>
+                        </div>
+                        <div class="chart clearfix">
+                            <div class="item">
+                                <div class="bar">
+                                    <span class="percent">16%</span>
+                                    <div class="item-progress" data-percent="16" style="width: 62.356px;">
+                                        <span class="title">OPD Patient</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <div class="bar">
+                                    <span class="percent">71%</span>
+                                    <div class="item-progress" data-percent="71" style="width: 276.705px;">
+                                        <span class="title">New Patient</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <div class="bar">
+                                    <span class="percent">82%</span>
+                                    <div class="item-progress" data-percent="82" style="width: 319.575px;">
+                                        <span class="title">Laboratory Test</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <div class="bar">
+                                    <span class="percent">67%</span>
+                                    <div class="item-progress" data-percent="67" style="width: 261.116px;">
+                                        <span class="title">Treatment</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <div class="bar">
+                                    <span class="percent">30%</span>
+                                    <div class="item-progress" data-percent="30" style="width: 116.918px;">
+                                        <span class="title">Discharge</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>*@
+    </div>
+    @if (@Session["successfull"] != null)
+    {
+
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <strong>@Session["successfull"]</strong>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+
+
+    }
+</div>
+<div class="row">
+    <div class="col-12 col-md-6 col-lg-6 col-xl-6">
+        <div class="card">
+            <div class="card-body">
+                <div class="chartjs-size-monitor" style="position: absolute; left: 0px; top: 0px; right: 0px; bottom: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;"><div class="chartjs-size-monitor-expand" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;"><div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0"></div></div><div class="chartjs-size-monitor-shrink" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;"><div style="position:absolute;width:200%;height:200%;left:0; top:0"></div></div></div>
+                <div class="chart-title">
+                    <h4>Total Loads</h4>
+                    <span class="float-right"><i class="fa fa-caret-up" aria-hidden="true"></i> 15% Higher than Last Month</span>
+                </div>
+                <canvas id="linegraph" width="700" height="350" class="chartjs-render-monitor" style="display: block; height: 280px; width: 560px;"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-md-6 col-lg-6 col-xl-6">
+        <div class="card">
+            <div class="card-body">
+                <div class="chartjs-size-monitor" style="position: absolute; left: 0px; top: 0px; right: 0px; bottom: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;"><div class="chartjs-size-monitor-expand" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;"><div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0"></div></div><div class="chartjs-size-monitor-shrink" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;"><div style="position:absolute;width:200%;height:200%;left:0; top:0"></div></div></div>
+                <div class="chart-title">
+                    <h4>Loads in queue</h4>
+                    <div class="float-right">
+                        <ul class="chat-user-total">
+                            <li><i class="fa fa-circle current-users" aria-hidden="true"></i>Premium</li>
+                            <li><i class="fa fa-circle old-users" aria-hidden="true"></i>Silver</li>
+                        </ul>
+                    </div>
+                </div>
+                <canvas id="bargraph" width="700" height="350" class="chartjs-render-monitor" style="display: block; height: 280px; width: 560px;"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="assets/js/Chart.bundle.js"></script>
+<script src="assets/js/chart.js"></script>

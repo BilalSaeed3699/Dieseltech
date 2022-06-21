@@ -1,0 +1,79 @@
+﻿
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- register24:03-->
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+    <link rel="shortcut icon" type="image/x-icon" href="assets/img/logo.jpg">
+    <title>Dieseltech</title>
+    <link rel="stylesheet" type="text/css" href="~/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="~/assets/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="~/assets/css/style.css">
+    <!--[if lt IE 9]>
+        <script src="assets/js/html5shiv.min.js"></script>
+        <script src="assets/js/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+
+    <div class="main-wrapper  account-wrapper">
+        <div class="row">
+            <div class="col-sm-7 col-6">
+                <h4 class="page-title">Registration</h4>
+            </div>
+            <div class="col-sm-5 col-6 text-right m-b-30">
+                <a href="@Url.Action("Index", "User")" class="btn btn-primary ThemeColor btn-rounded" style="background-color: #4c5564 !important"> Back</a>
+            </div>
+        </div>
+        <div class="account-page">
+
+            <div class="account-center">
+                <div class="account-box">
+                    <span style="color:red;" id="fademsg">@ViewBag.error</span>
+                    @using (Html.BeginForm("Create", "User", FormMethod.Post))
+                    {
+                        @Html.AntiForgeryToken()
+                        <form class="form-signin">
+                            <div class="account-logo">
+                                <a href="#"><img src="assets/img/logo.jpg" alt=""></a>
+                            </div>
+                            <div class="form-group">
+                                <label>Username</label>
+                                <input type="text" class="form-control" id="Username" name="Username">
+                            </div>
+                            <div class="form-group">
+                                <label>Email Address</label>
+                                <input type="email" class="form-control" id="Email_Adress" name="Email_Adress">
+                            </div>
+                            <div class="form-group">
+                                <label>Password</label>
+                                <input type="password" class="form-control" id="pass" name="pass">
+                            </div>
+
+
+                            <div class="form-group text-center">
+                                <button class="btn btn-primary ThemeColor account-btn" style="background-color: #4c5564 !important" type="submit">Register</button>
+                            </div>
+
+                        </form>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="~/assets/js/jquery-3.2.1.min.js"></script>
+    <script src="~/assets/js/popper.min.js"></script>
+    <script src="~/assets/js/bootstrap.min.js"></script>
+    <script src="~/assets/js/app.js"></script>
+</body>
+
+<!-- register24:03-->
+</html>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#fademsg").fadeOut(5000);
+    });
+</script>

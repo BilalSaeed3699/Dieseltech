@@ -1,0 +1,127 @@
+﻿@using Dieseltech.Models;
+@model Dieseltech.Models.tblAccess_Level
+@{
+    ViewBag.Title = "Index";
+    List<tblAccess_Level> list = (List<tblAccess_Level>)ViewBag.POS;
+}
+<head>
+    @*<link href="~/assets/css/style.css" rel="stylesheet" />*@
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    @*<link rel="stylesheet" type="text/css" href="/assets/css/style.css">*@
+
+    <style>
+        .recipientName a {
+            color: #009ce7;
+           /* border-bottom: 2px solid #00539CFF;*/
+        }
+
+    </style>
+</head>
+
+<div class="content">
+    <div class="row">
+        <div class="col-sm-4 col-3">
+            <h4 class="page-title">Access Level</h4>
+        </div>
+        <div class="col-sm-8 col-9 text-right m-b-20">
+
+
+            <a style="background-color: #4c5564 !important" id="remove" href="#" data-toggle="modal" data-target="#add_Recipent"  class="pen-AddBookDialog btn btn-primary ThemeColor btn-rounded  float-right"><i class="fa fa-plus"></i> Add Access Level</a>
+
+
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="table-responsive">
+                <table class="table table-border">
+                    @*<table class="table table-border table-striped custom-table datatable mb-0">*@
+
+                    <thead>
+
+                    @*<thead class="thead-light">*@
+                        <tr>
+                            <th class="recipient_id" hidden>ID</th>
+                            <th>Access Level</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in list)
+                        {
+                            <tr>
+                                <td class="Access_ID" hidden>@item.Access_ID</td>
+                                <td class="recipientName"> <a href="@Url.Action("Edit", "AccessLevel" ,new { id=@item.Access_ID})"> @item.Access_Level_Type     </a>  </td>
+                                @*<td class="text-right">
+                        <div class="dropdown dropdown-action">
+                            <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
+                            <div class="dropdown-menu dropdown-menu-right">
+
+                                <a id="remove" class="open-AddBookDialog dropdown-item" href="#" data-toggle="modal" data-target="#delete_Recipent"><i class="remove fa fa-trash-o m-r-5"></i> Delete</a>
+                            </div>
+                        </div>
+                    </td>*@
+
+                            </tr>
+                        }
+
+
+                    </tbody>
+                </table>
+</div>
+        </div>
+    </div>
+</div>
+
+
+<div id="add_Recipent" class="modal fade delete-modal" role="dialog">
+    <div class="modal-dialog " style="max-width:500px !important">
+        @using (Html.BeginForm("Create", "AccessLevel", FormMethod.Post))
+        {@Html.AntiForgeryToken()
+        <div class="modal-content" >
+            <!--Header-->
+            <div class="modal-header">
+                <p class="heading lead">Add Access Level</p>
+
+                <button type="button" style="color:white" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" class="white-text">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body ">
+                <div class="row">
+                    <div class="col-lg-12  ">
+                        <form>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>Access Title</label>
+                                        <input class="form-control" type="text" id="Access_Level_Type" name="Access_Level_Type">
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="m-t-5 text-right">
+                                        <a href="#" class="btn btn-white" data-dismiss="modal">Close</a>
+                                        <button type="submit" style="background-color: #4c5564 !important" class="btn btn-primary ThemeColor" >Add</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    }
+    </div>
+
+</div>

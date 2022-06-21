@@ -1,0 +1,554 @@
+﻿
+@using Dieseltech.Models;
+@model Dieseltech.Models.sp_Get_Carrier_Helper_List_Result
+@{
+    ViewBag.Title = "Customers";
+
+    List<sp_Broker_List_Result> list = (List<sp_Broker_List_Result>)ViewBag.Broker;
+
+
+}
+<head>
+
+
+    @*<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>*@
+
+
+    <!--[if lt IE 9]>
+        <script src="assets/js/html5shiv.min.js"></script>
+        <script src="assets/js/respond.min.js"></script>
+    <![endif]-->
+    <style>
+        label {
+            color: #00539CFF;
+        }
+          /*  table.table-fit {
+                width: auto !important;
+                table-layout: auto !important;
+            }
+
+                table.table-fit thead th, table.table-fit tfoot th {
+                    width: auto !important;
+                }
+
+                table.table-fit tbody td, table.table-fit tfoot td {
+                    width: auto !important;
+                }*/
+    </style>
+</head>
+
+<div class="content">
+    <div class="row">
+        <div class="col-sm-4 col-3">
+            <h4 class="page-title">Customers <i onclick="RefereshList()" class="fa fa-refresh"></i></h4>
+            <span style="color:red;" id="fademsg">@ViewBag.error</span>
+        </div>
+        <div class="col-sm-8 col-9 text-right m-b-20">
+            <a id="remove" href="#" data-toggle="modal" data-target="#add_Broker" class=" open-AddBookDialog btn btn-primary btn-rounded float-right" style="background-color: #4c5564 !important;"><i class="fa fa-plus"></i> Add Customers</a>
+
+
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="table-responsive">
+                @*<table class="table table-border table-striped custom-table  g-dataTable mb-0">*@
+
+                    <table style="font-size:12px;width:100%" class="table table-condensed table-fit table-sm table-striped g-dataTable  mb-0" id="tblBroker">
+                        <thead>
+                            <tr>
+                                <th class="Broker_id" hidden>id</th>
+                                <th hidden>Active Flag </th>
+                                <th>Assign ID </th>
+                                <th>Customer Name </th>
+                                <th>MC# </th>
+                                <th>Contact Name </th>
+                                <th>Phone Number </th>
+                                <th>Dispatch Email</th>
+                                <th>Accounting Email</th>
+                                <th>MC Authority</th>
+                                <th>W9</th>
+                                <th>Surety Bond</th>
+
+                                <th>Active </th>
+                                <th class="text-right">Action</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in list)
+                            {
+                            <tr>
+                                <td class="carrier_id" hidden>@item.Brokerid</td>
+                                <td hidden class="IsActive">@item.IsActive</td>
+                                <td class="AssignID">  @item.AssignID   </td>
+                                <td class="BrokerName">  @item.Name </td>
+                                <td class="MC">  @item.MC </td>
+                                <td class="ContactName">  @item.ContactName </td>
+                                <td class="PhoneNumber">  @item.Phone   </td>
+                                <td class="Email">  @item.Email   </td>
+                                <td class="AccountingEmail">  @item.AccountingEmail </td>
+
+                                @if (item.IsMcAuthorityUploaded == 1)
+                                {
+                                    <td class="MCAuthority"><a target="_blank" style="color:#009efb !important" class="social-icon text-xs-center" href="@item.McAuthorityFilePath"> <i class='fa fa-file'></i> @item.McAuthorityFileName</a></td>
+                                }
+                                else if (item.IsMcAuthorityUploaded == 0)
+                                {
+                                    <td class="MCAuthority">No Document Upload</td>
+                                }
+
+                                @if (item.IsW9Uploaded == 1)
+                                {
+                                    <td class="W9"><a target="_blank" class="social-icon text-xs-center" style="color:#009efb !important" href="@item.W9FilePath"> <i class='fa fa-file'></i> @item.W9FileName</a></td>
+                                }
+                                else if (item.IsW9Uploaded == 0)
+                                {
+                                    <td class="W9">No Document Upload</td>
+                                }
+
+                                @if (item.IsAssurityUploaded == 1)
+                                {
+                                    <td class="AssurityBond"><a target="_blank" class="social-icon text-xs-center" style="color:#009efb !important" href="@item.AssurityFilePath"> <i class='fa fa-file'></i> @item.AssurityFileName</a></td>
+                                }
+                                else if (item.IsAssurityUploaded == 0)
+                                {
+                                    <td class="AssurityBond">No Document Upload</td>
+                                }
+
+
+
+
+
+
+
+                                @if (item.IsActive == false)
+                                {
+                                    <td>
+                                        <div class="badge badge-danger">Non-Active</div>
+
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td>
+                                        <div class="badge badge-success">Active</div>
+
+                                    </td>
+                                }
+
+                                <td class="text-right">
+                                    <a id="remove" class="open-AddBookDialog" href="#" data-toggle="modal" data-target="#Edit_Carrier"><i class="remove fa fa-pencil m-r-5"></i> </a>
+                                    <a id="remove" class="open-AddBookDialog" style="color:red;" href="#" data-toggle="modal" data-target="#Delete_Carrier"><i class="remove fa fa-trash-o m-r-5"></i> </a>
+
+                                </td>
+
+                            </tr>
+                            }
+
+
+                        </tbody>
+                    </table>
+</div>
+        </div>
+    </div>
+</div>
+<div id="Delete_Carrier" class="modal fade delete-modal" role="dialog">
+    <div class="modal-dialog ">
+        @using (Html.BeginForm("DeleteBroker", "Definition", FormMethod.Post))
+        {@Html.AntiForgeryToken()
+        <div class="modal-content">
+
+            <div class="modal-body text-center">
+                <input type="text" id="Brokerid" name="Brokerid" class="form-control" hidden />
+                <img src="~/assets/img/sent.png" alt="" width="50" height="46">
+                <h3>Are you sure want to delete this?</h3>
+                <div class="m-t-20">
+                    <a href="#" class="btn btn-white" data-dismiss="modal">Close</a>
+
+                    <button type="submit" style="background-color: #4c5564 !important" class="btn btn-danger">Delete</button>
+                </div>
+            </div>
+        </div>
+    }
+    </div>
+
+</div>
+
+<div id="Edit_Carrier" class="modal fade delete-modal" role="dialog">
+    <div class="modal-dialog" style="width:600px !important;">
+
+
+        @using (Html.BeginForm("EditBroker", "Definition", FormMethod.Post, new
+        {
+            enctype = "multipart/form-data"
+        }))
+        {@Html.AntiForgeryToken()
+        <div class="modal-content">
+            <!--Header-->
+            <div class="modal-header">
+                <p class="heading lead">Modify Customer</p>
+
+                <button type="button" style="color:white" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" class="white-text">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <form>
+                            <input type="text" id="id" name="id" class="form-control" hidden />
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>Assign ID</label>
+                                        <input readonly class="form-control" type="number" id="AssignID" required name="AssignID">
+
+                                    </div>
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="form-group">
+                                        <label>Customer</label>
+                                        <input class="form-control" type="text" id="Name" required name="Name">
+
+                                    </div>
+                                </div>
+
+                            </div>
+
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>MC#</label>
+                                        <input class="form-control" type="text" id="MC" required name="MC">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>Contact Name</label>
+                                        <input class="form-control" type="text" id="ContactName" required name="ContactName">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>Phone Number</label>
+                                        <input class="form-control" type="text"  id="PhoneNumber" name="Phone">
+
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+                            <div class="row">
+                               
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Dispatch Email</label>
+                                        <input class="form-control" type="email" id="txtEmail" required name="Email">
+
+
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Accounting Email</label>
+                                        <input class="form-control" type="email" id="txtAccountingEmail" required name="AccountingEmail">
+
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>MC Authority</label>
+                                        <input name="MCEditAuhtortiy" class="form-control" type="file">
+
+
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>W9</label>
+                                        <input name="W9EditDocuments" class="form-control" type="file">
+
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Surety Bond</label>
+                                        <input name="AssurityBondEdit" class="form-control" type="file">
+
+
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+
+                                    <div class="form-group">
+                                        <label>Active</label>
+                                        <input class="form-control" style="width: 18px;height: 18px" id="Actives" name="IsActives" checked="checked" value="true" type="checkbox">
+
+
+
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="m-t-5 text-right">
+                                        <br />
+                                        <a href="#" class="btn btn-white" data-dismiss="modal">Close</a>
+                                        <button type="submit" onclick=" return sendform('E')" class="btn btn-primary" style="        color: white;
+        background-color: #4c5564 !important;">Update</button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        </form>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    }
+    </div>
+
+</div>
+
+
+
+
+<div id="add_Broker" class="modal fade delete-modal " role="dialog" >
+    <div class="modal-dialog" style="width:600px !important;">
+        @using (Html.BeginForm("SaveBroker", "Definition", FormMethod.Post, new
+        {
+            enctype = "multipart/form-data"
+        }))
+        {@Html.AntiForgeryToken()
+        <div class="modal-content">
+            <!--Header-->
+            <div class="modal-header">
+                <p class="heading lead">Add Customer</p>
+
+                <button type="button" style="color:white" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" class="white-text">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body ">
+                <div class="row">
+                    <div class="col-lg-12  ">
+                        <form>
+
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label>Assign ID</label>
+                                        <input readonly value="@ViewBag.CustomerAssignId" class="form-control" type="number" id="AssignID" required name="AssignID">
+
+                                    </div>
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="form-group">
+                                        <label>Customer</label>
+                                        <input class="form-control" type="text" id="Name" required name="Name">
+
+                                    </div>
+                                </div>
+
+                            </div>
+
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>MC#</label>
+                                        <input class="form-control" type="text" id="MC" required name="MC">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>Contact Name</label>
+                                        <input class="form-control" type="text" id="ContactName" required name="ContactName">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>Phone Number</label>
+                                        <input class="form-control" type="text" id="PhoneNumber" required name="Phone">
+
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="row">
+                                
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Dispatch Email</label>
+                                        <input class="form-control" type="email" id="txtEmail" required name="Email">
+
+
+                                    </div>
+                             
+                                </div>
+
+                                
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Accounting Email</label>
+                                        <input class="form-control" type="email" id="txtAccountingEmail" required name="AccountingEmail">
+
+
+                                    </div>
+                                </div>
+
+
+                            </div>
+
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>MC Authority</label>
+                                        <input name="MCAuhtortiy" class="form-control" type="file">
+
+
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>W9</label>
+                                        <input name="W9Documents" class="form-control" type="file">
+
+
+                                    </div>
+                                </div>
+                            </div>
+
+
+                           
+
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Surety Bond</label>
+                                        <input name ="AssurityBond" class="form-control" type="file">
+
+
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Active</label>
+                                        <input class="form-control" style="width: 18px;height: 18px" id="Active"  name="IsActive" checked="checked" value="true" type="checkbox">
+
+
+                                    </div>
+                                   
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="m-t-5 text-right">
+                                        <br />
+                                        <a href="#" class="btn btn-white" data-dismiss="modal">Close</a>
+                                        <button type="submit" onclick=" return sendform('s')" class="btn btn-primary" style="color: white;background-color: #4c5564 !important;">add</button>
+                                        @*<button type="submit" class="btn btn-primary" style="color: white;background-color: #e80000;">Add</button>*@
+
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    }
+    </div>
+
+</div>
+
+<script>
+    function RefereshList() {
+        location.reload();
+    }
+    $(document).on("click", ".open-AddBookDialog", function () {
+
+        var myModal = $('#Edit_Carrier');
+        var carrier_id = $(this).closest('tr').find('.carrier_id').text().trim();
+        var BrokerName = $(this).closest('tr').find('.BrokerName').text().trim();
+        var MC = $(this).closest('tr').find('.MC').text().trim();
+        var AssignID = $(this).closest('tr').find('.AssignID').text().trim();
+        var ContactName = $(this).closest('tr').find('.ContactName').text().trim();
+        var PhoneNumber = $(this).closest('tr').find('.PhoneNumber').text().trim();
+        var Email = $(this).closest('tr').find('.Email').text().trim();
+        var AccountingEmail = $(this).closest('tr').find('.AccountingEmail').text().trim();
+        var activestatus = $(this).closest('tr').find('.IsActive').text().trim();
+        var IsActive;
+
+        //$("#Actives", myModal).attr('checked', true);
+
+
+        if (activestatus == 'False') {
+
+            $("#Actives", myModal).attr('checked', false);
+
+
+        }
+        if (activestatus == 'True') {
+
+            //$("#Actives", myModal).attr('checked', true);
+            $("#Actives").prop("checked", true);
+
+        }
+
+       
+
+
+
+        $("#id", myModal).val(carrier_id);
+        $("#Name", myModal).val(BrokerName);
+        $("#MC", myModal).val(MC);
+        $("#AssignID", myModal).val(AssignID);
+        $("#ContactName", myModal).val(ContactName);
+        $("#PhoneNumber", myModal).val(PhoneNumber);
+        $("#txtEmail", myModal).val(Email);
+        $("#txtAccountingEmail", myModal).val(AccountingEmail);
+        $("#Active", myModal).val(IsActive);
+
+    });
+</script>
+<script>
+
+    $(document).on("click", ".open-AddBookDialog", function () {
+        var myModal = $('#Delete_Carrier');
+        var country_id = $(this).closest('tr').find('.carrier_id').text();
+        $("#Brokerid", myModal).val(country_id);
+
+    });
+</script>
+
+
+@*<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>*@
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#fademsg").fadeOut(5000);
+    });
+</script>

@@ -1,0 +1,88 @@
+1.Add column in existing table sql 
+ALTER TABLE tblTransactionList
+ADD PaidDate datetime NOT NULL DEFAULT(getdate())
+GO
+
+
+
+2. Access viewbag value in javascript 
+var cc = @Html.Raw(Json.Encode(ViewBag.CC)
+
+3.on ajax response move to controller action  (Load ---> Index ---> (MoveToCopyLoad) )
+ [HttpPost]
+        public ActionResult MoveToCopyLoad(string LoadNumber)
+        {
+            string qry = " Exec SpGetLoadNumber ";
+
+            string NewLoadNumber = ut.ExecuteScalar(qry);
+
+            return Json(new { data = LoadNumber, url = Url.Action("Index", "CopyLoad", new { LoadNumber = LoadNumber }) });
+        }
+
+
+   $.ajax({
+                url: '/Load/MoveToCopyLoad?LoadNumber=' + LoadNumber + '',
+                type: "POST",
+                contentType: false, // Not to set any content header
+                processData: false, // Not to process data
+                success: function (result) {
+                    window.location = result.url;
+
+                },
+                error: function (err) {
+                    alert(err.statusText);
+                }
+            });
+
+
+4. Get total number of columns count in  a table 
+
+SELECT COUNT(COLUMN_NAME) 
+FROM INFORMATION_SCHEMA.COLUMNS 
+WHERE TABLE_CATALOG = 'RestockReports' AND TABLE_SCHEMA = 'dbo'
+AND TABLE_NAME = 'tblReportData'   
+
+5.Remove double quotation from string ("")
+
+for C# you'd have to escape the quotation mark using a backslash:
+
+s = s.Replace("\"", "");
+
+6. Below is the url to draw canvas and convert to image 
+https://www.aspsnippets.com/demos/1434/
+
+7. Alter table column data type in sql
+ALTER TABLE test
+ALTER COLUMN IsNoticeOfAssignment numeric(18,2) ;
+
+
+8. Linq join query example 
+
+                ViewBag.SubCategoryList = (from categories in dbEntities.tblCategories
+                                           join subcategories in dbEntities.tblSubCategories
+                                        on categories.CategoryId equals subcategories.CategoryId
+                                           select new SubcategoryAttributeList
+                                           {
+                                               CategoryId = subcategories.CategoryId,
+                                               CategoryName = categories.Name,
+                                               SubcategoryId = subcategories.SubcategoryId,
+                                               SubcategoryName = subcategories.Name
+                                           }).ToList();
+
+9. Truncate or delete command in entitiy framework
+  DbEntity.Database.ExecuteSqlCommand("Exec  Sp_Insert_Insurance_Expiration_Date");
+
+10. Get differenct dates from current date
+ //get Different dates from current date
+            //DateTime baseDatess = DateTime.Today;
+
+            //var today = baseDatess;
+            //var yesterday = baseDate.AddDays(-1);
+            //var thisWeekStart = baseDate.AddDays(-(int)baseDate.DayOfWeek);
+            //var thisWeekEnd = thisWeekStart.AddDays(7).AddSeconds(-1);
+            //var lastWeekStart = thisWeekStart.AddDays(-7);
+            //var lastWeekEnd = thisWeekStart.AddSeconds(-1);
+            //var thisMonthStart = baseDatess.AddDays(1 - baseDatess.Day);
+            //var thisMonthEnd = thisMonthStart.AddMonths(1).AddSeconds(-1);
+            //var lastMonthStart = thisMonthStart.AddMonths(-1);
+            //var lastMonthEnd = thisMonthStart.AddSeconds(-1);
