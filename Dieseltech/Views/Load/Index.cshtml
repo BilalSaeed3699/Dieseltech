@@ -198,6 +198,22 @@
         .ImportantFields {
             color: red;
         }
+
+        /*#ATable, .ARow, .ACol {
+            border: 1px solid black;
+        }*/
+
+        .ARow {
+            background-color: @Session["Color"];
+            color:white;
+        }
+
+        /*.ADCol {
+            background-color: #F3F9F9;
+        }*/
+        .ui-autocomplete {
+            padding: 0px;
+        }
     </style>
 </head>
 
@@ -6898,11 +6914,12 @@ var model = {
 
 
 
-                        return {
-                            label: 'Name: ' + item.Name + ', ID: ' + item.AssignID + ', MC#: ' + item.MC
+                        //return {
+                        //    label: 'Name: ' + item.Name + ', ID: ' + item.AssignID + ', MC#: ' + item.MC
 
-                            , AssignID: item.AssignID
-                        };
+                        //    , AssignID: item.AssignID
+                        //};
+                        return { label: item.Name, MC: item.MC, id: item.AssignID, AssignID: item.AssignID };
 
                     }))
 
@@ -6934,10 +6951,28 @@ var model = {
 
         }
 
-    });
+    }).data("ui-autocomplete")._renderMenu = function (ul, items) {
+        var self = this;
+        $.each(items, function (index, item) {
+            if (index == 0) {
+                ul.append('<li><table id="ATable"><tr class="ARow"><td class="ACol"  style="width:160px">Name</td><td class="ACol" style="width:160px">ID</td><td class="ACol" style="width:160px">MC#</td></tr></table>');
+            }
+
+            self._renderItemData(ul, item);
+        });
+    };
 
 
-
+        $('#txtBrokerName').autocomplete().data("ui-autocomplete")._renderItem = function (ul, item) {
+            return $("<li class='Label'>")
+                .append(
+                    + '<table id="ATable"><tr class="ARow">'
+                    + '<td class="ADCol" style="width:160px">' + item.label + '</td>'
+                    + '<td class="ADCol" style="width:160px">' + item.id + '</td>'
+                    + '<td class="ADCol" style="width:160px">' + item.MC + '</td>'
+                    + '</tr></table>')
+                .appendTo(ul);
+        };
 
     $("#txtModalBrokerName").autocomplete({
         showHeader: true,
@@ -7021,14 +7056,14 @@ var model = {
 
 
 
-                        return {
-                            label: 'Name:' + item.CarrierName + ', ID:' + item.AssignID + ', MC#:' + item.MC_
+                        //return {
+                        //    label: 'Name:' + item.CarrierName + ', ID:' + item.AssignID + ', MC#:' + item.MC_
 
-                            //label: 'Carrier Name:' + item.CarrierName + ', AssignID:' + item.AssignID + ', ContactName:' + item.ContactName +
-                            // + ', Phonenumber:' + item.Phonenumber
-                            , AssignID: item.AssignID
-                        };
-
+                        //    //label: 'Carrier Name:' + item.CarrierName + ', AssignID:' + item.AssignID + ', ContactName:' + item.ContactName +
+                        //    // + ', Phonenumber:' + item.Phonenumber
+                        //    , AssignID: item.AssignID
+                        //};
+                        return { label: item.CarrierName, MC: item.MC_, id: item.AssignID, AssignID: item.AssignID };
                     }))
 
                 }
@@ -7113,10 +7148,28 @@ var model = {
                 });
 
         }
-    });
+    }).data("ui-autocomplete")._renderMenu = function (ul, items) {
+        var self = this;
+        $.each(items, function (index, item) {
+            if (index == 0) {
+                ul.append('<li><table id="ATable"><tr class="ARow"><td class="ACol"  style="width:160px">Name</td><td class="ACol" style="width:160px">ID</td><td class="ACol" style="width:160px">MC#</td></tr></table>');
+            }
+
+            self._renderItemData(ul, item);
+        });
+    };
 
 
-
+    $('#txtCarrierSearch').autocomplete().data("ui-autocomplete")._renderItem = function (ul, item) {
+        return $("<li class='Label'>")
+            .append(
+                + '<tr class="ARow">'
+                + '<td class="ADCol" style="width:160px">' + item.label + '</td>'
+                + '<td class="ADCol" style="width:160px">' + item.id + '</td>'
+                + '<td class="ADCol" style="width:160px">' + item.MC + '</td>'
+                + '</tr>')
+            .appendTo(ul);
+    };
 
 
 </script>

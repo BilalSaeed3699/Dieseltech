@@ -242,3 +242,8 @@ Date: 6/18/2022 1:26:03 PM
 Controller Name: Report
 Action Name: InvoicingDetail
 Exception: Object reference not set to an instance of an object.
+----------------------------------------------------------------------------------------------
+Date: 06/22/2022 4:02:59 PM
+Controller Name: Definition
+Action Name: CarrierInfo
+Exception: Cannot perform runtime binding on a null reference

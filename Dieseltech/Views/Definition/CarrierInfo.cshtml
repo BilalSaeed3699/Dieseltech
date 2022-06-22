@@ -66,6 +66,23 @@
         .unchecked {
             color: black !important;
         }
+
+        /*#ATable, .ARow, .ACol {
+            border: 1px solid black;
+        }*/
+        .ATable,.ARow,.Label {
+            width: 100% !important;
+        }
+        .ARow {
+            background-color: @Session["Color"];
+            color: white;
+        }
+        /*.ADCol {
+            background-color: #F3F9F9;
+        }*/
+        .ui-autocomplete{
+            padding:0px;
+        }
     </style>
 </head>
 
@@ -85,936 +102,936 @@
                     }))
                     {
                         @Html.AntiForgeryToken()
-                    <form>
+                        <form>
 
 
-                        @{string CarrierName = "";}
-                        @{string ContactName = "";}
-                        @{string Phonenumber = "";}
-                        @{string ContactName2 = "";}
-                        @{string Phonenumber2 = "";}
-                        @{string Email = "";}
-                        @{string MC_ = "";}
-                        @{Int32 CarrierCategoryId = 0;}
-                        @{Int32 OwnerOperator = 0;}
-                        @{bool IsOwnerOperator = false;}
-                        @{bool Isquickpay = false;}
-                        @{bool Isblacklist = false;}
-                        @{bool Istrailerinterchange = false;}
-                        @{double quickpaypercentage = 3;}
-                        @{DateTime InsuranceExpirationDate = DateTime.Now;}
+                            @{string CarrierName = "";}
+                            @{string ContactName = "";}
+                            @{string Phonenumber = "";}
+                            @{string ContactName2 = "";}
+                            @{string Phonenumber2 = "";}
+                            @{string Email = "";}
+                            @{string MC_ = "";}
+                            @{Int32 CarrierCategoryId = 0;}
+                            @{Int32 OwnerOperator = 0;}
+                            @{bool IsOwnerOperator = false;}
+                            @{bool Isquickpay = false;}
+                            @{bool Isblacklist = false;}
+                            @{bool Istrailerinterchange = false;}
+                            @{double quickpaypercentage = 3;}
+                            @{DateTime InsuranceExpirationDate = DateTime.Now;}
 
 
 
-                        @if (ListCarrier != null && ListCarrier.Count != 0)
-                        {
-                            CarrierName = ListCarrier[0].CarrierName;
-                            ContactName = ListCarrier[0].ContactName;
-                            Phonenumber = ListCarrier[0].Phonenumber;
-                            ContactName2 = ListCarrier[0].ContactName2;
-                            Phonenumber2 = ListCarrier[0].Phonenumber2;
-                            Email = ListCarrier[0].Email;
-                            MC_ = ListCarrier[0].MC_;
-                            CarrierCategoryId = Convert.ToInt32(ListCarrier[0].CarrierCategoryId);
-                            CarrierCategoryId = Convert.ToInt32(ListCarrier[0].CarrierCategoryId);
-                            if (Convert.ToInt32(ListCarrier[0].IsOwnerOperator) == 1)
+                            @if (ListCarrier != null && ListCarrier.Count != 0)
                             {
-                                IsOwnerOperator = true;
+                                CarrierName = ListCarrier[0].CarrierName;
+                                ContactName = ListCarrier[0].ContactName;
+                                Phonenumber = ListCarrier[0].Phonenumber;
+                                ContactName2 = ListCarrier[0].ContactName2;
+                                Phonenumber2 = ListCarrier[0].Phonenumber2;
+                                Email = ListCarrier[0].Email;
+                                MC_ = ListCarrier[0].MC_;
+                                CarrierCategoryId = Convert.ToInt32(ListCarrier[0].CarrierCategoryId);
+                                CarrierCategoryId = Convert.ToInt32(ListCarrier[0].CarrierCategoryId);
+                                if (Convert.ToInt32(ListCarrier[0].IsOwnerOperator) == 1)
+                                {
+                                    IsOwnerOperator = true;
+                                }
+                                else
+                                {
+                                    IsOwnerOperator = false;
+                                }
+
+                                if (Convert.ToInt32(ListCarrier[0].IsQuickPay) == 1)
+                                {
+                                    Isquickpay = true;
+                                }
+                                else
+                                {
+                                    Isquickpay = false;
+                                }
+
+                                if (Convert.ToInt32(ListCarrier[0].IsBlackList) == 1)
+                                {
+                                    Isblacklist = true;
+                                }
+                                else
+                                {
+                                    Isblacklist = false;
+                                }
+
+                                if (Convert.ToInt32(ListCarrier[0].Istrailerinterchange) == 1)
+                                {
+                                    Istrailerinterchange = true;
+                                }
+                                else
+                                {
+                                    Istrailerinterchange = false;
+                                }
+
+
+                                quickpaypercentage = ListCarrier[0].Quickpaypercentage;
+
+                                InsuranceExpirationDate = Convert.ToDateTime(ListCarrier[0].InsuranceExpirationDate);
                             }
-                            else
+                            else if (ListCarrier == null || ListCarrier.Count == 0)
                             {
+                                CarrierName = "";
+                                ContactName = "";
+                                Phonenumber = "";
+                                MC_ = "";
+                                Email = "";
+                                CarrierCategoryId = 0;
                                 IsOwnerOperator = false;
-                            }
-
-                            if (Convert.ToInt32(ListCarrier[0].IsQuickPay) == 1)
-                            {
-                                Isquickpay = true;
-                            }
-                            else
-                            {
                                 Isquickpay = false;
-                            }
-
-                            if (Convert.ToInt32(ListCarrier[0].IsBlackList) == 1)
-                            {
-                                Isblacklist = true;
-                            }
-                            else
-                            {
                                 Isblacklist = false;
                             }
 
-                            if (Convert.ToInt32(ListCarrier[0].Istrailerinterchange) == 1)
-                            {
-                                Istrailerinterchange = true;
-                            }
-                            else
-                            {
-                                Istrailerinterchange = false;
-                            }
-
-
-                            quickpaypercentage = ListCarrier[0].Quickpaypercentage;
-
-                            InsuranceExpirationDate = Convert.ToDateTime(ListCarrier[0].InsuranceExpirationDate);
-                        }
-                        else if (ListCarrier == null || ListCarrier.Count == 0)
-                        {
-                            CarrierName = "";
-                            ContactName = "";
-                            Phonenumber = "";
-                            MC_ = "";
-                            Email = "";
-                            CarrierCategoryId = 0;
-                            IsOwnerOperator = false;
-                            Isquickpay = false;
-                            Isblacklist = false;
-                        }
-
-                        <div class="row" id="CarrierInformationSection">
-                            <div class="col-md-12">
-                                <div class="card-box shadow-none p-3  bg-light rounded">
-                                    <h4 class="card-title">
-                                        Carrier Information
-                                        <small id="lblCarrierName"></small>
-                                        &nbsp;
-                                        <a onclick="GetAllCarrierList()" style="background-color: #4c5564 !important" class="btn btn-primary"><i class="fa fa-address-card-o"></i> &nbsp; All Carriers</a>
-
-                                        <a onclick="ClearAllData()" id="NewCarrier" style="font-size: 10px;background-color: #4c5564 !important;float:right" class="btn btn-primary"><i class="fa fa-plus"></i> &nbsp; Add New Carrier</a>
-                                        <label id="lblCarrierSaveMessage" style="display:none;border-color:#c3e6cb; float:right;background-color: #d4edda;color: #155724;padding: 5px;margin-right:10px"> Carrier Information Updated</label> &nbsp;
-
-                                    </h4>
-
-
-                                    @*<a onclick="CarrierDataValidation()" class="btn btn-primary"><i class="fa fa-plus"></i> &nbsp; New </a>*@
-                                    <hr />
-                                    <div class="form-group">
-                                        <div class="row">
-                                            <div class="col-md-3">
-
-                                            </div>
-
-                                        </div>
-                                        <div class="row">
-
-                                            <div class="col-md-2">
-                                                <label>Assign ID</label>
-                                                <input type="text" value="@ViewBag.CarrierAssignID" id="txtAssignId" name="CarrierAssignId" readonly class="form-control" required="">
-
-                                            </div>
-                                            <div class="col-md-4">
-                                                <small id="lblCarrier" style="color: red; display: none;">* Select Carrier</small>
-                                                <label>
-                                                    Carrier Name  <small>* (Search By Type Name, AssignID, MC# )</small>
-                                                    @*<a  data-toggle="modal" data-target="#Show_Carrier" id="btnShowCarrierList" class="btn btn-sm btn-outline-secondary btn-square"><i class="fa fa-check"></i> Choose Existing</a>*@
-
-                                                </label>
-                                                <input type="text" id="txtCarrierName" value="@CarrierName" name="CarrierName" class="form-control" required="">
-                                            </div>
-
-                                            <div class="col-md-3">
-                                                <label>Contact Name <small id="lblContactName" style="color: red; display: none;"> Enter Contact Name </small></label>
-                                                <input type="text" id="txtContactName" value="@ContactName" name="ContactName" class="form-control" required="">
-                                            </div>
-
-                                            <div class="col-md-3">
-                                                <label>Phone Number <small id="lblPhoneNuber" style="color: red; display: none;"> Enter Phone Number </small></label>
-                                                <input type="text" id="txtPhoneNumber" value="@Phonenumber" name="PhoneNumber" class="form-control" required="">
-                                            </div>
-
-
-                                        </div>
-                                    </div>
-
-
-                                    <div class="form-group">
-                                        <div class="row">
-                                            <div class="col-md-3">
-                                                <label>Contact Name 2 <small id="lblContactName2" style="color: red; display: none;"> Enter Contact Name </small></label>
-                                                <input type="text" id="txtContactName2" value="@ContactName2" name="ContactName2" class="form-control">
-                                            </div>
-
-                                            <div class="col-md-3">
-                                                <label>Phone Number 2  <small id="lblPhoneNuber2" style="color: red; display: none;"> Enter Phone Number </small></label>
-                                                <input type="text" id="txtPhoneNumber2" value="@Phonenumber2" name="PhoneNumber2" class="form-control">
-                                            </div>
-
-                                            <div class="col-md-3">
-                                                <label>MC # <small id="lblMCNumber" style="color: red; display: none;"> Enter MC Number </small></label>
-                                                <input type="text" id="txtMCNumber" value="@MC_" name="ModernCarrier" class="form-control" required="">
-
-                                            </div>
-                                            <div class="col-md-3">
-                                                <label>Email <small id="lblEmailNuber" style="color: red; display: none;"> Enter Email</small></label>
-                                                <input type="Email" id="txtCarrierEmail" value="@Email" name="Email" class="form-control">
-                                            </div>
-
-                                        </div>
-                                    </div>
-
-
-                                    <div class="form-group">
-                                        <div class="row">
-
-                                            <div class="col-md-3">
-
-
-                                                <label>MC Authortiy <i class="fa fa-upload" aria-hidden="true"></i></label>
-                                                @*<input id="MCAuthorityDocument" name="MCAuthorityDocument"
-                                class="file" type="file" data-upload-url="/Definition/CarrierDocumentUpload">*@
-
-                                                <div class="input-group">
-                                                    <div class="custom-file">
-                                                        <input class="custom-file-input" id="MCAuthorityDocument" type="file"
-                                                               multiple="multiple" name="files"
-                                                               aria-describedby="inputGroupFileAddon01">
-                                                        <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
-                                                    </div>
-                                                </div>
-
-
-
-                                                @*<input id="file-upload" type="file" class="file" data-upload-url="Load/UploadFiles/?LoaderName=@LoaderNumber"
-                                multiple="multiple" name="files">*@
-
-                                            </div>
-                                            <div class="col-md-3">
-                                                <label>W9 <i class="fa fa-upload" aria-hidden="true"></i></label>
-                                                @*<input id="W9Document" name="W9Document" class="file" type="file" data-upload-url="/Definition/CarrierDocumentUpload">*@
-
-                                                <div class="input-group">
-                                                    <div class="custom-file">
-                                                        <input class="custom-file-input" id="W9Document" type="file"
-                                                               multiple="multiple" name="files"
-                                                               aria-describedby="inputGroupFileAddon01">
-                                                        <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
-                                                    </div>
-                                                </div>
-
-
-
-
-                                            </div>
-                                            <div class="col-md-3">
-                                                <label>Insurance <i class="fa fa-upload" aria-hidden="true"></i></label>
-                                                @*<input id="InsuranceDocument" name="InsuranceDocument" class="form-control" type="file" data-upload-url="/Definition/CarrierDocumentUpload">*@
-                                                <div class="input-group">
-                                                    <div class="custom-file">
-                                                        <input class="custom-file-input" id="InsuranceDocument" type="file"
-                                                               multiple="multiple" name="files"
-                                                               aria-describedby="inputGroupFileAddon01">
-                                                        <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
-                                                    </div>
-                                                </div>
-
-                                            </div>
-
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <div class="row">
-
-
-
-
-                                            @if (ViewBag.CarrierDocuments.Count > 0)
-                                            {
-                                                foreach (var item in ViewBag.CarrierDocuments)
-                                                {
-
-
-                                                    if (@item.IsMcAuthorityUploaded == 1)
-                                                    {
-                                                        <div class="col-md-3" id="McAuthorityDocumentdiv">
-                                                            <div id='DocumentsColumn' style="background-color:@Session["Color"] !important;padding:7px !important">
-                                                                <a style="color:white !important" target='_blank' class='social-icon text-xs-center' href="@item.McAuthorityFilePath">
-                                                                    <i class="fa fa-file"></i> @item.McAuthorityFileName
-                                                                </a>
-                                                                <button style="color:white !important" type="button" onclick="DeleteDocument('@item.CarrierAssignId','MC')" id="btnRemoveDocument" class="close" aria-label="Close"><span aria-hidden="true">×</span></button>
-                                                            </div>
-
-                                                        </div>
-                                                    }
-                                                    else
-                                                    {
-                                                        <div class="col-md-3" id="McAuthorityDocumentdiv">
-
-                                                            <div></div>
-                                                        </div>
-                                                    }
-
-
-
-
-                                                }
-
-                                            }
-                                            else if (@ViewBag.CarrierDocuments.Count == 0)
-                                            {
-                                                <div class="col-md-3" id="McAuthorityDocumentdiv">
-
-                                                    <div></div>
-                                                </div>
-                                            }
-
-
-
-
-
-
-
-
-
-
-                                            @*<div class="col-md-3" id="W9DocumentExisting">
-                                @foreach (var item in ViewBag.CarrierDocuments)
-                                {
-
-                                    if (@item.IsW9Uploaded == 1)
-                                    {
-                                        <div id='DocumentsColumn' style="background-color:blue !important;padding:7px !important">
-                                            <a style="color:white !important" target='_blank' class='social-icon text-xs-center' href="@item.W9FilePath">
-                                                <i class="fa fa-file"></i> @item.W9FileName
-                                            </a>
-                                            <button style="color:white !important" type="button" onclick="DeleteDocument(4016)" id="btnRemoveDocument" class="close" aria-label="Close"><span aria-hidden="true">×</span></button>
-                                        </div>
-                                    }
-
-                                }
-
-                            </div>*@
-
-
-                                            @if (ViewBag.CarrierDocuments.Count > 0)
-                                            {
-                                                foreach (var item in ViewBag.CarrierDocuments)
-                                                {
-
-
-                                                    if (@item.IsW9Uploaded == 1)
-                                                    {
-                                                        <div class="col-md-3" id="W9DocumentExisting">
-                                                            <div id='DocumentsColumn' style="background-color:@Session["Color"] !important;padding:7px !important">
-                                                                <a style="color:white !important" target='_blank' class='social-icon text-xs-center' href="@item.W9FilePath">
-                                                                    <i class="fa fa-file"></i> @item.W9FileName
-                                                                </a>
-                                                                <button style="color:white !important" type="button" onclick="DeleteDocument('@item.CarrierAssignId','W9')" id="btnRemoveDocument" class="close" aria-label="Close"><span aria-hidden="true">×</span></button>
-                                                            </div>
-
-                                                        </div>
-                                                    }
-                                                    else
-                                                    {
-                                                        <div class="col-md-3" id="W9DocumentExisting">
-                                                            <div></div>
-                                                        </div>
-                                                    }
-
-
-
-
-                                                }
-
-                                            }
-                                            else if (@ViewBag.CarrierDocuments.Count == 0)
-                                            {
-                                                <div class="col-md-3" id="W9DocumentExisting">
-                                                    <div></div>
-                                                </div>
-                                            }
-
-
-
-
-
-
-
-
-                                            @*<div class="col-md-3" id="InsuranceFileNameDocument">
-                                @foreach (var item in ViewBag.CarrierDocuments)
-                                {
-
-                                    if (@item.IsInsuranceUploaded == 1)
-                                    {
-                                        <div id='DocumentsColumn' style="background-color:blue !important;padding:7px !important">
-                                            <a style="color:white !important" target='_blank' class='social-icon text-xs-center' href="@item.InsuranceFilePath">
-                                                <i class="fa fa-file"></i> @item.InsuranceFileName
-                                            </a>
-                                            <button style="color:white !important" type="button" onclick="DeleteDocument(4016)" id="btnRemoveDocument" class="close" aria-label="Close"><span aria-hidden="true">×</span></button>
-                                        </div>
-                                    }
-
-                                }
-
-                            </div>*@
-
-
-
-                                            @if (ViewBag.CarrierDocuments.Count > 0)
-                                            {
-                                                foreach (var item in ViewBag.CarrierDocuments)
-                                                {
-
-
-                                                    if (@item.IsInsuranceUploaded == 1)
-                                                    {
-                                                        <div class="col-md-3" id="InsuranceFileNameDocument">
-                                                            <div id='DocumentsColumn' style="background-color:@Session["Color"] !important;padding:7px !important">
-                                                                <a style="color:white !important" target='_blank' class='social-icon text-xs-center' href="@item.InsuranceFilePath">
-                                                                    <i class="fa fa-file"></i> @item.InsuranceFileName
-                                                                </a>
-                                                                <button style="color:white !important" type="button" onclick="DeleteDocument('@item.CarrierAssignId','IN')" id="btnRemoveDocument" class="close" aria-label="Close"><span aria-hidden="true">×</span></button>
-                                                            </div>
-
-                                                        </div>
-                                                    }
-
-                                                    else
-                                                    {
-                                                        <div class="col-md-3" id="InsuranceFileNameDocument">
-                                                            <div></div>
-                                                        </div>
-                                                    }
-
-
-                                                }
-
-                                            }
-                                            else if (@ViewBag.CarrierDocuments.Count == 0)
-                                            {
-                                                <div class="col-md-3" id="InsuranceFileNameDocument">
-                                                    <div></div>
-                                                </div>
-                                            }
-
-
-                                        </div>
-                                    </div>
-
-
-                                    @* Start New Document (Notice Assignment and void cheque)*@
-
-                                    <div class="form-group">
-                                        <div class="row">
-
-                                            <div class="col-md-4">
-
-
-                                                <label>Notice Of Assignment <i class="fa fa-upload" aria-hidden="true"></i></label>
-
-                                                <div class="input-group">
-                                                    <div class="custom-file">
-                                                        <input class="custom-file-input" id="AssignmentNoticeDocument" type="file"
-                                                               multiple="multiple" name="files"
-                                                               aria-describedby="inputGroupFileAddon01">
-                                                        <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
-                                                    </div>
-                                                </div>
-
-
-
-                                                @*<input id="file-upload" type="file" class="file" data-upload-url="Load/UploadFiles/?LoaderName=@LoaderNumber"
-                                multiple="multiple" name="files">*@
-
-                                            </div>
-                                            <div class="col-md-4">
-                                                <label>Void cheque for account information  <i class="fa fa-upload" aria-hidden="true"></i></label>
-                                                @*<input id="W9Document" name="W9Document" class="file" type="file" data-upload-url="/Definition/CarrierDocumentUpload">*@
-
-                                                <div class="input-group">
-                                                    <div class="custom-file">
-                                                        <input class="custom-file-input" id="VoidedChequeDocument" type="file"
-                                                               multiple="multiple" name="files"
-                                                               aria-describedby="inputGroupFileAddon01">
-                                                        <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
-                                                    </div>
-                                                </div>
-
-
-
-
-                                            </div>
-
-
-
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <div class="row">
-
-                                            @*<div class="col-md-4" id="NoticeAssignmentDocument">
-
-
-                                @foreach (var item in ViewBag.CarrierDocuments)
-                                {
-
-                                    if (@item.IsNoticeOfAssignment == 1)
-                                    {
-                                        <div id='DocumentsColumn' style="background-color:blue !important;padding:7px !important">
-                                            <a style="color:white !important" target='_blank' class='social-icon text-xs-center' href="@item.AssignmentFilePath">
-                                                <i class="fa fa-file"></i> @item.AssignmentFileName
-                                            </a>
-                                            <button style="color:white !important" type="button" onclick="DeleteDocument(4016)" id="btnRemoveDocument" class="close" aria-label="Close"><span aria-hidden="true">×</span></button>
-                                        </div>
-                                    }
-
-                                }
-
-
-
-                            </div>*@
-
-
-                                            @if (ViewBag.CarrierDocuments.Count > 0)
-                                            {
-                                                foreach (var item in ViewBag.CarrierDocuments)
-                                                {
-
-
-                                                    if (@item.IsNoticeOfAssignment == 1)
-                                                    {
-                                                        <div class="col-md-4" id="NoticeAssignmentDocument">
-                                                            <div id='DocumentsColumn' style="background-color:@Session["Color"] !important;padding:7px !important">
-                                                                <a style="color:white !important" target='_blank' class='social-icon text-xs-center' href="@item.AssignmentFilePath">
-                                                                    <i class="fa fa-file"></i> @item.AssignmentFileName
-                                                                </a>
-                                                                <button style="color:white !important" type="button" onclick="DeleteDocument('@item.CarrierAssignId','NA')" id="btnRemoveDocument" class="close" aria-label="Close"><span aria-hidden="true">×</span></button>
-                                                            </div>
-
-                                                        </div>
-                                                    }
-                                                    else
-                                                    {
-                                                        <div class="col-md-4" id="NoticeAssignmentDocument">
-                                                            <div></div>
-                                                        </div>
-                                                    }
-
-
-
-                                                }
-
-                                            }
-                                            else if (@ViewBag.CarrierDocuments.Count == 0)
-                                            {
-                                                <div class="col-md-4" id="NoticeAssignmentDocument">
-                                                    <div></div>
-                                                </div>
-                                            }
-
-
-
-
-                                            @*<div class="col-md-4" id="VoidedChequedocumentdiv">
-                                @foreach (var item in ViewBag.CarrierDocuments)
-                                {
-
-                                    if (@item.IsW9Uploaded == 1)
-                                    {
-                                        <div id='DocumentsColumn' style="background-color:blue !important;padding:7px !important">
-                                            <a style="color:white !important" target='_blank' class='social-icon text-xs-center' href="@item.W9FilePath">
-                                                <i class="fa fa-file"></i> @item.W9FileName
-                                            </a>
-                                            <button style="color:white !important" type="button" onclick="DeleteDocument(4016)" id="btnRemoveDocument" class="close" aria-label="Close"><span aria-hidden="true">×</span></button>
-                                        </div>
-                                    }
-
-                                }
-
-                            </div>*@
-
-
-
-                                            @if (ViewBag.CarrierDocuments.Count > 0)
-                                            {
-                                                foreach (var item in ViewBag.CarrierDocuments)
-                                                {
-
-
-                                                    if (@item.IsVoidCheque == 1)
-                                                    {
-                                                        <div class="col-md-4" id="VoidedChequedocumentdiv">
-                                                            <div id='DocumentsColumn' style="background-color:@Session["Color"] !important;padding:7px !important">
-                                                                <a style="color:white !important" target='_blank' class='social-icon text-xs-center' href="@item.VoidChequeFilePath">
-                                                                    <i class="fa fa-file"></i> @item.VoidChequeFileName
-                                                                </a>
-                                                                <button style="color:white !important" type="button" onclick="DeleteDocument('@item.CarrierAssignId','VC')" id="btnRemoveDocument" class="close" aria-label="Close"><span aria-hidden="true">×</span></button>
-                                                            </div>
-
-                                                        </div>
-                                                    }
-
-                                                    else
-                                                    {
-                                                        <div class="col-md-4" id="VoidedChequedocumentdiv">
-                                                            <div></div>
-                                                        </div>
-                                                    }
-
-
-                                                }
-
-                                            }
-                                            else if (@ViewBag.CarrierDocuments.Count == 0)
-                                            {
-                                                <div class="col-md-4" id="VoidedChequedocumentdiv">
-                                                    <div></div>
-                                                </div>
-                                            }
-
-
-
-                                        </div>
-                                    </div>
-
-
-                                    @* End New Document (Notice Assignment and void cheque)*@
-
-
-
-
-
-                                    <div class="form-group">
-                                        <div class="row">
-
-
-                                            <div class="col-md-2">
-                                                <label>Carrier Category <small id="lblCategoryError" style="color: red; display: none;"> Select Carrier Category </small></label>
-                                                <select id="CategoryId" required name="CategoryId" class="form-control js-example-basic-single">
-                                                    <option value="0">Select Category </option>
-                                                    @foreach (var item in ViewBag.CarrierCategory)
-                                                    {
-                                                        <text>
-                                                            <option value="@item.Value">@item.Text</option>
-
-                                                        </text>
-                                                    }
-                                                </select>
-
-                                            </div>
-                                            <div class="col-md-3">
-                                                <label>Insurance Expiration Date  &nbsp;&nbsp;<i class="fa fa-calendar" aria-hidden="true"></i></label> <br />
-                                                <input id="txtInsuranceExpirtationDate" type="date" value="@InsuranceExpirationDate.ToString("yyyy-MM-dd")" name="InsuranceExpirationDate" class="form-control" required>
-
-                                                @*<input style="width:70% !important;min-height: 38px !important;" id="txtInsuranceExpirtationDate" type="date" value="" name="InsuranceExpirationDate" class="form-control" required>*@
-
-
-
-                                            </div>
-                                            <div class="col-md-2">
-                                                <label>Owner Operator <i class="fa fa-male" aria-hidden="true"></i></label> <br />
-                                                Owner Operator
-
-                                                @if (Isquickpay == true)
-                                                {
-                                                    <input checked id="chkIsOwnerOperator" name="OwnerOperator" style="font-size:15px !important" type="checkbox" />
-                                                }
-                                                else
-                                                {
-                                                    <input id="chkIsOwnerOperator" name="OwnerOperator" style="font-size:15px !important" type="checkbox" />
-                                                }
-
-
-
-
-                                            </div>
-
-
-                                            <div class="col-md-2">
-                                                <label>Quick Pay  <i class="fa fa-check-circle" aria-hidden="true"></i></label> <br />
-                                                Quick Pay  <input onclick="fniaquickpay()" id="chkIsQuickPay" name="IsQuickPay" style="font-size:15px !important"
-                                                                  type="checkbox" />
-                                                @if (Isquickpay == true)
-                                                {
-                                                    <input value="@quickpaypercentage" id="Quickpaypercentage" name="Quickpaypercentage" style="font-size:15px !important;width:40%"
-                                                           type="text" />
-                                                }
-                                                else
-                                                {
-                                                    <input value="@quickpaypercentage" disabled readonly id="Quickpaypercentage" name="Quickpaypercentage" style="font-size:15px !important;width:40%"
-                                                           type="text" />
-                                                }
-
-
-
-                                            </div>
-
-
-                                            <div class="col-md-2">
-                                                <label>Black List  <i class="fa fa-close" aria-hidden="true"></i></label> <br />
-                                                Black List
-
-                                                @if (Isblacklist == true)
-                                                {
-                                                    <input id="chkIsBlackList" name="IsBlackList" style="font-size:15px !important" type="checkbox" checked />
-                                                }
-                                                else
-                                                {
-                                                    <input id="chkIsBlackList" name="IsBlackList" style="font-size:15px !important" type="checkbox" />
-                                                }
-
-                                            </div>
-                                        </div>
-
-                                        <br />
-                                        <div class="row">
-                                            <div class="col-md-2">
-                                                <label>Trailer-Interchange  <i class="fa fa-exchange" aria-hidden="true"></i></label> <br />
-                                                Trailer-Interchange
-
-                                                @if (Istrailerinterchange == true)
-                                                {
-                                                    <input id="chkIstrailerinterchange" name="Istrailerinterchange" style="font-size:15px !important" type="checkbox" checked />
-                                                }
-                                                else
-                                                {
-                                                    <input id="chkIstrailerinterchange" name="Istrailerinterchange" style="font-size:15px !important" type="checkbox" />
-                                                }
-
-                                            </div>
-
-                                            <div class="col-md-2" id="deletediv" style="display:none">
-                                                <label> </label>
-                                                <a  style="background-color:red !important"  class ="btn btn-danger" onclick="deletecarrier()">Delete Carrier</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <br />
-                        <div class="row">
-                            <div class="col-md-12">
-
-                                <div class="table-responsive">
-                                    @*<table class="table table-border table-striped custom-table  g-dataTable mb-0">*@
-                                    <h4 class="card-title">
-                                        Truck Information
-                                        <a style="background-color: #4c5564 !important" onclick="CarrierDataValidation()" class="btn btn-primary"><i class="fa fa-plus"></i> &nbsp; Add Truck</a>
-                                        @*<a style="background-color: #4c5564 !important"  data-toggle="modal" data-target="#Add_Driver" class="btn btn-primary"><i class="fa fa-plus"></i> &nbsp; Add Driver</a>*@
-
-                                        @*<a onclick="CarrierDataValidation()" data-toggle="modal" data-target="#Add_Truck" class="btn btn-primary"><i class="fa fa-plus"></i> &nbsp; Add Truck</a>*@
-
-                                    </h4>
-                                    <table name="tblTruckList" style="font-size:12px;width:100%" class="table table-condensed table-fit table-sm table-striped tblTruck    mb-0" id="tblTruckInfo">
-
-                                        <thead>
-
-                                            <tr>
-                                                <th>Truck Id</th>
-                                                <th>Carrier Assign Id</th>
-                                                <th>Carrier Name</th>
-                                                <th>Truck Number</th>
-                                                <th>Truck Yard</th>
-                                                <th>Preferred Destination</th>
-                                                <th>Trailer No</th>
-                                                <th hidden>Trailer Type Id</th>
-                                                <th hidden>Trailer Type</th>
-                                                <th>Zip Code</th>
-                                                <th hidden>States</th>
-                                                <th hidden>City</th>
-                                                <th>Available Date</th>
-                                                <th hidden>Driver Id</th>
-                                                <th hidden>Driver Name</th>
-                                                <th hidden>Driver Phone</th>
-
-
-
-                                                <th hidden class="text-right">Edit</th>
-                                                <th hidden class="text-right">Delete</th>
-
-                                            </tr>
-                                        </thead>
-                                        <tbody id="truckBody">
-                                            @foreach (var item in ListTruck)
-                                            {
-                                                <tr>
-                                                    <td class="MC">  @item.TruckId</td>
-                                                    <td class="MC">  @item.CarrierAssignId </td>
-                                                    <td class="MC">  @item.CarrierAssignId </td>
-                                                    <td class="MC">  @item.TruckNo </td>
-                                                    <td class="ContactName">  @item.TruckYard </td>
-                                                    <td class="ContactName">  @item.PrefferedDestination </td>
-                                                    <td class="PhoneNumber">  @item.TrailerNo </td>
-                                                    <td class="PhoneNumber" hidden>  @item.TrailerTypeId </td>
-                                                    <td class="PhoneNumber" hidden>  @item.TrailerTypeId </td>
-                                                    <td class="PhoneNumber">  @item.ZipCode </td>
-                                                    <td class="PhoneNumber" hidden>  @item.ZipCode </td>
-                                                    <td class="PhoneNumber" hidden>  @item.ZipCode </td>
-                                                    <td class="PhoneNumber">  @item.AvailableDate.ToString("MM/dd/yyyy") </td>
-                                                    <td class="PhoneNumber" hidden>  @item.DriverId </td>
-                                                    <td class="PhoneNumber" hidden>  @item.DriverName </td>
-                                                    <td class="PhoneNumber" hidden>  @item.DriverPhone </td>
-
-                                                    <td hidden> <a id="remove" class="open-AddBookDialog" href="#" data-toggle="modal" data-target="#Edit_Carrier"><i class="remove fa fa-pencil m-r-5"></i> </a></td>
-                                                    <td hidden> <a id="remove" class="open-AddBookDialog" style="color:red;" href="#" data-toggle="modal" data-target="#Delete_Carrier"><i class="remove fa fa-trash-o m-r-5"></i> </a></td>
-                                                    @*<td class="text-right">
-                                        <a id="remove" class="open-AddBookDialog" href="#" data-toggle="modal" data-target="#Edit_Carrier"><i class="remove fa fa-pencil m-r-5"></i> </a>
-                                        <a id="remove" class="open-AddBookDialog" style="color:red;" href="#" data-toggle="modal" data-target="#Delete_Carrier"><i class="remove fa fa-trash-o m-r-5"></i> </a>
-
-                                    </td>*@
-
-                                                </tr>
-                                            }
-
-
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                        <br />
-                        <div class="row">
-                            <div class="col-md-12 text-right">
-                                <button type="submit" style="background-color: #4c5564 !important" id="btnSaveCarrierInformation" class="btn btn-primary">Save</button>
-
-                                @*<button type="button" onClick="window.location.reload()" style="background-color:red !important" class="btn btn-danger">Cancel</button>*@
-                                @*<a type="button" onClick="window.location.reload()" style="background-color:red !important" class="btn btn-danger">Cancel</a>*@
-                                <a style="background-color:red !important" class="btn btn-danger" href="@Url.Action("CarrierInfo", "Definition", new { CarrierAssignsId = "0" })">Cancel</a>
-
-
-                            </div>
-                        </div>
-
-
-
-                        <br />
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="row">
-                                    <div class="col-md-8">
+                            <div class="row" id="CarrierInformationSection">
+                                <div class="col-md-12">
+                                    <div class="card-box shadow-none p-3  bg-light rounded">
                                         <h4 class="card-title">
-                                            <i class="fa fa-address-card-o"></i> Carriers List
-                                            &nbsp; &nbsp;
-
-                                            <label style="color:orange" class="radio-inline">
-                                                <input onclick="FilterCarrierList(1)" type="radio" name="optradio"> Inside Carrier
-                                            </label>
+                                            Carrier Information
+                                            <small id="lblCarrierName"></small>
                                             &nbsp;
-                                            <label style="color:brown" class="radio-inline">
-                                                <input onclick="FilterCarrierList(2)" type="radio" name="optradio"> Outside Carrier
-                                            </label>
-                                            &nbsp;
-                                            <label style="        color: #4c5564" class="radio-inline">
-                                                <input checked onclick="FilterCarrierList(0)" type="radio" name="optradio"> Both
-                                            </label>
-                                            @*<i class="fa fa-circle" style="color:orange" aria-hidden="true"> Inside Carrier</i>   &nbsp;
-                            <i class="fa fa-circle" style="color:brown" aria-hidden="true"> Outside Carrier</i>*@
+                                            <a onclick="GetAllCarrierList()" style="background-color: #4c5564 !important" class="btn btn-primary"><i class="fa fa-address-card-o"></i> &nbsp; All Carriers</a>
 
-                                            &nbsp;  &nbsp;
-                                            <label style="        color: #4c5564" class="radio-inline">
-                                                <input id="blacklistfilter" onclick="FilterCarrierList(0)" type="checkbox"> Black List
-                                            </label>
-
-                                            &nbsp;  &nbsp;
-                                            <label style="        color: #4c5564" class="radio-inline">
-                                                <input id="OwnerOperatorfilter" onclick="FilterCarrierList(0)" type="checkbox"> Owner Operator
-                                            </label>
+                                            <a onclick="ClearAllData()" id="NewCarrier" style="font-size: 10px;background-color: #4c5564 !important;float:right" class="btn btn-primary"><i class="fa fa-plus"></i> &nbsp; Add New Carrier</a>
+                                            <label id="lblCarrierSaveMessage" style="display:none;border-color:#c3e6cb; float:right;background-color: #d4edda;color: #155724;padding: 5px;margin-right:10px"> Carrier Information Updated</label> &nbsp;
 
                                         </h4>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <input placeholder="Search" type="text" id="txtCarrierListSearch" value="" name="CarrierSearch" class="form-control">
-                                    </div>
-                                </div>
-                                <div class="table-responsive">
-                                    @*<table class="table table-border table-striped custom-table  g-dataTable mb-0">*@
+
+
+                                        @*<a onclick="CarrierDataValidation()" class="btn btn-primary"><i class="fa fa-plus"></i> &nbsp; New </a>*@
+                                        <hr />
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-md-3">
+
+                                                </div>
+
+                                            </div>
+                                            <div class="row">
+
+                                                <div class="col-md-2">
+                                                    <label>Assign ID</label>
+                                                    <input type="text" value="@ViewBag.CarrierAssignID" id="txtAssignId" name="CarrierAssignId" readonly class="form-control" required="">
+
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <small id="lblCarrier" style="color: red; display: none;">* Select Carrier</small>
+                                                    <label>
+                                                        Carrier Name  <small>* (Search By Type Name, AssignID, MC# )</small>
+                                                        @*<a  data-toggle="modal" data-target="#Show_Carrier" id="btnShowCarrierList" class="btn btn-sm btn-outline-secondary btn-square"><i class="fa fa-check"></i> Choose Existing</a>*@
+
+                                                    </label>
+                                                    <input type="text" id="txtCarrierName" value="@CarrierName" name="CarrierName" class="form-control" required="">
+                                                </div>
+
+                                                <div class="col-md-3">
+                                                    <label>Contact Name <small id="lblContactName" style="color: red; display: none;"> Enter Contact Name </small></label>
+                                                    <input type="text" id="txtContactName" value="@ContactName" name="ContactName" class="form-control" required="">
+                                                </div>
+
+                                                <div class="col-md-3">
+                                                    <label>Phone Number <small id="lblPhoneNuber" style="color: red; display: none;"> Enter Phone Number </small></label>
+                                                    <input type="text" id="txtPhoneNumber" value="@Phonenumber" name="PhoneNumber" class="form-control" required="">
+                                                </div>
+
+
+                                            </div>
+                                        </div>
+
+
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-md-3">
+                                                    <label>Contact Name 2 <small id="lblContactName2" style="color: red; display: none;"> Enter Contact Name </small></label>
+                                                    <input type="text" id="txtContactName2" value="@ContactName2" name="ContactName2" class="form-control">
+                                                </div>
+
+                                                <div class="col-md-3">
+                                                    <label>Phone Number 2  <small id="lblPhoneNuber2" style="color: red; display: none;"> Enter Phone Number </small></label>
+                                                    <input type="text" id="txtPhoneNumber2" value="@Phonenumber2" name="PhoneNumber2" class="form-control">
+                                                </div>
+
+                                                <div class="col-md-3">
+                                                    <label>MC # <small id="lblMCNumber" style="color: red; display: none;"> Enter MC Number </small></label>
+                                                    <input type="text" id="txtMCNumber" value="@MC_" name="ModernCarrier" class="form-control" required="">
+
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <label>Email <small id="lblEmailNuber" style="color: red; display: none;"> Enter Email</small></label>
+                                                    <input type="Email" id="txtCarrierEmail" value="@Email" name="Email" class="form-control">
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+
+                                        <div class="form-group">
+                                            <div class="row">
+
+                                                <div class="col-md-3">
+
+
+                                                    <label>MC Authortiy <i class="fa fa-upload" aria-hidden="true"></i></label>
+                                                    @*<input id="MCAuthorityDocument" name="MCAuthorityDocument"
+                                                        class="file" type="file" data-upload-url="/Definition/CarrierDocumentUpload">*@
+
+                                                    <div class="input-group">
+                                                        <div class="custom-file">
+                                                            <input class="custom-file-input" id="MCAuthorityDocument" type="file"
+                                                                   multiple="multiple" name="files"
+                                                                   aria-describedby="inputGroupFileAddon01">
+                                                            <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+                                                        </div>
+                                                    </div>
 
 
 
-                                    @*<table style="font-size:12px" id="DailyLoads" class="table table-border table-striped table-sm custom-table mb-0 g-dataTable">*@
-                                    <table name="tblCarrierList" style="font-size:12px;width:100%" class="table table-condensed table-fit table-sm table-striped tblCarrierList mb-0 " id="tblCarriernfo">
+                                                    @*<input id="file-upload" type="file" class="file" data-upload-url="Load/UploadFiles/?LoaderName=@LoaderNumber"
+                                                        multiple="multiple" name="files">*@
 
-                                        <thead>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <label>W9 <i class="fa fa-upload" aria-hidden="true"></i></label>
+                                                    @*<input id="W9Document" name="W9Document" class="file" type="file" data-upload-url="/Definition/CarrierDocumentUpload">*@
 
-                                            <tr>
-                                                <th></th>
-                                                <th>Assign Id</th>
-                                                <th>Name</th>
-                                                <th>Rating</th>
-                                                <th>Category</th>
-                                                <th>Email</th>
-                                                <th>MC #</th>
-                                                <th>Contact Name</th>
-                                                <th>Phone</th>
-                                                <th>Truck No</th>
-
-                                                <th>Truck Yard</th>
-                                                <th>Zip Code</th>
-                                                <th>State Code</th>
-                                                <th>Driver Name</th>
-                                                <th>Driver Phone</th>
-                                                <th>Black List</th>
-                                                @*<th>Truck Yard</th>
-                                <th>Trailer No</th>
-                                <th hidden>Trailer Type Id</th>
-                                <th hidden>Trailer Type</th>
-                                <th>Zip Code</th>
-                                <th hidden>States</th>
-                                <th hidden>City</th>
-                                <th>Available Date</th>
-                                <th hidden>Driver Id</th>
-                                <th hidden>Driver Name</th>
-                                <th hidden>Driver Phone</th>
+                                                    <div class="input-group">
+                                                        <div class="custom-file">
+                                                            <input class="custom-file-input" id="W9Document" type="file"
+                                                                   multiple="multiple" name="files"
+                                                                   aria-describedby="inputGroupFileAddon01">
+                                                            <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+                                                        </div>
+                                                    </div>
 
 
 
-                                <th hidden class="text-right">Edit</th>
-                                <th hidden class="text-right">Delete</th>*@
 
-                                            </tr>
-                                        </thead>
-                                        <tbody id="truckBody">
-                                            @foreach (var item in AllListCarrier)
-                                            {
-                                                <tr>
-                                                    <td class="MC">  @item.AssignID </td>
-                                                    <td class="MC">  @item.AssignID </td>
-                                                    <td class="MC">  @item.AssignID </td>
-                                                    <td class="MC" onclick="ShowCommentRating('@item.AssignID',0)">
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <label>Insurance <i class="fa fa-upload" aria-hidden="true"></i></label>
+                                                    @*<input id="InsuranceDocument" name="InsuranceDocument" class="form-control" type="file" data-upload-url="/Definition/CarrierDocumentUpload">*@
+                                                    <div class="input-group">
+                                                        <div class="custom-file">
+                                                            <input class="custom-file-input" id="InsuranceDocument" type="file"
+                                                                   multiple="multiple" name="files"
+                                                                   aria-describedby="inputGroupFileAddon01">
+                                                            <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+                                                        </div>
+                                                    </div>
 
-                                                        @for (int i = 1; i <= 10; i++)
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <div class="row">
+
+
+
+
+                                                @if (ViewBag.CarrierDocuments.Count > 0)
+                                                {
+                                                    foreach (var item in ViewBag.CarrierDocuments)
+                                                    {
+
+
+                                                        if (@item.IsMcAuthorityUploaded == 1)
                                                         {
-                                                            if (i <= @item.Rating)
+                                                            <div class="col-md-3" id="McAuthorityDocumentdiv">
+                                                                <div id='DocumentsColumn' style="background-color:@Session["Color"] !important;padding:7px !important">
+                                                                    <a style="color:white !important" target='_blank' class='social-icon text-xs-center' href="@item.McAuthorityFilePath">
+                                                                        <i class="fa fa-file"></i> @item.McAuthorityFileName
+                                                                    </a>
+                                                                    <button style="color:white !important" type="button" onclick="DeleteDocument('@item.CarrierAssignId','MC')" id="btnRemoveDocument" class="close" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                                                </div>
+
+                                                            </div>
+                                                        }
+                                                        else
+                                                        {
+                                                            <div class="col-md-3" id="McAuthorityDocumentdiv">
+
+                                                                <div></div>
+                                                            </div>
+                                                        }
+
+
+
+
+                                                    }
+
+                                                }
+                                                else if (@ViewBag.CarrierDocuments.Count == 0)
+                                                {
+                                                    <div class="col-md-3" id="McAuthorityDocumentdiv">
+
+                                                        <div></div>
+                                                    </div>
+                                                }
+
+
+
+
+
+
+
+
+
+
+                                                @*<div class="col-md-3" id="W9DocumentExisting">
+                                                        @foreach (var item in ViewBag.CarrierDocuments)
+                                                        {
+
+                                                            if (@item.IsW9Uploaded == 1)
                                                             {
-                                                                <a style="font-size:8px"><span class="fa fa-star checked"></span></a>
+                                                                <div id='DocumentsColumn' style="background-color:blue !important;padding:7px !important">
+                                                                    <a style="color:white !important" target='_blank' class='social-icon text-xs-center' href="@item.W9FilePath">
+                                                                        <i class="fa fa-file"></i> @item.W9FileName
+                                                                    </a>
+                                                                    <button style="color:white !important" type="button" onclick="DeleteDocument(4016)" id="btnRemoveDocument" class="close" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                                                </div>
                                                             }
-                                                            else if (i > @item.Rating && i <= 10)
-                                                            {
-                                                                <a style="font-size:8px"><span class="fa fa-star unchecked"></span></a>
-                                                            }
-                                                            //value = i;
 
                                                         }
-                                                    </td>
 
-                                                    <td class="MC">  @item.AssignID </td>
-                                                    @*@*<td class="ContactName">  @item.TruckYard </td>
-                                    <td class="PhoneNumber">  @item.TrailerNo </td>
-                                    <td class="PhoneNumber" hidden>  @item.TrailerTypeId </td>
-                                    <td class="PhoneNumber" hidden>  @item.TrailerTypeId </td>
-                                    <td class="PhoneNumber">  @item.ZipCode </td>
-                                    <td class="PhoneNumber" hidden>  @item.ZipCode </td>
-                                    <td class="PhoneNumber" hidden>  @item.ZipCode </td>
-                                    <td class="PhoneNumber">  @item.AvailableDate </td>
-                                    <td class="PhoneNumber" hidden>  @item.DriverId </td>
-                                    <td class="PhoneNumber" hidden>  @item.DriverName </td>
-                                    <td class="PhoneNumber" hidden>  @item.DriverPhone </td>*@
+                                                    </div>*@
 
 
-                                                </tr>
-                                            }
+                                                @if (ViewBag.CarrierDocuments.Count > 0)
+                                                {
+                                                    foreach (var item in ViewBag.CarrierDocuments)
+                                                    {
 
 
-                                        </tbody>
-                                    </table>
+                                                        if (@item.IsW9Uploaded == 1)
+                                                        {
+                                                            <div class="col-md-3" id="W9DocumentExisting">
+                                                                <div id='DocumentsColumn' style="background-color:@Session["Color"] !important;padding:7px !important">
+                                                                    <a style="color:white !important" target='_blank' class='social-icon text-xs-center' href="@item.W9FilePath">
+                                                                        <i class="fa fa-file"></i> @item.W9FileName
+                                                                    </a>
+                                                                    <button style="color:white !important" type="button" onclick="DeleteDocument('@item.CarrierAssignId','W9')" id="btnRemoveDocument" class="close" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                                                </div>
+
+                                                            </div>
+                                                        }
+                                                        else
+                                                        {
+                                                            <div class="col-md-3" id="W9DocumentExisting">
+                                                                <div></div>
+                                                            </div>
+                                                        }
+
+
+
+
+                                                    }
+
+                                                }
+                                                else if (@ViewBag.CarrierDocuments.Count == 0)
+                                                {
+                                                    <div class="col-md-3" id="W9DocumentExisting">
+                                                        <div></div>
+                                                    </div>
+                                                }
+
+
+
+
+
+
+
+
+                                                @*<div class="col-md-3" id="InsuranceFileNameDocument">
+                                                        @foreach (var item in ViewBag.CarrierDocuments)
+                                                        {
+
+                                                            if (@item.IsInsuranceUploaded == 1)
+                                                            {
+                                                                <div id='DocumentsColumn' style="background-color:blue !important;padding:7px !important">
+                                                                    <a style="color:white !important" target='_blank' class='social-icon text-xs-center' href="@item.InsuranceFilePath">
+                                                                        <i class="fa fa-file"></i> @item.InsuranceFileName
+                                                                    </a>
+                                                                    <button style="color:white !important" type="button" onclick="DeleteDocument(4016)" id="btnRemoveDocument" class="close" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                                                </div>
+                                                            }
+
+                                                        }
+
+                                                    </div>*@
+
+
+
+                                                @if (ViewBag.CarrierDocuments.Count > 0)
+                                                {
+                                                    foreach (var item in ViewBag.CarrierDocuments)
+                                                    {
+
+
+                                                        if (@item.IsInsuranceUploaded == 1)
+                                                        {
+                                                            <div class="col-md-3" id="InsuranceFileNameDocument">
+                                                                <div id='DocumentsColumn' style="background-color:@Session["Color"] !important;padding:7px !important">
+                                                                    <a style="color:white !important" target='_blank' class='social-icon text-xs-center' href="@item.InsuranceFilePath">
+                                                                        <i class="fa fa-file"></i> @item.InsuranceFileName
+                                                                    </a>
+                                                                    <button style="color:white !important" type="button" onclick="DeleteDocument('@item.CarrierAssignId','IN')" id="btnRemoveDocument" class="close" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                                                </div>
+
+                                                            </div>
+                                                        }
+
+                                                        else
+                                                        {
+                                                            <div class="col-md-3" id="InsuranceFileNameDocument">
+                                                                <div></div>
+                                                            </div>
+                                                        }
+
+
+                                                    }
+
+                                                }
+                                                else if (@ViewBag.CarrierDocuments.Count == 0)
+                                                {
+                                                    <div class="col-md-3" id="InsuranceFileNameDocument">
+                                                        <div></div>
+                                                    </div>
+                                                }
+
+
+                                            </div>
+                                        </div>
+
+
+                                        @* Start New Document (Notice Assignment and void cheque)*@
+
+                                        <div class="form-group">
+                                            <div class="row">
+
+                                                <div class="col-md-4">
+
+
+                                                    <label>Notice Of Assignment <i class="fa fa-upload" aria-hidden="true"></i></label>
+
+                                                    <div class="input-group">
+                                                        <div class="custom-file">
+                                                            <input class="custom-file-input" id="AssignmentNoticeDocument" type="file"
+                                                                   multiple="multiple" name="files"
+                                                                   aria-describedby="inputGroupFileAddon01">
+                                                            <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+                                                        </div>
+                                                    </div>
+
+
+
+                                                    @*<input id="file-upload" type="file" class="file" data-upload-url="Load/UploadFiles/?LoaderName=@LoaderNumber"
+                                                        multiple="multiple" name="files">*@
+
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label>Void cheque for account information  <i class="fa fa-upload" aria-hidden="true"></i></label>
+                                                    @*<input id="W9Document" name="W9Document" class="file" type="file" data-upload-url="/Definition/CarrierDocumentUpload">*@
+
+                                                    <div class="input-group">
+                                                        <div class="custom-file">
+                                                            <input class="custom-file-input" id="VoidedChequeDocument" type="file"
+                                                                   multiple="multiple" name="files"
+                                                                   aria-describedby="inputGroupFileAddon01">
+                                                            <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+                                                        </div>
+                                                    </div>
+
+
+
+
+                                                </div>
+
+
+
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <div class="row">
+
+                                                @*<div class="col-md-4" id="NoticeAssignmentDocument">
+
+
+                                                        @foreach (var item in ViewBag.CarrierDocuments)
+                                                        {
+
+                                                            if (@item.IsNoticeOfAssignment == 1)
+                                                            {
+                                                                <div id='DocumentsColumn' style="background-color:blue !important;padding:7px !important">
+                                                                    <a style="color:white !important" target='_blank' class='social-icon text-xs-center' href="@item.AssignmentFilePath">
+                                                                        <i class="fa fa-file"></i> @item.AssignmentFileName
+                                                                    </a>
+                                                                    <button style="color:white !important" type="button" onclick="DeleteDocument(4016)" id="btnRemoveDocument" class="close" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                                                </div>
+                                                            }
+
+                                                        }
+
+
+
+                                                    </div>*@
+
+
+                                                @if (ViewBag.CarrierDocuments.Count > 0)
+                                                {
+                                                    foreach (var item in ViewBag.CarrierDocuments)
+                                                    {
+
+
+                                                        if (@item.IsNoticeOfAssignment == 1)
+                                                        {
+                                                            <div class="col-md-4" id="NoticeAssignmentDocument">
+                                                                <div id='DocumentsColumn' style="background-color:@Session["Color"] !important;padding:7px !important">
+                                                                    <a style="color:white !important" target='_blank' class='social-icon text-xs-center' href="@item.AssignmentFilePath">
+                                                                        <i class="fa fa-file"></i> @item.AssignmentFileName
+                                                                    </a>
+                                                                    <button style="color:white !important" type="button" onclick="DeleteDocument('@item.CarrierAssignId','NA')" id="btnRemoveDocument" class="close" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                                                </div>
+
+                                                            </div>
+                                                        }
+                                                        else
+                                                        {
+                                                            <div class="col-md-4" id="NoticeAssignmentDocument">
+                                                                <div></div>
+                                                            </div>
+                                                        }
+
+
+
+                                                    }
+
+                                                }
+                                                else if (@ViewBag.CarrierDocuments.Count == 0)
+                                                {
+                                                    <div class="col-md-4" id="NoticeAssignmentDocument">
+                                                        <div></div>
+                                                    </div>
+                                                }
+
+
+
+
+                                                @*<div class="col-md-4" id="VoidedChequedocumentdiv">
+                                                        @foreach (var item in ViewBag.CarrierDocuments)
+                                                        {
+
+                                                            if (@item.IsW9Uploaded == 1)
+                                                            {
+                                                                <div id='DocumentsColumn' style="background-color:blue !important;padding:7px !important">
+                                                                    <a style="color:white !important" target='_blank' class='social-icon text-xs-center' href="@item.W9FilePath">
+                                                                        <i class="fa fa-file"></i> @item.W9FileName
+                                                                    </a>
+                                                                    <button style="color:white !important" type="button" onclick="DeleteDocument(4016)" id="btnRemoveDocument" class="close" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                                                </div>
+                                                            }
+
+                                                        }
+
+                                                    </div>*@
+
+
+
+                                                @if (ViewBag.CarrierDocuments.Count > 0)
+                                                {
+                                                    foreach (var item in ViewBag.CarrierDocuments)
+                                                    {
+
+
+                                                        if (@item.IsVoidCheque == 1)
+                                                        {
+                                                            <div class="col-md-4" id="VoidedChequedocumentdiv">
+                                                                <div id='DocumentsColumn' style="background-color:@Session["Color"] !important;padding:7px !important">
+                                                                    <a style="color:white !important" target='_blank' class='social-icon text-xs-center' href="@item.VoidChequeFilePath">
+                                                                        <i class="fa fa-file"></i> @item.VoidChequeFileName
+                                                                    </a>
+                                                                    <button style="color:white !important" type="button" onclick="DeleteDocument('@item.CarrierAssignId','VC')" id="btnRemoveDocument" class="close" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                                                </div>
+
+                                                            </div>
+                                                        }
+
+                                                        else
+                                                        {
+                                                            <div class="col-md-4" id="VoidedChequedocumentdiv">
+                                                                <div></div>
+                                                            </div>
+                                                        }
+
+
+                                                    }
+
+                                                }
+                                                else if (@ViewBag.CarrierDocuments.Count == 0)
+                                                {
+                                                    <div class="col-md-4" id="VoidedChequedocumentdiv">
+                                                        <div></div>
+                                                    </div>
+                                                }
+
+
+
+                                            </div>
+                                        </div>
+
+
+                                        @* End New Document (Notice Assignment and void cheque)*@
+
+
+
+
+
+                                        <div class="form-group">
+                                            <div class="row">
+
+
+                                                <div class="col-md-2">
+                                                    <label>Carrier Category <small id="lblCategoryError" style="color: red; display: none;"> Select Carrier Category </small></label>
+                                                    <select id="CategoryId" required name="CategoryId" class="form-control js-example-basic-single">
+                                                        <option value="0">Select Category </option>
+                                                        @foreach (var item in ViewBag.CarrierCategory)
+                                                        {
+                                                            <text>
+                                                                <option value="@item.Value">@item.Text</option>
+
+                                                            </text>
+                                                        }
+                                                    </select>
+
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <label>Insurance Expiration Date  &nbsp;&nbsp;<i class="fa fa-calendar" aria-hidden="true"></i></label> <br />
+                                                    <input id="txtInsuranceExpirtationDate" type="date" value="@InsuranceExpirationDate.ToString("yyyy-MM-dd")" name="InsuranceExpirationDate" class="form-control" required>
+
+                                                    @*<input style="width:70% !important;min-height: 38px !important;" id="txtInsuranceExpirtationDate" type="date" value="" name="InsuranceExpirationDate" class="form-control" required>*@
+
+
+
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <label>Owner Operator <i class="fa fa-male" aria-hidden="true"></i></label> <br />
+                                                    Owner Operator
+
+                                                    @if (Isquickpay == true)
+                                                    {
+                                                        <input checked id="chkIsOwnerOperator" name="OwnerOperator" style="font-size:15px !important" type="checkbox" />
+                                                    }
+                                                    else
+                                                    {
+                                                        <input id="chkIsOwnerOperator" name="OwnerOperator" style="font-size:15px !important" type="checkbox" />
+                                                    }
+
+
+
+
+                                                </div>
+
+
+                                                <div class="col-md-2">
+                                                    <label>Quick Pay  <i class="fa fa-check-circle" aria-hidden="true"></i></label> <br />
+                                                    Quick Pay  <input onclick="fniaquickpay()" id="chkIsQuickPay" name="IsQuickPay" style="font-size:15px !important"
+                                                                      type="checkbox" />
+                                                    @if (Isquickpay == true)
+                                                    {
+                                                        <input value="@quickpaypercentage" id="Quickpaypercentage" name="Quickpaypercentage" style="font-size:15px !important;width:40%"
+                                                               type="text" />
+                                                    }
+                                                    else
+                                                    {
+                                                        <input value="@quickpaypercentage" disabled readonly id="Quickpaypercentage" name="Quickpaypercentage" style="font-size:15px !important;width:40%"
+                                                               type="text" />
+                                                    }
+
+
+
+                                                </div>
+
+
+                                                <div class="col-md-2">
+                                                    <label>Black List  <i class="fa fa-close" aria-hidden="true"></i></label> <br />
+                                                    Black List
+
+                                                    @if (Isblacklist == true)
+                                                    {
+                                                        <input id="chkIsBlackList" name="IsBlackList" style="font-size:15px !important" type="checkbox" checked />
+                                                    }
+                                                    else
+                                                    {
+                                                        <input id="chkIsBlackList" name="IsBlackList" style="font-size:15px !important" type="checkbox" />
+                                                    }
+
+                                                </div>
+                                            </div>
+
+                                            <br />
+                                            <div class="row">
+                                                <div class="col-md-2">
+                                                    <label>Trailer-Interchange  <i class="fa fa-exchange" aria-hidden="true"></i></label> <br />
+                                                    Trailer-Interchange
+
+                                                    @if (Istrailerinterchange == true)
+                                                    {
+                                                        <input id="chkIstrailerinterchange" name="Istrailerinterchange" style="font-size:15px !important" type="checkbox" checked />
+                                                    }
+                                                    else
+                                                    {
+                                                        <input id="chkIstrailerinterchange" name="Istrailerinterchange" style="font-size:15px !important" type="checkbox" />
+                                                    }
+
+                                                </div>
+
+                                                <div class="col-md-2" id="deletediv" style="display:none">
+                                                    <label> </label>
+                                                    <a style="background-color:red !important" class="btn btn-danger" onclick="deletecarrier()">Delete Carrier</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-md-12">
 
-                    </form>
+                                    <div class="table-responsive">
+                                        @*<table class="table table-border table-striped custom-table  g-dataTable mb-0">*@
+                                        <h4 class="card-title">
+                                            Truck Information
+                                            <a style="background-color: #4c5564 !important" onclick="CarrierDataValidation()" class="btn btn-primary"><i class="fa fa-plus"></i> &nbsp; Add Truck</a>
+                                            @*<a style="background-color: #4c5564 !important"  data-toggle="modal" data-target="#Add_Driver" class="btn btn-primary"><i class="fa fa-plus"></i> &nbsp; Add Driver</a>*@
+
+                                            @*<a onclick="CarrierDataValidation()" data-toggle="modal" data-target="#Add_Truck" class="btn btn-primary"><i class="fa fa-plus"></i> &nbsp; Add Truck</a>*@
+
+                                        </h4>
+                                        <table name="tblTruckList" style="font-size:12px;width:100%" class="table table-condensed table-fit table-sm table-striped tblTruck    mb-0" id="tblTruckInfo">
+
+                                            <thead>
+
+                                                <tr>
+                                                    <th>Truck Id</th>
+                                                    <th>Carrier Assign Id</th>
+                                                    <th>Carrier Name</th>
+                                                    <th>Truck Number</th>
+                                                    <th>Truck Yard</th>
+                                                    <th>Preferred Destination</th>
+                                                    <th>Trailer No</th>
+                                                    <th hidden>Trailer Type Id</th>
+                                                    <th hidden>Trailer Type</th>
+                                                    <th>Zip Code</th>
+                                                    <th hidden>States</th>
+                                                    <th hidden>City</th>
+                                                    <th>Available Date</th>
+                                                    <th hidden>Driver Id</th>
+                                                    <th hidden>Driver Name</th>
+                                                    <th hidden>Driver Phone</th>
+
+
+
+                                                    <th hidden class="text-right">Edit</th>
+                                                    <th hidden class="text-right">Delete</th>
+
+                                                </tr>
+                                            </thead>
+                                            <tbody id="truckBody">
+                                                @foreach (var item in ListTruck)
+                                                {
+                                                    <tr>
+                                                        <td class="MC">  @item.TruckId</td>
+                                                        <td class="MC">  @item.CarrierAssignId </td>
+                                                        <td class="MC">  @item.CarrierAssignId </td>
+                                                        <td class="MC">  @item.TruckNo </td>
+                                                        <td class="ContactName">  @item.TruckYard </td>
+                                                        <td class="ContactName">  @item.PrefferedDestination </td>
+                                                        <td class="PhoneNumber">  @item.TrailerNo </td>
+                                                        <td class="PhoneNumber" hidden>  @item.TrailerTypeId </td>
+                                                        <td class="PhoneNumber" hidden>  @item.TrailerTypeId </td>
+                                                        <td class="PhoneNumber">  @item.ZipCode </td>
+                                                        <td class="PhoneNumber" hidden>  @item.ZipCode </td>
+                                                        <td class="PhoneNumber" hidden>  @item.ZipCode </td>
+                                                        <td class="PhoneNumber">  @item.AvailableDate.ToString("MM/dd/yyyy") </td>
+                                                        <td class="PhoneNumber" hidden>  @item.DriverId </td>
+                                                        <td class="PhoneNumber" hidden>  @item.DriverName </td>
+                                                        <td class="PhoneNumber" hidden>  @item.DriverPhone </td>
+
+                                                        <td hidden> <a id="remove" class="open-AddBookDialog" href="#" data-toggle="modal" data-target="#Edit_Carrier"><i class="remove fa fa-pencil m-r-5"></i> </a></td>
+                                                        <td hidden> <a id="remove" class="open-AddBookDialog" style="color:red;" href="#" data-toggle="modal" data-target="#Delete_Carrier"><i class="remove fa fa-trash-o m-r-5"></i> </a></td>
+                                                        @*<td class="text-right">
+                                                                <a id="remove" class="open-AddBookDialog" href="#" data-toggle="modal" data-target="#Edit_Carrier"><i class="remove fa fa-pencil m-r-5"></i> </a>
+                                                                <a id="remove" class="open-AddBookDialog" style="color:red;" href="#" data-toggle="modal" data-target="#Delete_Carrier"><i class="remove fa fa-trash-o m-r-5"></i> </a>
+
+                                                            </td>*@
+
+                                                    </tr>
+                                                }
+
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-md-12 text-right">
+                                    <button type="submit" style="background-color: #4c5564 !important" id="btnSaveCarrierInformation" class="btn btn-primary">Save</button>
+
+                                    @*<button type="button" onClick="window.location.reload()" style="background-color:red !important" class="btn btn-danger">Cancel</button>*@
+                                    @*<a type="button" onClick="window.location.reload()" style="background-color:red !important" class="btn btn-danger">Cancel</a>*@
+                                    <a style="background-color:red !important" class="btn btn-danger" href="@Url.Action("CarrierInfo", "Definition", new { CarrierAssignsId = "0" })">Cancel</a>
+
+
+                                </div>
+                            </div>
+
+
+
+                            <br />
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <h4 class="card-title">
+                                                <i class="fa fa-address-card-o"></i> Carriers List
+                                                &nbsp; &nbsp;
+
+                                                <label style="color:orange" class="radio-inline">
+                                                    <input onclick="FilterCarrierList(1)" type="radio" name="optradio"> Inside Carrier
+                                                </label>
+                                                &nbsp;
+                                                <label style="color:brown" class="radio-inline">
+                                                    <input onclick="FilterCarrierList(2)" type="radio" name="optradio"> Outside Carrier
+                                                </label>
+                                                &nbsp;
+                                                <label style="        color: #4c5564" class="radio-inline">
+                                                    <input checked onclick="FilterCarrierList(0)" type="radio" name="optradio"> Both
+                                                </label>
+                                                @*<i class="fa fa-circle" style="color:orange" aria-hidden="true"> Inside Carrier</i>   &nbsp;
+                                                    <i class="fa fa-circle" style="color:brown" aria-hidden="true"> Outside Carrier</i>*@
+
+                                                &nbsp;  &nbsp;
+                                                <label style="        color: #4c5564" class="radio-inline">
+                                                    <input id="blacklistfilter" onclick="FilterCarrierList(0)" type="checkbox"> Black List
+                                                </label>
+
+                                                &nbsp;  &nbsp;
+                                                <label style="        color: #4c5564" class="radio-inline">
+                                                    <input id="OwnerOperatorfilter" onclick="FilterCarrierList(0)" type="checkbox"> Owner Operator
+                                                </label>
+
+                                            </h4>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <input placeholder="Search" type="text" id="txtCarrierListSearch" value="" name="CarrierSearch" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="table-responsive">
+                                        @*<table class="table table-border table-striped custom-table  g-dataTable mb-0">*@
+
+
+
+                                        @*<table style="font-size:12px" id="DailyLoads" class="table table-border table-striped table-sm custom-table mb-0 g-dataTable">*@
+                                        <table name="tblCarrierList" style="font-size:12px;width:100%" class="table table-condensed table-fit table-sm table-striped tblCarrierList mb-0 " id="tblCarriernfo">
+
+                                            <thead>
+
+                                                <tr>
+                                                    <th></th>
+                                                    <th>Assign Id</th>
+                                                    <th>Name</th>
+                                                    <th>Rating</th>
+                                                    <th>Category</th>
+                                                    <th>Email</th>
+                                                    <th>MC #</th>
+                                                    <th>Contact Name</th>
+                                                    <th>Phone</th>
+                                                    <th>Truck No</th>
+
+                                                    <th>Truck Yard</th>
+                                                    <th>Zip Code</th>
+                                                    <th>State Code</th>
+                                                    <th>Driver Name</th>
+                                                    <th>Driver Phone</th>
+                                                    <th>Black List</th>
+                                                    @*<th>Truck Yard</th>
+                                                        <th>Trailer No</th>
+                                                        <th hidden>Trailer Type Id</th>
+                                                        <th hidden>Trailer Type</th>
+                                                        <th>Zip Code</th>
+                                                        <th hidden>States</th>
+                                                        <th hidden>City</th>
+                                                        <th>Available Date</th>
+                                                        <th hidden>Driver Id</th>
+                                                        <th hidden>Driver Name</th>
+                                                        <th hidden>Driver Phone</th>
+
+
+
+                                                        <th hidden class="text-right">Edit</th>
+                                                        <th hidden class="text-right">Delete</th>*@
+
+                                                </tr>
+                                            </thead>
+                                            <tbody id="truckBody">
+                                                @foreach (var item in AllListCarrier)
+                                                {
+                                                    <tr>
+                                                        <td class="MC">  @item.AssignID </td>
+                                                        <td class="MC">  @item.AssignID </td>
+                                                        <td class="MC">  @item.AssignID </td>
+                                                        <td class="MC" onclick="ShowCommentRating('@item.AssignID',0)">
+
+                                                            @for (int i = 1; i <= 10; i++)
+                                                            {
+                                                                if (i <= @item.Rating)
+                                                                {
+                                                                    <a style="font-size:8px"><span class="fa fa-star checked"></span></a>
+                                                                }
+                                                                else if (i > @item.Rating && i <= 10)
+                                                                {
+                                                                    <a style="font-size:8px"><span class="fa fa-star unchecked"></span></a>
+                                                                }
+                                                                //value = i;
+
+                                                            }
+                                                        </td>
+
+                                                        <td class="MC">  @item.AssignID </td>
+                                                        @*@*<td class="ContactName">  @item.TruckYard </td>
+                                                            <td class="PhoneNumber">  @item.TrailerNo </td>
+                                                            <td class="PhoneNumber" hidden>  @item.TrailerTypeId </td>
+                                                            <td class="PhoneNumber" hidden>  @item.TrailerTypeId </td>
+                                                            <td class="PhoneNumber">  @item.ZipCode </td>
+                                                            <td class="PhoneNumber" hidden>  @item.ZipCode </td>
+                                                            <td class="PhoneNumber" hidden>  @item.ZipCode </td>
+                                                            <td class="PhoneNumber">  @item.AvailableDate </td>
+                                                            <td class="PhoneNumber" hidden>  @item.DriverId </td>
+                                                            <td class="PhoneNumber" hidden>  @item.DriverName </td>
+                                                            <td class="PhoneNumber" hidden>  @item.DriverPhone </td>*@
+
+
+                                                    </tr>
+                                                }
+
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </form>
 
 
                     }
@@ -1546,6 +1563,14 @@
 
     </div>
 </div>
+
+
+
+
+
+
+
+
 <script type="text/javascript">
 
     function deletecarrier()
@@ -1565,7 +1590,7 @@
                 link = link.replace('CarrierAssignsId', assignid);
         link = link.replace(/&amp;/g, '&');
         window.location.href = link;
-               
+
                 //$("#deletediv").fadeOut();
                 //ClearAllData();
                 //alert(data);
@@ -3093,7 +3118,7 @@
     $(document).ready(function () {
 
         $("#txtCarrierName").autocomplete({
-            showHeader: true,
+            //showHeader: true,
             source: function (request, response) {
 
                 $.ajax({
@@ -3110,18 +3135,18 @@
 
                         response($.map(data, function (item) {
 
-                            return {
+                            //return {
 
-                                label: 'Name: ' + item.CarrierName + ', ID: ' + item.AssignID + ', MC_: ' + item.MC_
-
-
-                                //label: 'Carrier Name:' + item.CarrierName + ', AssignID:' + item.AssignID + ', ContactName:' + item.ContactName +
-                                // + ', Phonenumber:' + item.Phonenumber
-                                , AssignID: item.AssignID
+                            //    label: 'Name: ' + item.CarrierName + ', ID: ' + item.AssignID + ', MC_: ' + item.MC_
 
 
-                            };
+                            //    //label: 'Carrier Name:' + item.CarrierName + ', AssignID:' + item.AssignID + ', ContactName:' + item.ContactName +
+                            //    // + ', Phonenumber:' + item.Phonenumber
+                            //    , AssignID: item.AssignID
 
+
+                            //};
+                            return { label: item.CarrierName, MC: item.MC_, id: item.AssignID, AssignID: item.AssignID };
                         }))
 
                     }
@@ -3167,7 +3192,7 @@
                         document.getElementById("txtInsuranceExpirtationDate").value = DateFrom;
 
 
-                        
+
                         if (json[0].IsOwnerOperator == 0) {
                             // Check
                             $("#chkIsOwnerOperator").prop("checked", false);
@@ -3201,7 +3226,7 @@
                             $("#chkIsBlackList").prop("checked", true);
 
                         }
-                        
+
 
                         if (json[0].Istrailerinterchange == 0) {
                             // Check
@@ -3214,7 +3239,7 @@
 
                         }
 
-                       
+
 
 
 
@@ -3396,7 +3421,34 @@
     });
 
 
+    $('#txtCarrierName').autocomplete().data("ui-autocomplete")._renderMenu = function (ul, items) {
+        var self = this;
+        $.each(items, function (index, item) {
+            if (index == 0) {
+                ul.append('<li class="Label"><table class="ATable"><tbody id="ATableB"><tr class="ARow"><td class="ACol"  style="width:165px">Name</td><td class="ACol" style="width:165px">ID</td><td class="ACol" style="width:165px">MC#</td></tr></tbody></table></li>');
+            }
 
+            self._renderItemData(ul, item);
+        });
+    };
+
+
+    $('#txtCarrierName').autocomplete().data("ui-autocomplete")._renderItem = function (ul, item) {
+        return $("<li class='Label'>")
+            .append(
+                + '<tr class="ADRow">'
+                + '<td class="ADCol" style="width:165px">' + item.label + '</td>'
+                + '<td class="ADCol" style="width:165px">' + item.id + '</td>'
+                + '<td class="ADCol" style="width:165px">' + item.MC + '</td>'
+                + '</tr>')
+            .appendTo(ul);
+        // TableB.append('<tr class="ADRow">'
+        //    + '<td class="ADCol" style="width:165px">' + item.label + '</td>'
+        //    + '<td class="ADCol" style="width:165px">' + item.id + '</td>'
+        //    + '<td class="ADCol" style="width:165px">' + item.MC + '</td>'
+        //    + '</tr>');
+        //self._renderItemData(ul, item);
+    };
 
 
 
@@ -3830,7 +3882,7 @@
 
         //var txtDateTime = year + "-" + month + "-" + day;
 
-        
+
 
 
         $("#tblTruckInfo tbody tr").remove();
@@ -3929,7 +3981,7 @@
 
                 $('#Quickpaypercentage').val(json[0].quickpaypercentage);
 
-                
+
 
                 var datevalue = new Date(parseInt(json[0].InsuranceExpirationDate.replace("/Date(", "").replace(")/", ""), 10));
                 var todayDate = new Date(datevalue);
@@ -3956,7 +4008,7 @@
 
                 }
 
-    
+
 
                 if (json[0].IsQuickPay == 0) {
                     // Check
@@ -3985,7 +4037,7 @@
 
                 }
 
-                
+
 
                 if (json[0].Istrailerinterchange == 0) {
                     // Check
@@ -3999,7 +4051,7 @@
                 }
 
 
-               
+
 
                 var Categoryid = json[0].CarrierCategoryId;
 
