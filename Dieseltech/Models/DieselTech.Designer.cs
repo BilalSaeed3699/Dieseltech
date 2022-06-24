@@ -1,4 +1,4 @@
-﻿// T4 code generation is enabled for model 'F:\Clients\Loader\Dieseltech\Dieseltech\Models\DieselTech.edmx'. 
+﻿// T4 code generation is enabled for model 'C:\Eazisols\Dieseltech\Dieseltech\Dieseltech\Models\DieselTech.edmx'. 
 // To enable legacy code generation, change the value of the 'Code Generation Strategy' designer
 // property to 'Legacy ObjectContext'. This property is available in the Properties Window when the model
 // is open in the designer.

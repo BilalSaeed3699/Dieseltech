@@ -97,7 +97,7 @@ else if (comapnyrevenuesummary.Count == 1)
             <span style="color:red;" id="fademsg">@ViewBag.error</span>
         </div>
         <div class="col-md-4">
-            
+
             <select id="ddlAgent" required name="ddlAgent" onchange="ReloadList(this)" class="form-control js-example-basic-single">
                 <option value="0">All Agents</option>
                 @foreach (var item in ViewBag.AgentList)
@@ -117,7 +117,50 @@ else if (comapnyrevenuesummary.Count == 1)
                 }
             </select>
         </div>
+        <div class="col-md-2">
 
+            <select id="ddlyear" required name="ddlyear" onchange="ReloadList(this)" class="form-control js-example-basic-single">
+
+                @foreach (var item in ViewBag.ddlYears)
+                {
+                    <text>
+                        @if (item.Value == Convert.ToString(@ViewBag.CurrentYear))
+                        {
+                            <option selected value="@item.Value">@item.Value</option>
+                        }
+                        else
+                        {
+                            <option value="@item.Value">@item.Value</option>
+                        }
+
+
+                    </text>
+                }
+            </select>
+        </div>
+        <div class="col-md-2">
+
+            <select id="ddlmonth" required name="ddlmonth" onchange="ReloadList()" class="form-control js-example-basic-single">
+                <option selected value="0">All Months</option>
+                @foreach (var item in ViewBag.Days)
+                {
+
+                    <text>
+                        @if (item.ID == Convert.ToString(@ViewBag.CurrentMonth))
+                        {
+                            <option selected value="@item.ID">@item.Day</option>
+                        }
+                        else
+                        {
+                            <option value="@item.ID">@item.Day</option>
+                        }
+
+
+                    </text>
+                }
+
+            </select>
+        </div>
     </div>
 
 
@@ -245,7 +288,8 @@ else if (comapnyrevenuesummary.Count == 1)
 
         var carrierscroll = @Html.Raw(Json.Encode(ViewBag.carrierscroll));
 
-
+        jQuery('#ddlyear').select2();
+        jQuery('#ddlmonth').select2();
 
         var row = $('tr');
         var table = $('table');
@@ -274,15 +318,28 @@ else if (comapnyrevenuesummary.Count == 1)
     function ReloadList(agentid) {
 
         /*var year = year.value;*/
-        var agent = agentid.value;
-        alert(agent);
+        //var agent = agentid.value;
+        var agent = $("#ddlAgent").val();;
+        //alert(agent);
 
         if (agent == null) {
             agent = 0;
         }
 
+        var year = $("#ddlyear").val();
+        var month = $("#ddlmonth").val();
+
+        if (year == null) {
+            year = 0;
+        }
+        if (month == null) {
+            month = 0;
+        }
+
         var model = {
-            ddlAgentvalue: agent
+            ddlAgentvalue: agent,
+            Year: year,
+            ddlmonth: month
         };
 
           $.ajax({
@@ -296,4 +353,6 @@ else if (comapnyrevenuesummary.Count == 1)
               }
         });
     }
+
+   
 </script>

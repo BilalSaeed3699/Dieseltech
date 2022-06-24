@@ -537,27 +537,27 @@ namespace Dieseltech.Models
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_Get_CarrierTruck_Information_Result>("Sp_Get_CarrierTruck_Information", assignIDParameter);
         }
     
-        public virtual ObjectResult<Sp_Get_Company_Summary_Revenue_Result> Sp_Get_Company_Summary_Revenue(Nullable<int> agentid)
-        {
-            var agentidParameter = agentid.HasValue ?
-                new ObjectParameter("agentid", agentid) :
-                new ObjectParameter("agentid", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_Get_Company_Summary_Revenue_Result>("Sp_Get_Company_Summary_Revenue", agentidParameter);
-        }
-    
         public virtual ObjectResult<Sp_get_collection_list_Result> Sp_get_collection_list()
         {
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_get_collection_list_Result>("Sp_get_collection_list");
         }
     
-        public virtual ObjectResult<Sp_Get_Company_Revenue_Result> Sp_Get_Company_Revenue(Nullable<int> agentid)
+        public virtual ObjectResult<Sp_Get_Company_Revenue_Result> Sp_Get_Company_Revenue(string searchValue)
         {
-            var agentidParameter = agentid.HasValue ?
-                new ObjectParameter("agentid", agentid) :
-                new ObjectParameter("agentid", typeof(int));
+            var searchValueParameter = searchValue != null ?
+                new ObjectParameter("searchValue", searchValue) :
+                new ObjectParameter("searchValue", typeof(string));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_Get_Company_Revenue_Result>("Sp_Get_Company_Revenue", agentidParameter);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_Get_Company_Revenue_Result>("Sp_Get_Company_Revenue", searchValueParameter);
+        }
+    
+        public virtual ObjectResult<Sp_Get_Company_Summary_Revenue_Result> Sp_Get_Company_Summary_Revenue(string searchValue)
+        {
+            var searchValueParameter = searchValue != null ?
+                new ObjectParameter("searchValue", searchValue) :
+                new ObjectParameter("searchValue", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_Get_Company_Summary_Revenue_Result>("Sp_Get_Company_Summary_Revenue", searchValueParameter);
         }
     }
 }

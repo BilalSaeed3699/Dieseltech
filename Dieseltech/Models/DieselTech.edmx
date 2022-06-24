@@ -754,10 +754,10 @@ warning 6002: The table/view 'Dieseltech.dbo.tblUser_Rights' does not have a pri
         <Function Name="sp_Get_City_List" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="Sp_get_collection_list" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="Sp_Get_Company_Revenue" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="agentid" Type="int" Mode="In" />
+          <Parameter Name="searchValue" Type="varchar(max)" Mode="In" />
         </Function>
         <Function Name="Sp_Get_Company_Summary_Revenue" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="agentid" Type="int" Mode="In" />
+          <Parameter Name="searchValue" Type="varchar(max)" Mode="In" />
         </Function>
         <Function Name="sp_Get_Country_State" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="Sp_get_Customer_Month_Comparison" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
@@ -1215,12 +1215,12 @@ warning 6002: The table/view 'Dieseltech.dbo.tblUser_Rights' does not have a pri
           </FunctionImport>
           <EntitySet Name="tblcarriercollections" EntityType="DieseltechModel.tblcarriercollection" />
           <EntitySet Name="tblcustomercollections" EntityType="DieseltechModel.tblcustomercollection" />
-          <FunctionImport Name="Sp_Get_Company_Summary_Revenue" ReturnType="Collection(DieseltechModel.Sp_Get_Company_Summary_Revenue_Result)">
-          <Parameter Name="agentid" Mode="In" Type="Int32" />
-          </FunctionImport>
           <FunctionImport Name="Sp_get_collection_list" ReturnType="Collection(DieseltechModel.Sp_get_collection_list_Result)" />
           <FunctionImport Name="Sp_Get_Company_Revenue" ReturnType="Collection(DieseltechModel.Sp_Get_Company_Revenue_Result)">
-            <Parameter Name="agentid" Mode="In" Type="Int32" />
+            <Parameter Name="searchValue" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="Sp_Get_Company_Summary_Revenue" ReturnType="Collection(DieseltechModel.Sp_Get_Company_Summary_Revenue_Result)">
+            <Parameter Name="searchValue" Mode="In" Type="String" />
           </FunctionImport>
         </EntityContainer>
         <ComplexType Name="SP_Verify_UserLogin_Result">
@@ -2569,10 +2569,6 @@ warning 6002: The table/view 'Dieseltech.dbo.tblUser_Rights' does not have a pri
           <Property Name="userid" Type="Int32" Nullable="false" />
           <Property Name="date" Type="DateTime" Nullable="false" Precision="3" />
         </EntityType>
-        <ComplexType Name="Sp_Get_Company_Summary_Revenue_Result">
-          <Property Type="Decimal" Name="TotalAmount" Nullable="true" Precision="38" Scale="2" />
-          <Property Type="String" Name="CompanyName" Nullable="false" MaxLength="500" />
-        </ComplexType>
         <ComplexType Name="Sp_get_collection_list_Result">
           <Property Type="String" Name="Name" Nullable="false" MaxLength="500" />
           <Property Type="Int32" Name="id" Nullable="false" />
@@ -2594,6 +2590,10 @@ warning 6002: The table/view 'Dieseltech.dbo.tblUser_Rights' does not have a pri
           <Property Type="Decimal" Name="jetlineagentcommission" Nullable="true" Precision="18" Scale="2" />
           <Property Type="Decimal" Name="sportagentcommission" Nullable="true" Precision="18" Scale="2" />
           <Property Type="Int32" Name="salary" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="Sp_Get_Company_Summary_Revenue_Result">
+          <Property Type="Decimal" Name="TotalAmount" Nullable="true" Precision="38" Scale="2" />
+          <Property Type="String" Name="CompanyName" Nullable="false" MaxLength="500" />
         </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
@@ -4091,14 +4091,6 @@ warning 6002: The table/view 'Dieseltech.dbo.tblUser_Rights' does not have a pri
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <FunctionImportMapping FunctionImportName="Sp_Get_Company_Summary_Revenue" FunctionName="DieseltechModel.Store.Sp_Get_Company_Summary_Revenue">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="DieseltechModel.Sp_Get_Company_Summary_Revenue_Result">
-                <ScalarProperty Name="TotalAmount" ColumnName="TotalAmount" />
-                <ScalarProperty Name="CompanyName" ColumnName="CompanyName" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="Sp_get_collection_list" FunctionName="DieseltechModel.Store.Sp_get_collection_list">
             <ResultMapping>
               <ComplexTypeMapping TypeName="DieseltechModel.Sp_get_collection_list_Result">
@@ -4126,6 +4118,14 @@ warning 6002: The table/view 'Dieseltech.dbo.tblUser_Rights' does not have a pri
                 <ScalarProperty Name="jetlineagentcommission" ColumnName="jetlineagentcommission" />
                 <ScalarProperty Name="sportagentcommission" ColumnName="sportagentcommission" />
                 <ScalarProperty Name="salary" ColumnName="salary" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="Sp_Get_Company_Summary_Revenue" FunctionName="DieseltechModel.Store.Sp_Get_Company_Summary_Revenue">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="DieseltechModel.Sp_Get_Company_Summary_Revenue_Result">
+                <ScalarProperty Name="TotalAmount" ColumnName="TotalAmount" />
+                <ScalarProperty Name="CompanyName" ColumnName="CompanyName" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

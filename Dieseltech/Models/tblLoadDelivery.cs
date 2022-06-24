@@ -39,8 +39,11 @@ namespace Dieseltech.Models
         public string Longitude { get; set; }
         public string Latitude { get; set; }
         public int Deliveryorder { get; set; }
+
         public string NewDateFrom { get; set; }
+
         public string NewDateTo { get; set; }
+
 
     }
 }
