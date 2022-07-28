@@ -57,7 +57,7 @@ namespace Dieseltech.Controllers
                     });
                 }
 
-                if(ddlmonth ==null || ddlmonth ==0)
+                if(ddlmonth ==null )
                 {
                     DateTime myDateTime = DateTime.Now;
                     ddlmonth = myDateTime.Month;

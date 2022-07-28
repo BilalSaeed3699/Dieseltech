@@ -295,6 +295,9 @@
     <Compile Include="Models\Sp_get_Customer_Month_Comparison_Result.cs">
       <DependentUpon>DieselTech.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Sp_Get_Customer_Revenue_Result.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Sp_Get_Dashboard_Stats_Result.cs">
       <DependentUpon>DieselTech.tt</DependentUpon>
     </Compile>
@@ -784,6 +787,7 @@
     <Content Include="Uploads\Broker\0001\Drivers.docx" />
     <Content Include="Uploads\Broker\0001\MC Authority.docx" />
     <Content Include="Uploads\Broker\0001\Queries.docx" />
+    <Content Include="Views\revenue\customerrevenue.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

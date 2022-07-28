@@ -2374,7 +2374,7 @@ namespace Dieseltech.Controllers
         //Code to generate pdf and send email 
         [HttpPost]
         [ValidateInput(false)]
-        [Customexception]
+        //[Customexception]
         public ActionResult ConvertToPdf(string LoadNumber, string Subject, string Email, string Detail, int userid)
         {
 

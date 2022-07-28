@@ -1,44 +1,11 @@
 ﻿@using Dieseltech.Models;
 @{
     ViewBag.Title = "Company Revenue";
-    List<Sp_Get_Company_Summary_Revenue_Result> comapnyrevenuesummary = (List<Sp_Get_Company_Summary_Revenue_Result>)ViewBag.CompanySummaryRevenue;
+    
 }
 
-@{decimal Totalcombinedprofit = 0;}
-@{decimal alkaoisprofit = 0;}
-@{decimal jetlineprofit = 0;}
-@{decimal sporttruckingprofit = 0;}
 
-@if (comapnyrevenuesummary.Count == 3)
-{
 
-    {
-        alkaoisprofit = Convert.ToDecimal(comapnyrevenuesummary[0].TotalAmount);
-        jetlineprofit = Convert.ToDecimal(comapnyrevenuesummary[1].TotalAmount);
-        sporttruckingprofit = Convert.ToDecimal(comapnyrevenuesummary[2].TotalAmount);
-
-        Totalcombinedprofit = Convert.ToDecimal(comapnyrevenuesummary[0].TotalAmount) + Convert.ToDecimal(comapnyrevenuesummary[1].TotalAmount)
-+ Convert.ToDecimal(comapnyrevenuesummary[2].TotalAmount);
-    }
-}
-else if (comapnyrevenuesummary.Count == 2)
-{
-
-    {
-        alkaoisprofit = Convert.ToDecimal(comapnyrevenuesummary[0].TotalAmount);
-        jetlineprofit = Convert.ToDecimal(comapnyrevenuesummary[1].TotalAmount);
-
-        Totalcombinedprofit = Convert.ToDecimal(comapnyrevenuesummary[0].TotalAmount) + Convert.ToDecimal(comapnyrevenuesummary[1].TotalAmount);
-    }
-}
-else if (comapnyrevenuesummary.Count == 1)
-{
-
-    {
-        alkaoisprofit = Convert.ToDecimal(comapnyrevenuesummary[0].TotalAmount);
-        Totalcombinedprofit = Convert.ToDecimal(comapnyrevenuesummary[0].TotalAmount);
-    }
-}
 
 
 
@@ -93,10 +60,10 @@ else if (comapnyrevenuesummary.Count == 1)
 <div class="content">
     <div class="row">
         <div class="col-md-3">
-            <h4 class="page-title">Company Revenue <i onclick="RefereshList()" class="fa fa-refresh"></i></h4>
+            <h4 class="page-title">Customer Revenue <i onclick="RefereshList()" class="fa fa-refresh"></i></h4>
             <span style="color:red;" id="fademsg">@ViewBag.error</span>
         </div>
-        <div class="col-md-4">
+        @*<div class="col-md-4">
 
             <select id="ddlAgent" required name="ddlAgent" onchange="ReloadList(this)" class="form-control js-example-basic-single">
                 <option value="0">All Agents</option>
@@ -116,7 +83,7 @@ else if (comapnyrevenuesummary.Count == 1)
                     </text>
                 }
             </select>
-        </div>
+        </div>*@
         <div class="col-md-2">
 
             <select id="ddlyear" required name="ddlyear" onchange="ReloadList(this)" class="form-control js-example-basic-single">
@@ -164,7 +131,7 @@ else if (comapnyrevenuesummary.Count == 1)
     </div>
 
 
-    <div class="content">
+    @*<div class="content">
         <div class="row">
             <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
                 <h4 style="font-weight:Bold">ALKAIOS TRANSPORTATION</h4>
@@ -228,7 +195,7 @@ else if (comapnyrevenuesummary.Count == 1)
 
 
         </div>
-    </div>
+    </div>*@
 
     <div class="row">
         <div class="col-md-12">
@@ -238,42 +205,29 @@ else if (comapnyrevenuesummary.Count == 1)
                 <table style="font-size:12px;width:100%" class="table table-condensed table-fit table-sm table-striped g-dataTable  mb-0" id="tblannualtotals">
                     <thead>
                         <tr>
-                            <th>Agent </th>
+                            <th>Customer Id </th>
+                            <th>Customer Name </th>
                             <th>ALKAIOS TRANSPORTATION </th>
                             <th>JETLINE TRANSPORT</th>
                             <th>SPORT TRUCKING </th>
-
-                            <th>Commission (%)</th>
-                            <th>Commission under  ALKAIOS </th>
-                            <th>Commission under  JETLINE </th>
-                            <th>Commission under  SPORT </th>
-                            <th>Salary</th>
                             <th>Total</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var item in @ViewBag.CompanyRevenue)
+                        @foreach (Dieseltech.Models.Sp_Get_Customer_Revenue_Result item in @ViewBag.CustomerRevenue)
                         {
                             <tr>
-                                <td>@item.UserName</td>
+                                <td>@item.BrokerId</td>
+                                <td>@item.Name</td>
                                 <td>@item.ALKAIOS</td>
                                 <td>@item.JETLINE</td>
                                 <td>@item.Sporttruckingt</td>
-
-                                <td>@item.Commissionpercentage</td>
-                                <td>@item.Alkaiosagentcommission</td>
-                                <td>@item.jetlineagentcommission</td>
-                                <td>@item.sportagentcommission</td>
-                                <td>@item.salary</td>
-                                <td>@item.CompanyTotalAmount</td>
+                                <td>@item.CustomerTotalAmount</td>
                             </tr>
                         }
 
 
                     </tbody>
-                    <tfoot  style="color:white !important;">
-                        <tr><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th></tr>
-                    </tfoot>
                 </table>
             </div>
         </div>
@@ -289,16 +243,15 @@ else if (comapnyrevenuesummary.Count == 1)
 
     function ReloadList(agentid) {
 
-        /*var year = year.value;*/
-        //var agent = agentid.value;
-        var agent = $("#ddlAgent").val();;
+        
+        //var agent = $("#ddlAgent").val();;
         var checkajax = 1;
         //alert(agent);
         //alert(checkajax);
 
-        if (agent == null) {
-            agent = 0;
-        }
+        //if (agent == null) {
+        //    agent = 0;
+        //}
 
         var year = $("#ddlyear").val();
         var month = $("#ddlmonth").val();
@@ -311,14 +264,12 @@ else if (comapnyrevenuesummary.Count == 1)
         }
 
         var model = {
-            ddlAgentvalue: agent,
             Year: year,
-            ddlmonth: month,
-            CheckAjax: checkajax
+            ddlmonth: month
         };
         console.log(model);
           $.ajax({
-            url: '@Url.Action("ReloadCompanyreveneu", "revenue")',
+            url: '@Url.Action("Reloadcustomerrevenue", "revenue")',
             type: "POST",
               data: JSON.stringify(model),
               contentType: "application/json; charset=utf-8",
@@ -351,95 +302,9 @@ else if (comapnyrevenuesummary.Count == 1)
 
         jQuery('#ddlAgent').select2();
         $('#tblannualtotals').DataTable({
-            "footerCallback": function (row, data, start, end, display) {
-                var api = this.api(), data;
-
-                // converting to interger to find total
-                var intVal = function (i) {
-                    return typeof i === 'string' ?
-                        i.replace(/[\$,]/g, '') * 1 :
-                        typeof i === 'number' ?
-                            i : 0;
-                };
-
-                // computing column Total of the complete result 
-                var monTotal = api
-                    .column(1)
-                    .data()
-                    .reduce(function (a, b) {
-                        return intVal(a) + intVal(b);
-                    }, 0);
-
-                var tueTotal = api
-                    .column(2)
-                    .data()
-                    .reduce(function (a, b) {
-                        return intVal(a) + intVal(b);
-                    }, 0);
-
-                var wedTotal = api
-                    .column(3)
-                    .data()
-                    .reduce(function (a, b) {
-                        return intVal(a) + intVal(b);
-                    }, 0);
-
-                //var thuTotal = api
-                //    .column(4)
-                //    .data()
-                //    .reduce(function (a, b) {
-                //        return intVal(a) + intVal(b);
-                //    }, 0);
-
-                var friTotal = api
-                    .column(5)
-                    .data()
-                    .reduce(function (a, b) {
-                        return intVal(a) + intVal(b);
-                    }, 0);
-
-                var wedTotal1 = api
-                    .column(6)
-                    .data()
-                    .reduce(function (a, b) {
-                        return intVal(a) + intVal(b);
-                    }, 0);
-
-                var thuTotal1 = api
-                    .column(7)
-                    .data()
-                    .reduce(function (a, b) {
-                        return intVal(a) + intVal(b);
-                    }, 0);
-
-                //var friTotal1 = api
-                //    .column(8)
-                //    .data()
-                //    .reduce(function (a, b) {
-                //        return intVal(a) + intVal(b);
-                //    }, 0);
-                var monTotal1 = api
-                    .column(9)
-                    .data()
-                    .reduce(function (a, b) {
-                        return intVal(a) + intVal(b);
-                    }, 0);
-
-                // Update footer by showing the total with the reference of the column index 
-                $(api.column(0).footer()).html('Total');
-                $(api.column(1).footer()).html(monTotal);
-                $(api.column(2).footer()).html(tueTotal);
-                $(api.column(3).footer()).html(wedTotal);
-                //$(api.column(4).footer()).html(thuTotal);
-                $(api.column(5).footer()).html(friTotal);
-                $(api.column(6).footer()).html(wedTotal1);
-                $(api.column(7).footer()).html(thuTotal1);
-                //$(api.column(8).footer()).html(friTotal1);
-                $(api.column(9).footer()).html(monTotal1);
+            "search": {
+                "search": JqueryTableSearchValue
             },
-            //"search": {
-            //    "search": JqueryTableSearchValue
-            //},
            "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
             "pageLength": -1
         });

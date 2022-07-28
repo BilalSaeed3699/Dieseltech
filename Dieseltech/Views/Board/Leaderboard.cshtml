@@ -39,7 +39,7 @@
         <div class="col-md-2">
 
             <select id="ddlmonth" required name="ddlmonth" onchange="ReloadList()" class="form-control js-example-basic-single">
-                <option selected value="0">Select Month</option>
+                <option selected value="0">All Months</option>
                 @foreach (var item in ViewBag.Days)
                 {
                     
@@ -72,7 +72,7 @@
                         <tr>
                             <th hidden>Carrier ID </th>
                             <th>Agent Name </th>
-                            <th>Customer Name </th>
+                            @*<th>Customer Name </th>*@
                             <th>Total Load </th>
                             <th>Total Profit </th>
                             <th>Average Profit Margin </th>
@@ -85,7 +85,7 @@
                         <tr>
                             <td hidden>@item.User_ID</td>
                             <td>@item.UserName</td>
-                            <td>@item.Name</td>
+                            @*<td>@item.Name</td>*@
                             <td>  @item.TotalLoads   </td>
                             <td> @Convert.ToInt64(@item.Profit) </td>
                             <td> @Convert.ToInt64(@item.AverageProfitmargin) </td>
