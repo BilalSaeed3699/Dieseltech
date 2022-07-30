@@ -568,5 +568,14 @@ namespace Dieseltech.Models
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_Get_Customer_Revenue_Result>("Sp_Get_Customer_Revenue", searchValueParameter);
         }
+    
+        public virtual ObjectResult<Sp_Get_Carrier_Revenue_Result> Sp_Get_Carrier_Revenue(string searchValue)
+        {
+            var searchValueParameter = searchValue != null ?
+                new ObjectParameter("searchValue", searchValue) :
+                new ObjectParameter("searchValue", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_Get_Carrier_Revenue_Result>("Sp_Get_Carrier_Revenue", searchValueParameter);
+        }
     }
 }

@@ -745,6 +745,9 @@ warning 6002: The table/view 'Dieseltech.dbo.tblUser_Rights' does not have a pri
         <Function Name="Sp_Get_Carrier_LoadList" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="CarrierAssignId" Type="varchar" Mode="In" />
         </Function>
+        <Function Name="Sp_Get_Carrier_Revenue" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="searchValue" Type="varchar(max)" Mode="In" />
+        </Function>
         <Function Name="Sp_Get_CarrierTruck_Information" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="AssignID" Type="varchar" Mode="In" />
         </Function>
@@ -1226,6 +1229,9 @@ warning 6002: The table/view 'Dieseltech.dbo.tblUser_Rights' does not have a pri
           <Parameter Name="searchValue" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="Sp_Get_Customer_Revenue" ReturnType="Collection(DieseltechModel.Sp_Get_Customer_Revenue_Result)">
+          <Parameter Name="searchValue" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="Sp_Get_Carrier_Revenue" ReturnType="Collection(DieseltechModel.Sp_Get_Carrier_Revenue_Result)">
             <Parameter Name="searchValue" Mode="In" Type="String" />
           </FunctionImport>
         </EntityContainer>
@@ -2608,6 +2614,14 @@ warning 6002: The table/view 'Dieseltech.dbo.tblUser_Rights' does not have a pri
           <Property Type="Decimal" Name="CustomerTotalAmount" Nullable="true" Precision="38" Scale="2" />
           <Property Type="String" Name="BrokerId" Nullable="true" MaxLength="50" />
           <Property Type="String" Name="Name" Nullable="false" MaxLength="500" />
+        </ComplexType>
+        <ComplexType Name="Sp_Get_Carrier_Revenue_Result">
+          <Property Type="Decimal" Name="ALKAIOS" Nullable="false" Precision="38" Scale="2" />
+          <Property Type="Decimal" Name="JETLINE" Nullable="false" Precision="38" Scale="2" />
+          <Property Type="Decimal" Name="Sporttruckingt" Nullable="false" Precision="38" Scale="2" />
+          <Property Type="Decimal" Name="CustomerTotalAmount" Nullable="true" Precision="38" Scale="2" />
+          <Property Type="String" Name="CarrierId" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="CarrierName" Nullable="false" MaxLength="200" />
         </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
@@ -4152,6 +4166,18 @@ warning 6002: The table/view 'Dieseltech.dbo.tblUser_Rights' does not have a pri
                 <ScalarProperty Name="CustomerTotalAmount" ColumnName="CustomerTotalAmount" />
                 <ScalarProperty Name="BrokerId" ColumnName="BrokerId" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="Sp_Get_Carrier_Revenue" FunctionName="DieseltechModel.Store.Sp_Get_Carrier_Revenue">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="DieseltechModel.Sp_Get_Carrier_Revenue_Result">
+                <ScalarProperty Name="ALKAIOS" ColumnName="ALKAIOS" />
+                <ScalarProperty Name="JETLINE" ColumnName="JETLINE" />
+                <ScalarProperty Name="Sporttruckingt" ColumnName="Sporttruckingt" />
+                <ScalarProperty Name="CustomerTotalAmount" ColumnName="CustomerTotalAmount" />
+                <ScalarProperty Name="CarrierId" ColumnName="CarrierId" />
+                <ScalarProperty Name="CarrierName" ColumnName="CarrierName" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

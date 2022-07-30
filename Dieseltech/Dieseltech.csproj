@@ -277,6 +277,9 @@
     <Compile Include="Models\Sp_Get_Carrier_LoadList_Result.cs">
       <DependentUpon>DieselTech.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Sp_Get_Carrier_Revenue_Result.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\sp_Get_City_List_Result.cs">
       <DependentUpon>DieselTech.tt</DependentUpon>
     </Compile>
@@ -788,6 +791,7 @@
     <Content Include="Uploads\Broker\0001\MC Authority.docx" />
     <Content Include="Uploads\Broker\0001\Queries.docx" />
     <Content Include="Views\revenue\customerrevenue.cshtml" />
+    <Content Include="Views\revenue\carrierrevenue.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

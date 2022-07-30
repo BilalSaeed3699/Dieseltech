@@ -1,7 +1,7 @@
 ﻿@using Dieseltech.Models;
 @{
     ViewBag.Title = "Company Revenue";
-    
+
 }
 
 
@@ -60,30 +60,30 @@
 <div class="content">
     <div class="row">
         <div class="col-md-3">
-            <h4 class="page-title">Customer Revenue <i onclick="RefereshList()" class="fa fa-refresh"></i></h4>
+            <h4 class="page-title">Carrier Revenue <i onclick="RefereshList()" class="fa fa-refresh"></i></h4>
             <span style="color:red;" id="fademsg">@ViewBag.error</span>
         </div>
         @*<div class="col-md-4">
 
-            <select id="ddlAgent" required name="ddlAgent" onchange="ReloadList(this)" class="form-control js-example-basic-single">
-                <option value="0">All Agents</option>
-                @foreach (var item in ViewBag.AgentList)
-                {
-                    <text>
-                        @if (item.User_ID == ViewBag.UserId)
-                        {
-                            <option selected value="@item.User_ID">@item.UserName</option>
-                        }
-                        else
-                        {
-                            <option value="@item.User_ID">@item.UserName</option>
-                        }
+                <select id="ddlAgent" required name="ddlAgent" onchange="ReloadList(this)" class="form-control js-example-basic-single">
+                    <option value="0">All Agents</option>
+                    @foreach (var item in ViewBag.AgentList)
+                    {
+                        <text>
+                            @if (item.User_ID == ViewBag.UserId)
+                            {
+                                <option selected value="@item.User_ID">@item.UserName</option>
+                            }
+                            else
+                            {
+                                <option value="@item.User_ID">@item.UserName</option>
+                            }
 
 
-                    </text>
-                }
-            </select>
-        </div>*@
+                        </text>
+                    }
+                </select>
+            </div>*@
         <div class="col-md-2">
 
             <select id="ddlyear" required name="ddlyear" onchange="ReloadList(this)" class="form-control js-example-basic-single">
@@ -132,70 +132,70 @@
 
 
     @*<div class="content">
-        <div class="row">
-            <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
-                <h4 style="font-weight:Bold">ALKAIOS TRANSPORTATION</h4>
-                <div class="dash-widget" style="    background-color: #ffbc35">
-                    <span class="dash-widget-bg3" style="        background-color: #ffbc35"><i class="fa fa-money" aria-hidden="true"></i></span>
-                    <div class="dash-widget-info text-right">
-                        <h3 style="color:white" id="GrossProfit">
-                            @alkaoisprofit
-                        </h3>
-                        <span style="font-size: 14px;background-color: white;color: #ffbc35;font-weight:bold" class="widget-title3">
-                            Total  Gross Profit
-                            <i style="        background-color: #ffbc35;color: white" class="fa fa-check" aria-hidden="true"></i>
-                        </span>
+            <div class="row">
+                <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
+                    <h4 style="font-weight:Bold">ALKAIOS TRANSPORTATION</h4>
+                    <div class="dash-widget" style="    background-color: #ffbc35">
+                        <span class="dash-widget-bg3" style="        background-color: #ffbc35"><i class="fa fa-money" aria-hidden="true"></i></span>
+                        <div class="dash-widget-info text-right">
+                            <h3 style="color:white" id="GrossProfit">
+                                @alkaoisprofit
+                            </h3>
+                            <span style="font-size: 14px;background-color: white;color: #ffbc35;font-weight:bold" class="widget-title3">
+                                Total  Gross Profit
+                                <i style="        background-color: #ffbc35;color: white" class="fa fa-check" aria-hidden="true"></i>
+                            </span>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
-                <h4 style="font-weight:Bold">JETLINE TRANSPORT</h4>
-                <div class="dash-widget" style=" background-color: #7a92a3">
-                    <span class="dash-widget-bg3" style=" background-color: #7a92a3"><i class="fa fa-money" aria-hidden="true"></i></span>
-                    <div class="dash-widget-info text-right">
-                        <h3 style="color:white" id="GrossProfit">@jetlineprofit</h3>
-                        <span style="font-size: 14px; background-color: white; color: #7a92a3; font-weight: bold" class="widget-title3">
-                            Total  Gross Profit
-                            <i style=" background-color: #7a92a3; color: white" class="fa fa-check" aria-hidden="true"></i>
-                        </span>
+                <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
+                    <h4 style="font-weight:Bold">JETLINE TRANSPORT</h4>
+                    <div class="dash-widget" style=" background-color: #7a92a3">
+                        <span class="dash-widget-bg3" style=" background-color: #7a92a3"><i class="fa fa-money" aria-hidden="true"></i></span>
+                        <div class="dash-widget-info text-right">
+                            <h3 style="color:white" id="GrossProfit">@jetlineprofit</h3>
+                            <span style="font-size: 14px; background-color: white; color: #7a92a3; font-weight: bold" class="widget-title3">
+                                Total  Gross Profit
+                                <i style=" background-color: #7a92a3; color: white" class="fa fa-check" aria-hidden="true"></i>
+                            </span>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
-                <h4 style="font-weight:Bold">SPORT TRUCKING</h4>
-                <div class="dash-widget" style=" background-color: #55ce63">
-                    <span class="dash-widget-bg3" style=" background-color: #55ce63"><i class="fa fa-money" aria-hidden="true"></i></span>
-                    <div class="dash-widget-info text-right">
-                        <h3 style="color:white" id="GrossProfit">@sporttruckingprofit</h3>
-                        <span style="font-size: 14px; background-color: white; color: #55ce63; font-weight: bold" class="widget-title3">
-                            Total  Gross Profit
-                            <i style=" background-color: #55ce63; color: white" class="fa fa-check" aria-hidden="true"></i>
-                        </span>
+                <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
+                    <h4 style="font-weight:Bold">SPORT TRUCKING</h4>
+                    <div class="dash-widget" style=" background-color: #55ce63">
+                        <span class="dash-widget-bg3" style=" background-color: #55ce63"><i class="fa fa-money" aria-hidden="true"></i></span>
+                        <div class="dash-widget-info text-right">
+                            <h3 style="color:white" id="GrossProfit">@sporttruckingprofit</h3>
+                            <span style="font-size: 14px; background-color: white; color: #55ce63; font-weight: bold" class="widget-title3">
+                                Total  Gross Profit
+                                <i style=" background-color: #55ce63; color: white" class="fa fa-check" aria-hidden="true"></i>
+                            </span>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
-                <h4 style="font-weight:Bold">TOTAL COMBINED GROSS</h4>
-                <div class="dash-widget" style=" background-color: darkgreen ">
-                    <span class="dash-widget-bg3" style=" background-color: darkgreen "><i class="fa fa-money" aria-hidden="true"></i></span>
-                    <div class="dash-widget-info text-right">
-                        <h3 style="color:white" id="GrossProfit">@Totalcombinedprofit</h3>
-                        <span style="font-size: 14px; background-color: white; color: darkgreen; font-weight: bold" class="widget-title3">
-                            Total Combined
-                            <i style=" background-color: darkgreen; color: white" class="fa fa-check" aria-hidden="true"></i>
-                        </span>
+                <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
+                    <h4 style="font-weight:Bold">TOTAL COMBINED GROSS</h4>
+                    <div class="dash-widget" style=" background-color: darkgreen ">
+                        <span class="dash-widget-bg3" style=" background-color: darkgreen "><i class="fa fa-money" aria-hidden="true"></i></span>
+                        <div class="dash-widget-info text-right">
+                            <h3 style="color:white" id="GrossProfit">@Totalcombinedprofit</h3>
+                            <span style="font-size: 14px; background-color: white; color: darkgreen; font-weight: bold" class="widget-title3">
+                                Total Combined
+                                <i style=" background-color: darkgreen; color: white" class="fa fa-check" aria-hidden="true"></i>
+                            </span>
+                        </div>
                     </div>
                 </div>
+
+
+
+
             </div>
-
-
-
-
-        </div>
-    </div>*@
+        </div>*@
 
     <div class="row">
         <div class="col-md-12">
@@ -205,8 +205,8 @@
                 <table style="font-size:12px;width:100%" class="table table-condensed table-fit table-sm table-striped g-dataTable  mb-0" id="tblannualtotals">
                     <thead>
                         <tr>
-                            <th>Customer Id </th>
-                            <th>Customer Name </th>
+                            <th>Carrier Id </th>
+                            <th>Carrier Name </th>
                             <th>ALKAIOS TRANSPORTATION </th>
                             <th>JETLINE TRANSPORT</th>
                             <th>SPORT TRUCKING </th>
@@ -214,11 +214,11 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (Dieseltech.Models.Sp_Get_Customer_Revenue_Result item in @ViewBag.CustomerRevenue)
+                        @foreach (Dieseltech.Models.Sp_Get_Carrier_Revenue_Result item in @ViewBag.CustomerRevenue)
                         {
                             <tr>
-                                <td>@item.BrokerId</td>
-                                <td>@item.Name</td>
+                                <td>@item.CarrierId</td>
+                                <td>@item.CarrierName</td>
                                 <td>@item.ALKAIOS</td>
                                 <td>@item.JETLINE</td>
                                 <td>@item.Sporttruckingt</td>
@@ -243,7 +243,7 @@
 
     function ReloadList(agentid) {
 
-        
+
         //var agent = $("#ddlAgent").val();;
         var checkajax = 1;
         //alert(agent);
@@ -269,7 +269,7 @@
         };
         console.log(model);
           $.ajax({
-            url: '@Url.Action("Reloadcustomerrevenue", "revenue")',
+            url: '@Url.Action("Reloadcarrierrevenue", "revenue")',
             type: "POST",
               data: JSON.stringify(model),
               contentType: "application/json; charset=utf-8",

@@ -15,7 +15,7 @@ namespace Dieseltech.Controllers
 
         // GET: Board
         [Customexception]
-        public ActionResult Leaderboard(int ddlyear = 0, int ddlmonth = 0)
+        public ActionResult Leaderboard(int ddlyear = 0, int ddlmonth = 0, int CheckAjax = 0)
         {
             try
             {
@@ -57,7 +57,7 @@ namespace Dieseltech.Controllers
                     });
                 }
 
-                if(ddlmonth ==null )
+                if((ddlmonth ==null|| ddlmonth == 0)&& CheckAjax==0)
                 {
                     DateTime myDateTime = DateTime.Now;
                     ddlmonth = myDateTime.Month;
@@ -80,10 +80,10 @@ namespace Dieseltech.Controllers
 
         [HttpPost]
         [Customexception]
-        public ActionResult ReloadLeaderBoard(int ddlyear = 0, int ddlmonth = 0)
+        public ActionResult ReloadLeaderBoard(int ddlyear = 0, int ddlmonth = 0, int CheckAjax = 0)
         {
 
-            return Json(new { url = Url.Action("Leaderboard", "Board", new { ddlyear = ddlyear, ddlmonth = ddlmonth }) });
+            return Json(new { url = Url.Action("Leaderboard", "Board", new { ddlyear = ddlyear, ddlmonth = ddlmonth, CheckAjax = CheckAjax }) });
         }
     }
 }

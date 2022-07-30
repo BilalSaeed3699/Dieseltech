@@ -133,7 +133,7 @@
 
 
      function ReloadList() {
-
+         var checkajax = 1;
          var year =$("#ddlyear").val();
          var month = $("#ddlmonth").val();
 
@@ -145,7 +145,8 @@
          }
          var model = {
              ddlyear: year,
-             ddlmonth: month
+             ddlmonth: month,
+             CheckAjax: checkajax
          };
 
          $.ajax({
