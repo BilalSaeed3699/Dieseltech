@@ -2297,7 +2297,7 @@ namespace Dieseltech.Controllers
                     //entities.SaveChanges();
 
 
-                    qry = "Exec Sp_Calculate_Quick_Pay -2,'" + LoaderNumber + "'";
+                    qry = "Exec Sp_Calculate_Quick_Pay -2,'" + LoaderNumber + "' ,"+ LoadHeadDetail.QuickPaypercentage + "";
                     ut.InsertUpdate(qry);
 
                     //qry = "update tblLoadHead  SET RegistrationDate = '"+ RegistrationDate + "' Where LoaderNumber = '" + LoaderNumber + "'";
