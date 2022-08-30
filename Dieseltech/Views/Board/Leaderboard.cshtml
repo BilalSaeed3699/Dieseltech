@@ -1,6 +1,9 @@
 ﻿
 @{
     ViewBag.Title = "Leaderboard";
+
+
+    double AvgProfit = 0.0d;
 }
 
 
@@ -88,7 +91,10 @@
                             @*<td>@item.Name</td>*@
                             <td>  @item.TotalLoads   </td>
                             <td> @Convert.ToInt64(@item.Profit) </td>
-                            <td> @Convert.ToInt64(@item.AverageProfitmargin) </td>
+                            @{ 
+                                AvgProfit = Convert.ToDouble(@item.Profit / item.TotalLoads);
+                            }
+                            <td> @AvgProfit.ToString("0.00") </td>
 
 
                         </tr>
