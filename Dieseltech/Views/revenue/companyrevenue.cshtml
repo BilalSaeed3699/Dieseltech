@@ -69,7 +69,7 @@ else if (comapnyrevenuesummary.Count == 1)
             background: darkblue !important;
             color: white !important;
             width: 79.5% !important;
-            /*height: 4.5% !important;*/
+            height: 7.5% !important;
         }
 
         select {
@@ -232,10 +232,10 @@ else if (comapnyrevenuesummary.Count == 1)
 
     <div class="row">
         <div class="col-md-12">
-            <div class="table-responsive">
+            <div class="table-responsive" style="height: 700px !important;">
                 @*<table class="table table-border table-striped custom-table  g-dataTable mb-0">*@
 
-                <table style="font-size:12px;width:100%" class="table table-condensed table-fit table-sm table-striped g-dataTable  mb-0" id="tblannualtotals">
+                <table style="font-size:12px;width:99.9%;" class="table table-condensed table-fit table-sm table-striped g-dataTable  mb-0" id="tblannualtotals">
                     <thead>
                         <tr>
                             <th>Agent </th>
@@ -426,22 +426,31 @@ else if (comapnyrevenuesummary.Count == 1)
                     }, 0);
 
                 // Update footer by showing the total with the reference of the column index 
+                var numFormat = $.fn.dataTable.render.number(',', '.', 2, '').display;
                 $(api.column(0).footer()).html('Total');
-                $(api.column(1).footer()).html(monTotal.toFixed(2));
-                $(api.column(2).footer()).html(tueTotal.toFixed(2));
-                $(api.column(3).footer()).html(wedTotal.toFixed(2));
+                $(api.column(1).footer()).html(numFormat(monTotal));
+                $(api.column(2).footer()).html(numFormat(tueTotal));
+                $(api.column(3).footer()).html(numFormat(wedTotal));
                 //$(api.column(4).footer()).html(thuTotal);
-                $(api.column(5).footer()).html(friTotal.toFixed(2));
-                $(api.column(6).footer()).html(wedTotal1.toFixed(2));
-                $(api.column(7).footer()).html(thuTotal1.toFixed(2));
+                $(api.column(5).footer()).html(numFormat(friTotal));
+                $(api.column(6).footer()).html(numFormat(wedTotal1));
+                $(api.column(7).footer()).html(numFormat(thuTotal1));
                 //$(api.column(8).footer()).html(friTotal1);
-                $(api.column(9).footer()).html(monTotal1.toFixed(2));
+                $(api.column(9).footer()).html(numFormat(monTotal1));
             },
             //"search": {
             //    "search": JqueryTableSearchValue
             //},
            "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
-            "pageLength": -1
+            "pageLength": -1,
+            "fixedHeader": true,
+            "columnDefs": [
+                {
+                    "orderable": false,
+                    "render": $.fn.dataTable.render.number(',', '.', 2, ''),
+                    "targets": [1,,2,3, 5,6, 7,8,9],
+                }
+            ],
         });
     });
 

@@ -829,7 +829,14 @@
             //},
             "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
             "pageLength": -1,
-            "fixedHeader": true
+            "fixedHeader": true,
+            "columnDefs": [
+                {
+                    "orderable": false,
+                    "render": $.fn.dataTable.render.number(',', '.', 2, ''),
+                    "targets": [11,12,13,14],
+                }
+            ],
         });
 
 

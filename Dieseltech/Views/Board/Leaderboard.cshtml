@@ -70,7 +70,7 @@
             <div class="table-responsive">
                 @*<table class="table table-border table-striped custom-table  g-dataTable mb-0">*@
 
-                <table style="font-size:12px;width:100%" class="table table-condensed table-fit table-sm table-striped g-dataTable  mb-0" id="tblBroker">
+                <table style="font-size: 12px; width: 99%;" class="table table-condensed table-fit table-sm table-striped g-dataTable  mb-0" id="tblBroker">
                     <thead>
                         <tr>
                             <th hidden>Carrier ID </th>
@@ -132,6 +132,18 @@
     jQuery(document).ready(function () {
         jQuery('#ddlyear').select2();
         jQuery('#ddlmonth').select2();
+
+        $('#tblBroker').DataTable({
+
+            "fixedHeader": true,
+            "columnDefs": [
+                {
+                    "orderable": false,
+                    "render": $.fn.dataTable.render.number(',', '.', 2, ''),
+                    "targets": [3, 4],
+                }
+            ],
+        });
     });
     function RefereshList() {
         location.reload();

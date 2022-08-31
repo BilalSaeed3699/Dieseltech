@@ -713,7 +713,15 @@
         $('#DailyLoads').DataTable({
 
             "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
-            "pageLength": -1
+            "pageLength": -1,
+            "fixedHeader": true,
+            "columnDefs": [
+                {
+                    "orderable": false,
+                    "render": $.fn.dataTable.render.number(',', '.', 2, ''),
+                    "targets": [16, 17, 18],
+                }
+            ],
         });
 
 
