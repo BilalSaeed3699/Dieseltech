@@ -14,6 +14,8 @@
             padding: 5px;
             z-index: 100;
             background: darkblue;
+            color: white !important;
+            width: 21.5% !important;
         }
 
         /*  #Loadshead {
@@ -30,8 +32,14 @@
             z-index: 100 !important;
             background: darkblue !important;
             color: white !important;
-            width: 79.5% !important;
-            height: 7.5% !important;
+            width: 78.5% !important;
+            height: 51px !important;
+        }
+
+        thead {
+            position: sticky !important;
+            top: 50px !important;
+            z-index: 100 !important;
         }
 
         select {
@@ -42,20 +50,20 @@
             color: black !important;
         }
 
-        label {
-            color: white !important
-        }
-
         input[type="search"] {
             color: white !important;
         }
+        /* label {
+            color: white !important
+        }*/
+
     </style>
 
 </head>
 <div class="content">
     <div class="row">
         <div class="col-md-2">
-            <h4 class="page-title">Annual Totals <i onclick="RefereshList()" class="fa fa-refresh"></i></h4>
+            <h4 class="page-title">Annual Totals <a href="#"><i onclick="RefereshList()" class="fa fa-refresh"></i></a></h4>
             <span style="color:red;" id="fademsg">@ViewBag.error</span>
         </div>
         <div class="col-md-2">
@@ -107,7 +115,7 @@
 
     <div class="row">
         <div class="col-md-12">
-            <div class="table-responsive" style="height: 700px !important;">
+            <div class="table-responsive" style="max-height: 700px !important;">
                 @*<table class="table table-border table-striped custom-table  g-dataTable mb-0">*@
 
                 <table style="font-size:12px;width:99.9%;" class="table table-condensed table-fit table-sm table-striped g-dataTable  mb-0" id="tblannualtotals">
@@ -272,9 +280,11 @@
                 {
                     "orderable": false,
                     "render": $.fn.dataTable.render.number(',', '.', 2, ''),
-                    "targets": [3,5,7],
-                }
+                    "targets": [3, 5, 7],
+                },
+                { responsivePriority: 10001, targets: 2 },
             ],
+            responsive: true,
         });
     });
     function RefereshList() {

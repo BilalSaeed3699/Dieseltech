@@ -34,6 +34,8 @@
         padding: 5px;
         z-index: 100;
         background: darkblue;
+        color:white !important;
+        width: 21.5% !important;
     }
 
     /*  #Loadshead {
@@ -50,8 +52,14 @@
         z-index: 100 !important;
         background: darkblue !important;
         color: white !important;
-        width: 79.5% !important;
-        /*height: 4.5% !important;*/
+        width: 78.5% !important;
+        height: 51px !important;
+    }
+
+    thead {
+        position: sticky !important;
+        top: 50px !important;
+        z-index: 100 !important;
     }
 
     select {
@@ -62,13 +70,14 @@
         color: black !important;
     }
 
-    label {
-        color: white !important
-    }
-
     input[type="search"] {
         color: white !important;
     }
+
+    /* label {
+        color: white !important
+    }*/
+
 </style>
 
 
@@ -277,12 +286,13 @@
         <br />
         <div class="row">
             <div class="col-md-12">
-                <div class="table-responsive" style="overflow: auto !important; height: 700px !important">
+                <div class="table-responsive" style="overflow: auto !important; max-height: 700px !important">
                     @*<div class="table-responsive" style="overflow: auto !important; height: 700px !important">*@
-                    <table style="font-size:10px !important" id="LoadInvoiceList" class="table table-border table-striped table-sm custom-table mb-0 g-dataTable searchable">
+                    <table style="font-size:10px !important;width:99.9%;" id="LoadInvoiceList" class="table table-border table-striped table-sm custom-table mb-0 g-dataTable searchable">
                         <thead>
                             <tr>
 
+                                <th></th>
                                 <th>Load Number </th>
                                 <th>C.O.D</th>
                                 <th>Date</th>
@@ -313,6 +323,7 @@
                             @foreach (var item in listInvoice)
                             {
                                 <tr id="@item.LoaderNumber">
+                                    <td></td>
                                     <td class="LoadNumber" style="width: 6% !important;"> <a> @item.LoaderNumber</a></td>
                                     <td>@item.COD</td>
                                     <td>@item.RegistrationDate</td>
@@ -529,21 +540,21 @@
 
                                     @if (item.CustomerConfFileName != "")
                                     {
-                                        <td class="AssurityBond"><a target="_blank" class="social-icon text-xs-center" style="color:#009efb !important" href="@item.CustomerConfFilePath"> <i class='fa fa-file'></i> @item.CustomerConfFileName</a></td>
+                                        <td class="AssurityBond"><a target="_blank" class="social-icon text-xs-center" style="color:#009efb !important" href="@item.CustomerConfFilePath"> <i class='fa fa-download'></i></a></td>
                                     }
                                     else if (item.CustomerConfFileName == "")
                                     {
-                                        <td class="AssurityBond">No Document Upload</td>
+                                        <td class="AssurityBond">N/F</td>
                                     }
 
 
                                     @if (item.PODFileName != "")
                                     {
-                                        <td class="AssurityBond"><a target="_blank" class="social-icon text-xs-center" style="color:#009efb !important" href="@item.PODFilePath"> <i class='fa fa-file'></i> @item.PODFileName</a></td>
+                                        <td class="AssurityBond"><a target="_blank" class="social-icon text-xs-center" style="color:#009efb !important" href="@item.PODFilePath"> <i class='fa fa-download'></i></a></td>
                                     }
                                     else if (item.PODFileName == "")
                                     {
-                                        <td class="AssurityBond">No Document Upload</td>
+                                        <td class="AssurityBond">N/F</td>
                                     }
 
 
@@ -802,6 +813,13 @@
             "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
             "pageLength": -1,
             "fixedHeader": true,
+            "columnDefs": [
+                
+                { responsivePriority: 10001, targets: 18 },
+                { responsivePriority: 10002, targets: 19 },
+                { responsivePriority: 10003, targets: 6 },
+            ],
+            responsive: true,
             
         });
 

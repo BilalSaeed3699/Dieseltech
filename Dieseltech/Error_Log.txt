@@ -277,3 +277,38 @@ Date: 07/19/2022 11:30:49 AM
 Controller Name: Board
 Action Name: Leaderboard
 Exception: Object reference not set to an instance of an object.
+----------------------------------------------------------------------------------------------
+Date: 09/01/2022 7:00:56 PM
+Controller Name: Report
+Action Name: InvoicingDetail
+Exception: Object reference not set to an instance of an object.
+----------------------------------------------------------------------------------------------
+Date: 09/01/2022 7:34:09 PM
+Controller Name: User
+Action Name: Edit
+Exception: C:\Eazisols\Dieseltech\Dieseltech\Dieseltech\Views\User\Edit.cshtml(214): error CS0029: Cannot implicitly convert type 'int?' to 'bool'
+----------------------------------------------------------------------------------------------
+Date: 09/01/2022 7:34:23 PM
+Controller Name: User
+Action Name: Edit
+Exception: C:\Eazisols\Dieseltech\Dieseltech\Dieseltech\Views\User\Edit.cshtml(214): error CS0029: Cannot implicitly convert type 'int?' to 'bool'
+----------------------------------------------------------------------------------------------
+Date: 09/02/2022 12:42:41 PM
+Controller Name: Home
+Action Name: Index
+Exception: The view 'Index' or its master was not found or no view engine supports the searched locations. The following locations were searched:
+~/Views/Home/Index.aspx
+~/Views/Home/Index.ascx
+~/Views/Shared/Index.aspx
+~/Views/Shared/Index.ascx
+~/Views/Home/Account.master
+~/Views/Shared/Account.master
+~/Views/Home/Account.cshtml
+~/Views/Home/Account.vbhtml
+~/Views/Shared/Account.cshtml
+~/Views/Shared/Account.vbhtml
+----------------------------------------------------------------------------------------------
+Date: 09/02/2022 3:38:30 PM
+Controller Name: Truck
+Action Name: TruckBoard
+Exception: Object reference not set to an instance of an object.

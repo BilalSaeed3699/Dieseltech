@@ -540,6 +540,7 @@
     <Content Include="assets\css\jquery.dataTables.min.css" />
     <Content Include="assets\css\jquery.minicolors.css" />
     <Content Include="assets\css\RadioButton.css" />
+    <Content Include="assets\css\responsive.dataTables.min.css" />
     <Content Include="assets\css\select2.min.css" />
     <Content Include="assets\css\style.css" />
     <Content Include="assets\css\tagsinput.css" />
@@ -615,6 +616,7 @@
     <Content Include="assets\js\chart.js" />
     <Content Include="assets\js\colorpalettepicker.js" />
     <Content Include="assets\js\dataTables.bootstrap4.min.js" />
+    <Content Include="assets\js\dataTables.responsive.min.js" />
     <Content Include="assets\js\fileinput.js" />
     <Content Include="assets\js\fullcalendar.min.js" />
     <Content Include="assets\js\jquery-1.10.2.js" />

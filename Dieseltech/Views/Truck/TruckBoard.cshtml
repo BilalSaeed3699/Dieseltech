@@ -16,6 +16,53 @@
 }
 <head>
     <style>
+
+        div#tblTruckInfo_filter {
+            position: sticky;
+            top: 0;
+            padding: 5px;
+            z-index: 100;
+            background: darkblue;
+            color: white !important;
+            width: 21.5% !important;
+        }
+
+
+        div#tblTruckInfo_length {
+            position: sticky !important;
+            top: 0 !important;
+            padding: 5px !important;
+            z-index: 100 !important;
+            background: darkblue !important;
+            color: white !important;
+            width: 78.5% !important;
+            height: 51px !important;
+        }
+
+        thead {
+            position: sticky !important;
+            top: 50px !important;
+            z-index: 100 !important;
+        }
+
+        select {
+            color: white !important;
+        }
+
+        option {
+            color: black !important;
+        }
+
+        /*label {
+            color: white !important
+        }*/
+
+        input[type="search"] {
+            color: white !important;
+        }
+
+
+
         .dropdown.mobile-user-menu.float-right {
             display: none;
         }
@@ -356,9 +403,9 @@
                 <div class="row">
                     <div class="col-md-12">
 
-                        <div class="table-responsive">
+                        <div class="table-responsive" style="overflow-x: auto !important;max-height:700px;" >
 
-                            <table name="tblTruckList" style="font-size:12px;width:100%" class="table table-condensed table-fit table-sm table-striped tblTruck  g-dataTable   mb-0" id="tblTruckInfo">
+                            <table name="tblTruckList" style="font-size:12px;width:99.9%" class="table table-condensed table-fit table-sm table-striped tblTruck  g-dataTable   mb-0" id="tblTruckInfo">
 
                                 <thead>
 
@@ -417,7 +464,7 @@
 
                                         <td class="MC">  @item.AssignID </td>
                                         <td class="MC">  @item.CarrierName </td>
-                                        <td class="MC"><a style="color: #009efb;cursor:pointer">  @item.TruckNo</a> </td>
+                                        <td class="TruckNumberTD"><a style="color: #009efb;cursor:pointer">  @item.TruckNo</a> </td>
 
                                         @*<td class="MC"><a onclick="CarrierTruckData('@item.TruckNo')" style="color: #009efb">  @item.TruckNo</a> </td>*@
 
@@ -495,7 +542,7 @@
 
                                     <div class="col-md-3">
                                         <label>Carrier Name </label>
-                                        <input id="txtCarrierName" readonly type="text" name="CarrierName" class="form-control" required="">
+                                        <input id="txtEditCarrierName" readonly type="text" name="CarrierName" class="form-control" required="">
 
                                     </div>
 
@@ -520,12 +567,12 @@
                                 <div class="row">
                                     <div class="col-md-3">
                                         <label>Truck No</label>
-                                        <input type="text" id="txtTruckNumber" readonly name="TruckNumber" class="form-control" required="">
-                                        <input type="text" id="txtTruckId" hidden readonly name="TruckId" class="form-control" required="">
+                                        <input type="text" id="txtEditTruckNumber" readonly name="TruckNumber" class="form-control" required="">
+                                        <input type="text" id="txtEditTruckId" hidden readonly name="TruckId" class="form-control" required="">
                                     </div>
                                     <div class="col-md-3">
                                         <label>Truck Yard </label>
-                                        <input type="text" id="txtTruckYard" readonly name="TruckYard" class="form-control" required="">
+                                        <input type="text" id="txtEditTruckYard" readonly name="TruckYard" class="form-control" required="">
                                     </div>
 
                                     <div class="col-md-3">
@@ -658,7 +705,7 @@
 
                                             <table name="tblTruckList" style="font-size:12px;width:100%" class="table table-condensed table-fit table-sm table-striped tblTrucklist    mb-0" id="tblTruckList">
 
-                                                <thead>
+                                                <thead style="top: 0px !important;">
 
                                                     <tr>
                                                         <th>Truck Id</th>
@@ -829,17 +876,17 @@
 
 
             IsOwnerOperator = 0
- 
+
 
             IsQuickPay = 0
-        
+
 
 
             IsBlackList = 0
 
 
             Istrailerinterchange = 0
-        
+
 
 
 
@@ -889,7 +936,7 @@
             $("#txtZipCode").focus();
             return;
         }
-       
+
 
 
 
@@ -995,7 +1042,7 @@
                         $('#txtPhoneNumber').val(json[0].Phonenumber);
                         $('#txtCarrierName').val(json[0].CarrierName);
                         $('#txtShowCarrierAssignId').val(json[0].AssignID);
-                        
+
                         document.getElementById("txtShowCarrierName").value = json[0].CarrierName;
                         document.getElementById("txtShowContactName").value = json[0].ContactName;
                         document.getElementById("txtShowPhoneNumber").value = json[0].Phonenumber;
@@ -1276,21 +1323,25 @@
     //}
 
     //On table cell click get carrier id and open model(Carrier Detail and Truck List of carrier)
-    $('.tblTruck').on('click', 'tr', function () {
-
+    $('.tblTruck').on('click', '.TruckNumberTD', function () {
+        //console.log($(this));
+        var currentRow = $(this).closest("tr");
         var AssignID = "";
-        var td = this.cells[2];  // the first <td>
+        var td = currentRow.find("td:eq(2)").text() /*this.cells[2]*/;  // the first <td>
 
-        AssignID = $(td).text();
+        AssignID = td /*$(td).text()*/;
 
-        var TruckId = this.cells[0];
-        var TruckNo = this.cells[5];
-        var TruckYard = this.cells[6];
-        var TrailorNumber = this.cells[7];
-        var TrailorInfo = this.cells[9];
-        var DriverName = this.cells[15];
-        var DriverLanugage = this.cells[16];
-        var DriverPhone = this.cells[17];
+        var TruckId = currentRow.find("td:eq(0)").text() /*this.cells[0] */;
+        var TruckNo = currentRow.find("td:eq(4)").text()/*this.cells[5] */;
+        var TruckYard = currentRow.find("td:eq(5)").text() /*this.cells[6]*/;
+        var TrailorNumber = currentRow.find("td:eq(6)").text()/*this.cells[7]*/;
+        var TrailorInfo = currentRow.find("td:eq(9)").text() /*this.cells[9]*/;
+        var DriverName = currentRow.find("td:eq(15)").text() /*this.cells[15]*/;
+        var DriverLanugage = currentRow.find("td:eq(17)").text() /*this.cells[16]*/;
+        var DriverPhone = currentRow.find("td:eq(16)").text() /*this.cells[17]*/;
+        //alert('TruckId' + TruckId + ' TruckNo' + TruckNo +'TruckYard' + TruckYard + ' TrailorNumber' + TrailorNumber + ' TrailorInfo' + TrailorInfo + ' DriverName' + DriverName + ' DriverLanugage' + DriverLanugage + ' DriverPhone' + DriverPhone);
+
+      
 
 
         $("#tblTruckList tbody tr").remove();
@@ -1314,10 +1365,10 @@
 
 
                     $('#txtCarrierId').val(json[0].AssignID);
-                    $('#txtCarrierName').val(json[0].CarrierName);
+                    $('#txtEditCarrierName').val(json[0].CarrierName);
                     $('#txtContactPerson').val(json[0].ContactName);
                     $('#txtContactPhone').val(json[0].Phonenumber);
-                    $('#txtTruckId').val($(TruckId).text());
+                    $('#txtEditTruckId').val(TruckId);
 
 
                     //$('#txtComment').val($(TruckId).text());
@@ -1354,18 +1405,19 @@
                     //var DriverName = this.cells[13];
                     //var DriverLanugage = this.cells[14];
                     //var DriverPhone = this.cells[15];
+                    
+                    $('#txtEditTruckNumber').val(TruckNo);
+                    $('#txtEditTruckYard').val(TruckYard);
+                    $('#txtTrailorNumner').val(TrailorNumber);
+                    $('#txtTrailorInformation').val(TrailorInfo);
+                    $('#txtDriverName').val(DriverName);
+                    $('#txtDriverLanguage').val(DriverLanugage);
+                    $('#txtDriverPhone').val(DriverPhone);
 
-                    $('#txtTruckNumber').val($(TruckNo).text());
-                    $('#txtTruckYard').val($(TruckYard).text());
-                    $('#txtTrailorNumner').val($(TrailorNumber).text());
-                    $('#txtTrailorInformation').val($(TrailorInfo).text());
-                    $('#txtDriverName').val($(DriverName).text());
-                    $('#txtDriverLanguage').val($(DriverLanugage).text());
-                    $('#txtDriverPhone').val($(DriverPhone).text());
-
+                    
                     //Append each row to html table
                     for (var i = 0; i < json.length; i++) {
-
+                       
 
                         var datevalue = new Date(parseInt(json[i].AvailableDate.replace("/Date(", "").replace(")/", ""), 10));
                         var todayDate = new Date(datevalue);
@@ -1398,7 +1450,7 @@
                         tr.append("<td hidden>" + json[i].LoadTypeName + "</td>");
                         tr.append("<td hidden>" + json[i].Language + "</td>");
                         tr.append("<td hidden>" + json[i].DriverPhone + "</td>");
-
+                        
 
                         //<td> <a id="remove" class="open-AddBookDialog" href="#" data-toggle="modal" data-target="#Edit_Carrier"><i class="remove fa fa-pencil m-r-5"></i> </a></td>
                         //    <td> <a id="remove" class="open-AddBookDialog" style="color:red;" href="#" data-toggle="modal" data-target="#Delete_Carrier"><i class="remove fa fa-trash-o m-r-5"></i> </a></td>
@@ -1448,8 +1500,8 @@
 
 
             $('#txtTruckId').val($(TruckId).text());
-            $('#txtTruckNumber').val($(TruckNo).text());
-            $('#txtTruckYard').val($(TruckYard).text());
+            $('#txtEditTruckNumber').val($(TruckNo).text());
+            $('#txtEditTruckYard').val($(TruckYard).text());
             $('#txtTrailorNumner').val($(TrailorNumber).text());
             $('#txtTrailorInformation').val($(TrailorInfo).text());
             $('#txtDriverName').val($(DriverName).text());
@@ -1785,6 +1837,19 @@
             }
         });
     }
+    $(document).ready(function () {
 
+        $('#tblTruckInfo').DataTable({
+            responsive: true,
+            columnDefs: [
+                { responsivePriority: 10001, targets: 7 },
+                { responsivePriority: 10002, targets: 10 },
+                { responsivePriority: 10003, targets: 11 },
+                { responsivePriority: 10004, targets: 12 },
+            ],
+            //"fixedHeader": true,
+
+        });
+    });
 
 </script>

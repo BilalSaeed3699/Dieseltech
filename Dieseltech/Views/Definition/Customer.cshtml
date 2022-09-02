@@ -19,9 +19,54 @@
         <script src="assets/js/respond.min.js"></script>
     <![endif]-->
     <style>
-        label {
-            color: #00539CFF;
+
+        div#tblBroker_filter {
+            position: sticky;
+            top: 0;
+            padding: 5px;
+            z-index: 100;
+            background: darkblue;
+            color: white !important;
+            width: 21.5% !important;
         }
+
+
+        div#tblBroker_length {
+            position: sticky !important;
+            top: 0 !important;
+            padding: 5px !important;
+            z-index: 100 !important;
+            background: darkblue !important;
+            color: white !important;
+            width: 78.5% !important;
+            height: 51px !important;
+        }
+
+        thead {
+            position: sticky !important;
+            top: 50px !important;
+            z-index: 100 !important;
+        }
+
+        select {
+            color: white !important;
+        }
+
+        option {
+            color: black !important;
+        }
+
+        /*label {
+            color: white !important
+        }*/
+
+        input[type="search"] {
+            color: white !important;
+        }
+
+        /*label {
+            color: #00539CFF;
+        }*/
           /*  table.table-fit {
                 width: auto !important;
                 table-layout: auto !important;
@@ -40,11 +85,11 @@
 <div class="content">
     <div class="row">
         <div class="col-sm-4 col-3">
-            <h4 class="page-title">Customers <i onclick="RefereshList()" class="fa fa-refresh"></i></h4>
+            <h4 class="page-title">Customers <a href="#"><i onclick="RefereshList()" class="fa fa-refresh"></i></a></h4>
             <span style="color:red;" id="fademsg">@ViewBag.error</span>
         </div>
         <div class="col-sm-8 col-9 text-right m-b-20">
-            <a id="remove" href="#" data-toggle="modal" data-target="#add_Broker" class=" open-AddBookDialog btn btn-primary btn-rounded float-right" style="background-color: #4c5564 !important;"><i class="fa fa-plus"></i> Add Customers</a>
+            <a id="remove" href="#" data-toggle="modal" data-target="#add_Broker" class=" open-AddBookDialog btn btn-secondary float-right" style="background-color: #4c5564 !important;"><i class="fa fa-plus"></i> Add Customers</a>
 
 
         </div>
@@ -53,10 +98,10 @@
 
     <div class="row">
         <div class="col-md-12">
-            <div class="table-responsive">
+            <div class="table-responsive" style="max-height:700px;" >
                 @*<table class="table table-border table-striped custom-table  g-dataTable mb-0">*@
 
-                    <table style="font-size:12px;width:100%" class="table table-condensed table-fit table-sm table-striped g-dataTable  mb-0" id="tblBroker">
+                    <table style="font-size:12px;width:99.9%" class="table table-condensed table-fit table-sm table-striped g-dataTable  mb-0" id="tblBroker">
                         <thead>
                             <tr>
                                 <th class="Broker_id" hidden>id</th>
@@ -80,7 +125,7 @@
                         <tbody>
                             @foreach (var item in list)
                             {
-                            <tr>
+                            <tr class="text-center">
                                 <td class="carrier_id" hidden>@item.Brokerid</td>
                                 <td hidden class="IsActive">@item.IsActive</td>
                                 <td class="AssignID">  @item.AssignID   </td>
@@ -93,29 +138,29 @@
 
                                 @if (item.IsMcAuthorityUploaded == 1)
                                 {
-                                    <td class="MCAuthority"><a target="_blank" style="color:#009efb !important" class="social-icon text-xs-center" href="@item.McAuthorityFilePath"> <i class='fa fa-file'></i> @item.McAuthorityFileName</a></td>
+                                    <td class="MCAuthority"><a target="_blank" style="color:#009efb !important" class="social-icon text-xs-center" href="@item.McAuthorityFilePath"> <i class='fa fa-download'></i></a></td>
                                 }
                                 else if (item.IsMcAuthorityUploaded == 0)
                                 {
-                                    <td class="MCAuthority">No Document Upload</td>
+                            <td class="MCAuthority">N/F</td>
                                 }
 
                                 @if (item.IsW9Uploaded == 1)
                                 {
-                                    <td class="W9"><a target="_blank" class="social-icon text-xs-center" style="color:#009efb !important" href="@item.W9FilePath"> <i class='fa fa-file'></i> @item.W9FileName</a></td>
+                                    <td class="W9"><a target="_blank" class="social-icon text-xs-center" style="color:#009efb !important" href="@item.W9FilePath"> <i class='fa fa-download'></i></a></td>
                                 }
                                 else if (item.IsW9Uploaded == 0)
                                 {
-                                    <td class="W9">No Document Upload</td>
+                                    <td class="W9">N/F</td>
                                 }
 
                                 @if (item.IsAssurityUploaded == 1)
                                 {
-                                    <td class="AssurityBond"><a target="_blank" class="social-icon text-xs-center" style="color:#009efb !important" href="@item.AssurityFilePath"> <i class='fa fa-file'></i> @item.AssurityFileName</a></td>
+                                    <td class="AssurityBond"><a target="_blank" class="social-icon text-xs-center" style="color:#009efb !important" href="@item.AssurityFilePath"> <i class='fa fa-download'></i> </a></td>
                                 }
                                 else if (item.IsAssurityUploaded == 0)
                                 {
-                                    <td class="AssurityBond">No Document Upload</td>
+                                    <td class="AssurityBond">N/F</td>
                                 }
 
 
@@ -544,11 +589,30 @@
 
     });
 </script>
-
+@*<script src="~/assets/js/dataTables.responsive.min.js"></script>*@
 
 @*<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>*@
 <script type="text/javascript">
     $(document).ready(function () {
+
+        $('#tblBroker').DataTable({
+            //scrollY: 500,
+            //"scrollX": false,
+            responsive: true,
+            columnDefs: [
+                { responsivePriority: 10001, targets: 6 },
+                { responsivePriority: 10002, targets: 7 },
+                { responsivePriority: 10003, targets: 8 },
+            ],
+            //fixedHeader: {
+            //    header: true,
+            //    footer: true
+            //}
+            //"fixedHeader": true,
+        });
+
+        
+
         $("#fademsg").fadeOut(5000);
     });
 </script>
