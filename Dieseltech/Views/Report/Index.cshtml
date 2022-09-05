@@ -332,7 +332,7 @@
                         <thead>
                             <tr>
                                 @*<th>Email History</th>*@
-                                <th></th>
+                                @*<th></th>*@
                                 <th>Status</th>
                                 <th>C.O.D</th>
                                 <th>Load Number </th>
@@ -377,7 +377,7 @@
                                     }
 
                                     <tr>
-                                         <td></td>
+                                         @*<td></td>*@
                                         @*<td onclick="ShowEmailHistory(@item.LoaderNumber)"><button type="button" class="fa fa-eye"><span class="glyphicon glyphicon-eye-open"></span></button></td>*@
 
                                         @*<td data-toggle="collapse" data-target="#Load_@item.LoaderNumber" class="accordion-toggle"><button data-toggle="tooltip" data-placement="top" title="Click to view Email History" type="button" class="fa fa-eye"><span class="glyphicon glyphicon-eye-open"></span></button></td>*@
@@ -847,12 +847,12 @@
                     "render": $.fn.dataTable.render.number(',', '.', 2, ''),
                     "targets": [11, 12, 13, 14],
                 },
-                { responsivePriority: 10001, targets: 10 },
-                { responsivePriority: 10002, targets: 11 },
-                { responsivePriority: 10003, targets: 12 },
+                //{ responsivePriority: 10001, targets: 10 },
+                //{ responsivePriority: 10002, targets: 11 },
+                //{ responsivePriority: 10003, targets: 12 },
             ],
-            responsive: true,
-
+           /* responsive: true,*/
+            scrollX: true,
         });
 
 

@@ -538,23 +538,23 @@
 
 
 
-                                    @if (item.CustomerConfFileName != "")
+                                     @if (item.CustomerConfFileName != "")
                                     {
-                                        <td class="AssurityBond"><a target="_blank" class="social-icon text-xs-center" style="color:#009efb !important" href="@item.CustomerConfFilePath"> <i class='fa fa-download'></i></a></td>
+                                        <td class="AssurityBond"><a target="_blank" class="social-icon text-xs-center" style="color:#009efb !important" href="@item.CustomerConfFilePath"> <i class='fa fa-file'></i> @item.CustomerConfFileName</a></td>
                                     }
                                     else if (item.CustomerConfFileName == "")
                                     {
-                                        <td class="AssurityBond">N/F</td>
+                                        <td class="AssurityBond">No Document Upload</td>
                                     }
 
 
                                     @if (item.PODFileName != "")
                                     {
-                                        <td class="AssurityBond"><a target="_blank" class="social-icon text-xs-center" style="color:#009efb !important" href="@item.PODFilePath"> <i class='fa fa-download'></i></a></td>
+                                        <td class="AssurityBond"><a target="_blank" class="social-icon text-xs-center" style="color:#009efb !important" href="@item.PODFilePath"> <i class='fa fa-file'></i> @item.PODFileName</a></td>
                                     }
                                     else if (item.PODFileName == "")
                                     {
-                                        <td class="AssurityBond">N/F</td>
+                                        <td class="AssurityBond">No Document Upload</td>
                                     }
 
 
@@ -813,14 +813,14 @@
             "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
             "pageLength": -1,
             "fixedHeader": true,
-            "columnDefs": [
+            //"columnDefs": [
                 
-                { responsivePriority: 10001, targets: 18 },
-                { responsivePriority: 10002, targets: 19 },
-                { responsivePriority: 10003, targets: 6 },
-            ],
-            responsive: true,
-            
+            //    { responsivePriority: 10001, targets: 18 },
+            //    { responsivePriority: 10002, targets: 19 },
+            //    { responsivePriority: 10003, targets: 6 },
+            //],
+            //responsive: true,
+            scrollX: true,
         });
 
 
