@@ -73,7 +73,7 @@ namespace Dieseltech.Controllers
             {
                 AssingId = Truck.CarrierAssignId;
                 qry = " Exec  SP_Definition_Truck  '" + Truck.CarrierAssignId + "' , '" + Truck.TruckNo + "','" + Truck.TruckYard + "', ";
-                qry += " '" + Truck.TrailerNo + "' , " + Truck.TrailerTypeId + "," + Truck.ZipCode + ", '" + Truck.AvailableDate.ToString("yyyy-MM-dd") + "',   ";
+                qry += " '" + Truck.TrailerNo + "' , " + Truck.TrailerTypeId + ",'" + Truck.ZipCode + "', '" + Truck.AvailableDate.ToString("yyyy-MM-dd") + "',   ";
                 qry += " '" + Truck.DriverName + "' , '" + Truck.DriverPhone + "','" + Truck.DriverLanguage + "', " + Session["User_id"] + ",'" + Truck.StateName + "' ";
                 qry += " , '" + Truck.CityName + "','" + Truck.StateCode + "' , 0," + Truck.DriverId + " ,'" + Truck.PrefferedDestination + "','I'   ";
                 ut.InsertUpdate(qry);
@@ -202,12 +202,12 @@ namespace Dieseltech.Controllers
 
         //Update Truck States
         [Customexception]
-        public JsonResult UpdateState(Int32 TruckId, Int64 ZipCode, DateTime AvailableDate, string PreferredDestinations)
+        public JsonResult UpdateState(Int32 TruckId, string ZipCode, DateTime AvailableDate, string PreferredDestinations)
 
         {
 
             string theDate = AvailableDate.ToString("yyyy-MM-dd");
-            string qry = "Exec Sp_Update_Truck_State " + TruckId + "," + ZipCode + ",'" + theDate + "','" + PreferredDestinations + "' ";
+            string qry = "Exec Sp_Update_Truck_State " + TruckId + ",'" + ZipCode + "','" + theDate + "','" + PreferredDestinations + "' ";
             ut.InsertUpdate(qry);
             return Json("1", JsonRequestBehavior.AllowGet);
         }

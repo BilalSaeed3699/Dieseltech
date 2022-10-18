@@ -723,3 +723,15 @@ Controller Name: Load
 Action Name: MoveLoadPickupToDelivery
 Exception: The parameters dictionary contains a null entry for parameter 'txtPickupId' of non-nullable type 'System.Int32' for method 'System.Web.Mvc.JsonResult MoveLoadPickupToDelivery(Int32, Int32[], Int32[])' in 'Dieseltech.Controllers.LoadController'. An optional parameter must be a reference type, a nullable type, or be declared as an optional parameter.
 Parameter name: parameters
+----------------------------------------------------------------------------------------------
+Date: 10/26/2022 2:26:40 PM
+Controller Name: Truck
+Action Name: GetPreferredDestinations
+Exception: The parameters dictionary contains a null entry for parameter 'TruckId' of non-nullable type 'System.Int32' for method 'System.Web.Mvc.JsonResult GetPreferredDestinations(Int32)' in 'Dieseltech.Controllers.TruckController'. An optional parameter must be a reference type, a nullable type, or be declared as an optional parameter.
+Parameter name: parameters
+----------------------------------------------------------------------------------------------
+Date: 10/26/2022 2:30:25 PM
+Controller Name: Truck
+Action Name: GetPreferredDestinations
+Exception: The parameters dictionary contains a null entry for parameter 'TruckId' of non-nullable type 'System.Int32' for method 'System.Web.Mvc.JsonResult GetPreferredDestinations(Int32)' in 'Dieseltech.Controllers.TruckController'. An optional parameter must be a reference type, a nullable type, or be declared as an optional parameter.
+Parameter name: parameters

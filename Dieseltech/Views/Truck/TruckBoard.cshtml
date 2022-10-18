@@ -357,7 +357,7 @@
 " onclick="FilterTruckList(@item.ZoneId,'Z')" type="button" id="@item.ZoneId" class="btn btn-primary" href="">
                                 @item.ZoneName
                             </button>
-                            <div class="dropdown-content">
+                            <div class="dropdown-content" style="z-index: 101;">
                                 <ul class="list-inline">
                                     @foreach (var childs in ZoneStateList)
                                     {
@@ -431,8 +431,8 @@
 
 
 
-                                        <th hidden class="text-right">Edit</th>
-                                        <th hidden class="text-right">Delete</th>
+                                        @*<th hidden class="text-right">Edit</th>
+                                        <th hidden class="text-right">Delete</th>*@
 
                                     </tr>
                                 </thead>
@@ -482,8 +482,8 @@
                                         <td class="PhoneNumber" hidden>  @item.DriverPhone </td>
                                         <td class="PhoneNumber" hidden>  @item.Language </td>
 
-                                        <td hidden> <a id="remove" class="open-AddBookDialog" href="#" data-toggle="modal" data-target="#Edit_Carrier"><i class="remove fa fa-pencil m-r-5"></i> </a></td>
-                                        <td hidden> <a id="remove" class="open-AddBookDialog" style="color:red;" href="#" data-toggle="modal" data-target="#Delete_Carrier"><i class="remove fa fa-trash-o m-r-5"></i> </a></td>
+                                        @*<td hidden> <a id="remove" class="open-AddBookDialog" href="#" data-toggle="modal" data-target="#Edit_Carrier"><i class="remove fa fa-pencil m-r-5"></i> </a></td>
+                                        <td hidden> <a id="remove" class="open-AddBookDialog" style="color:red;" href="#" data-toggle="modal" data-target="#Delete_Carrier"><i class="remove fa fa-trash-o m-r-5"></i> </a></td>*@
                                         @*<td class="text-right">
             <a id="remove" class="open-AddBookDialog" href="#" data-toggle="modal" data-target="#Edit_Carrier"><i class="remove fa fa-pencil m-r-5"></i> </a>
             <a id="remove" class="open-AddBookDialog" style="color:red;" href="#" data-toggle="modal" data-target="#Delete_Carrier"><i class="remove fa fa-trash-o m-r-5"></i> </a>
@@ -652,26 +652,26 @@
                                     <div class="col-md-3">
                                         <label>Available Date</label>
 
-                                        <input id="AvailableDate" value="@DateTime.Now.ToString("MM/dd/yyyy")" name="AvailableDate" class="form-control" required>
+                                        <input id="EditAvailableDate" value="@DateTime.Now.ToString("MM/dd/yyyy")" name="AvailableDate" class="form-control" required>
                                         @*<input id="AvailableDate" value="@DateTime.Now.ToString("yyyy-MM-dd")" name="AvailableDate" class="form-control" required>*@
                                         <input id="txtShowMCNumber" type="text" name="ShowMCNumber" hidden class="form-control" required="">
                                     </div>
                                     <div class="col-md-3">
-                                        <label>Zip Code<span class="ImportantFields" style="color:red">*</span> <small id="lblZipCodeError" style="Color:red;display:none">Invalid Zip Code</small> </label>
-                                        <input id="txtZipCode" type="number" name="ZipCode" class="form-control" onfocusout="GetStateCity()" required="">
+                                        <label>Zip Code<span class="ImportantFields" style="color:red">*</span> <small id="lblEditZipCodeError" style="Color:red;display:none">Invalid Zip Code</small> </label>
+                                        <input id="txtEditZipCode" type="number" name="ZipCode" class="form-control" onfocusout="GetEditStateCity()" required="">
 
                                     </div>
 
                                     <div class="col-md-3">
-                                        <label>State <small id="lblStateCodeError" style="color: red;display: none">Invalid State Code</small></label>
-                                        <input type="text"  id="txtStates" name="State" class="form-control" required="">
+                                        <label>State <small id="lblEditStateCodeError" style="color: red;display: none">Invalid State Code</small></label>
+                                        <input type="text"  id="txtEditStates" name="State" class="form-control" required="">
 
                                         @*<input type="text" onfocusout="GetLocation('S')" id="txtStates" name="State" class="form-control" required="">*@
                                         <input hidden type="text" readonly id="txtStateCode" name="StateCode" class="form-control" required="">
                                     </div>
                                     <div class="col-md-3">
-                                        <label>City <small id="lblCityCodeError" style="color: red;display: none">Invalid City Name</small> </label>
-                                        <input type="text" id="txtCity" readonly name="City" class="form-control" required="">
+                                        <label>City <small id="lblEditCityCodeError" style="color: red;display: none">Invalid City Name</small> </label>
+                                        <input type="text" id="txtEditCity" readonly name="City" class="form-control" required="">
 
                                         @*<input type="text" id="txtCity" onfocusout="GetLocation('C')" name="City" class="form-control" required="">*@
                                     </div>
@@ -683,7 +683,7 @@
 
                                     <div class="col-md-12">
                                         <label>Preferred Destinations </label> <br />
-                                        <textarea id="txtPreferredDestinations" name="PreferredDestination" rows="3" style="width:100%"></textarea>
+                                        <textarea id="txtEditPreferredDestinations" name="PreferredDestination" rows="3" style="width:100%"></textarea>
 
                                     </div>
                                 </div>
@@ -691,7 +691,7 @@
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="text-right">
-                                            <button id="btnUpdateTruckState" onclick="ZipCodeValidation()" type="button" class="btn btn-primary ThemeColor">Save</button>
+                                            <button id="btnUpdateTruckState" onclick="EditZipCodeValidation()" type="button" class="btn btn-primary ThemeColor">Save</button>
                                         </div>
                                     </div>
                                 </div>
@@ -1341,12 +1341,12 @@
         var DriverPhone = currentRow.find("td:eq(16)").text() /*this.cells[17]*/;
         //alert('TruckId' + TruckId + ' TruckNo' + TruckNo +'TruckYard' + TruckYard + ' TrailorNumber' + TrailorNumber + ' TrailorInfo' + TrailorInfo + ' DriverName' + DriverName + ' DriverLanugage' + DriverLanugage + ' DriverPhone' + DriverPhone);
 
-      
+
 
 
         $("#tblTruckList tbody tr").remove();
 
-
+        //alert(AssignID.trim());
         //Call EmpDetails jsonResult Method
         $.getJSON("/Truck/GetCarrierTruckDetail/?AssignID=" + AssignID.trim() + "",
             function (json) {
@@ -1405,7 +1405,7 @@
                     //var DriverName = this.cells[13];
                     //var DriverLanugage = this.cells[14];
                     //var DriverPhone = this.cells[15];
-                    
+
                     $('#txtEditTruckNumber').val(TruckNo);
                     $('#txtEditTruckYard').val(TruckYard);
                     $('#txtTrailorNumner').val(TrailorNumber);
@@ -1414,10 +1414,10 @@
                     $('#txtDriverLanguage').val(DriverLanugage);
                     $('#txtDriverPhone').val(DriverPhone);
 
-                    
+
                     //Append each row to html table
                     for (var i = 0; i < json.length; i++) {
-                       
+
 
                         var datevalue = new Date(parseInt(json[i].AvailableDate.replace("/Date(", "").replace(")/", ""), 10));
                         var todayDate = new Date(datevalue);
@@ -1450,7 +1450,7 @@
                         tr.append("<td hidden>" + json[i].LoadTypeName + "</td>");
                         tr.append("<td hidden>" + json[i].Language + "</td>");
                         tr.append("<td hidden>" + json[i].DriverPhone + "</td>");
-                        
+
 
                         //<td> <a id="remove" class="open-AddBookDialog" href="#" data-toggle="modal" data-target="#Edit_Carrier"><i class="remove fa fa-pencil m-r-5"></i> </a></td>
                         //    <td> <a id="remove" class="open-AddBookDialog" style="color:red;" href="#" data-toggle="modal" data-target="#Delete_Carrier"><i class="remove fa fa-trash-o m-r-5"></i> </a></td>
@@ -1499,7 +1499,7 @@
             var DriverPhone = this.cells[15];
 
 
-            $('#txtTruckId').val($(TruckId).text());
+            $('#txtEditTruckId').val($(TruckId).text());
             $('#txtEditTruckNumber').val($(TruckNo).text());
             $('#txtEditTruckYard').val($(TruckYard).text());
             $('#txtTrailorNumner').val($(TrailorNumber).text());
@@ -1517,7 +1517,7 @@
 
 
     function ShowStatePanel() {
-        var TruckId = $("#txtTruckId").val();
+        var TruckId = $("#txtEditTruckId").val();
 
         $.ajax({
             type: "GET",
@@ -1527,7 +1527,7 @@
             success: function (response) {
                 if (response != "0") {
 
-                    $("#txtPreferredDestinations").val(response);
+                    $("#txtEditPreferredDestinations").val(response);
                 }
             },
             failure: function (response) {
@@ -1550,6 +1550,7 @@
     //Function to get State and city against Zip Code
     function GetStateCity() {
         var ZipCode = document.getElementById("txtZipCode");
+       
         $.ajax({
             type: "GET",
             url: "/Definition/GetStateCity/?ZipCode=" + ZipCode.value + " ",
@@ -1586,6 +1587,47 @@
         });
     }
 
+
+
+
+    function GetEditStateCity() {
+       
+            ZipCode = document.getElementById("txtEditZipCode");
+        $.ajax({
+            type: "GET",
+            url: "/Definition/GetStateCity/?ZipCode=" + ZipCode.value + " ",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                if (response != null) {
+                    if (response.StateName == "0") {
+                        //alert("Invalid Zip Code");
+                        document.getElementById('lblEditZipCodeError').innerHTML = 'Invalid Zip Code';
+                        $("#lblEditZipCodeError").fadeIn();
+                        $("#lblEditZipCodeError").fadeOut(3000);
+                        $('#txtEditStates').val("");
+                        $('#txtEditCity').val("");
+                        $('#txtEditZipCode').val("");
+                        //$('#txtZipCode').focus();
+
+                        return;
+                    }
+                    $('#txtEditStates').val(response.StateCode);
+                    $('#txtEditStateCode').val(response.StateCode);
+                    $('#txtEditCity').val(response.CityName);
+
+                } else {
+                    alert("Something went wrong");
+                }
+            },
+            failure: function (response) {
+                alert("No Data");
+            },
+            error: function (response) {
+                //alert(response.responseText);
+            }
+        });
+    }
 
     //Function work on Update Truck State
     function ZipCodeValidation() {
@@ -1653,6 +1695,73 @@
 
     }
 
+
+
+    function EditZipCodeValidation() {
+        var ZipCode = $("#txtEditZipCode");
+        var TruckId = $("#txtEditTruckId");
+        var AvailableDate = $("#EditAvailableDate");
+        var PreferredDestinations = $("#txtEditPreferredDestinations");
+
+        //alert(TruckId.val());
+        //return;
+        if (ZipCode.val() == "") {
+
+            document.getElementById('lblEditZipCodeError').innerHTML = 'Enter Zip Code';
+
+            $("#lblZipCodeError").fadeIn();
+            $("#lblZipCodeError").fadeOut(3000);
+            $("#txtZipCode").focus();
+            return;
+        }
+
+        $.ajax({
+            type: "GET",
+            url: "/Truck/UpdateState/?TruckId=" + TruckId.val() + "&PreferredDestinations=" + PreferredDestinations.val() + "&ZipCode=" + ZipCode.val() + "&AvailableDate=" + AvailableDate.val(),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                if (response != null) {
+                    if (response == "1") {
+
+                        swal({ title: "Modify Truck Availablity", text: "Truck Availablitiy Updated!", type: "success" },
+                            function () {
+                                location.reload();
+                            }
+                        );
+
+                        //alert("State Updated Successfully")
+                        //$("#success-alert").fadeTo(2000, 500).slideUp(500, function () {
+                        //    $("#success-alert").slideUp(500);
+                        //});
+
+                        //swal({ title: "Modify Truck Availablity : " + data, text: "Truck Availablitiy Updated!", type: "success" },
+                        //    function () {
+                        //        location.reload();
+                        //    }
+                        //);
+
+                        //location.reload(true);
+
+                        //return;
+                    }
+
+                } else {
+                    alert("Something went wrong");
+                }
+            },
+            failure: function (response) {
+                alert("No Data");
+            },
+            error: function (response) {
+                alert(response.responseText);
+            }
+        });
+
+
+
+    }
+
     //Funcion to show Zone States on hover
     function ZoneStateList() {
 
@@ -1663,8 +1772,10 @@
 
     function FilterTruckList(FilterData, FilterType) {
 
-        $("#tblTruckInfo tbody tr").remove();
+        $('#tblTruckInfo').DataTable().destroy();
 
+        $("#tblTruckInfo tbody tr").remove();
+        
 
         //Call EmpDetails jsonResult Method
         $.getJSON("/Truck/FilterTruckBoardList/?FilterData="+FilterData+"&FilterType=" + FilterType,
@@ -1673,7 +1784,7 @@
                 var tr;
                 //$('#txtContactName').val(json[0].ContactName);
                 if (json.length > 0) {
-
+                    
                      $("#RatingDiv div a ").remove();
 
 
@@ -1695,7 +1806,7 @@
                     //Append each row to html table
                     for (var i = 0; i < json.length; i++) {
 
-
+                        
                         //console.log(json[0].AvailableDate);
                         //return;
 
@@ -1722,15 +1833,16 @@
 
 
 
-                        tr.append("<td>" + json[i].TruckId + "</td>");
+                        tr.append("<td class='MC'>" + json[i].TruckId + "</td>");
 
 
                         var RatingTd;
                         var Rating = json[i].Rating;
-                        var RatingDiv = "<td style='font-size: 8px'>";
+                        var RatingDiv = "<td class='MC'>";
+                        
 
                         for (var j = 1; j <= 10; j++) {
-
+                             RatingDiv += "<a style='font-size: 8px'>";
                             if (parseInt(Rating) > 0) {
                                 if (j <= parseInt(Rating)) {
                                     RatingDiv += "<span class='fa fa-star checked'></span>"
@@ -1748,26 +1860,34 @@
 
                                 RatingDiv += "<span class='fa fa-star unchecked'></span>"
                             }
-
+                            RatingDiv += "</a>";
                         }
 
                         RatingTd = RatingDiv + "</td>";
 
                         tr.append(RatingTd);
-                        tr.append("<td>" + json[i].AssignID + "</td>");
-                        tr.append("<td>" + json[i].CarrierName + "</td>");
-                        tr.append("<td> <a style='color: #009efb;cursor:pointer'>" + json[i].TruckNo + "</a> </td>");
-                        tr.append("<td>" + json[i].TruckYard + "</td>");
-                        tr.append("<td >" + json[i].TrailerNo + "</td>");
-                        tr.append("<td >" + json[i].PrefferedDestination + "</td>");
-                        tr.append("<td>" + json[i].ZipCode + "</td>");
-                        tr.append("<td>" + json[i].StateCode + "</td>");
-                        tr.append("<td>" + json[i].CityName + "</td>");
+                        tr.append("<td class='MC'>" + json[i].AssignID + "</td>");
+                        tr.append("<td class='MC'>" + json[i].CarrierName + "</td>");
+                        tr.append("<td class='TruckNumberTD'> <a style='color: #009efb;cursor:pointer'>" + json[i].TruckNo + "</a> </td>");
+                        tr.append("<td class='ContactName'>" + json[i].TruckYard + "</td>");
+                        tr.append("<td class='PhoneNumber'>" + json[i].TrailerNo + "</td>");
+                        tr.append("<td class='PhoneNumber'>" + json[i].PrefferedDestination + "</td>");
+                        tr.append("<td class='PhoneNumber' hidden>" + json[i].LoadTypeId + "</td>");
+                        tr.append("<td class='PhoneNumber' hidden>" + json[i].LoadTypeName + "</td>");
+                        tr.append("<td class='PhoneNumber'>" + json[i].ZipCode + "</td>");
+                        tr.append("<td class='PhoneNumber'>" + json[i].StateCode + "</td>");
+                        tr.append("<td class='PhoneNumber'>" + json[i].CityName + "</td>");
 
-                        tr.append("<td>" + AvailableDate + "</td>");
+                        tr.append("<td class='PhoneNumber'>" + AvailableDate + "</td>");
                         //tr.append("<td >" + json[i].Trailer + "</td>");
-                        tr.append("<td hidden>" + json[i].Trailer + "</td>");
-                        tr.append("<td hidden>" + json[i].Trailer + "</td>");
+                        tr.append("<td class='PhoneNumber' hidden>" + json[i].DriverId + "</td>");
+                        tr.append("<td class='PhoneNumber' hidden>" + json[i].DriverName + "</td>");
+                        tr.append("<td class='PhoneNumber' hidden>" + json[i].DriverPhone + "</td>");
+                        tr.append("<td class='PhoneNumber' hidden>" + json[i].Language + "</td>");
+
+
+                        //tr.append("<td hidden>" + json[i].Trailer + "</td>");
+                        //tr.append("<td hidden>" + json[i].Trailer + "</td>");
 
 
                         //tr.append("<td >" + json[i].LoadTypeName + "</td>");
@@ -1776,9 +1896,21 @@
 
                         //<td> <a id="remove" class="open-AddBookDialog" href="#" data-toggle="modal" data-target="#Edit_Carrier"><i class="remove fa fa-pencil m-r-5"></i> </a></td>
                         //    <td> <a id="remove" class="open-AddBookDialog" style="color:red;" href="#" data-toggle="modal" data-target="#Delete_Carrier"><i class="remove fa fa-trash-o m-r-5"></i> </a></td>
+                        
                         $('#tblTruckInfo tbody').append(tr);
 
                     }
+                    //
+                    $('#tblTruckInfo').DataTable({
+                        responsive: true,
+                        columnDefs: [
+                            { responsivePriority: 10001, targets: 7 },
+                            { responsivePriority: 10002, targets: 10 },
+                            { responsivePriority: 10003, targets: 11 },
+                            { responsivePriority: 10004, targets: 12 },
+                        ],
+
+                    });
                 }
                 else {
                     //alert('No Record Found');

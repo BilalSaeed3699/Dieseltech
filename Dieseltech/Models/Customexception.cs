@@ -25,26 +25,26 @@ namespace Dieseltech.Models
             dt = ut.GetDatatable(EmailQuery);
             var controllerName = filterContext.RouteData.Values["controller"];
             var actionName = filterContext.RouteData.Values["action"];
-            using (MailMessage mm = new MailMessage(dt.Rows[0]["Email"].ToString(), "hasanbilal369@gmail.com"))
-            {
+            //using (MailMessage mm = new MailMessage(dt.Rows[0]["Email"].ToString(), "hasanbilal369@gmail.com"))
+            //{
               
-                mm.Subject = "Exception occur";
-                string body = "Hello Admin" ;
-                body += "<br /><br />Date :" + DateTime.Now;
-                body += "<br /><br />Controller Name:" + controllerName;
-                body += "<br /><br />Action Name:" + actionName;
-                body += "<br /><br />Exception:" + filterContext.Exception.Message;
-                mm.Body = body;
-                mm.IsBodyHtml = true;
-                SmtpClient smtp = new SmtpClient();
-                smtp.Host = dt.Rows[0]["Host"].ToString();
-                smtp.EnableSsl = Convert.ToBoolean(dt.Rows[0]["SSLEnable"]);
-                NetworkCredential NetworkCred = new NetworkCredential(dt.Rows[0]["Email"].ToString(), dt.Rows[0]["Password"].ToString());
-                smtp.UseDefaultCredentials = true;
-                smtp.Credentials = NetworkCred;
-                smtp.Port = Convert.ToInt32(dt.Rows[0]["Port"]);
-                smtp.Send(mm);
-            }
+            //    mm.Subject = "Exception occur";
+            //    string body = "Hello Admin" ;
+            //    body += "<br /><br />Date :" + DateTime.Now;
+            //    body += "<br /><br />Controller Name:" + controllerName;
+            //    body += "<br /><br />Action Name:" + actionName;
+            //    body += "<br /><br />Exception:" + filterContext.Exception.Message;
+            //    mm.Body = body;
+            //    mm.IsBodyHtml = true;
+            //    SmtpClient smtp = new SmtpClient();
+            //    smtp.Host = dt.Rows[0]["Host"].ToString();
+            //    smtp.EnableSsl = Convert.ToBoolean(dt.Rows[0]["SSLEnable"]);
+            //    NetworkCredential NetworkCred = new NetworkCredential(dt.Rows[0]["Email"].ToString(), dt.Rows[0]["Password"].ToString());
+            //    smtp.UseDefaultCredentials = true;
+            //    smtp.Credentials = NetworkCred;
+            //    smtp.Port = Convert.ToInt32(dt.Rows[0]["Port"]);
+            //    smtp.Send(mm);
+            //}
 
             //save error to textfile
             string temp = AppDomain.CurrentDomain.BaseDirectory;
