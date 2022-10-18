@@ -37,5 +37,6 @@ namespace Dieseltech.Models
         public double Quickpaypercentage { get; set; }
         public int Istrailerinterchange { get; set; }
         public int Isdeleted { get; set; }
+        public Nullable<bool> IsNeedToAssign { get; set; }
     }
 }

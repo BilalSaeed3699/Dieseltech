@@ -7,6 +7,7 @@ using System.Web.Mvc;
 
 namespace Dieseltech.Controllers
 {
+    [FilterConfig.AuthorizeActionFilter]
     [HandleError]
     public class BoardController : Controller
     {
@@ -68,6 +69,12 @@ namespace Dieseltech.Controllers
                 ViewBag.CurrentMonth = ddlmonth;
                 ViewBag.ddlYears = ddlYears;
                 var LoaderBoard = deEntity.Sp_Get_Leader_Board(ddlyear, ddlmonth).ToList();
+                int RoleId =Convert.ToInt32(Session["Role_id"]);
+                int UserId =Convert.ToInt32(Session["User_id"]);
+                if (RoleId!=1)
+                {
+                    LoaderBoard = LoaderBoard.Where(x => x.User_ID == UserId).ToList();
+                }
                 ViewBag.LoaderBoard = LoaderBoard;
 
             }

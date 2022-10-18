@@ -14,6 +14,8 @@ namespace Dieseltech.Models
     public partial class Sp_Get_LoadDetail_WithAllFilter_Result
     {
         public string COD { get; set; }
+        public Nullable<bool> IsNeedToAssign { get; set; }
+        public Nullable<int> Status { get; set; }
         public string LoaderNumber { get; set; }
         public string RegistrationDate { get; set; }
         public string Agent { get; set; }

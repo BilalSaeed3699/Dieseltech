@@ -6,8 +6,6 @@
     <edmx:Diagrams>
       <Diagram DiagramId="c9591bd581324b87a02b52813f6448c5" Name="Diagram1" ZoomLevel="88">
         <EntityTypeShape EntityType="DieseltechModel.tblBroker" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="DieseltechModel.tblProfile" Width="1.5" PointX="3.125" PointY="0.875" IsExpanded="true" />
-        <EntityTypeShape EntityType="DieseltechModel.tblUser" Width="1.5" PointX="4.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="DieseltechModel.tblAccess_Level_Menu" Width="1.5" PointX="6.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="DieseltechModel.tblActivationCode" Width="1.5" PointX="0.75" PointY="6.75" IsExpanded="true" />
         <EntityTypeShape EntityType="DieseltechModel.tblForgetPassword" Width="1.5" PointX="6.75" PointY="3.75" IsExpanded="true" />
@@ -20,7 +18,6 @@
         <EntityTypeShape EntityType="DieseltechModel.tblState" Width="1.5" PointX="9.75" PointY="9.75" />
         <EntityTypeShape EntityType="DieseltechModel.tblZone" Width="1.5" PointX="0.75" PointY="10.75" />
         <EntityTypeShape EntityType="DieseltechModel.tblDriver" Width="1.5" PointX="11.375" PointY="0.75" />
-        <EntityTypeShape EntityType="DieseltechModel.tblTruck" Width="1.5" PointX="11.375" PointY="4.75" />
         <EntityTypeShape EntityType="DieseltechModel.tblBrokerHelper" Width="1.5" PointX="4.875" PointY="7" />
         <EntityTypeShape EntityType="DieseltechModel.tblAccess_Level" Width="1.5" PointX="12.375" PointY="10.75" />
         <EntityTypeShape EntityType="DieseltechModel.tblCompany" Width="1.5" PointX="13.375" PointY="0.75" />
@@ -29,30 +26,34 @@
         <EntityTypeShape EntityType="DieseltechModel.tblLoadSubType" Width="1.5" PointX="7.375" PointY="13.75" />
         <EntityTypeShape EntityType="DieseltechModel.tblLoadType" Width="1.5" PointX="9.375" PointY="13.75" />
         <EntityTypeShape EntityType="DieseltechModel.tblQuantityType" Width="1.5" PointX="11.375" PointY="13.75" />
-        <EntityTypeShape EntityType="DieseltechModel.tblLoadPickupDelivery" Width="1.5" PointX="13.375" PointY="13.75" />
+        <EntityTypeShape EntityType="DieseltechModel.tblLoadPickupDelivery" Width="2" PointX="13.125" PointY="13.25" />
         <EntityTypeShape EntityType="DieseltechModel.tblLoadCharge1" Width="1.5" PointX="0.75" PointY="14.75" />
         <EntityTypeShape EntityType="DieseltechModel.tblLoadFilePath" Width="1.5" PointX="14.375" PointY="9.75" />
         <EntityTypeShape EntityType="DieseltechModel.tblZoneList" Width="1.5" PointX="15.375" PointY="0.75" />
         <EntityTypeShape EntityType="DieseltechModel.tblLoadConfirmationDocument" Width="1.5" PointX="15.375" PointY="3.75" />
         <EntityTypeShape EntityType="DieseltechModel.tblCarrierDocument" Width="1.5" PointX="15.375" PointY="12.75" />
         <EntityTypeShape EntityType="DieseltechModel.tblDriverLicense" Width="1.5" PointX="16.375" PointY="6.75" />
-        <EntityTypeShape EntityType="DieseltechModel.tblStateCityData" Width="1.5" PointX="7.375" PointY="16.75" />
-        <EntityTypeShape EntityType="DieseltechModel.tblLoadDelivery" Width="1.5" PointX="9.375" PointY="16.75" />
-        <EntityTypeShape EntityType="DieseltechModel.tblLoadPickup" Width="1.5" PointX="17.375" PointY="0.75" />
         <EntityTypeShape EntityType="DieseltechModel.tblLoadFilePathTemp" Width="1.5" PointX="17.375" PointY="10.75" />
-        <EntityTypeShape EntityType="DieseltechModel.tblShipper" Width="1.5" PointX="17.375" PointY="13.75" />
         <EntityTypeShape EntityType="DieseltechModel.tblThemeColor" Width="1.5" PointX="13.375" PointY="6.75" />
         <EntityTypeShape EntityType="DieseltechModel.tblCarrierCategory" Width="1.5" PointX="15.375" PointY="17.75" />
         <EntityTypeShape EntityType="DieseltechModel.tblComment" Width="1.5" PointX="17.375" PointY="17.75" />
         <EntityTypeShape EntityType="DieseltechModel.tblEmailSetting" Width="1.5" PointX="18.375" PointY="6.75" />
         <EntityTypeShape EntityType="DieseltechModel.tblEmailHistory" Width="1.5" PointX="19.375" PointY="0.75" />
         <EntityTypeShape EntityType="DieseltechModel.tblDriverLocation" Width="1.5" PointX="19.375" PointY="10.75" />
-        <EntityTypeShape EntityType="DieseltechModel.tblLoadHead" Width="1.5" PointX="3.375" PointY="16.75" />
-        <EntityTypeShape EntityType="DieseltechModel.tblCarrier" Width="1.5" PointX="5.375" PointY="19.75" />
         <EntityTypeShape EntityType="DieseltechModel.tblNotification" Width="1.5" PointX="11.375" PointY="19.75" />
         <EntityTypeShape EntityType="DieseltechModel.tblAgentcommission" Width="1.5" PointX="3.375" PointY="10.75" />
         <EntityTypeShape EntityType="DieseltechModel.tblcarriercollection" Width="1.5" PointX="19.375" PointY="14.75" />
         <EntityTypeShape EntityType="DieseltechModel.tblcustomercollection" Width="1.5" PointX="19.375" PointY="17.75" />
+        <EntityTypeShape EntityType="DieseltechModel.tblProfile" Width="1.5" PointX="3.75" PointY="0.75" />
+        <EntityTypeShape EntityType="DieseltechModel.tblUser" Width="1.5" PointX="0.75" PointY="20.75" />
+        <EntityTypeShape EntityType="DieseltechModel.tblLoadDelivery" Width="1.5" PointX="7.375" PointY="16.75" />
+        <EntityTypeShape EntityType="DieseltechModel.tblLoadPickup" Width="1.5" PointX="13.375" PointY="20.75" />
+        <EntityTypeShape EntityType="DieseltechModel.tblShipper" Width="1.5" PointX="20.375" PointY="4.75" />
+        <EntityTypeShape EntityType="DieseltechModel.tblStateCityData" Width="1.5" PointX="9.375" PointY="16.75" />
+        <EntityTypeShape EntityType="DieseltechModel.tblAgentSalary" Width="1.5" PointX="19.375" PointY="20.75" />
+        <EntityTypeShape EntityType="DieseltechModel.tblTruck" Width="1.5" PointX="21.375" PointY="8.75" />
+        <EntityTypeShape EntityType="DieseltechModel.tblCarrier" Width="1.5" PointX="21.375" PointY="14.75" />
+        <EntityTypeShape EntityType="DieseltechModel.tblLoadHead" Width="1.5" PointX="3.375" PointY="16.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

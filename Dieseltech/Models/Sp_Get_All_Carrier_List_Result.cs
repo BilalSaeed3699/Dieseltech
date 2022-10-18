@@ -20,7 +20,7 @@ namespace Dieseltech.Models
         public string Phonenumber { get; set; }
         public string TrailerNo { get; set; }
         public string TruckYard { get; set; }
-        public int ZipCode { get; set; }
+        public string ZipCode { get; set; }
         public string StateCode { get; set; }
         public string DriverName { get; set; }
         public string DriverPhone { get; set; }

@@ -36,6 +36,18 @@
           <Property Name="AgentId" Type="int" Nullable="false" />
           <Property Name="Commissionpercentage" Type="int" Nullable="false" />
           <Property Name="salary" Type="int" Nullable="false" />
+          <Property Name="AffectiveDate" Type="datetime" Nullable="false" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tblAgentSalary">
+          <Key>
+            <PropertyRef Name="AgentSalaryId" />
+          </Key>
+          <Property Name="AgentSalaryId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AgentId" Type="int" Nullable="false" />
+          <Property Name="salary" Type="int" Nullable="false" />
+          <Property Name="AffectiveDate" Type="datetime" Nullable="false" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
         </EntityType>
         <EntityType Name="tblBroker">
           <Key>
@@ -91,6 +103,7 @@
           <Property Name="Quickpaypercentage" Type="float" Nullable="false" />
           <Property Name="Istrailerinterchange" Type="int" Nullable="false" />
           <Property Name="Isdeleted" Type="int" Nullable="false" />
+          <Property Name="IsNeedToAssign" Type="bit" />
         </EntityType>
         <EntityType Name="tblCarrierCategory">
           <Key>
@@ -352,7 +365,7 @@ warning 6002: The table/view 'Dieseltech.dbo.tblForgetPassword' does not have a 
           <Property Name="CountryName" Type="varchar" MaxLength="200" Nullable="false" />
           <Property Name="PhoneNumber" Type="varchar" MaxLength="20" Nullable="false" />
           <Property Name="Address" Type="varchar" MaxLength="500" Nullable="false" />
-          <Property Name="ZipCode" Type="int" Nullable="false" />
+          <Property Name="ZipCode" Type="nvarchar" MaxLength="500" />
           <Property Name="StateCode" Type="varchar" MaxLength="2" Nullable="false" />
           <Property Name="CityName" Type="varchar" MaxLength="200" Nullable="false" />
           <Property Name="DateTimeFrom" Type="datetime" Nullable="false" />
@@ -458,6 +471,7 @@ warning 6002: The table/view 'Dieseltech.dbo.tblLoadFilePathTemp' does not have 
           <Property Name="QuickPaypercentage" Type="numeric" Precision="18" Scale="2" Nullable="false" />
           <Property Name="AdjustedCarrierRate" Type="numeric" Precision="18" Scale="2" Nullable="false" />
           <Property Name="IsManagerFutureLoad" Type="bit" />
+          <Property Name="Status" Type="int" />
         </EntityType>
         <EntityType Name="tblLoadPickup">
           <Key>
@@ -472,7 +486,7 @@ warning 6002: The table/view 'Dieseltech.dbo.tblLoadFilePathTemp' does not have 
           <Property Name="CountryName" Type="varchar" MaxLength="200" Nullable="false" />
           <Property Name="PhoneNumber" Type="varchar" MaxLength="20" Nullable="false" />
           <Property Name="Address" Type="varchar" MaxLength="500" Nullable="false" />
-          <Property Name="ZipCode" Type="int" Nullable="false" />
+          <Property Name="ZipCode" Type="nvarchar" MaxLength="500" />
           <Property Name="StateCode" Type="varchar" MaxLength="2" Nullable="false" />
           <Property Name="CityName" Type="varchar" MaxLength="200" Nullable="false" />
           <Property Name="DateTimeFrom" Type="datetime" Nullable="false" />
@@ -602,7 +616,7 @@ warning 6002: The table/view 'Dieseltech.dbo.tblPackage' does not have a primary
           <Property Name="ShipperCity" Type="varchar" MaxLength="20" />
           <Property Name="ShipperStateCode" Type="varchar" MaxLength="20" />
           <Property Name="ShipperStateName" Type="varchar" MaxLength="20" />
-          <Property Name="ShipperZipCode" Type="int" />
+          <Property Name="ShipperZipCode" Type="nvarchar" MaxLength="500" />
           <Property Name="ShipperAssignId" Type="varchar" MaxLength="4" />
           <Property Name="Longitude" Type="varchar" MaxLength="300" />
           <Property Name="Latitude" Type="varchar" MaxLength="300" />
@@ -624,13 +638,12 @@ warning 6002: The table/view 'Dieseltech.dbo.tblStateCityData' does not have a p
         <EntityType Name="tblStateCityData">
           <Key>
             <PropertyRef Name="Id" />
-            <PropertyRef Name="ZipCode" />
             <PropertyRef Name="CityName" />
             <PropertyRef Name="StateCode" />
             <PropertyRef Name="StateName" />
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="ZipCode" Type="int" Nullable="false" />
+          <Property Name="ZipCode" Type="nvarchar" MaxLength="500" />
           <Property Name="CityName" Type="varchar" MaxLength="200" Nullable="false" />
           <Property Name="StateCode" Type="char" MaxLength="2" Nullable="false" />
           <Property Name="StateName" Type="varchar" MaxLength="200" Nullable="false" />
@@ -654,7 +667,7 @@ warning 6002: The table/view 'Dieseltech.dbo.tblStateCityData' does not have a p
           <Property Name="TruckYard" Type="varchar" MaxLength="200" Nullable="false" />
           <Property Name="TrailerNo" Type="varchar" MaxLength="200" Nullable="false" />
           <Property Name="TrailerTypeId" Type="int" Nullable="false" />
-          <Property Name="ZipCode" Type="int" Nullable="false" />
+          <Property Name="ZipCode" Type="nvarchar" MaxLength="500" />
           <Property Name="AvailableDate" Type="datetime" Nullable="false" />
           <Property Name="DriverName" Type="varchar" MaxLength="200" Nullable="false" />
           <Property Name="DriverPhone" Type="varchar" MaxLength="20" Nullable="false" />
@@ -728,7 +741,14 @@ warning 6002: The table/view 'Dieseltech.dbo.tblUser_Rights' does not have a pri
           <Parameter Name="DateTime" Type="date" Mode="In" />
           <Parameter Name="AgentId" Type="int" Mode="In" />
         </Function>
+        <Function Name="sp_Get_AgentCommisionList" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ID" Type="int" Mode="In" />
+        </Function>
         <Function Name="Sp_Get_Agents_List" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="sp_Get_AgentSalaryList" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ID" Type="int" Mode="In" />
+        </Function>
+        <Function Name="sp_Get_AgentsLatestCommision" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="Sp_Get_All_Carrier_List" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="Sp_Get_All_Carrier_List_Filter" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="FilterType" Type="int" Mode="In" />
@@ -858,6 +878,7 @@ warning 6002: The table/view 'Dieseltech.dbo.tblUser_Rights' does not have a pri
           <EntitySet Name="tblAccess_Level_Menu" EntityType="Self.tblAccess_Level_Menu" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblActivationCode" EntityType="Self.tblActivationCode" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblAgentcommission" EntityType="Self.tblAgentcommission" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblAgentSalary" EntityType="Self.tblAgentSalary" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblBroker" EntityType="Self.tblBroker" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblBrokerHelper" EntityType="Self.tblBrokerHelper" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblCarrier" EntityType="Self.tblCarrier" Schema="dbo" store:Type="Tables" />
@@ -957,43 +978,6 @@ warning 6002: The table/view 'Dieseltech.dbo.tblUser_Rights' does not have a pri
           <Property Name="Email" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
           <Property Name="AccountingEmail" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
         </EntityType>
-        <EntityType Name="tblProfile">
-          <Key>
-            <PropertyRef Name="profile_id" />
-          </Key>
-          <Property Name="profile_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Profile_name" Type="String" MaxLength="500" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="Email" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="Password" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="phoneNo" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="youtube" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="instagram" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="Linkdin" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="Twitter" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="Facebook" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="Details" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="Designation" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="Image" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="IsActive" Type="Int32" />
-          <Property Name="Adress" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="User_ID" Type="Int32" />
-          <Property Name="Packageid" Type="Int32" />
-          <Property Name="Accessid" Type="Int32" />
-          <Property Name="Isdeleted" Type="Int32" Nullable="false" />
-        </EntityType>
-        <EntityType Name="tblUser">
-          <Key>
-            <PropertyRef Name="User_ID" />
-          </Key>
-          <Property Name="User_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="UserName" Type="String" MaxLength="500" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="Password" Type="String" MaxLength="500" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="Email_Adress" Type="String" MaxLength="500" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="IsActive" Type="Int32" Nullable="false" />
-          <Property Name="Create_Date" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="ValidUpto" Type="DateTime" Precision="3" />
-          <Property Name="Isdeleted" Type="Int32" Nullable="false" />
-        </EntityType>
         <EntityType Name="tblAccess_Level_Menu">
           <Key>
             <PropertyRef Name="ID" />
@@ -1041,8 +1025,6 @@ warning 6002: The table/view 'Dieseltech.dbo.tblUser_Rights' does not have a pri
         </EntityType>
         <EntityContainer Name="DieseltechEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="tblBrokers" EntityType="Self.tblBroker" />
-          <EntitySet Name="tblProfiles" EntityType="Self.tblProfile" />
-          <EntitySet Name="tblUsers" EntityType="Self.tblUser" />
           <EntitySet Name="tblAccess_Level_Menu" EntityType="Self.tblAccess_Level_Menu" />
           <EntitySet Name="tblActivationCodes" EntityType="Self.tblActivationCode" />
           <EntitySet Name="tblForgetPasswords" EntityType="Self.tblForgetPassword" />
@@ -1077,7 +1059,6 @@ warning 6002: The table/view 'Dieseltech.dbo.tblUser_Rights' does not have a pri
           <FunctionImport Name="sp_Get_Zone_List" ReturnType="Collection(DieseltechModel.sp_Get_Zone_List_Result)" />
           <EntitySet Name="tblDrivers" EntityType="DieseltechModel.tblDriver" />
           <FunctionImport Name="sp_Driver_List" ReturnType="Collection(DieseltechModel.sp_Driver_List_Result)" />
-          <EntitySet Name="tblTrucks" EntityType="DieseltechModel.tblTruck" />
           <EntitySet Name="tblBrokerHelpers" EntityType="DieseltechModel.tblBrokerHelper" />
           <FunctionImport Name="sp_Get_Broker_Helper_List" ReturnType="Collection(DieseltechModel.sp_Get_Broker_Helper_List_Result)" />
           <EntitySet Name="tblAccess_Level" EntityType="DieseltechModel.tblAccess_Level" />
@@ -1106,7 +1087,6 @@ warning 6002: The table/view 'Dieseltech.dbo.tblUser_Rights' does not have a pri
           <EntitySet Name="tblLoadConfirmationDocuments" EntityType="DieseltechModel.tblLoadConfirmationDocument" />
           <EntitySet Name="tblCarrierDocuments" EntityType="DieseltechModel.tblCarrierDocument" />
           <EntitySet Name="tblDriverLicenses" EntityType="DieseltechModel.tblDriverLicense" />
-          <EntitySet Name="tblStateCityDatas" EntityType="DieseltechModel.tblStateCityData" />
           <FunctionImport Name="Sp_Get_CarrierTrucks" ReturnType="Collection(DieseltechModel.Sp_Get_CarrierTrucks_Result)">
           <Parameter Name="CarrierAssignId" Mode="In" Type="Int32" />
           </FunctionImport>
@@ -1115,10 +1095,7 @@ warning 6002: The table/view 'Dieseltech.dbo.tblUser_Rights' does not have a pri
           </FunctionImport>
           <FunctionImport Name="Sp_Get_Zone_States" ReturnType="Collection(DieseltechModel.Sp_Get_Zone_States_Result)" />
           <FunctionImport Name="Sp_Get_ZoneList" ReturnType="Collection(DieseltechModel.Sp_Get_ZoneList_Result)" />
-          <EntitySet Name="tblLoadDeliveries" EntityType="DieseltechModel.tblLoadDelivery" />
-          <EntitySet Name="tblLoadPickups" EntityType="DieseltechModel.tblLoadPickup" />
           <EntitySet Name="tblLoadFilePathTemps" EntityType="DieseltechModel.tblLoadFilePathTemp" />
-          <EntitySet Name="tblShippers" EntityType="DieseltechModel.tblShipper" />
           <FunctionImport Name="sp_getAccessMenusUser" ReturnType="Collection(DieseltechModel.sp_getAccessMenusUser_Result2)">
           <Parameter Name="User_ID" Mode="In" Type="Int32" />
           </FunctionImport>
@@ -1130,7 +1107,6 @@ warning 6002: The table/view 'Dieseltech.dbo.tblUser_Rights' does not have a pri
           </FunctionImport>
           <EntitySet Name="tblComments" EntityType="DieseltechModel.tblComment" />
           <FunctionImport Name="Sp_Get_Dashboard_Stats" ReturnType="Collection(DieseltechModel.Sp_Get_Dashboard_Stats_Result)" />
-          <FunctionImport Name="Sp_GetAll_Truck_List" ReturnType="Collection(DieseltechModel.Sp_GetAll_Truck_List_Result)" />
           <FunctionImport Name="Sp_TruckBoard_Truck_List" ReturnType="Collection(DieseltechModel.Sp_TruckBoard_Truck_List_Result)">
             <Parameter Name="FilterData" Mode="In" Type="String" />
             <Parameter Name="FilterType" Mode="In" Type="String" />
@@ -1146,24 +1122,9 @@ warning 6002: The table/view 'Dieseltech.dbo.tblUser_Rights' does not have a pri
             <Parameter Name="DateFrom" Mode="In" Type="DateTime" />
             <Parameter Name="DateTo" Mode="In" Type="DateTime" />
           </FunctionImport>
-          <FunctionImport Name="Sp_Get_Agent_Statistics_New" ReturnType="Collection(DieseltechModel.Sp_Get_Agent_Statistics_New_Result)">
-            <Parameter Name="FilterType" Mode="In" Type="String" />
-            <Parameter Name="DateFrom" Mode="In" Type="DateTime" />
-            <Parameter Name="DateTime" Mode="In" Type="DateTime" />
-            <Parameter Name="AgentId" Mode="In" Type="Int32" />
-          </FunctionImport>
           <FunctionImport Name="Sp_Get_LoadDetail_FilterWise" ReturnType="Collection(DieseltechModel.Sp_Get_LoadDetail_FilterWise_Result)">
           <Parameter Name="FilterType" Mode="In" Type="String" />
           </FunctionImport>
-          <EntitySet Name="tblLoadHeads" EntityType="DieseltechModel.tblLoadHead" />
-          <FunctionImport Name="Sp_Get_LoadDetail_WithAllFilter" ReturnType="Collection(DieseltechModel.Sp_Get_LoadDetail_WithAllFilter_Result)">
-            <Parameter Name="FilterType" Mode="In" Type="String" />
-            <Parameter Name="DateFrom" Mode="In" Type="DateTime" />
-            <Parameter Name="DateTime" Mode="In" Type="DateTime" />
-            <Parameter Name="userid" Mode="In" Type="Int32" />
-            <Parameter Name="cwhere" Mode="In" Type="String" />
-          </FunctionImport>
-          <EntitySet Name="tblCarriers" EntityType="DieseltechModel.tblCarrier" />
           <EntitySet Name="tblNotifications" EntityType="DieseltechModel.tblNotification" />
           <FunctionImport Name="Sp_Get_Agents_List" ReturnType="Collection(DieseltechModel.Sp_Get_Agents_List_Result)" />
           <FunctionImport Name="SP_Get_Load_Confirmation_Data" ReturnType="Collection(DieseltechModel.SP_Get_Load_Confirmation_Data_Result)">
@@ -1173,7 +1134,6 @@ warning 6002: The table/view 'Dieseltech.dbo.tblUser_Rights' does not have a pri
           <FunctionImport Name="Sp_Get_Carrier_LoadList" ReturnType="Collection(DieseltechModel.Sp_Get_Carrier_LoadList_Result)">
           <Parameter Name="CarrierAssignId" Mode="In" Type="String" />
           </FunctionImport>
-          <FunctionImport Name="Sp_Get_All_Carrier_List" ReturnType="Collection(DieseltechModel.Sp_Get_All_Carrier_List_Result)" />
           <FunctionImport Name="Sp_Get_All_Carrier_List_Filter" ReturnType="Collection(DieseltechModel.Sp_Get_All_Carrier_List_Filter_Result)">
             <Parameter Name="FilterType" Mode="In" Type="Int32" />
             <Parameter Name="BlackList" Mode="In" Type="Int32" />
@@ -1216,9 +1176,6 @@ warning 6002: The table/view 'Dieseltech.dbo.tblUser_Rights' does not have a pri
           <FunctionImport Name="Sp_Search_Autocomplete_TruckInfo" ReturnType="Collection(DieseltechModel.Sp_Search_Autocomplete_TruckInfo_Result)">
           <Parameter Name="Filter" Mode="In" Type="String" />
           </FunctionImport>
-          <FunctionImport Name="Sp_Get_CarrierTruck_Information" ReturnType="Collection(DieseltechModel.Sp_Get_CarrierTruck_Information_Result)">
-          <Parameter Name="AssignID" Mode="In" Type="String" />
-          </FunctionImport>
           <EntitySet Name="tblcarriercollections" EntityType="DieseltechModel.tblcarriercollection" />
           <EntitySet Name="tblcustomercollections" EntityType="DieseltechModel.tblcustomercollection" />
           <FunctionImport Name="Sp_get_collection_list" ReturnType="Collection(DieseltechModel.Sp_get_collection_list_Result)" />
@@ -1232,7 +1189,42 @@ warning 6002: The table/view 'Dieseltech.dbo.tblUser_Rights' does not have a pri
           <Parameter Name="searchValue" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="Sp_Get_Carrier_Revenue" ReturnType="Collection(DieseltechModel.Sp_Get_Carrier_Revenue_Result)">
-            <Parameter Name="searchValue" Mode="In" Type="String" />
+          <Parameter Name="searchValue" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="sp_Get_AgentCommisionList" ReturnType="Collection(DieseltechModel.sp_Get_AgentCommisionList_Result)">
+          <Parameter Name="ID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_Get_AgentsLatestCommision" ReturnType="Collection(DieseltechModel.sp_Get_AgentsLatestCommision_Result)" />
+          <FunctionImport Name="Sp_Get_Agent_Statistics_New" ReturnType="Collection(DieseltechModel.Sp_Get_Agent_Statistics_New_Result)">
+            <Parameter Name="FilterType" Mode="In" Type="String" />
+            <Parameter Name="DateFrom" Mode="In" Type="DateTime" />
+            <Parameter Name="DateTime" Mode="In" Type="DateTime" />
+            <Parameter Name="AgentId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <EntitySet Name="tblProfiles" EntityType="DieseltechModel.tblProfile" />
+          <EntitySet Name="tblUsers" EntityType="DieseltechModel.tblUser" />
+          <EntitySet Name="tblLoadDeliveries" EntityType="DieseltechModel.tblLoadDelivery" />
+          <EntitySet Name="tblLoadPickups" EntityType="DieseltechModel.tblLoadPickup" />
+          <EntitySet Name="tblShippers" EntityType="DieseltechModel.tblShipper" />
+          <EntitySet Name="tblStateCityDatas" EntityType="DieseltechModel.tblStateCityData" />
+          <EntitySet Name="tblAgentSalaries" EntityType="DieseltechModel.tblAgentSalary" />
+          <FunctionImport Name="sp_Get_AgentSalaryList" ReturnType="Collection(DieseltechModel.sp_Get_AgentSalaryList_Result)">
+          <Parameter Name="ID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <EntitySet Name="tblTrucks" EntityType="DieseltechModel.tblTruck" />
+          <FunctionImport Name="Sp_Get_All_Carrier_List" ReturnType="Collection(DieseltechModel.Sp_Get_All_Carrier_List_Result)" />
+          <FunctionImport Name="Sp_GetAll_Truck_List" ReturnType="Collection(DieseltechModel.Sp_GetAll_Truck_List_Result)" />
+          <EntitySet Name="tblCarriers" EntityType="DieseltechModel.tblCarrier" />
+          <EntitySet Name="tblLoadHeads" EntityType="DieseltechModel.tblLoadHead" />
+          <FunctionImport Name="Sp_Get_LoadDetail_WithAllFilter" ReturnType="Collection(DieseltechModel.Sp_Get_LoadDetail_WithAllFilter_Result)">
+            <Parameter Name="FilterType" Mode="In" Type="String" />
+            <Parameter Name="DateFrom" Mode="In" Type="DateTime" />
+            <Parameter Name="DateTime" Mode="In" Type="DateTime" />
+            <Parameter Name="userid" Mode="In" Type="Int32" />
+            <Parameter Name="cwhere" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="Sp_Get_CarrierTruck_Information" ReturnType="Collection(DieseltechModel.Sp_Get_CarrierTruck_Information_Result)">
+            <Parameter Name="AssignID" Mode="In" Type="String" />
           </FunctionImport>
         </EntityContainer>
         <ComplexType Name="SP_Verify_UserLogin_Result">
@@ -1392,30 +1384,6 @@ warning 6002: The table/view 'Dieseltech.dbo.tblUser_Rights' does not have a pri
           <Property Type="DateTime" Name="CreatedDate" Nullable="false" Precision="23" />
           <Property Type="Boolean" Name="IsActive" Nullable="false" />
         </ComplexType>
-        <EntityType Name="tblTruck">
-          <Key>
-            <PropertyRef Name="TruckId" />
-          </Key>
-          <Property Name="TruckId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="CreatedBy" Type="Int32" Nullable="false" />
-          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="IsActive" Type="Boolean" Nullable="false" />
-          <Property Name="CarrierAssignId" Type="String" Nullable="false" MaxLength="4" FixedLength="false" Unicode="false" />
-          <Property Name="TruckNo" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="TruckYard" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="TrailerNo" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="TrailerTypeId" Type="Int32" Nullable="false" />
-          <Property Name="ZipCode" Type="Int32" Nullable="false" />
-          <Property Name="AvailableDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="DriverName" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="DriverPhone" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="DriverLanguage" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="false" />
-          <Property Name="DriverId" Type="Int32" Nullable="false" />
-          <Property Name="StateName" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="CityName" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="StateCode" Type="String" MaxLength="2" FixedLength="true" Unicode="false" />
-          <Property Name="PrefferedDestination" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
-        </EntityType>
         <ComplexType Name="Sp_Get_Truck_List_Result">
           <Property Type="Int32" Name="TruckId" Nullable="false" />
           <Property Type="String" Name="Name" Nullable="false" MaxLength="200" />
@@ -1780,21 +1748,6 @@ warning 6002: The table/view 'Dieseltech.dbo.tblUser_Rights' does not have a pri
           <Property Name="UploadedDate" Type="DateTime" Precision="3" />
           <Property Name="DriverId" Type="Int32" />
         </EntityType>
-        <EntityType Name="tblStateCityData">
-          <Key>
-            <PropertyRef Name="Id" />
-            <PropertyRef Name="ZipCode" />
-            <PropertyRef Name="CityName" />
-            <PropertyRef Name="StateCode" />
-            <PropertyRef Name="StateName" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="ZipCode" Type="Int32" Nullable="false" />
-          <Property Name="CityName" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="StateCode" Type="String" Nullable="false" MaxLength="2" FixedLength="true" Unicode="false" />
-          <Property Name="StateName" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="ZoneId" Type="Int32" />
-        </EntityType>
         <ComplexType Name="Sp_Get_CarrierTrucks_Result">
           <Property Type="Int32" Name="TruckId" Nullable="false" />
           <Property Type="String" Name="CarrierAssignId" Nullable="false" MaxLength="4" />
@@ -1822,65 +1775,6 @@ warning 6002: The table/view 'Dieseltech.dbo.tblUser_Rights' does not have a pri
           <Property Type="Int32" Name="ZoneId" Nullable="false" />
           <Property Type="String" Name="ZoneName" Nullable="false" MaxLength="50" />
         </ComplexType>
-        <EntityType Name="tblLoadDelivery">
-          <Key>
-            <PropertyRef Name="DeliveryId" />
-          </Key>
-          <Property Name="DeliveryId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="PickUpId" Type="Int32" Nullable="false" />
-          <Property Name="LoadNumber" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
-          <Property Name="Information" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="ShipperId" Type="Int32" Nullable="false" />
-          <Property Name="ShipperName" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="CountryId" Type="Int32" Nullable="false" />
-          <Property Name="PhoneNumber" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="Address" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="ZipCode" Type="Int32" Nullable="false" />
-          <Property Name="DateTimeFrom" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="DateTimeTo" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="PickupNumber" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="Traitor" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="Comments" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="CreatedBy" Type="Int32" Nullable="false" />
-          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="IsSave" Type="Int32" Nullable="false" />
-          <Property Name="StateCode" Type="String" Nullable="false" MaxLength="2" FixedLength="false" Unicode="false" />
-          <Property Name="CityName" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="CountryName" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="MaxDeliveryID" Type="Int32" Nullable="false" />
-          <Property Name="Longitude" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
-          <Property Name="Latitude" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
-          <Property Name="Deliveryorder" Type="Int32" Nullable="false" />
-        </EntityType>
-        <EntityType Name="tblLoadPickup">
-          <Key>
-            <PropertyRef Name="PickUpId" />
-          </Key>
-          <Property Name="PickUpId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="LoadNumber" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
-          <Property Name="Information" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="ShipperId" Type="Int32" Nullable="false" />
-          <Property Name="ShipperName" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="CountryId" Type="Int32" Nullable="false" />
-          <Property Name="PhoneNumber" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="Address" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="ZipCode" Type="Int32" Nullable="false" />
-          <Property Name="DateTimeFrom" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="DateTimeTo" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="PickupNumber" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="Traitor" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="Comments" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="CreatedBy" Type="Int32" Nullable="false" />
-          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="IsSave" Type="Int32" Nullable="false" />
-          <Property Name="StateCode" Type="String" Nullable="false" MaxLength="2" FixedLength="false" Unicode="false" />
-          <Property Name="CityName" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="CountryName" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="MaxPickupId" Type="Int32" />
-          <Property Name="Longitude" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
-          <Property Name="Latitude" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
-          <Property Name="Pickuporder" Type="Int32" Nullable="false" />
-        </EntityType>
         <EntityType Name="tblLoadFilePathTemp">
           <Key>
             <PropertyRef Name="FilePathId" />
@@ -1892,22 +1786,6 @@ warning 6002: The table/view 'Dieseltech.dbo.tblUser_Rights' does not have a pri
           <Property Name="LoaderNumber" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
           <Property Name="ImagePath" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
           <Property Name="FileName" Type="String" Nullable="false" MaxLength="300" FixedLength="false" Unicode="false" />
-        </EntityType>
-        <EntityType Name="tblShipper">
-          <Key>
-            <PropertyRef Name="ShipperId" />
-          </Key>
-          <Property Name="ShipperId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="ShipperName" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="ShipperPhone" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="ShipperAddress" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="ShipperCity" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="ShipperStateCode" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="ShipperStateName" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="ShipperZipCode" Type="Int32" />
-          <Property Name="ShipperAssignId" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
-          <Property Name="Longitude" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
-          <Property Name="Latitude" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
         </EntityType>
         <ComplexType Name="sp_getAccessMenusUser_Result2">
           <Property Type="Int32" Name="Page_ID" Nullable="false" />
@@ -1999,33 +1877,6 @@ warning 6002: The table/view 'Dieseltech.dbo.tblUser_Rights' does not have a pri
           <Property Type="Int32" Name="CarrierCount" Nullable="true" />
           <Property Type="Int32" Name="TruckCount" Nullable="true" />
           <Property Type="Int32" Name="DriverCount" Nullable="true" />
-        </ComplexType>
-        <ComplexType Name="Sp_GetAll_Truck_List_Result">
-          <Property Type="Int32" Name="TruckId" Nullable="false" />
-          <Property Type="String" Name="Board" Nullable="false" MaxLength="9" />
-          <Property Type="String" Name="AssignID" Nullable="false" MaxLength="4" />
-          <Property Type="String" Name="CarrierName" Nullable="false" MaxLength="200" />
-          <Property Type="String" Name="ContactName" Nullable="false" MaxLength="200" />
-          <Property Type="String" Name="Phonenumber" Nullable="false" MaxLength="20" />
-          <Property Type="String" Name="TruckNo" Nullable="false" MaxLength="200" />
-          <Property Type="String" Name="TruckYard" Nullable="false" MaxLength="200" />
-          <Property Type="String" Name="TrailerNo" Nullable="false" MaxLength="200" />
-          <Property Type="String" Name="LoadTypeName" Nullable="false" MaxLength="200" />
-          <Property Type="Int32" Name="LoadTypeId" Nullable="false" />
-          <Property Type="String" Name="Language" Nullable="false" MaxLength="200" />
-          <Property Type="String" Name="DriverPhone" Nullable="false" MaxLength="20" />
-          <Property Type="String" Name="CityName" Nullable="false" MaxLength="200" />
-          <Property Type="String" Name="StateCode" Nullable="false" MaxLength="2" />
-          <Property Type="String" Name="StateName" Nullable="false" MaxLength="200" />
-          <Property Type="Int32" Name="ZipCode" Nullable="false" />
-          <Property Type="String" Name="AvailableDate" Nullable="true" MaxLength="4000" />
-          <Property Type="String" Name="Eq" Nullable="false" MaxLength="200" />
-          <Property Type="String" Name="DriverName" Nullable="false" MaxLength="200" />
-          <Property Type="String" Name="LoadSubType" Nullable="false" MaxLength="4" />
-          <Property Type="String" Name="Team" Nullable="false" MaxLength="4" />
-          <Property Type="Int32" Name="DriverId" Nullable="false" />
-          <Property Type="Int32" Name="Rating" Nullable="true" />
-          <Property Type="String" Name="prefferedDestination" Nullable="false" MaxLength="1000" />
         </ComplexType>
         <ComplexType Name="Sp_TruckBoard_Truck_List_Result">
           <Property Type="Int32" Name="TruckId" Nullable="false" />
@@ -2130,11 +1981,6 @@ warning 6002: The table/view 'Dieseltech.dbo.tblUser_Rights' does not have a pri
           <Property Type="Boolean" Name="IsFutureLoad" Nullable="false" />
           <Property Type="String" Name="FutureLoadText" Nullable="false" MaxLength="500" />
         </ComplexType>
-        <ComplexType Name="Sp_Get_Agent_Statistics_New_Result">
-          <Property Type="String" Name="DispatcherName" Nullable="false" MaxLength="500" />
-          <Property Type="Int32" Name="TotalQuanity" Nullable="false" />
-          <Property Type="Decimal" Name="GrossProfit" Nullable="false" Precision="38" Scale="2" />
-        </ComplexType>
         <ComplexType Name="Sp_Get_LoadDetail_FilterWise_Result">
           <Property Type="String" Name="COD" Nullable="false" MaxLength="7" />
           <Property Type="String" Name="LoaderNumber" Nullable="true" MaxLength="10" />
@@ -2155,114 +2001,6 @@ warning 6002: The table/view 'Dieseltech.dbo.tblUser_Rights' does not have a pri
           <Property Type="Boolean" Name="IsFutureLoad" Nullable="false" />
           <Property Type="String" Name="FutureLoadText" Nullable="false" MaxLength="500" />
         </ComplexType>
-        <EntityType Name="tblLoadHead">
-          <Key>
-            <PropertyRef Name="LoaderHeadId" />
-          </Key>
-          <Property Name="LoaderHeadId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="LoaderNumber" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
-          <Property Name="CarrierId" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="NumberToText" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="IsSendText" Type="Boolean" />
-          <Property Name="TruckId" Type="Int32" Nullable="false" />
-          <Property Name="CarrierRate" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="LoadTypeId" Type="Int32" Nullable="false" />
-          <Property Name="Commodity" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
-          <Property Name="LoadSubTypeId" Type="Int32" Nullable="false" />
-          <Property Name="Available" Type="Int32" />
-          <Property Name="Weight" Type="Int32" />
-          <Property Name="QuantityTypeId" Type="Int32" />
-          <Property Name="Quantity" Type="Int32" />
-          <Property Name="DriverTypeId" Type="Int32" Nullable="false" />
-          <Property Name="CarrierInstructions" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="CompanyId" Type="Int32" />
-          <Property Name="BrokerId" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="BrokerRate" Type="Decimal" Precision="18" Scale="2" />
-          <Property Name="Extension" Type="String" MaxLength="6" FixedLength="false" Unicode="false" />
-          <Property Name="BrokerReference" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="RegistrationDate" Type="DateTime" Precision="3" />
-          <Property Name="User_ID" Type="Int32" />
-          <Property Name="AgentGross" Type="Decimal" Precision="18" Scale="2" />
-          <Property Name="AgentFlat" Type="Int32" />
-          <Property Name="BranchFlat" Type="Int32" />
-          <Property Name="IsPrint" Type="Int32" />
-          <Property Name="IsBrokerConfirm" Type="Int32" />
-          <Property Name="IsCarrierConfirm" Type="Int32" />
-          <Property Name="IsPod" Type="Int32" />
-          <Property Name="IsLumper" Type="Int32" />
-          <Property Name="IsMarkCOD" Type="Int32" />
-          <Property Name="Comment" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
-          <Property Name="DispatcherName" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="DispatcherPhone" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
-          <Property Name="DriverName" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="DriverPhone" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="IsCancel" Type="Int32" />
-          <Property Name="BrokerAmout" Type="Int32" />
-          <Property Name="CarrierAmount" Type="Int32" />
-          <Property Name="IsFutureLoad" Type="Boolean" />
-          <Property Name="FutureLoadText" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="IsInvoiceCustomer" Type="Int32" />
-          <Property Name="IsPaymentRecieved" Type="Int32" />
-          <Property Name="IsPaidCarrier" Type="Int32" />
-          <Property Name="Rating" Type="Int32" />
-          <Property Name="UserId" Type="Int32" />
-          <Property Name="IsFuelAdvance" Type="Int32" />
-          <Property Name="FuelAdvanceAmount" Type="Int32" />
-          <Property Name="InvoiceNumber" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="IsQuickPay" Type="Int32" Nullable="false" />
-          <Property Name="QuickPaypercentage" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="AdjustedCarrierRate" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="IsManagerFutureLoad" Type="Boolean" />
-        </EntityType>
-        <ComplexType Name="Sp_Get_LoadDetail_WithAllFilter_Result">
-          <Property Type="String" Name="COD" Nullable="false" MaxLength="7" />
-          <Property Type="String" Name="LoaderNumber" Nullable="true" MaxLength="10" />
-          <Property Type="String" Name="RegistrationDate" Nullable="true" MaxLength="4000" />
-          <Property Type="String" Name="Agent" Nullable="false" MaxLength="4" />
-          <Property Type="String" Name="Profile" Nullable="false" MaxLength="500" />
-          <Property Type="String" Name="Brokernanme" Nullable="true" MaxLength="500" />
-          <Property Type="String" Name="CarrierName" Nullable="true" MaxLength="200" />
-          <Property Type="String" Name="LoadTypeName" Nullable="false" MaxLength="200" />
-          <Property Type="String" Name="PickupDate" Nullable="false" MaxLength="1" />
-          <Property Type="String" Name="PickupInfo" Nullable="false" MaxLength="1" />
-          <Property Type="String" Name="DeliveryInfo" Nullable="false" MaxLength="1" />
-          <Property Type="String" Name="BrokerReference" Nullable="false" MaxLength="200" />
-          <Property Type="String" Name="DeliveryDate" Nullable="false" MaxLength="1" />
-          <Property Type="Decimal" Name="BrokerRate" Nullable="true" Precision="18" Scale="2" />
-          <Property Type="Decimal" Name="CarrierRate" Nullable="false" Precision="18" Scale="2" />
-          <Property Type="Decimal" Name="Profit" Nullable="true" Precision="19" Scale="2" />
-          <Property Type="Int32" Name="IsCancel" Nullable="false" />
-          <Property Type="Boolean" Name="IsFutureLoad" Nullable="false" />
-          <Property Type="String" Name="FutureLoadText" Nullable="false" MaxLength="500" />
-        </ComplexType>
-        <EntityType Name="tblCarrier">
-          <Key>
-            <PropertyRef Name="CarrierID" />
-          </Key>
-          <Property Name="CarrierID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="CarrierName" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="MC_" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="AssignID" Type="String" Nullable="false" MaxLength="4" FixedLength="false" Unicode="false" />
-          <Property Name="ContactName" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="Phonenumber" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="CarrierCategoryId" Type="Int32" />
-          <Property Name="IsOwnerOperator" Type="Int32" />
-          <Property Name="IsActive" Type="Boolean" Nullable="false" />
-          <Property Name="CreatedBy" Type="Int32" Nullable="false" />
-          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="Rating" Type="Int32" />
-          <Property Name="Comment" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="PrefferedDestination" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
-          <Property Name="Email" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="ContactName2" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="Phonenumber2" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="IsQuickPay" Type="Int32" Nullable="false" />
-          <Property Name="InsuranceExpirationDate" Type="DateTime" Precision="3" />
-          <Property Name="IsBlackList" Type="Int32" Nullable="false" />
-          <Property Name="Quickpaypercentage" Type="Double" Nullable="false" />
-          <Property Name="Istrailerinterchange" Type="Int32" Nullable="false" />
-          <Property Name="Isdeleted" Type="Int32" Nullable="false" />
-        </EntityType>
         <EntityType Name="tblNotification">
           <Key>
             <PropertyRef Name="NotificationId" />
@@ -2318,6 +2056,8 @@ warning 6002: The table/view 'Dieseltech.dbo.tblUser_Rights' does not have a pri
           <Property Name="AgentId" Type="Int32" Nullable="false" />
           <Property Name="Commissionpercentage" Type="Int32" Nullable="false" />
           <Property Name="salary" Type="Int32" Nullable="false" />
+          <Property Name="AffectiveDate" Type="DateTime" Precision="3" Nullable="false" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
         </EntityType>
         <ComplexType Name="Sp_Get_Carrier_LoadList_Result">
           <Property Type="String" Name="LoaderNumber" Nullable="true" MaxLength="10" />
@@ -2332,25 +2072,6 @@ warning 6002: The table/view 'Dieseltech.dbo.tblUser_Rights' does not have a pri
           <Property Type="Decimal" Name="BrokerRate" Nullable="true" Precision="18" Scale="2" />
           <Property Type="Decimal" Name="CarrierRate" Nullable="false" Precision="18" Scale="2" />
           <Property Type="Decimal" Name="Profit" Nullable="true" Precision="19" Scale="2" />
-        </ComplexType>
-        <ComplexType Name="Sp_Get_All_Carrier_List_Result">
-          <Property Type="String" Name="CarrierName" Nullable="false" MaxLength="200" />
-          <Property Type="String" Name="MC_" Nullable="false" MaxLength="200" />
-          <Property Type="String" Name="AssignID" Nullable="false" MaxLength="4" />
-          <Property Type="String" Name="ContactName" Nullable="false" MaxLength="200" />
-          <Property Type="String" Name="Phonenumber" Nullable="false" MaxLength="20" />
-          <Property Type="String" Name="TrailerNo" Nullable="false" MaxLength="200" />
-          <Property Type="String" Name="TruckYard" Nullable="false" MaxLength="200" />
-          <Property Type="Int32" Name="ZipCode" Nullable="false" />
-          <Property Type="String" Name="StateCode" Nullable="false" MaxLength="2" />
-          <Property Type="String" Name="DriverName" Nullable="false" MaxLength="200" />
-          <Property Type="String" Name="DriverPhone" Nullable="false" MaxLength="20" />
-          <Property Type="String" Name="CategoryName" Nullable="false" MaxLength="100" />
-          <Property Type="Int32" Name="Rating" Nullable="false" />
-          <Property Type="Int32" Name="CarrierCategoryId" Nullable="false" />
-          <Property Type="String" Name="Email" Nullable="false" MaxLength="200" />
-          <Property Type="Boolean" Name="isactive" Nullable="false" />
-          <Property Type="Int32" Name="IsBlackList" Nullable="false" />
         </ComplexType>
         <ComplexType Name="Sp_Get_All_Carrier_List_Filter_Result">
           <Property Type="String" Name="CarrierName" Nullable="false" MaxLength="200" />
@@ -2518,47 +2239,6 @@ warning 6002: The table/view 'Dieseltech.dbo.tblUser_Rights' does not have a pri
           <Property Type="Int32" Name="IsBlackList" Nullable="false" />
           <Property Type="Int32" Name="Validcarrier" Nullable="false" />
         </ComplexType>
-        <ComplexType Name="Sp_Get_CarrierTruck_Information_Result">
-          <Property Type="String" Name="CarrierName" Nullable="false" MaxLength="200" />
-          <Property Type="String" Name="MC_" Nullable="false" MaxLength="200" />
-          <Property Type="String" Name="AssignID" Nullable="false" MaxLength="4" />
-          <Property Type="String" Name="ContactName" Nullable="false" MaxLength="200" />
-          <Property Type="String" Name="Phonenumber" Nullable="false" MaxLength="20" />
-          <Property Type="Int32" Name="TruckId" Nullable="false" />
-          <Property Type="String" Name="CarrierAssignId" Nullable="false" MaxLength="4" />
-          <Property Type="String" Name="TruckNo" Nullable="false" MaxLength="200" />
-          <Property Type="String" Name="TruckYard" Nullable="false" MaxLength="200" />
-          <Property Type="String" Name="TrailerNo" Nullable="false" MaxLength="200" />
-          <Property Type="Int32" Name="TrailerTypeId" Nullable="false" />
-          <Property Type="Int32" Name="ZipCode" Nullable="false" />
-          <Property Type="String" Name="AvailableDate" Nullable="true" MaxLength="4000" />
-          <Property Type="String" Name="Email" Nullable="false" MaxLength="200" />
-          <Property Type="String" Name="DriverName" Nullable="false" MaxLength="200" />
-          <Property Type="String" Name="DriverPhone" Nullable="false" MaxLength="20" />
-          <Property Type="String" Name="DriverLanguage" Nullable="false" MaxLength="30" />
-          <Property Type="Int32" Name="DriverId" Nullable="false" />
-          <Property Type="String" Name="McAuthorityFileName" Nullable="false" MaxLength="100" />
-          <Property Type="String" Name="McAuthorityFilePath" Nullable="false" MaxLength="500" />
-          <Property Type="String" Name="AssignmentFileName" Nullable="false" MaxLength="100" />
-          <Property Type="String" Name="AssignmentFilePath" Nullable="false" MaxLength="500" />
-          <Property Type="String" Name="VoidChequeFileName" Nullable="false" MaxLength="100" />
-          <Property Type="String" Name="VoidChequeFilePath" Nullable="false" MaxLength="500" />
-          <Property Type="String" Name="InsuranceFileName" Nullable="false" MaxLength="100" />
-          <Property Type="String" Name="InsuranceFilePath" Nullable="false" MaxLength="500" />
-          <Property Type="String" Name="W9FileName" Nullable="false" MaxLength="100" />
-          <Property Type="String" Name="W9FilePath" Nullable="false" MaxLength="500" />
-          <Property Type="Int32" Name="CarrierCategoryId" Nullable="false" />
-          <Property Type="Int32" Name="IsOwnerOperator" Nullable="false" />
-          <Property Type="Int32" Name="IsQuickPay" Nullable="false" />
-          <Property Type="String" Name="PrefferedDestination" Nullable="false" MaxLength="1000" />
-          <Property Type="DateTime" Name="InsuranceExpirationDate" Nullable="false" Precision="23" />
-          <Property Type="String" Name="ContactNametwo" Nullable="false" MaxLength="200" />
-          <Property Type="String" Name="Phonenumbertwo" Nullable="false" MaxLength="20" />
-          <Property Type="Boolean" Name="IsActive" Nullable="false" />
-          <Property Type="Int32" Name="IsBlackList" Nullable="false" />
-          <Property Type="Int32" Name="Istrailerinterchange" Nullable="false" />
-          <Property Type="Double" Name="quickpaypercentage" Nullable="false" />
-        </ComplexType>
         <EntityType Name="tblcarriercollection">
           <Key>
             <PropertyRef Name="id" />
@@ -2623,6 +2303,394 @@ warning 6002: The table/view 'Dieseltech.dbo.tblUser_Rights' does not have a pri
           <Property Type="String" Name="CarrierId" Nullable="true" MaxLength="50" />
           <Property Type="String" Name="CarrierName" Nullable="false" MaxLength="200" />
         </ComplexType>
+        <ComplexType Name="sp_Get_AgentCommisionList_Result">
+          <Property Type="Int32" Name="AgentCommissionId" Nullable="false" />
+          <Property Type="Int32" Name="AgentId" Nullable="false" />
+          <Property Type="Int32" Name="Commissionpercentage" Nullable="false" />
+          <Property Type="Int32" Name="salary" Nullable="false" />
+          <Property Type="DateTime" Name="AffectiveDate" Nullable="false" Precision="23" />
+          <Property Type="String" Name="UserName" Nullable="false" MaxLength="500" />
+        </ComplexType>
+        <ComplexType Name="sp_Get_AgentsLatestCommision_Result">
+          <Property Type="Int32" Name="AgentCommissionId" Nullable="true" />
+          <Property Type="Int32" Name="AgentId" Nullable="false" />
+          <Property Type="Int32" Name="Commissionpercentage" Nullable="false" />
+          <Property Type="DateTime" Name="AffectiveDate" Nullable="true" Precision="23" />
+          <Property Type="String" Name="UserName" Nullable="false" MaxLength="500" />
+        </ComplexType>
+        <ComplexType Name="Sp_Get_Agent_Statistics_New_Result">
+          <Property Type="String" Name="DispatcherName" Nullable="false" MaxLength="500" />
+          <Property Type="Int32" Name="TotalQuanity" Nullable="false" />
+          <Property Type="Decimal" Name="GrossProfit" Nullable="false" Precision="38" Scale="2" />
+          <Property Type="Decimal" Name="Commission" Nullable="false" Precision="38" Scale="6" />
+        </ComplexType>
+        <EntityType Name="tblProfile">
+          <Key>
+            <PropertyRef Name="profile_id" />
+          </Key>
+          <Property Name="profile_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Profile_name" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="Email" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="Password" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="phoneNo" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="youtube" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="instagram" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="Linkdin" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="Twitter" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="Facebook" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="Details" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Designation" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Image" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="IsActive" Type="Int32" />
+          <Property Name="Adress" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="User_ID" Type="Int32" />
+          <Property Name="Packageid" Type="Int32" />
+          <Property Name="Accessid" Type="Int32" />
+          <Property Name="Isdeleted" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tblUser">
+          <Key>
+            <PropertyRef Name="User_ID" />
+          </Key>
+          <Property Name="User_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserName" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="Password" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="Email_Adress" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="IsActive" Type="Int32" Nullable="false" />
+          <Property Name="Create_Date" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ValidUpto" Type="DateTime" Precision="3" />
+          <Property Name="Isdeleted" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tblLoadDelivery">
+          <Key>
+            <PropertyRef Name="DeliveryId" />
+          </Key>
+          <Property Name="DeliveryId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="PickUpId" Type="Int32" Nullable="false" />
+          <Property Name="LoadNumber" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="Information" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="ShipperId" Type="Int32" Nullable="false" />
+          <Property Name="ShipperName" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="CountryId" Type="Int32" Nullable="false" />
+          <Property Name="CountryName" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="PhoneNumber" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Address" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="ZipCode" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="StateCode" Type="String" Nullable="false" MaxLength="2" FixedLength="false" Unicode="false" />
+          <Property Name="CityName" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="DateTimeFrom" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="DateTimeTo" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="PickupNumber" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="Traitor" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="Comments" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="CreatedBy" Type="Int32" Nullable="false" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="IsSave" Type="Int32" Nullable="false" />
+          <Property Name="MaxDeliveryID" Type="Int32" Nullable="false" />
+          <Property Name="Longitude" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+          <Property Name="Latitude" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+          <Property Name="Deliveryorder" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tblLoadPickup">
+          <Key>
+            <PropertyRef Name="PickUpId" />
+          </Key>
+          <Property Name="PickUpId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="LoadNumber" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="Information" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="ShipperId" Type="Int32" Nullable="false" />
+          <Property Name="ShipperName" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="CountryId" Type="Int32" Nullable="false" />
+          <Property Name="CountryName" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="PhoneNumber" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Address" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="ZipCode" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="StateCode" Type="String" Nullable="false" MaxLength="2" FixedLength="false" Unicode="false" />
+          <Property Name="CityName" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="DateTimeFrom" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="DateTimeTo" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="PickupNumber" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="Traitor" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="Comments" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="CreatedBy" Type="Int32" Nullable="false" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="IsSave" Type="Int32" Nullable="false" />
+          <Property Name="MaxPickupId" Type="Int32" />
+          <Property Name="Longitude" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+          <Property Name="Latitude" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+          <Property Name="Pickuporder" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tblShipper">
+          <Key>
+            <PropertyRef Name="ShipperId" />
+          </Key>
+          <Property Name="ShipperId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ShipperName" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="ShipperPhone" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="ShipperAddress" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="ShipperCity" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="ShipperStateCode" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="ShipperStateName" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="ShipperZipCode" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="ShipperAssignId" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="Longitude" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+          <Property Name="Latitude" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="tblStateCityData">
+          <Key>
+            <PropertyRef Name="Id" />
+            <PropertyRef Name="CityName" />
+            <PropertyRef Name="StateCode" />
+            <PropertyRef Name="StateName" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ZipCode" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="CityName" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="StateCode" Type="String" Nullable="false" MaxLength="2" FixedLength="true" Unicode="false" />
+          <Property Name="StateName" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="ZoneId" Type="Int32" />
+        </EntityType>
+        <EntityType Name="tblAgentSalary">
+          <Key>
+            <PropertyRef Name="AgentSalaryId" />
+          </Key>
+          <Property Name="AgentSalaryId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AgentId" Type="Int32" Nullable="false" />
+          <Property Name="salary" Type="Int32" Nullable="false" />
+          <Property Name="AffectiveDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <ComplexType Name="sp_Get_AgentSalaryList_Result">
+          <Property Type="Int32" Name="AgentSalaryId" Nullable="false" />
+          <Property Type="Int32" Name="AgentId" Nullable="false" />
+          <Property Type="Int32" Name="salary" Nullable="false" />
+          <Property Type="DateTime" Name="AffectiveDate" Nullable="false" Precision="23" />
+          <Property Type="String" Name="UserName" Nullable="false" MaxLength="500" />
+        </ComplexType>
+        <EntityType Name="tblTruck">
+          <Key>
+            <PropertyRef Name="TruckId" />
+          </Key>
+          <Property Name="TruckId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CarrierAssignId" Type="String" Nullable="false" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="TruckNo" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="TruckYard" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="TrailerNo" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="TrailerTypeId" Type="Int32" Nullable="false" />
+          <Property Name="ZipCode" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="AvailableDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="DriverName" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="DriverPhone" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="DriverLanguage" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="CreatedBy" Type="Int32" Nullable="false" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="DriverId" Type="Int32" Nullable="false" />
+          <Property Name="StateName" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="CityName" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="StateCode" Type="String" MaxLength="2" FixedLength="true" Unicode="false" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <Property Name="PrefferedDestination" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <ComplexType Name="Sp_Get_All_Carrier_List_Result">
+          <Property Type="String" Name="CarrierName" Nullable="false" MaxLength="200" />
+          <Property Type="String" Name="MC_" Nullable="false" MaxLength="200" />
+          <Property Type="String" Name="AssignID" Nullable="false" MaxLength="4" />
+          <Property Type="String" Name="ContactName" Nullable="false" MaxLength="200" />
+          <Property Type="String" Name="Phonenumber" Nullable="false" MaxLength="20" />
+          <Property Type="String" Name="TrailerNo" Nullable="false" MaxLength="200" />
+          <Property Type="String" Name="TruckYard" Nullable="false" MaxLength="200" />
+          <Property Type="String" Name="ZipCode" Nullable="false" MaxLength="500" />
+          <Property Type="String" Name="StateCode" Nullable="false" MaxLength="2" />
+          <Property Type="String" Name="DriverName" Nullable="false" MaxLength="200" />
+          <Property Type="String" Name="DriverPhone" Nullable="false" MaxLength="20" />
+          <Property Type="String" Name="CategoryName" Nullable="false" MaxLength="100" />
+          <Property Type="Int32" Name="Rating" Nullable="false" />
+          <Property Type="Int32" Name="CarrierCategoryId" Nullable="false" />
+          <Property Type="String" Name="Email" Nullable="false" MaxLength="200" />
+          <Property Type="Boolean" Name="isactive" Nullable="false" />
+          <Property Type="Int32" Name="IsBlackList" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="Sp_GetAll_Truck_List_Result">
+          <Property Type="Int32" Name="TruckId" Nullable="false" />
+          <Property Type="String" Name="Board" Nullable="false" MaxLength="9" />
+          <Property Type="String" Name="AssignID" Nullable="false" MaxLength="4" />
+          <Property Type="String" Name="CarrierName" Nullable="false" MaxLength="200" />
+          <Property Type="String" Name="ContactName" Nullable="false" MaxLength="200" />
+          <Property Type="String" Name="Phonenumber" Nullable="false" MaxLength="20" />
+          <Property Type="String" Name="TruckNo" Nullable="false" MaxLength="200" />
+          <Property Type="String" Name="TruckYard" Nullable="false" MaxLength="200" />
+          <Property Type="String" Name="TrailerNo" Nullable="false" MaxLength="200" />
+          <Property Type="String" Name="LoadTypeName" Nullable="false" MaxLength="200" />
+          <Property Type="Int32" Name="LoadTypeId" Nullable="false" />
+          <Property Type="String" Name="Language" Nullable="false" MaxLength="200" />
+          <Property Type="String" Name="DriverPhone" Nullable="false" MaxLength="20" />
+          <Property Type="String" Name="CityName" Nullable="false" MaxLength="200" />
+          <Property Type="String" Name="StateCode" Nullable="false" MaxLength="2" />
+          <Property Type="String" Name="StateName" Nullable="false" MaxLength="200" />
+          <Property Type="String" Name="ZipCode" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="AvailableDate" Nullable="true" MaxLength="4000" />
+          <Property Type="String" Name="Eq" Nullable="false" MaxLength="200" />
+          <Property Type="String" Name="DriverName" Nullable="false" MaxLength="200" />
+          <Property Type="String" Name="LoadSubType" Nullable="false" MaxLength="4" />
+          <Property Type="String" Name="Team" Nullable="false" MaxLength="4" />
+          <Property Type="Int32" Name="DriverId" Nullable="false" />
+          <Property Type="Int32" Name="Rating" Nullable="false" />
+          <Property Type="String" Name="prefferedDestination" Nullable="false" MaxLength="1000" />
+        </ComplexType>
+        <EntityType Name="tblCarrier">
+          <Key>
+            <PropertyRef Name="CarrierID" />
+          </Key>
+          <Property Name="CarrierID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CarrierName" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="MC_" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="AssignID" Type="String" Nullable="false" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="ContactName" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="Phonenumber" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="CarrierCategoryId" Type="Int32" />
+          <Property Name="IsOwnerOperator" Type="Int32" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <Property Name="CreatedBy" Type="Int32" Nullable="false" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Rating" Type="Int32" />
+          <Property Name="Comment" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="PrefferedDestination" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <Property Name="Email" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="ContactName2" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="Phonenumber2" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="IsQuickPay" Type="Int32" Nullable="false" />
+          <Property Name="InsuranceExpirationDate" Type="DateTime" Precision="3" />
+          <Property Name="IsBlackList" Type="Int32" Nullable="false" />
+          <Property Name="Quickpaypercentage" Type="Double" Nullable="false" />
+          <Property Name="Istrailerinterchange" Type="Int32" Nullable="false" />
+          <Property Name="Isdeleted" Type="Int32" Nullable="false" />
+          <Property Name="IsNeedToAssign" Type="Boolean" />
+        </EntityType>
+        <EntityType Name="tblLoadHead">
+          <Key>
+            <PropertyRef Name="LoaderHeadId" />
+          </Key>
+          <Property Name="LoaderHeadId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="LoaderNumber" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="CarrierId" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="NumberToText" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="IsSendText" Type="Boolean" />
+          <Property Name="TruckId" Type="Int32" Nullable="false" />
+          <Property Name="CarrierRate" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="LoadTypeId" Type="Int32" Nullable="false" />
+          <Property Name="Commodity" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+          <Property Name="LoadSubTypeId" Type="Int32" Nullable="false" />
+          <Property Name="Available" Type="Int32" />
+          <Property Name="Weight" Type="Int32" />
+          <Property Name="QuantityTypeId" Type="Int32" />
+          <Property Name="Quantity" Type="Int32" />
+          <Property Name="DriverTypeId" Type="Int32" Nullable="false" />
+          <Property Name="CarrierInstructions" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="CompanyId" Type="Int32" />
+          <Property Name="BrokerId" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="BrokerRate" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="Extension" Type="String" MaxLength="6" FixedLength="false" Unicode="false" />
+          <Property Name="BrokerReference" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="RegistrationDate" Type="DateTime" Precision="3" />
+          <Property Name="User_ID" Type="Int32" />
+          <Property Name="AgentGross" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="AgentFlat" Type="Int32" />
+          <Property Name="BranchFlat" Type="Int32" />
+          <Property Name="IsPrint" Type="Int32" />
+          <Property Name="IsBrokerConfirm" Type="Int32" />
+          <Property Name="IsCarrierConfirm" Type="Int32" />
+          <Property Name="IsPod" Type="Int32" />
+          <Property Name="IsLumper" Type="Int32" />
+          <Property Name="IsMarkCOD" Type="Int32" />
+          <Property Name="Comment" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <Property Name="DispatcherName" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="DispatcherPhone" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="DriverName" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="DriverPhone" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="IsCancel" Type="Int32" />
+          <Property Name="BrokerAmout" Type="Int32" />
+          <Property Name="CarrierAmount" Type="Int32" />
+          <Property Name="IsFutureLoad" Type="Boolean" />
+          <Property Name="FutureLoadText" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="IsInvoiceCustomer" Type="Int32" />
+          <Property Name="IsPaymentRecieved" Type="Int32" />
+          <Property Name="IsPaidCarrier" Type="Int32" />
+          <Property Name="Rating" Type="Int32" />
+          <Property Name="UserId" Type="Int32" />
+          <Property Name="IsFuelAdvance" Type="Int32" />
+          <Property Name="FuelAdvanceAmount" Type="Int32" />
+          <Property Name="InvoiceNumber" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="IsQuickPay" Type="Int32" Nullable="false" />
+          <Property Name="QuickPaypercentage" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="AdjustedCarrierRate" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="IsManagerFutureLoad" Type="Boolean" />
+          <Property Name="Status" Type="Int32" />
+        </EntityType>
+        <ComplexType Name="Sp_Get_LoadDetail_WithAllFilter_Result">
+          <Property Type="String" Name="COD" Nullable="false" MaxLength="7" />
+          <Property Type="Boolean" Name="IsNeedToAssign" Nullable="true" />
+          <Property Type="Int32" Name="Status" Nullable="true" />
+          <Property Type="String" Name="LoaderNumber" Nullable="true" MaxLength="10" />
+          <Property Type="String" Name="RegistrationDate" Nullable="true" MaxLength="4000" />
+          <Property Type="String" Name="Agent" Nullable="false" MaxLength="500" />
+          <Property Type="String" Name="Profile" Nullable="false" MaxLength="500" />
+          <Property Type="String" Name="Brokernanme" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="CarrierName" Nullable="true" MaxLength="200" />
+          <Property Type="String" Name="LoadTypeName" Nullable="false" MaxLength="200" />
+          <Property Type="String" Name="PickupDate" Nullable="false" MaxLength="1" />
+          <Property Type="String" Name="PickupInfo" Nullable="false" MaxLength="1" />
+          <Property Type="String" Name="DeliveryInfo" Nullable="false" MaxLength="1" />
+          <Property Type="String" Name="BrokerReference" Nullable="false" MaxLength="200" />
+          <Property Type="String" Name="DeliveryDate" Nullable="false" MaxLength="1" />
+          <Property Type="Decimal" Name="BrokerRate" Nullable="true" Precision="18" Scale="2" />
+          <Property Type="Decimal" Name="CarrierRate" Nullable="false" Precision="18" Scale="2" />
+          <Property Type="Decimal" Name="Profit" Nullable="true" Precision="19" Scale="2" />
+          <Property Type="Int32" Name="IsCancel" Nullable="false" />
+          <Property Type="Boolean" Name="IsFutureLoad" Nullable="false" />
+          <Property Type="String" Name="FutureLoadText" Nullable="false" MaxLength="500" />
+        </ComplexType>
+        <ComplexType Name="Sp_Get_CarrierTruck_Information_Result">
+          <Property Type="String" Name="CarrierName" Nullable="false" MaxLength="200" />
+          <Property Type="String" Name="MC_" Nullable="false" MaxLength="200" />
+          <Property Type="String" Name="AssignID" Nullable="false" MaxLength="4" />
+          <Property Type="String" Name="ContactName" Nullable="false" MaxLength="200" />
+          <Property Type="String" Name="Phonenumber" Nullable="false" MaxLength="20" />
+          <Property Type="Int32" Name="TruckId" Nullable="false" />
+          <Property Type="String" Name="CarrierAssignId" Nullable="false" MaxLength="4" />
+          <Property Type="String" Name="TruckNo" Nullable="false" MaxLength="200" />
+          <Property Type="String" Name="TruckYard" Nullable="false" MaxLength="200" />
+          <Property Type="String" Name="TrailerNo" Nullable="false" MaxLength="200" />
+          <Property Type="Int32" Name="TrailerTypeId" Nullable="false" />
+          <Property Type="String" Name="ZipCode" Nullable="false" MaxLength="500" />
+          <Property Type="String" Name="AvailableDate" Nullable="true" MaxLength="4000" />
+          <Property Type="String" Name="Email" Nullable="false" MaxLength="200" />
+          <Property Type="String" Name="DriverName" Nullable="false" MaxLength="200" />
+          <Property Type="String" Name="DriverPhone" Nullable="false" MaxLength="20" />
+          <Property Type="String" Name="DriverLanguage" Nullable="false" MaxLength="30" />
+          <Property Type="Int32" Name="DriverId" Nullable="false" />
+          <Property Type="String" Name="McAuthorityFileName" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="McAuthorityFilePath" Nullable="false" MaxLength="500" />
+          <Property Type="String" Name="AssignmentFileName" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="AssignmentFilePath" Nullable="false" MaxLength="500" />
+          <Property Type="String" Name="VoidChequeFileName" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="VoidChequeFilePath" Nullable="false" MaxLength="500" />
+          <Property Type="String" Name="InsuranceFileName" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="InsuranceFilePath" Nullable="false" MaxLength="500" />
+          <Property Type="String" Name="W9FileName" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="W9FilePath" Nullable="false" MaxLength="500" />
+          <Property Type="Int32" Name="CarrierCategoryId" Nullable="false" />
+          <Property Type="Int32" Name="IsOwnerOperator" Nullable="false" />
+          <Property Type="Int32" Name="IsQuickPay" Nullable="false" />
+          <Property Type="String" Name="PrefferedDestination" Nullable="false" MaxLength="1000" />
+          <Property Type="DateTime" Name="InsuranceExpirationDate" Nullable="false" Precision="23" />
+          <Property Type="String" Name="ContactNametwo" Nullable="false" MaxLength="200" />
+          <Property Type="String" Name="Phonenumbertwo" Nullable="false" MaxLength="20" />
+          <Property Type="Boolean" Name="IsActive" Nullable="false" />
+          <Property Type="Int32" Name="IsBlackList" Nullable="false" />
+          <Property Type="Int32" Name="Istrailerinterchange" Nullable="false" />
+          <Property Type="Double" Name="quickpaypercentage" Nullable="false" />
+          <Property Type="Boolean" Name="IsNeedToAssign" Nullable="false" />
+        </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2643,45 +2711,6 @@ warning 6002: The table/view 'Dieseltech.dbo.tblUser_Rights' does not have a pri
                 <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
                 <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
                 <ScalarProperty Name="IsActive" ColumnName="IsActive" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="tblProfiles">
-            <EntityTypeMapping TypeName="DieseltechModel.tblProfile">
-              <MappingFragment StoreEntitySet="tblProfile">
-                <ScalarProperty Name="Isdeleted" ColumnName="Isdeleted" />
-                <ScalarProperty Name="profile_id" ColumnName="profile_id" />
-                <ScalarProperty Name="Profile_name" ColumnName="Profile_name" />
-                <ScalarProperty Name="Email" ColumnName="Email" />
-                <ScalarProperty Name="Password" ColumnName="Password" />
-                <ScalarProperty Name="phoneNo" ColumnName="phoneNo" />
-                <ScalarProperty Name="youtube" ColumnName="youtube" />
-                <ScalarProperty Name="instagram" ColumnName="instagram" />
-                <ScalarProperty Name="Linkdin" ColumnName="Linkdin" />
-                <ScalarProperty Name="Twitter" ColumnName="Twitter" />
-                <ScalarProperty Name="Facebook" ColumnName="Facebook" />
-                <ScalarProperty Name="Details" ColumnName="Details" />
-                <ScalarProperty Name="Designation" ColumnName="Designation" />
-                <ScalarProperty Name="Image" ColumnName="Image" />
-                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
-                <ScalarProperty Name="Adress" ColumnName="Adress" />
-                <ScalarProperty Name="User_ID" ColumnName="User_ID" />
-                <ScalarProperty Name="Packageid" ColumnName="Packageid" />
-                <ScalarProperty Name="Accessid" ColumnName="Accessid" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="tblUsers">
-            <EntityTypeMapping TypeName="DieseltechModel.tblUser">
-              <MappingFragment StoreEntitySet="tblUser">
-                <ScalarProperty Name="Isdeleted" ColumnName="Isdeleted" />
-                <ScalarProperty Name="User_ID" ColumnName="User_ID" />
-                <ScalarProperty Name="UserName" ColumnName="UserName" />
-                <ScalarProperty Name="Password" ColumnName="Password" />
-                <ScalarProperty Name="Email_Adress" ColumnName="Email_Adress" />
-                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
-                <ScalarProperty Name="Create_Date" ColumnName="Create_Date" />
-                <ScalarProperty Name="ValidUpto" ColumnName="ValidUpto" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -2909,31 +2938,6 @@ warning 6002: The table/view 'Dieseltech.dbo.tblUser_Rights' does not have a pri
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <EntitySetMapping Name="tblTrucks">
-            <EntityTypeMapping TypeName="DieseltechModel.tblTruck">
-              <MappingFragment StoreEntitySet="tblTruck">
-                <ScalarProperty Name="PrefferedDestination" ColumnName="PrefferedDestination" />
-                <ScalarProperty Name="StateCode" ColumnName="StateCode" />
-                <ScalarProperty Name="CityName" ColumnName="CityName" />
-                <ScalarProperty Name="StateName" ColumnName="StateName" />
-                <ScalarProperty Name="DriverId" ColumnName="DriverId" />
-                <ScalarProperty Name="DriverLanguage" ColumnName="DriverLanguage" />
-                <ScalarProperty Name="DriverPhone" ColumnName="DriverPhone" />
-                <ScalarProperty Name="DriverName" ColumnName="DriverName" />
-                <ScalarProperty Name="AvailableDate" ColumnName="AvailableDate" />
-                <ScalarProperty Name="ZipCode" ColumnName="ZipCode" />
-                <ScalarProperty Name="TrailerTypeId" ColumnName="TrailerTypeId" />
-                <ScalarProperty Name="TrailerNo" ColumnName="TrailerNo" />
-                <ScalarProperty Name="TruckYard" ColumnName="TruckYard" />
-                <ScalarProperty Name="TruckNo" ColumnName="TruckNo" />
-                <ScalarProperty Name="CarrierAssignId" ColumnName="CarrierAssignId" />
-                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="TruckId" ColumnName="TruckId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="tblBrokerHelpers">
             <EntityTypeMapping TypeName="DieseltechModel.tblBrokerHelper">
               <MappingFragment StoreEntitySet="tblBrokerHelper">
@@ -3218,18 +3222,6 @@ warning 6002: The table/view 'Dieseltech.dbo.tblUser_Rights' does not have a pri
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="tblStateCityDatas">
-            <EntityTypeMapping TypeName="DieseltechModel.tblStateCityData">
-              <MappingFragment StoreEntitySet="tblStateCityData">
-                <ScalarProperty Name="ZoneId" ColumnName="ZoneId" />
-                <ScalarProperty Name="StateName" ColumnName="StateName" />
-                <ScalarProperty Name="StateCode" ColumnName="StateCode" />
-                <ScalarProperty Name="CityName" ColumnName="CityName" />
-                <ScalarProperty Name="ZipCode" ColumnName="ZipCode" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <FunctionImportMapping FunctionImportName="Sp_Get_CarrierTrucks" FunctionName="DieseltechModel.Store.Sp_Get_CarrierTrucks">
             <ResultMapping>
               <ComplexTypeMapping TypeName="DieseltechModel.Sp_Get_CarrierTrucks_Result">
@@ -3270,67 +3262,6 @@ warning 6002: The table/view 'Dieseltech.dbo.tblUser_Rights' does not have a pri
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <EntitySetMapping Name="tblLoadDeliveries">
-            <EntityTypeMapping TypeName="DieseltechModel.tblLoadDelivery">
-              <MappingFragment StoreEntitySet="tblLoadDelivery">
-                <ScalarProperty Name="Deliveryorder" ColumnName="Deliveryorder" />
-                <ScalarProperty Name="Latitude" ColumnName="Latitude" />
-                <ScalarProperty Name="Longitude" ColumnName="Longitude" />
-                <ScalarProperty Name="MaxDeliveryID" ColumnName="MaxDeliveryID" />
-                <ScalarProperty Name="CountryName" ColumnName="CountryName" />
-                <ScalarProperty Name="CityName" ColumnName="CityName" />
-                <ScalarProperty Name="StateCode" ColumnName="StateCode" />
-                <ScalarProperty Name="IsSave" ColumnName="IsSave" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="Comments" ColumnName="Comments" />
-                <ScalarProperty Name="Traitor" ColumnName="Traitor" />
-                <ScalarProperty Name="PickupNumber" ColumnName="PickupNumber" />
-                <ScalarProperty Name="DateTimeTo" ColumnName="DateTimeTo" />
-                <ScalarProperty Name="DateTimeFrom" ColumnName="DateTimeFrom" />
-                <ScalarProperty Name="ZipCode" ColumnName="ZipCode" />
-                <ScalarProperty Name="Address" ColumnName="Address" />
-                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
-                <ScalarProperty Name="CountryId" ColumnName="CountryId" />
-                <ScalarProperty Name="ShipperName" ColumnName="ShipperName" />
-                <ScalarProperty Name="ShipperId" ColumnName="ShipperId" />
-                <ScalarProperty Name="Information" ColumnName="Information" />
-                <ScalarProperty Name="LoadNumber" ColumnName="LoadNumber" />
-                <ScalarProperty Name="PickUpId" ColumnName="PickUpId" />
-                <ScalarProperty Name="DeliveryId" ColumnName="DeliveryId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="tblLoadPickups">
-            <EntityTypeMapping TypeName="DieseltechModel.tblLoadPickup">
-              <MappingFragment StoreEntitySet="tblLoadPickup">
-                <ScalarProperty Name="Pickuporder" ColumnName="Pickuporder" />
-                <ScalarProperty Name="Latitude" ColumnName="Latitude" />
-                <ScalarProperty Name="Longitude" ColumnName="Longitude" />
-                <ScalarProperty Name="MaxPickupId" ColumnName="MaxPickupId" />
-                <ScalarProperty Name="CountryName" ColumnName="CountryName" />
-                <ScalarProperty Name="CityName" ColumnName="CityName" />
-                <ScalarProperty Name="StateCode" ColumnName="StateCode" />
-                <ScalarProperty Name="IsSave" ColumnName="IsSave" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="Comments" ColumnName="Comments" />
-                <ScalarProperty Name="Traitor" ColumnName="Traitor" />
-                <ScalarProperty Name="PickupNumber" ColumnName="PickupNumber" />
-                <ScalarProperty Name="DateTimeTo" ColumnName="DateTimeTo" />
-                <ScalarProperty Name="DateTimeFrom" ColumnName="DateTimeFrom" />
-                <ScalarProperty Name="ZipCode" ColumnName="ZipCode" />
-                <ScalarProperty Name="Address" ColumnName="Address" />
-                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
-                <ScalarProperty Name="CountryId" ColumnName="CountryId" />
-                <ScalarProperty Name="ShipperName" ColumnName="ShipperName" />
-                <ScalarProperty Name="ShipperId" ColumnName="ShipperId" />
-                <ScalarProperty Name="Information" ColumnName="Information" />
-                <ScalarProperty Name="LoadNumber" ColumnName="LoadNumber" />
-                <ScalarProperty Name="PickUpId" ColumnName="PickUpId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="tblLoadFilePathTemps">
             <EntityTypeMapping TypeName="DieseltechModel.tblLoadFilePathTemp">
               <MappingFragment StoreEntitySet="tblLoadFilePathTemp">
@@ -3338,23 +3269,6 @@ warning 6002: The table/view 'Dieseltech.dbo.tblUser_Rights' does not have a pri
                 <ScalarProperty Name="ImagePath" ColumnName="ImagePath" />
                 <ScalarProperty Name="LoaderNumber" ColumnName="LoaderNumber" />
                 <ScalarProperty Name="FilePathId" ColumnName="FilePathId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="tblShippers">
-            <EntityTypeMapping TypeName="DieseltechModel.tblShipper">
-              <MappingFragment StoreEntitySet="tblShipper">
-                <ScalarProperty Name="Latitude" ColumnName="Latitude" />
-                <ScalarProperty Name="Longitude" ColumnName="Longitude" />
-                <ScalarProperty Name="ShipperAssignId" ColumnName="ShipperAssignId" />
-                <ScalarProperty Name="ShipperZipCode" ColumnName="ShipperZipCode" />
-                <ScalarProperty Name="ShipperStateName" ColumnName="ShipperStateName" />
-                <ScalarProperty Name="ShipperStateCode" ColumnName="ShipperStateCode" />
-                <ScalarProperty Name="ShipperCity" ColumnName="ShipperCity" />
-                <ScalarProperty Name="ShipperAddress" ColumnName="ShipperAddress" />
-                <ScalarProperty Name="ShipperPhone" ColumnName="ShipperPhone" />
-                <ScalarProperty Name="ShipperName" ColumnName="ShipperName" />
-                <ScalarProperty Name="ShipperId" ColumnName="ShipperId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -3468,37 +3382,6 @@ warning 6002: The table/view 'Dieseltech.dbo.tblUser_Rights' does not have a pri
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="Sp_GetAll_Truck_List" FunctionName="DieseltechModel.Store.Sp_GetAll_Truck_List">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="DieseltechModel.Sp_GetAll_Truck_List_Result">
-                <ScalarProperty Name="TruckId" ColumnName="TruckId" />
-                <ScalarProperty Name="Board" ColumnName="Board" />
-                <ScalarProperty Name="AssignID" ColumnName="AssignID" />
-                <ScalarProperty Name="CarrierName" ColumnName="CarrierName" />
-                <ScalarProperty Name="ContactName" ColumnName="ContactName" />
-                <ScalarProperty Name="Phonenumber" ColumnName="Phonenumber" />
-                <ScalarProperty Name="TruckNo" ColumnName="TruckNo" />
-                <ScalarProperty Name="TruckYard" ColumnName="TruckYard" />
-                <ScalarProperty Name="TrailerNo" ColumnName="TrailerNo" />
-                <ScalarProperty Name="LoadTypeName" ColumnName="LoadTypeName" />
-                <ScalarProperty Name="LoadTypeId" ColumnName="LoadTypeId" />
-                <ScalarProperty Name="Language" ColumnName="Language" />
-                <ScalarProperty Name="DriverPhone" ColumnName="DriverPhone" />
-                <ScalarProperty Name="CityName" ColumnName="CityName" />
-                <ScalarProperty Name="StateCode" ColumnName="StateCode" />
-                <ScalarProperty Name="StateName" ColumnName="StateName" />
-                <ScalarProperty Name="ZipCode" ColumnName="ZipCode" />
-                <ScalarProperty Name="AvailableDate" ColumnName="AvailableDate" />
-                <ScalarProperty Name="Eq" ColumnName="Eq" />
-                <ScalarProperty Name="DriverName" ColumnName="DriverName" />
-                <ScalarProperty Name="LoadSubType" ColumnName="LoadSubType" />
-                <ScalarProperty Name="Team" ColumnName="Team" />
-                <ScalarProperty Name="DriverId" ColumnName="DriverId" />
-                <ScalarProperty Name="Rating" ColumnName="Rating" />
-                <ScalarProperty Name="prefferedDestination" ColumnName="prefferedDestination" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="Sp_TruckBoard_Truck_List" FunctionName="DieseltechModel.Store.Sp_TruckBoard_Truck_List">
             <ResultMapping>
               <ComplexTypeMapping TypeName="DieseltechModel.Sp_TruckBoard_Truck_List_Result">
@@ -3593,15 +3476,6 @@ warning 6002: The table/view 'Dieseltech.dbo.tblUser_Rights' does not have a pri
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="Sp_Get_Agent_Statistics_New" FunctionName="DieseltechModel.Store.Sp_Get_Agent_Statistics_New">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="DieseltechModel.Sp_Get_Agent_Statistics_New_Result">
-                <ScalarProperty Name="DispatcherName" ColumnName="DispatcherName" />
-                <ScalarProperty Name="TotalQuanity" ColumnName="TotalQuanity" />
-                <ScalarProperty Name="GrossProfit" ColumnName="GrossProfit" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="Sp_Get_LoadDetail_FilterWise" FunctionName="DieseltechModel.Store.Sp_Get_LoadDetail_FilterWise">
             <ResultMapping>
               <ComplexTypeMapping TypeName="DieseltechModel.Sp_Get_LoadDetail_FilterWise_Result">
@@ -3626,120 +3500,6 @@ warning 6002: The table/view 'Dieseltech.dbo.tblUser_Rights' does not have a pri
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <EntitySetMapping Name="tblLoadHeads">
-            <EntityTypeMapping TypeName="DieseltechModel.tblLoadHead">
-              <MappingFragment StoreEntitySet="tblLoadHead">
-                <ScalarProperty Name="IsManagerFutureLoad" ColumnName="IsManagerFutureLoad" />
-                <ScalarProperty Name="AdjustedCarrierRate" ColumnName="AdjustedCarrierRate" />
-                <ScalarProperty Name="QuickPaypercentage" ColumnName="QuickPaypercentage" />
-                <ScalarProperty Name="IsQuickPay" ColumnName="IsQuickPay" />
-                <ScalarProperty Name="InvoiceNumber" ColumnName="InvoiceNumber" />
-                <ScalarProperty Name="FuelAdvanceAmount" ColumnName="FuelAdvanceAmount" />
-                <ScalarProperty Name="IsFuelAdvance" ColumnName="IsFuelAdvance" />
-                <ScalarProperty Name="UserId" ColumnName="UserId" />
-                <ScalarProperty Name="Rating" ColumnName="Rating" />
-                <ScalarProperty Name="IsPaidCarrier" ColumnName="IsPaidCarrier" />
-                <ScalarProperty Name="IsPaymentRecieved" ColumnName="IsPaymentRecieved" />
-                <ScalarProperty Name="IsInvoiceCustomer" ColumnName="IsInvoiceCustomer" />
-                <ScalarProperty Name="FutureLoadText" ColumnName="FutureLoadText" />
-                <ScalarProperty Name="IsFutureLoad" ColumnName="IsFutureLoad" />
-                <ScalarProperty Name="CarrierAmount" ColumnName="CarrierAmount" />
-                <ScalarProperty Name="BrokerAmout" ColumnName="BrokerAmout" />
-                <ScalarProperty Name="IsCancel" ColumnName="IsCancel" />
-                <ScalarProperty Name="DriverPhone" ColumnName="DriverPhone" />
-                <ScalarProperty Name="DriverName" ColumnName="DriverName" />
-                <ScalarProperty Name="DispatcherPhone" ColumnName="DispatcherPhone" />
-                <ScalarProperty Name="DispatcherName" ColumnName="DispatcherName" />
-                <ScalarProperty Name="Comment" ColumnName="Comment" />
-                <ScalarProperty Name="IsMarkCOD" ColumnName="IsMarkCOD" />
-                <ScalarProperty Name="IsLumper" ColumnName="IsLumper" />
-                <ScalarProperty Name="IsPod" ColumnName="IsPod" />
-                <ScalarProperty Name="IsCarrierConfirm" ColumnName="IsCarrierConfirm" />
-                <ScalarProperty Name="IsBrokerConfirm" ColumnName="IsBrokerConfirm" />
-                <ScalarProperty Name="IsPrint" ColumnName="IsPrint" />
-                <ScalarProperty Name="BranchFlat" ColumnName="BranchFlat" />
-                <ScalarProperty Name="AgentFlat" ColumnName="AgentFlat" />
-                <ScalarProperty Name="AgentGross" ColumnName="AgentGross" />
-                <ScalarProperty Name="User_ID" ColumnName="User_ID" />
-                <ScalarProperty Name="RegistrationDate" ColumnName="RegistrationDate" />
-                <ScalarProperty Name="BrokerReference" ColumnName="BrokerReference" />
-                <ScalarProperty Name="Extension" ColumnName="Extension" />
-                <ScalarProperty Name="BrokerRate" ColumnName="BrokerRate" />
-                <ScalarProperty Name="BrokerId" ColumnName="BrokerId" />
-                <ScalarProperty Name="CompanyId" ColumnName="CompanyId" />
-                <ScalarProperty Name="CarrierInstructions" ColumnName="CarrierInstructions" />
-                <ScalarProperty Name="DriverTypeId" ColumnName="DriverTypeId" />
-                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
-                <ScalarProperty Name="QuantityTypeId" ColumnName="QuantityTypeId" />
-                <ScalarProperty Name="Weight" ColumnName="Weight" />
-                <ScalarProperty Name="Available" ColumnName="Available" />
-                <ScalarProperty Name="LoadSubTypeId" ColumnName="LoadSubTypeId" />
-                <ScalarProperty Name="Commodity" ColumnName="Commodity" />
-                <ScalarProperty Name="LoadTypeId" ColumnName="LoadTypeId" />
-                <ScalarProperty Name="CarrierRate" ColumnName="CarrierRate" />
-                <ScalarProperty Name="TruckId" ColumnName="TruckId" />
-                <ScalarProperty Name="IsSendText" ColumnName="IsSendText" />
-                <ScalarProperty Name="NumberToText" ColumnName="NumberToText" />
-                <ScalarProperty Name="CarrierId" ColumnName="CarrierId" />
-                <ScalarProperty Name="LoaderNumber" ColumnName="LoaderNumber" />
-                <ScalarProperty Name="LoaderHeadId" ColumnName="LoaderHeadId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <FunctionImportMapping FunctionImportName="Sp_Get_LoadDetail_WithAllFilter" FunctionName="DieseltechModel.Store.Sp_Get_LoadDetail_WithAllFilter">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="DieseltechModel.Sp_Get_LoadDetail_WithAllFilter_Result">
-                <ScalarProperty Name="COD" ColumnName="COD" />
-                <ScalarProperty Name="LoaderNumber" ColumnName="LoaderNumber" />
-                <ScalarProperty Name="RegistrationDate" ColumnName="RegistrationDate" />
-                <ScalarProperty Name="Agent" ColumnName="Agent" />
-                <ScalarProperty Name="Profile" ColumnName="Profile" />
-                <ScalarProperty Name="Brokernanme" ColumnName="Brokernanme" />
-                <ScalarProperty Name="CarrierName" ColumnName="CarrierName" />
-                <ScalarProperty Name="LoadTypeName" ColumnName="LoadTypeName" />
-                <ScalarProperty Name="PickupDate" ColumnName="PickupDate" />
-                <ScalarProperty Name="PickupInfo" ColumnName="PickupInfo" />
-                <ScalarProperty Name="DeliveryInfo" ColumnName="DeliveryInfo" />
-                <ScalarProperty Name="BrokerReference" ColumnName="BrokerReference" />
-                <ScalarProperty Name="DeliveryDate" ColumnName="DeliveryDate" />
-                <ScalarProperty Name="BrokerRate" ColumnName="BrokerRate" />
-                <ScalarProperty Name="CarrierRate" ColumnName="CarrierRate" />
-                <ScalarProperty Name="Profit" ColumnName="Profit" />
-                <ScalarProperty Name="IsCancel" ColumnName="IsCancel" />
-                <ScalarProperty Name="IsFutureLoad" ColumnName="IsFutureLoad" />
-                <ScalarProperty Name="FutureLoadText" ColumnName="FutureLoadText" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
-          <EntitySetMapping Name="tblCarriers">
-            <EntityTypeMapping TypeName="DieseltechModel.tblCarrier">
-              <MappingFragment StoreEntitySet="tblCarrier">
-                <ScalarProperty Name="Isdeleted" ColumnName="Isdeleted" />
-                <ScalarProperty Name="Istrailerinterchange" ColumnName="Istrailerinterchange" />
-                <ScalarProperty Name="Quickpaypercentage" ColumnName="Quickpaypercentage" />
-                <ScalarProperty Name="IsBlackList" ColumnName="IsBlackList" />
-                <ScalarProperty Name="InsuranceExpirationDate" ColumnName="InsuranceExpirationDate" />
-                <ScalarProperty Name="IsQuickPay" ColumnName="IsQuickPay" />
-                <ScalarProperty Name="Phonenumber2" ColumnName="Phonenumber2" />
-                <ScalarProperty Name="ContactName2" ColumnName="ContactName2" />
-                <ScalarProperty Name="Email" ColumnName="Email" />
-                <ScalarProperty Name="PrefferedDestination" ColumnName="PrefferedDestination" />
-                <ScalarProperty Name="Comment" ColumnName="Comment" />
-                <ScalarProperty Name="Rating" ColumnName="Rating" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
-                <ScalarProperty Name="IsOwnerOperator" ColumnName="IsOwnerOperator" />
-                <ScalarProperty Name="CarrierCategoryId" ColumnName="CarrierCategoryId" />
-                <ScalarProperty Name="Phonenumber" ColumnName="Phonenumber" />
-                <ScalarProperty Name="ContactName" ColumnName="ContactName" />
-                <ScalarProperty Name="AssignID" ColumnName="AssignID" />
-                <ScalarProperty Name="MC_" ColumnName="MC#" />
-                <ScalarProperty Name="CarrierName" ColumnName="CarrierName" />
-                <ScalarProperty Name="CarrierID" ColumnName="CarrierID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="tblNotifications">
             <EntityTypeMapping TypeName="DieseltechModel.tblNotification">
               <MappingFragment StoreEntitySet="tblNotification">
@@ -3799,6 +3559,8 @@ warning 6002: The table/view 'Dieseltech.dbo.tblUser_Rights' does not have a pri
           <EntitySetMapping Name="tblAgentcommissions">
             <EntityTypeMapping TypeName="DieseltechModel.tblAgentcommission">
               <MappingFragment StoreEntitySet="tblAgentcommission">
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="AffectiveDate" ColumnName="AffectiveDate" />
                 <ScalarProperty Name="salary" ColumnName="salary" />
                 <ScalarProperty Name="Commissionpercentage" ColumnName="Commissionpercentage" />
                 <ScalarProperty Name="AgentId" ColumnName="AgentId" />
@@ -3821,29 +3583,6 @@ warning 6002: The table/view 'Dieseltech.dbo.tblUser_Rights' does not have a pri
                 <ScalarProperty Name="BrokerRate" ColumnName="BrokerRate" />
                 <ScalarProperty Name="CarrierRate" ColumnName="CarrierRate" />
                 <ScalarProperty Name="Profit" ColumnName="Profit" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="Sp_Get_All_Carrier_List" FunctionName="DieseltechModel.Store.Sp_Get_All_Carrier_List">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="DieseltechModel.Sp_Get_All_Carrier_List_Result">
-                <ScalarProperty Name="CarrierName" ColumnName="CarrierName" />
-                <ScalarProperty Name="MC_" ColumnName="MC#" />
-                <ScalarProperty Name="AssignID" ColumnName="AssignID" />
-                <ScalarProperty Name="ContactName" ColumnName="ContactName" />
-                <ScalarProperty Name="Phonenumber" ColumnName="Phonenumber" />
-                <ScalarProperty Name="TrailerNo" ColumnName="TrailerNo" />
-                <ScalarProperty Name="TruckYard" ColumnName="TruckYard" />
-                <ScalarProperty Name="ZipCode" ColumnName="ZipCode" />
-                <ScalarProperty Name="StateCode" ColumnName="StateCode" />
-                <ScalarProperty Name="DriverName" ColumnName="DriverName" />
-                <ScalarProperty Name="DriverPhone" ColumnName="DriverPhone" />
-                <ScalarProperty Name="CategoryName" ColumnName="CategoryName" />
-                <ScalarProperty Name="Rating" ColumnName="Rating" />
-                <ScalarProperty Name="CarrierCategoryId" ColumnName="CarrierCategoryId" />
-                <ScalarProperty Name="Email" ColumnName="Email" />
-                <ScalarProperty Name="isactive" ColumnName="isactive" />
-                <ScalarProperty Name="IsBlackList" ColumnName="IsBlackList" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
@@ -4050,51 +3789,6 @@ warning 6002: The table/view 'Dieseltech.dbo.tblUser_Rights' does not have a pri
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="Sp_Get_CarrierTruck_Information" FunctionName="DieseltechModel.Store.Sp_Get_CarrierTruck_Information">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="DieseltechModel.Sp_Get_CarrierTruck_Information_Result">
-                <ScalarProperty Name="CarrierName" ColumnName="CarrierName" />
-                <ScalarProperty Name="MC_" ColumnName="MC#" />
-                <ScalarProperty Name="AssignID" ColumnName="AssignID" />
-                <ScalarProperty Name="ContactName" ColumnName="ContactName" />
-                <ScalarProperty Name="Phonenumber" ColumnName="Phonenumber" />
-                <ScalarProperty Name="TruckId" ColumnName="TruckId" />
-                <ScalarProperty Name="CarrierAssignId" ColumnName="CarrierAssignId" />
-                <ScalarProperty Name="TruckNo" ColumnName="TruckNo" />
-                <ScalarProperty Name="TruckYard" ColumnName="TruckYard" />
-                <ScalarProperty Name="TrailerNo" ColumnName="TrailerNo" />
-                <ScalarProperty Name="TrailerTypeId" ColumnName="TrailerTypeId" />
-                <ScalarProperty Name="ZipCode" ColumnName="ZipCode" />
-                <ScalarProperty Name="AvailableDate" ColumnName="AvailableDate" />
-                <ScalarProperty Name="Email" ColumnName="Email" />
-                <ScalarProperty Name="DriverName" ColumnName="DriverName" />
-                <ScalarProperty Name="DriverPhone" ColumnName="DriverPhone" />
-                <ScalarProperty Name="DriverLanguage" ColumnName="DriverLanguage" />
-                <ScalarProperty Name="DriverId" ColumnName="DriverId" />
-                <ScalarProperty Name="McAuthorityFileName" ColumnName="McAuthorityFileName" />
-                <ScalarProperty Name="McAuthorityFilePath" ColumnName="McAuthorityFilePath" />
-                <ScalarProperty Name="AssignmentFileName" ColumnName="AssignmentFileName" />
-                <ScalarProperty Name="AssignmentFilePath" ColumnName="AssignmentFilePath" />
-                <ScalarProperty Name="VoidChequeFileName" ColumnName="VoidChequeFileName" />
-                <ScalarProperty Name="VoidChequeFilePath" ColumnName="VoidChequeFilePath" />
-                <ScalarProperty Name="InsuranceFileName" ColumnName="InsuranceFileName" />
-                <ScalarProperty Name="InsuranceFilePath" ColumnName="InsuranceFilePath" />
-                <ScalarProperty Name="W9FileName" ColumnName="W9FileName" />
-                <ScalarProperty Name="W9FilePath" ColumnName="W9FilePath" />
-                <ScalarProperty Name="CarrierCategoryId" ColumnName="CarrierCategoryId" />
-                <ScalarProperty Name="IsOwnerOperator" ColumnName="IsOwnerOperator" />
-                <ScalarProperty Name="IsQuickPay" ColumnName="IsQuickPay" />
-                <ScalarProperty Name="PrefferedDestination" ColumnName="PrefferedDestination" />
-                <ScalarProperty Name="InsuranceExpirationDate" ColumnName="InsuranceExpirationDate" />
-                <ScalarProperty Name="ContactNametwo" ColumnName="ContactNametwo" />
-                <ScalarProperty Name="Phonenumbertwo" ColumnName="Phonenumbertwo" />
-                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
-                <ScalarProperty Name="IsBlackList" ColumnName="IsBlackList" />
-                <ScalarProperty Name="Istrailerinterchange" ColumnName="Istrailerinterchange" />
-                <ScalarProperty Name="quickpaypercentage" ColumnName="quickpaypercentage" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
           <EntitySetMapping Name="tblcarriercollections">
             <EntityTypeMapping TypeName="DieseltechModel.tblcarriercollection">
               <MappingFragment StoreEntitySet="tblcarriercollection">
@@ -4178,6 +3872,433 @@ warning 6002: The table/view 'Dieseltech.dbo.tblUser_Rights' does not have a pri
                 <ScalarProperty Name="CustomerTotalAmount" ColumnName="CustomerTotalAmount" />
                 <ScalarProperty Name="CarrierId" ColumnName="CarrierId" />
                 <ScalarProperty Name="CarrierName" ColumnName="CarrierName" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_Get_AgentCommisionList" FunctionName="DieseltechModel.Store.sp_Get_AgentCommisionList">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="DieseltechModel.sp_Get_AgentCommisionList_Result">
+                <ScalarProperty Name="AgentCommissionId" ColumnName="AgentCommissionId" />
+                <ScalarProperty Name="AgentId" ColumnName="AgentId" />
+                <ScalarProperty Name="Commissionpercentage" ColumnName="Commissionpercentage" />
+                <ScalarProperty Name="salary" ColumnName="salary" />
+                <ScalarProperty Name="AffectiveDate" ColumnName="AffectiveDate" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_Get_AgentsLatestCommision" FunctionName="DieseltechModel.Store.sp_Get_AgentsLatestCommision">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="DieseltechModel.sp_Get_AgentsLatestCommision_Result">
+                <ScalarProperty Name="AgentCommissionId" ColumnName="AgentCommissionId" />
+                <ScalarProperty Name="AgentId" ColumnName="AgentId" />
+                <ScalarProperty Name="Commissionpercentage" ColumnName="Commissionpercentage" />
+                <ScalarProperty Name="AffectiveDate" ColumnName="AffectiveDate" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="Sp_Get_Agent_Statistics_New" FunctionName="DieseltechModel.Store.Sp_Get_Agent_Statistics_New">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="DieseltechModel.Sp_Get_Agent_Statistics_New_Result">
+                <ScalarProperty Name="DispatcherName" ColumnName="DispatcherName" />
+                <ScalarProperty Name="TotalQuanity" ColumnName="TotalQuanity" />
+                <ScalarProperty Name="GrossProfit" ColumnName="GrossProfit" />
+                <ScalarProperty Name="Commission" ColumnName="Commission" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <EntitySetMapping Name="tblProfiles">
+            <EntityTypeMapping TypeName="DieseltechModel.tblProfile">
+              <MappingFragment StoreEntitySet="tblProfile">
+                <ScalarProperty Name="Isdeleted" ColumnName="Isdeleted" />
+                <ScalarProperty Name="Accessid" ColumnName="Accessid" />
+                <ScalarProperty Name="Packageid" ColumnName="Packageid" />
+                <ScalarProperty Name="User_ID" ColumnName="User_ID" />
+                <ScalarProperty Name="Adress" ColumnName="Adress" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="Image" ColumnName="Image" />
+                <ScalarProperty Name="Designation" ColumnName="Designation" />
+                <ScalarProperty Name="Details" ColumnName="Details" />
+                <ScalarProperty Name="Facebook" ColumnName="Facebook" />
+                <ScalarProperty Name="Twitter" ColumnName="Twitter" />
+                <ScalarProperty Name="Linkdin" ColumnName="Linkdin" />
+                <ScalarProperty Name="instagram" ColumnName="instagram" />
+                <ScalarProperty Name="youtube" ColumnName="youtube" />
+                <ScalarProperty Name="phoneNo" ColumnName="phoneNo" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Profile_name" ColumnName="Profile_name" />
+                <ScalarProperty Name="profile_id" ColumnName="profile_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblUsers">
+            <EntityTypeMapping TypeName="DieseltechModel.tblUser">
+              <MappingFragment StoreEntitySet="tblUser">
+                <ScalarProperty Name="Isdeleted" ColumnName="Isdeleted" />
+                <ScalarProperty Name="ValidUpto" ColumnName="ValidUpto" />
+                <ScalarProperty Name="Create_Date" ColumnName="Create_Date" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="Email_Adress" ColumnName="Email_Adress" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="User_ID" ColumnName="User_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblLoadDeliveries">
+            <EntityTypeMapping TypeName="DieseltechModel.tblLoadDelivery">
+              <MappingFragment StoreEntitySet="tblLoadDelivery">
+                <ScalarProperty Name="Deliveryorder" ColumnName="Deliveryorder" />
+                <ScalarProperty Name="Latitude" ColumnName="Latitude" />
+                <ScalarProperty Name="Longitude" ColumnName="Longitude" />
+                <ScalarProperty Name="MaxDeliveryID" ColumnName="MaxDeliveryID" />
+                <ScalarProperty Name="IsSave" ColumnName="IsSave" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="Comments" ColumnName="Comments" />
+                <ScalarProperty Name="Traitor" ColumnName="Traitor" />
+                <ScalarProperty Name="PickupNumber" ColumnName="PickupNumber" />
+                <ScalarProperty Name="DateTimeTo" ColumnName="DateTimeTo" />
+                <ScalarProperty Name="DateTimeFrom" ColumnName="DateTimeFrom" />
+                <ScalarProperty Name="CityName" ColumnName="CityName" />
+                <ScalarProperty Name="StateCode" ColumnName="StateCode" />
+                <ScalarProperty Name="ZipCode" ColumnName="ZipCode" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
+                <ScalarProperty Name="CountryName" ColumnName="CountryName" />
+                <ScalarProperty Name="CountryId" ColumnName="CountryId" />
+                <ScalarProperty Name="ShipperName" ColumnName="ShipperName" />
+                <ScalarProperty Name="ShipperId" ColumnName="ShipperId" />
+                <ScalarProperty Name="Information" ColumnName="Information" />
+                <ScalarProperty Name="LoadNumber" ColumnName="LoadNumber" />
+                <ScalarProperty Name="PickUpId" ColumnName="PickUpId" />
+                <ScalarProperty Name="DeliveryId" ColumnName="DeliveryId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblLoadPickups">
+            <EntityTypeMapping TypeName="DieseltechModel.tblLoadPickup">
+              <MappingFragment StoreEntitySet="tblLoadPickup">
+                <ScalarProperty Name="Pickuporder" ColumnName="Pickuporder" />
+                <ScalarProperty Name="Latitude" ColumnName="Latitude" />
+                <ScalarProperty Name="Longitude" ColumnName="Longitude" />
+                <ScalarProperty Name="MaxPickupId" ColumnName="MaxPickupId" />
+                <ScalarProperty Name="IsSave" ColumnName="IsSave" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="Comments" ColumnName="Comments" />
+                <ScalarProperty Name="Traitor" ColumnName="Traitor" />
+                <ScalarProperty Name="PickupNumber" ColumnName="PickupNumber" />
+                <ScalarProperty Name="DateTimeTo" ColumnName="DateTimeTo" />
+                <ScalarProperty Name="DateTimeFrom" ColumnName="DateTimeFrom" />
+                <ScalarProperty Name="CityName" ColumnName="CityName" />
+                <ScalarProperty Name="StateCode" ColumnName="StateCode" />
+                <ScalarProperty Name="ZipCode" ColumnName="ZipCode" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
+                <ScalarProperty Name="CountryName" ColumnName="CountryName" />
+                <ScalarProperty Name="CountryId" ColumnName="CountryId" />
+                <ScalarProperty Name="ShipperName" ColumnName="ShipperName" />
+                <ScalarProperty Name="ShipperId" ColumnName="ShipperId" />
+                <ScalarProperty Name="Information" ColumnName="Information" />
+                <ScalarProperty Name="LoadNumber" ColumnName="LoadNumber" />
+                <ScalarProperty Name="PickUpId" ColumnName="PickUpId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblShippers">
+            <EntityTypeMapping TypeName="DieseltechModel.tblShipper">
+              <MappingFragment StoreEntitySet="tblShipper">
+                <ScalarProperty Name="Latitude" ColumnName="Latitude" />
+                <ScalarProperty Name="Longitude" ColumnName="Longitude" />
+                <ScalarProperty Name="ShipperAssignId" ColumnName="ShipperAssignId" />
+                <ScalarProperty Name="ShipperZipCode" ColumnName="ShipperZipCode" />
+                <ScalarProperty Name="ShipperStateName" ColumnName="ShipperStateName" />
+                <ScalarProperty Name="ShipperStateCode" ColumnName="ShipperStateCode" />
+                <ScalarProperty Name="ShipperCity" ColumnName="ShipperCity" />
+                <ScalarProperty Name="ShipperAddress" ColumnName="ShipperAddress" />
+                <ScalarProperty Name="ShipperPhone" ColumnName="ShipperPhone" />
+                <ScalarProperty Name="ShipperName" ColumnName="ShipperName" />
+                <ScalarProperty Name="ShipperId" ColumnName="ShipperId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblStateCityDatas">
+            <EntityTypeMapping TypeName="DieseltechModel.tblStateCityData">
+              <MappingFragment StoreEntitySet="tblStateCityData">
+                <ScalarProperty Name="ZoneId" ColumnName="ZoneId" />
+                <ScalarProperty Name="StateName" ColumnName="StateName" />
+                <ScalarProperty Name="StateCode" ColumnName="StateCode" />
+                <ScalarProperty Name="CityName" ColumnName="CityName" />
+                <ScalarProperty Name="ZipCode" ColumnName="ZipCode" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblAgentSalaries">
+            <EntityTypeMapping TypeName="DieseltechModel.tblAgentSalary">
+              <MappingFragment StoreEntitySet="tblAgentSalary">
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="AffectiveDate" ColumnName="AffectiveDate" />
+                <ScalarProperty Name="salary" ColumnName="salary" />
+                <ScalarProperty Name="AgentId" ColumnName="AgentId" />
+                <ScalarProperty Name="AgentSalaryId" ColumnName="AgentSalaryId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="sp_Get_AgentSalaryList" FunctionName="DieseltechModel.Store.sp_Get_AgentSalaryList">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="DieseltechModel.sp_Get_AgentSalaryList_Result">
+                <ScalarProperty Name="AgentSalaryId" ColumnName="AgentSalaryId" />
+                <ScalarProperty Name="AgentId" ColumnName="AgentId" />
+                <ScalarProperty Name="salary" ColumnName="salary" />
+                <ScalarProperty Name="AffectiveDate" ColumnName="AffectiveDate" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <EntitySetMapping Name="tblTrucks">
+            <EntityTypeMapping TypeName="DieseltechModel.tblTruck">
+              <MappingFragment StoreEntitySet="tblTruck">
+                <ScalarProperty Name="PrefferedDestination" ColumnName="PrefferedDestination" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="StateCode" ColumnName="StateCode" />
+                <ScalarProperty Name="CityName" ColumnName="CityName" />
+                <ScalarProperty Name="StateName" ColumnName="StateName" />
+                <ScalarProperty Name="DriverId" ColumnName="DriverId" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="DriverLanguage" ColumnName="DriverLanguage" />
+                <ScalarProperty Name="DriverPhone" ColumnName="DriverPhone" />
+                <ScalarProperty Name="DriverName" ColumnName="DriverName" />
+                <ScalarProperty Name="AvailableDate" ColumnName="AvailableDate" />
+                <ScalarProperty Name="ZipCode" ColumnName="ZipCode" />
+                <ScalarProperty Name="TrailerTypeId" ColumnName="TrailerTypeId" />
+                <ScalarProperty Name="TrailerNo" ColumnName="TrailerNo" />
+                <ScalarProperty Name="TruckYard" ColumnName="TruckYard" />
+                <ScalarProperty Name="TruckNo" ColumnName="TruckNo" />
+                <ScalarProperty Name="CarrierAssignId" ColumnName="CarrierAssignId" />
+                <ScalarProperty Name="TruckId" ColumnName="TruckId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="Sp_Get_All_Carrier_List" FunctionName="DieseltechModel.Store.Sp_Get_All_Carrier_List">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="DieseltechModel.Sp_Get_All_Carrier_List_Result">
+                <ScalarProperty Name="CarrierName" ColumnName="CarrierName" />
+                <ScalarProperty Name="MC_" ColumnName="MC#" />
+                <ScalarProperty Name="AssignID" ColumnName="AssignID" />
+                <ScalarProperty Name="ContactName" ColumnName="ContactName" />
+                <ScalarProperty Name="Phonenumber" ColumnName="Phonenumber" />
+                <ScalarProperty Name="TrailerNo" ColumnName="TrailerNo" />
+                <ScalarProperty Name="TruckYard" ColumnName="TruckYard" />
+                <ScalarProperty Name="ZipCode" ColumnName="ZipCode" />
+                <ScalarProperty Name="StateCode" ColumnName="StateCode" />
+                <ScalarProperty Name="DriverName" ColumnName="DriverName" />
+                <ScalarProperty Name="DriverPhone" ColumnName="DriverPhone" />
+                <ScalarProperty Name="CategoryName" ColumnName="CategoryName" />
+                <ScalarProperty Name="Rating" ColumnName="Rating" />
+                <ScalarProperty Name="CarrierCategoryId" ColumnName="CarrierCategoryId" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="isactive" ColumnName="isactive" />
+                <ScalarProperty Name="IsBlackList" ColumnName="IsBlackList" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="Sp_GetAll_Truck_List" FunctionName="DieseltechModel.Store.Sp_GetAll_Truck_List">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="DieseltechModel.Sp_GetAll_Truck_List_Result">
+                <ScalarProperty Name="TruckId" ColumnName="TruckId" />
+                <ScalarProperty Name="Board" ColumnName="Board" />
+                <ScalarProperty Name="AssignID" ColumnName="AssignID" />
+                <ScalarProperty Name="CarrierName" ColumnName="CarrierName" />
+                <ScalarProperty Name="ContactName" ColumnName="ContactName" />
+                <ScalarProperty Name="Phonenumber" ColumnName="Phonenumber" />
+                <ScalarProperty Name="TruckNo" ColumnName="TruckNo" />
+                <ScalarProperty Name="TruckYard" ColumnName="TruckYard" />
+                <ScalarProperty Name="TrailerNo" ColumnName="TrailerNo" />
+                <ScalarProperty Name="LoadTypeName" ColumnName="LoadTypeName" />
+                <ScalarProperty Name="LoadTypeId" ColumnName="LoadTypeId" />
+                <ScalarProperty Name="Language" ColumnName="Language" />
+                <ScalarProperty Name="DriverPhone" ColumnName="DriverPhone" />
+                <ScalarProperty Name="CityName" ColumnName="CityName" />
+                <ScalarProperty Name="StateCode" ColumnName="StateCode" />
+                <ScalarProperty Name="StateName" ColumnName="StateName" />
+                <ScalarProperty Name="ZipCode" ColumnName="ZipCode" />
+                <ScalarProperty Name="AvailableDate" ColumnName="AvailableDate" />
+                <ScalarProperty Name="Eq" ColumnName="Eq" />
+                <ScalarProperty Name="DriverName" ColumnName="DriverName" />
+                <ScalarProperty Name="LoadSubType" ColumnName="LoadSubType" />
+                <ScalarProperty Name="Team" ColumnName="Team" />
+                <ScalarProperty Name="DriverId" ColumnName="DriverId" />
+                <ScalarProperty Name="Rating" ColumnName="Rating" />
+                <ScalarProperty Name="prefferedDestination" ColumnName="prefferedDestination" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <EntitySetMapping Name="tblCarriers">
+            <EntityTypeMapping TypeName="DieseltechModel.tblCarrier">
+              <MappingFragment StoreEntitySet="tblCarrier">
+                <ScalarProperty Name="IsNeedToAssign" ColumnName="IsNeedToAssign" />
+                <ScalarProperty Name="Isdeleted" ColumnName="Isdeleted" />
+                <ScalarProperty Name="Istrailerinterchange" ColumnName="Istrailerinterchange" />
+                <ScalarProperty Name="Quickpaypercentage" ColumnName="Quickpaypercentage" />
+                <ScalarProperty Name="IsBlackList" ColumnName="IsBlackList" />
+                <ScalarProperty Name="InsuranceExpirationDate" ColumnName="InsuranceExpirationDate" />
+                <ScalarProperty Name="IsQuickPay" ColumnName="IsQuickPay" />
+                <ScalarProperty Name="Phonenumber2" ColumnName="Phonenumber2" />
+                <ScalarProperty Name="ContactName2" ColumnName="ContactName2" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="PrefferedDestination" ColumnName="PrefferedDestination" />
+                <ScalarProperty Name="Comment" ColumnName="Comment" />
+                <ScalarProperty Name="Rating" ColumnName="Rating" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="IsOwnerOperator" ColumnName="IsOwnerOperator" />
+                <ScalarProperty Name="CarrierCategoryId" ColumnName="CarrierCategoryId" />
+                <ScalarProperty Name="Phonenumber" ColumnName="Phonenumber" />
+                <ScalarProperty Name="ContactName" ColumnName="ContactName" />
+                <ScalarProperty Name="AssignID" ColumnName="AssignID" />
+                <ScalarProperty Name="MC_" ColumnName="MC#" />
+                <ScalarProperty Name="CarrierName" ColumnName="CarrierName" />
+                <ScalarProperty Name="CarrierID" ColumnName="CarrierID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblLoadHeads">
+            <EntityTypeMapping TypeName="DieseltechModel.tblLoadHead">
+              <MappingFragment StoreEntitySet="tblLoadHead">
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="IsManagerFutureLoad" ColumnName="IsManagerFutureLoad" />
+                <ScalarProperty Name="AdjustedCarrierRate" ColumnName="AdjustedCarrierRate" />
+                <ScalarProperty Name="QuickPaypercentage" ColumnName="QuickPaypercentage" />
+                <ScalarProperty Name="IsQuickPay" ColumnName="IsQuickPay" />
+                <ScalarProperty Name="InvoiceNumber" ColumnName="InvoiceNumber" />
+                <ScalarProperty Name="FuelAdvanceAmount" ColumnName="FuelAdvanceAmount" />
+                <ScalarProperty Name="IsFuelAdvance" ColumnName="IsFuelAdvance" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="Rating" ColumnName="Rating" />
+                <ScalarProperty Name="IsPaidCarrier" ColumnName="IsPaidCarrier" />
+                <ScalarProperty Name="IsPaymentRecieved" ColumnName="IsPaymentRecieved" />
+                <ScalarProperty Name="IsInvoiceCustomer" ColumnName="IsInvoiceCustomer" />
+                <ScalarProperty Name="FutureLoadText" ColumnName="FutureLoadText" />
+                <ScalarProperty Name="IsFutureLoad" ColumnName="IsFutureLoad" />
+                <ScalarProperty Name="CarrierAmount" ColumnName="CarrierAmount" />
+                <ScalarProperty Name="BrokerAmout" ColumnName="BrokerAmout" />
+                <ScalarProperty Name="IsCancel" ColumnName="IsCancel" />
+                <ScalarProperty Name="DriverPhone" ColumnName="DriverPhone" />
+                <ScalarProperty Name="DriverName" ColumnName="DriverName" />
+                <ScalarProperty Name="DispatcherPhone" ColumnName="DispatcherPhone" />
+                <ScalarProperty Name="DispatcherName" ColumnName="DispatcherName" />
+                <ScalarProperty Name="Comment" ColumnName="Comment" />
+                <ScalarProperty Name="IsMarkCOD" ColumnName="IsMarkCOD" />
+                <ScalarProperty Name="IsLumper" ColumnName="IsLumper" />
+                <ScalarProperty Name="IsPod" ColumnName="IsPod" />
+                <ScalarProperty Name="IsCarrierConfirm" ColumnName="IsCarrierConfirm" />
+                <ScalarProperty Name="IsBrokerConfirm" ColumnName="IsBrokerConfirm" />
+                <ScalarProperty Name="IsPrint" ColumnName="IsPrint" />
+                <ScalarProperty Name="BranchFlat" ColumnName="BranchFlat" />
+                <ScalarProperty Name="AgentFlat" ColumnName="AgentFlat" />
+                <ScalarProperty Name="AgentGross" ColumnName="AgentGross" />
+                <ScalarProperty Name="User_ID" ColumnName="User_ID" />
+                <ScalarProperty Name="RegistrationDate" ColumnName="RegistrationDate" />
+                <ScalarProperty Name="BrokerReference" ColumnName="BrokerReference" />
+                <ScalarProperty Name="Extension" ColumnName="Extension" />
+                <ScalarProperty Name="BrokerRate" ColumnName="BrokerRate" />
+                <ScalarProperty Name="BrokerId" ColumnName="BrokerId" />
+                <ScalarProperty Name="CompanyId" ColumnName="CompanyId" />
+                <ScalarProperty Name="CarrierInstructions" ColumnName="CarrierInstructions" />
+                <ScalarProperty Name="DriverTypeId" ColumnName="DriverTypeId" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="QuantityTypeId" ColumnName="QuantityTypeId" />
+                <ScalarProperty Name="Weight" ColumnName="Weight" />
+                <ScalarProperty Name="Available" ColumnName="Available" />
+                <ScalarProperty Name="LoadSubTypeId" ColumnName="LoadSubTypeId" />
+                <ScalarProperty Name="Commodity" ColumnName="Commodity" />
+                <ScalarProperty Name="LoadTypeId" ColumnName="LoadTypeId" />
+                <ScalarProperty Name="CarrierRate" ColumnName="CarrierRate" />
+                <ScalarProperty Name="TruckId" ColumnName="TruckId" />
+                <ScalarProperty Name="IsSendText" ColumnName="IsSendText" />
+                <ScalarProperty Name="NumberToText" ColumnName="NumberToText" />
+                <ScalarProperty Name="CarrierId" ColumnName="CarrierId" />
+                <ScalarProperty Name="LoaderNumber" ColumnName="LoaderNumber" />
+                <ScalarProperty Name="LoaderHeadId" ColumnName="LoaderHeadId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="Sp_Get_LoadDetail_WithAllFilter" FunctionName="DieseltechModel.Store.Sp_Get_LoadDetail_WithAllFilter">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="DieseltechModel.Sp_Get_LoadDetail_WithAllFilter_Result">
+                <ScalarProperty Name="COD" ColumnName="COD" />
+                <ScalarProperty Name="IsNeedToAssign" ColumnName="IsNeedToAssign" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="LoaderNumber" ColumnName="LoaderNumber" />
+                <ScalarProperty Name="RegistrationDate" ColumnName="RegistrationDate" />
+                <ScalarProperty Name="Agent" ColumnName="Agent" />
+                <ScalarProperty Name="Profile" ColumnName="Profile" />
+                <ScalarProperty Name="Brokernanme" ColumnName="Brokernanme" />
+                <ScalarProperty Name="CarrierName" ColumnName="CarrierName" />
+                <ScalarProperty Name="LoadTypeName" ColumnName="LoadTypeName" />
+                <ScalarProperty Name="PickupDate" ColumnName="PickupDate" />
+                <ScalarProperty Name="PickupInfo" ColumnName="PickupInfo" />
+                <ScalarProperty Name="DeliveryInfo" ColumnName="DeliveryInfo" />
+                <ScalarProperty Name="BrokerReference" ColumnName="BrokerReference" />
+                <ScalarProperty Name="DeliveryDate" ColumnName="DeliveryDate" />
+                <ScalarProperty Name="BrokerRate" ColumnName="BrokerRate" />
+                <ScalarProperty Name="CarrierRate" ColumnName="CarrierRate" />
+                <ScalarProperty Name="Profit" ColumnName="Profit" />
+                <ScalarProperty Name="IsCancel" ColumnName="IsCancel" />
+                <ScalarProperty Name="IsFutureLoad" ColumnName="IsFutureLoad" />
+                <ScalarProperty Name="FutureLoadText" ColumnName="FutureLoadText" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="Sp_Get_CarrierTruck_Information" FunctionName="DieseltechModel.Store.Sp_Get_CarrierTruck_Information">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="DieseltechModel.Sp_Get_CarrierTruck_Information_Result">
+                <ScalarProperty Name="CarrierName" ColumnName="CarrierName" />
+                <ScalarProperty Name="MC_" ColumnName="MC#" />
+                <ScalarProperty Name="AssignID" ColumnName="AssignID" />
+                <ScalarProperty Name="ContactName" ColumnName="ContactName" />
+                <ScalarProperty Name="Phonenumber" ColumnName="Phonenumber" />
+                <ScalarProperty Name="TruckId" ColumnName="TruckId" />
+                <ScalarProperty Name="CarrierAssignId" ColumnName="CarrierAssignId" />
+                <ScalarProperty Name="TruckNo" ColumnName="TruckNo" />
+                <ScalarProperty Name="TruckYard" ColumnName="TruckYard" />
+                <ScalarProperty Name="TrailerNo" ColumnName="TrailerNo" />
+                <ScalarProperty Name="TrailerTypeId" ColumnName="TrailerTypeId" />
+                <ScalarProperty Name="ZipCode" ColumnName="ZipCode" />
+                <ScalarProperty Name="AvailableDate" ColumnName="AvailableDate" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="DriverName" ColumnName="DriverName" />
+                <ScalarProperty Name="DriverPhone" ColumnName="DriverPhone" />
+                <ScalarProperty Name="DriverLanguage" ColumnName="DriverLanguage" />
+                <ScalarProperty Name="DriverId" ColumnName="DriverId" />
+                <ScalarProperty Name="McAuthorityFileName" ColumnName="McAuthorityFileName" />
+                <ScalarProperty Name="McAuthorityFilePath" ColumnName="McAuthorityFilePath" />
+                <ScalarProperty Name="AssignmentFileName" ColumnName="AssignmentFileName" />
+                <ScalarProperty Name="AssignmentFilePath" ColumnName="AssignmentFilePath" />
+                <ScalarProperty Name="VoidChequeFileName" ColumnName="VoidChequeFileName" />
+                <ScalarProperty Name="VoidChequeFilePath" ColumnName="VoidChequeFilePath" />
+                <ScalarProperty Name="InsuranceFileName" ColumnName="InsuranceFileName" />
+                <ScalarProperty Name="InsuranceFilePath" ColumnName="InsuranceFilePath" />
+                <ScalarProperty Name="W9FileName" ColumnName="W9FileName" />
+                <ScalarProperty Name="W9FilePath" ColumnName="W9FilePath" />
+                <ScalarProperty Name="CarrierCategoryId" ColumnName="CarrierCategoryId" />
+                <ScalarProperty Name="IsOwnerOperator" ColumnName="IsOwnerOperator" />
+                <ScalarProperty Name="IsQuickPay" ColumnName="IsQuickPay" />
+                <ScalarProperty Name="PrefferedDestination" ColumnName="PrefferedDestination" />
+                <ScalarProperty Name="InsuranceExpirationDate" ColumnName="InsuranceExpirationDate" />
+                <ScalarProperty Name="ContactNametwo" ColumnName="ContactNametwo" />
+                <ScalarProperty Name="Phonenumbertwo" ColumnName="Phonenumbertwo" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="IsBlackList" ColumnName="IsBlackList" />
+                <ScalarProperty Name="Istrailerinterchange" ColumnName="Istrailerinterchange" />
+                <ScalarProperty Name="quickpaypercentage" ColumnName="quickpaypercentage" />
+                <ScalarProperty Name="IsNeedToAssign" ColumnName="IsNeedToAssign" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

@@ -24,7 +24,7 @@ namespace Dieseltech.Models
         public string TruckYard { get; set; }
         public string TrailerNo { get; set; }
         public int TrailerTypeId { get; set; }
-        public int ZipCode { get; set; }
+        public string ZipCode { get; set; }
         public string AvailableDate { get; set; }
         public string Email { get; set; }
         public string DriverName { get; set; }
@@ -52,5 +52,6 @@ namespace Dieseltech.Models
         public int IsBlackList { get; set; }
         public int Istrailerinterchange { get; set; }
         public double quickpaypercentage { get; set; }
+        public bool IsNeedToAssign { get; set; }
     }
 }

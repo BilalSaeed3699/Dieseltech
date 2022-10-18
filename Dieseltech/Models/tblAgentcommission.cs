@@ -18,5 +18,7 @@ namespace Dieseltech.Models
         public int AgentId { get; set; }
         public int Commissionpercentage { get; set; }
         public int salary { get; set; }
+        public System.DateTime AffectiveDate { get; set; }
+        public System.DateTime CreatedDate { get; set; }
     }
 }

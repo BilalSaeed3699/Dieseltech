@@ -15,7 +15,7 @@ namespace Dieseltech.Models
     public partial class tblStateCityData
     {
         public int Id { get; set; }
-        public int ZipCode { get; set; }
+        public string ZipCode { get; set; }
         public string CityName { get; set; }
         public string StateCode { get; set; }
         public string StateName { get; set; }

@@ -7,6 +7,7 @@ using System.Web.Mvc;
 
 namespace Dieseltech.Controllers
 {
+    [FilterConfig.AuthorizeActionFilter]
     public class customerController : Controller
     {
         private DieseltechEntities deEntity = new DieseltechEntities();

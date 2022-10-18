@@ -1,12 +1,14 @@
 ﻿using Dieseltech.Models;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
 namespace Dieseltech.Controllers
 {
+    [FilterConfig.AuthorizeActionFilter]
     [HandleError]
     public class AgentStatisticsController : Controller
     {
@@ -85,13 +87,14 @@ namespace Dieseltech.Controllers
 
         // GET: Report
         [Customexception]
-        public ActionResult Index(int? previous, int? Next, string Filter, string Type, DateTime FilterDateFroms, DateTime FilterDateTos, int? BackViewType, int? ddlAgentvalue)
+        public ActionResult Index(int? previous, int? Next, string Filter, string Type, DateTime FilterDateFroms, DateTime FilterDateTos, int? BackViewType, int? ddlAgentvalue, string Error)
 
         {
 
             Int32 userid = 0;
             try
             {
+                ViewBag.error = Error;
                 if (Session["ddlAgent"] != null)
                 {
                     ddlAgentvalue = Convert.ToInt32(Session["ddlAgent"]);
@@ -477,8 +480,13 @@ namespace Dieseltech.Controllers
                     ViewBag.Daily = Daily;
                 }
 
+                //ViewBag.Agents = deEntity.tblUsers.Where(x => x.IsActive == 1 && x.Isdeleted == 0).ToList();
 
+                List<sp_Get_AgentCommisionList_Result> Data = deEntity.sp_Get_AgentCommisionList(userid).OrderBy(o => o.AffectiveDate).ToList();
+                ViewBag.Get_AgentCommisionList_Result = Data;
 
+                List<sp_Get_AgentSalaryList_Result> Data1 = deEntity.sp_Get_AgentSalaryList(userid).OrderBy(o => o.AffectiveDate).ToList();
+                ViewBag.Get_AgentSalaryList_Result = Data1;
 
                 return View();
 
@@ -491,6 +499,253 @@ namespace Dieseltech.Controllers
 
             return View();
 
+        }
+
+
+        [Customexception]
+        public ActionResult AgentCommission( string Error)
+        {
+            try
+            {
+                ViewBag.AgentsLatestCommision = deEntity.sp_Get_AgentsLatestCommision().ToList();
+                ViewBag.Agents = deEntity.tblUsers.Where(x=>x.IsActive==1&&x.Isdeleted==0).ToList();
+                // Query for a specific customer.
+
+                ViewBag.error = Error;
+
+
+                return View();
+            }
+            catch (Exception ex)
+            {
+                return Json(ex.Message, JsonRequestBehavior.AllowGet);
+            }
+
+        }
+
+
+        
+        //[HttpPost]
+        //public ActionResult AgentCommission(int AgentId)
+        //{
+        //    int i = 0;
+        //    try
+        //    {
+        //        List<sp_Get_AgentCommisionList_Result> Data = deEntity.sp_Get_AgentCommisionList(AgentId).ToList();
+        //        // Query for a specific customer.
+
+
+
+
+        //        return Json(Data,JsonRequestBehavior.AllowGet);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return Json(ex.Message, JsonRequestBehavior.AllowGet);
+        //    }
+
+        //}
+
+        [HttpPost]
+        public ActionResult AgentCommission(int AgentId)
+        {
+           
+
+            try
+            {
+                List<sp_Get_AgentCommisionList_Result> Data = deEntity.sp_Get_AgentCommisionList(AgentId).OrderBy(o=>o.AffectiveDate).ToList();
+                // Query for a specific customer.
+
+
+
+
+                return Json(Data, JsonRequestBehavior.AllowGet);
+
+            }
+            catch (Exception ex)
+            {
+
+                return Json(ex.Message, JsonRequestBehavior.AllowGet);
+            }
+
+
+
+
+            return Json(0);
+        }
+        
+        [HttpPost]
+        public ActionResult AgentSalary(int AgentId)
+        {
+           
+
+            try
+            {
+                List<sp_Get_AgentSalaryList_Result> Data = deEntity.sp_Get_AgentSalaryList(AgentId).OrderBy(o=>o.AffectiveDate).ToList();
+                // Query for a specific customer.
+
+
+
+
+                return Json(Data, JsonRequestBehavior.AllowGet);
+
+            }
+            catch (Exception ex)
+            {
+
+                return Json(ex.Message, JsonRequestBehavior.AllowGet);
+            }
+
+
+
+
+            return Json(0);
+        }
+
+        [HttpPost]
+        public ActionResult AddAgentCommission(int AgentId,int Commision, DateTime AffectiveDate,int AgentStat=0)
+        {
+           
+
+            try
+            {
+                tblAgentcommission Data = new tblAgentcommission();
+                tblAgentcommission check = new tblAgentcommission();
+                check = deEntity.tblAgentcommissions.Where(x => x.AffectiveDate == AffectiveDate && x.AgentId == AgentId).FirstOrDefault();
+                if (check==null)
+                {
+                    Data.AgentId = AgentId;
+                    Data.Commissionpercentage = Commision;
+                    Data.AffectiveDate = AffectiveDate;
+                    Data.CreatedDate = DateTime.Now;
+                    deEntity.tblAgentcommissions.Add(Data);
+                    deEntity.SaveChanges();
+                }
+                else
+                {
+                    ViewBag.error = "Same date already exist!!!";
+                }
+
+
+
+                if(AgentStat==1)
+                {
+                    return RedirectToAction("Index", "AgentStatistics", new { Error = ViewBag.error, FilterDateFroms=DateTime.Now, FilterDateTos = DateTime.Now });
+                }
+                else
+                {
+                    return RedirectToAction("AgentCommission",new {Error= ViewBag.error });
+                }
+
+            }
+            catch (Exception ex)
+            {
+
+                return Json(ex.Message, JsonRequestBehavior.AllowGet);
+            }
+
+
+
+
+            return Json(0);
+        }
+        
+        [HttpPost]
+        public ActionResult AddAgentSalary(int AgentId,int salary, DateTime AffectiveDate,int AgentStat=0)
+        {
+           
+
+            try
+            {
+                tblAgentSalary Data = new tblAgentSalary();
+                tblAgentSalary check = new tblAgentSalary();
+                check = deEntity.tblAgentSalaries.Where(x => x.AffectiveDate == AffectiveDate && x.AgentId == AgentId).FirstOrDefault();
+                if (check==null)
+                {
+                    Data.AgentId = AgentId;
+                    Data.salary = salary;
+                    Data.AffectiveDate = AffectiveDate;
+                    Data.CreatedDate = DateTime.Now;
+                    deEntity.tblAgentSalaries.Add(Data);
+                    deEntity.SaveChanges();
+                }
+                else
+                {
+                    ViewBag.error = "Same date already exist!!!";
+                }
+
+
+
+                if(AgentStat==1)
+                {
+                    return RedirectToAction("Index", "AgentStatistics", new { Error = ViewBag.error, FilterDateFroms=DateTime.Now, FilterDateTos = DateTime.Now });
+                }
+                else
+                {
+                    return RedirectToAction("AgentCommission",new {Error= ViewBag.error });
+                }
+
+            }
+            catch (Exception ex)
+            {
+
+                return Json(ex.Message, JsonRequestBehavior.AllowGet);
+            }
+
+
+
+
+            return Json(0);
+        }
+
+        [HttpPost]
+        public JsonResult DeleteAgentCommission(int AgentCommissionId)
+        {
+           
+
+            try
+            {
+                tblAgentcommission check = new tblAgentcommission();
+                check = deEntity.tblAgentcommissions.Where(x => x.AgentCommissionId == AgentCommissionId).FirstOrDefault();
+                if (check!=null)
+                {
+                    deEntity.Entry(check).State = EntityState.Deleted;
+                    deEntity.SaveChanges();
+                }
+
+                return Json(1);
+
+            }
+            catch (Exception ex)
+            {
+
+                return Json(ex.Message, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [HttpPost]
+        public JsonResult DeleteAgentSalary(int AgentSalaryId)
+        {
+           
+
+            try
+            {
+                tblAgentSalary check = new tblAgentSalary();
+                check = deEntity.tblAgentSalaries.Where(x => x.AgentSalaryId == AgentSalaryId).FirstOrDefault();
+                if (check!=null)
+                {
+                    deEntity.Entry(check).State = EntityState.Deleted;
+                    deEntity.SaveChanges();
+                }
+
+                return Json(1);
+
+            }
+            catch (Exception ex)
+            {
+
+                return Json(ex.Message, JsonRequestBehavior.AllowGet);
+            }
         }
     }
 }

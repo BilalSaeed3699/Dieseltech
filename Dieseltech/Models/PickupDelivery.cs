@@ -17,7 +17,7 @@ namespace Dieseltech.Models
         public int CountryId { get; set; }
         public string PhoneNumber { get; set; }
         public string Address { get; set; }
-        public int ZipCode { get; set; }
+        public string ZipCode { get; set; }
         public System.DateTime DateTimeFrom { get; set; }
         public System.DateTime DateTimeTo { get; set; }
         public string PickupNumber { get; set; }

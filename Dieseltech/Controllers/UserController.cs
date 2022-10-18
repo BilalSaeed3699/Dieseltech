@@ -48,7 +48,7 @@ namespace Dieseltech.Controllers
                     db.SaveChanges();
                 }
 
-                ViewBag.User = db.tblProfiles.Where(p => p.IsActive == 1 && p.Isdeleted == 0).ToList();
+                ViewBag.User = db.tblProfiles.Where(p => p.Isdeleted == 0).ToList();
 
                 return View();
             }
@@ -113,11 +113,28 @@ namespace Dieseltech.Controllers
             ViewBag.access = new ModelHelper().GetAccessList(db.tblAccess_Level.ToList()).ToList();
             ViewBag.Package = new ModelHelper().GetLocationList(db.tblPackages).ToList();
             tblProfile speaker = db.tblProfiles.Find(id);
+            if(speaker.IsActive==1)
+            {
+                ViewBag.isActiveUser = true;
+            }
+            else
+            {
+                ViewBag.isActiveUser = false;
+            }
+            
             if (speaker == null)
             {
                 tblProfile speaker1 = db.tblProfiles.Find(1);
                 ViewBag.image = speaker1.Image;
                 ViewBag.Details = speaker1.Details;
+                if (speaker1.IsActive == 1)
+                {
+                    ViewBag.isActiveUser = true;
+                }
+                else
+                {
+                    ViewBag.isActiveUser = false;
+                }
                 return View(speaker1);
             }
 
@@ -163,12 +180,17 @@ namespace Dieseltech.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Customexception]
-        public ActionResult Edit([Bind(Include = "profile_id, Profile_name,phoneNo,Email,youtube,instagram,Twitter,Facebook,Adress,Active,Packageid,Accessid,User_ID")] tblProfile speaker, HttpPostedFileBase Image, string Details, string Image1)
+        public ActionResult Edit([Bind(Include = "profile_id, Profile_name,phoneNo,Email,youtube,instagram,Twitter,Facebook,Adress,Active,Packageid,Accessid,User_ID")] tblProfile speaker, HttpPostedFileBase Image, string Details, string Image1,int? isActiveUser=0)
         {
 
             int id = Convert.ToInt32(Session["User_id"]);
+
+
+
+            speaker.IsActive = isActiveUser;
+
             string Query = "";
-            Query = "update tblUser set Email_Adress = '" + speaker.Email + "'  where  User_ID = " + speaker.User_ID+ "  ";
+            Query = "update tblUser set Email_Adress = '" + speaker.Email + "',IsActive = " + speaker.IsActive + "  where  User_ID = " + speaker.User_ID+ "  ";
             ut.InsertUpdate(Query);
 
 
@@ -226,7 +248,7 @@ namespace Dieseltech.Controllers
                 else
                 {
                     speaker.Image = Image1;
-                    speaker.IsActive = 1;
+                    //speaker.IsActive = 1;
                     db.Entry(speaker).State = EntityState.Modified;
                     db.SaveChanges();
                     return RedirectToAction("Index");

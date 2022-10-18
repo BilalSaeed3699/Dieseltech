@@ -16,5 +16,6 @@ namespace Dieseltech.Models
         public string DispatcherName { get; set; }
         public int TotalQuanity { get; set; }
         public decimal GrossProfit { get; set; }
+        public decimal Commission { get; set; }
     }
 }

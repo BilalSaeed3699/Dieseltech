@@ -8,6 +8,7 @@ using System.Web.Mvc;
 
 namespace Dieseltech.Controllers
 {
+    [FilterConfig.AuthorizeActionFilter]
     public class revenueController : Controller
     {
         private DieseltechEntities deEntity = new DieseltechEntities();

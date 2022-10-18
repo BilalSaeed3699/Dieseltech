@@ -20,9 +20,12 @@ namespace Dieseltech.Models
         public int ShipperId { get; set; }
         public string ShipperName { get; set; }
         public int CountryId { get; set; }
+        public string CountryName { get; set; }
         public string PhoneNumber { get; set; }
         public string Address { get; set; }
-        public int ZipCode { get; set; }
+        public string ZipCode { get; set; }
+        public string StateCode { get; set; }
+        public string CityName { get; set; }
         public System.DateTime DateTimeFrom { get; set; }
         public System.DateTime DateTimeTo { get; set; }
         public string PickupNumber { get; set; }
@@ -31,9 +34,6 @@ namespace Dieseltech.Models
         public int CreatedBy { get; set; }
         public System.DateTime CreatedDate { get; set; }
         public int IsSave { get; set; }
-        public string StateCode { get; set; }
-        public string CityName { get; set; }
-        public string CountryName { get; set; }
         public Nullable<int> MaxPickupId { get; set; }
         public string Longitude { get; set; }
         public string Latitude { get; set; }

@@ -120,6 +120,7 @@
                             @{bool Isquickpay = false;}
                             @{bool Isblacklist = false;}
                             @{bool Istrailerinterchange = false;}
+                            @{bool IsNeedToAssign = false;}
                             @{double quickpaypercentage = 3;}
                             @{DateTime InsuranceExpirationDate = DateTime.Now;}
 
@@ -170,6 +171,15 @@
                                 else
                                 {
                                     Istrailerinterchange = false;
+                                }
+
+                                if (Convert.ToInt32(ListCarrier[0].IsNeedToAssign) == 1)
+                                {
+                                    IsNeedToAssign = true;
+                                }
+                                else
+                                {
+                                    IsNeedToAssign = false;
                                 }
 
 
@@ -734,10 +744,6 @@
                                                     {
                                                         <input id="chkIsOwnerOperator" name="OwnerOperator" style="font-size:15px !important" type="checkbox" />
                                                     }
-
-
-
-
                                                 </div>
 
 
@@ -794,6 +800,18 @@
 
                                                 </div>
 
+                                                <div class="col-md-2">
+                                                    <label>Need to assign <i class="fa fa-male" aria-hidden="true"></i></label> <br />
+                                                    Need to assign
+                                                    @if (IsNeedToAssign == true)
+                                                    {
+                                                        <input checked id="chkIsNeedToAssign" name="IsNeedToAssign" style="font-size:15px !important" value="true" type="checkbox" />
+                                                    }
+                                                    else
+                                                    {
+                                                        <input id="chkIsNeedToAssign" name="IsNeedToAssign" style="font-size:15px !important" value="true" type="checkbox" />
+                                                    }
+                                                </div>
                                                 <div class="col-md-2" id="deletediv" style="display:none">
                                                     <label> </label>
                                                     <a style="background-color:red !important" class="btn btn-danger" onclick="deletecarrier()">Delete Carrier</a>
@@ -3175,7 +3193,13 @@
                         $('#txtMCNumber').val(json[0].MC_);
                         $('#txtCarrierName').val(json[0].CarrierName);
                         $('#txtCarrierEmail').val(json[0].Email);
-
+                        
+                        if (json[0].IsNeedToAssign == true) {
+                            $('#chkIsNeedToAssign').prop('checked', true);
+                        }
+                        else {
+                            $('#chkIsNeedToAssign').prop('checked', false);
+                        }
 
 
                         /*alert(json[0].InsuranceExpirationDate);*/
@@ -3983,7 +4007,12 @@
 
                 $('#Quickpaypercentage').val(json[0].quickpaypercentage);
 
-
+                if (json[0].IsNeedToAssign == true) {
+                    $('#chkIsNeedToAssign').prop('checked', true);
+                }
+                else {
+                    $('#chkIsNeedToAssign').prop('checked', false);
+                }
 
                 var datevalue = new Date(parseInt(json[0].InsuranceExpirationDate.replace("/Date(", "").replace(")/", ""), 10));
                 var todayDate = new Date(datevalue);

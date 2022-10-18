@@ -26,10 +26,31 @@ namespace Dieseltech.Controllers
 
         [HttpPost]
         [Customexception]
-        public ActionResult Advancesearch(int? userid, DateTime AdvanceFilterDateFroms, DateTime AdvanceFilterDateTo, int? previous, int? Next, string Filter, string Type, DateTime FilterDateFroms, DateTime FilterDateTos, string cwhere, int? Custom)
+        public ActionResult Advancesearch(int? userid, DateTime AdvanceFilterDateFroms, DateTime AdvanceFilterDateTo, int? previous, int? Next, string Filter, string Type, DateTime FilterDateFroms, DateTime FilterDateTos, string cwhere, int? Custom,int NTC=0)
         {
+            if(NTC==1)
+            {
+                return Json(new { url = Url.Action("NeedToCover", "Report", new { userid = userid, AdvanceFilterDateFroms = AdvanceFilterDateFroms, AdvanceFilterDateTo = AdvanceFilterDateTo, Filter = Filter, Type = Type, FilterDateFroms = FilterDateFroms, FilterDateTos = FilterDateTos, cwhere = cwhere, Custom = Custom }) });
+            }
+            else
+            {
+                return Json(new { url = Url.Action("Index", "Report", new { userid = userid, AdvanceFilterDateFroms = AdvanceFilterDateFroms, AdvanceFilterDateTo = AdvanceFilterDateTo, Filter = Filter, Type = Type, FilterDateFroms = FilterDateFroms, FilterDateTos = FilterDateTos, cwhere = cwhere, Custom = Custom }) });
+            }
+            
+        }
 
-            return Json(new { url = Url.Action("Index", "Report", new { userid = userid, AdvanceFilterDateFroms = AdvanceFilterDateFroms, AdvanceFilterDateTo = AdvanceFilterDateTo, Filter = Filter, Type = Type, FilterDateFroms = FilterDateFroms, FilterDateTos = FilterDateTos, cwhere = cwhere, Custom = Custom }) });
+
+
+        [HttpPost]
+        public JsonResult ChangeLoadSatus(string LoadNumber,int Status=0)
+        {
+            tblLoadHead Data = deEntity.tblLoadHeads.Where(x => x.LoaderNumber == LoadNumber).FirstOrDefault();
+            Data.Status = Status;
+            deEntity.Entry(Data);
+            deEntity.SaveChanges();
+
+
+            return Json(1);
         }
 
 
@@ -53,10 +74,17 @@ namespace Dieseltech.Controllers
 
         [HttpPost]
         [Customexception]
-        public ActionResult AgentLoadList(int? userid, DateTime AdvanceFilterDateFroms, DateTime AdvanceFilterDateTo, int? previous, int? Next, string Filter, string Type, DateTime FilterDateFroms, DateTime FilterDateTos, string cwhere, int? Custom)
+        public ActionResult AgentLoadList(int? userid, DateTime AdvanceFilterDateFroms, DateTime AdvanceFilterDateTo, int? previous, int? Next, string Filter, string Type, DateTime FilterDateFroms, DateTime FilterDateTos, string cwhere, int? Custom,int NTC=0)
         {
-
-            return Json(new { url = Url.Action("Index", "Report", new { userid, AdvanceFilterDateFroms, AdvanceFilterDateTo, previous, Next, Filter, Type, FilterDateFroms, FilterDateTos, cwhere, Custom }) });
+            if(NTC==1)
+            {
+                return Json(new { url = Url.Action("NeedToCover", "Report", new { userid, AdvanceFilterDateFroms, AdvanceFilterDateTo, previous, Next, Filter, Type, FilterDateFroms, FilterDateTos, cwhere, Custom }) });
+            }
+            else
+            {
+                return Json(new { url = Url.Action("Index", "Report", new { userid, AdvanceFilterDateFroms, AdvanceFilterDateTo, previous, Next, Filter, Type, FilterDateFroms, FilterDateTos, cwhere, Custom }) });
+            }
+            
         }
 
         [HttpPost]
@@ -77,6 +105,747 @@ namespace Dieseltech.Controllers
         }
 
         // GET: Report
+        [Customexception]
+        public ActionResult NeedToCover(int? userid, DateTime AdvanceFilterDateFroms, DateTime AdvanceFilterDateTo, int? previous, int? Next, string Filter, string Type, DateTime FilterDateFroms, DateTime FilterDateTos, string cwhere, int? Custom)
+        {
+            int AccessLevel = 0;
+            int LoginUserId = Convert.ToInt32(Session["User_id"]);
+            try
+            {
+                Session["CarrierInsuranceExpirationList"] = deEntity.tblNotifications.Where(n => n.NotificationType == "C").OrderBy(n => n.IsRead).ThenByDescending(n => n.CreateDate).ToList();
+                Session["AlkaiosnotifyList"] = deEntity.tblNotifications.Where(n => n.NotificationType == "P" && n.CompanyId == 1).OrderBy(n => n.IsRead).ThenByDescending(n => n.CreateDate).ToList();
+                Session["JetlinenotifyList"] = deEntity.tblNotifications.Where(n => n.NotificationType == "P" && n.CompanyId == 3).OrderBy(n => n.IsRead).ThenByDescending(n => n.CreateDate).ToList();
+
+                if (userid == null)
+                {
+                    userid = Convert.ToInt32(Session["User_id"]);
+                }
+                ViewBag.UserId = userid;
+                ViewBag.AgentList = deEntity.Sp_Get_Agents_List().ToList();
+                DateTime Daily;
+
+                var Userinfo = deEntity.tblProfiles.Where(p => p.User_ID == LoginUserId).FirstOrDefault();
+
+                if (Userinfo != null)
+                {
+                    AccessLevel = Convert.ToInt32(Userinfo.Accessid);
+                }
+
+                ViewBag.AccessLevel = AccessLevel;
+                if (cwhere == null)
+                {
+                    cwhere = "";
+                }
+                ViewBag.cwhere = cwhere;
+
+                //If Form is load first time 
+                if (Filter == null)
+                {
+                    Filter = "A";
+                }
+
+
+
+
+                //If Form is already loaded and applied custom search 
+
+                if (Custom == 1)
+                {
+
+                    string FullMonthName = FilterDateFroms.ToString("MMMM");
+                    int year = FilterDateFroms.Year;
+
+                    //var thisMonthStart = Daily.AddDays(1 - Daily.Day);
+                    //var thisMonthEnd = thisMonthStart.AddMonths(1).AddSeconds(-1);
+
+                    ViewBag.MonthDetails = FullMonthName + "  " + year;
+
+                    ViewBag.LoadType = Type;
+                    ViewBag.LoadFilterDateFrom = FilterDateFroms;
+                    ViewBag.LoadFilterDateTo = FilterDateTos;
+                    ViewBag.IsDateFilter = "1";
+                    ViewBag.AdvanceFilterDateFroms = AdvanceFilterDateFroms;
+                    ViewBag.AdvanceFilterDateTo = AdvanceFilterDateTo;
+
+                    if (cwhere != null && cwhere != "")
+                    {
+                        ViewBag.LoadDetailsMonth = deEntity.Sp_Get_LoadDetail_WithAllFilter("S", AdvanceFilterDateFroms, AdvanceFilterDateTo, userid, cwhere).OrderBy(a => a.LoaderNumber).ToList();
+                    }
+                    else
+                    {
+                        ViewBag.LoadDetailsMonth = deEntity.Sp_Get_LoadDetail_WithAllFilter(Filter, AdvanceFilterDateFroms, AdvanceFilterDateTo, userid, cwhere).OrderBy(a => a.LoaderNumber).ToList();
+                    }
+                }
+
+
+
+                //If Form is load first time 
+                if (previous == null && Next == null && Custom == null)
+                {
+                    ViewBag.AdvanceFilterDateFroms = AdvanceFilterDateFroms;
+                    ViewBag.AdvanceFilterDateTo = AdvanceFilterDateTo;
+                    if (Type == null)
+                    {
+
+                        //ViewBag.LoadType = "Monthly";
+
+
+                        ViewBag.LoadType = "Monthly";
+                        FilterDateFroms = FilterDateFroms.AddDays(-30);
+
+                        Daily = DateTime.Today;
+                        string FullMonthName = Daily.ToString("MMMM");
+                        int year = Daily.Year;
+                        ViewBag.MonthDetails = FullMonthName + "  " + year;
+
+
+
+                        FilterDateFroms = Daily.AddDays(1 - Daily.Day);
+                        FilterDateTos = FilterDateFroms.AddMonths(1).AddSeconds(-1);
+
+                        ViewBag.LoadFilterDateFrom = FilterDateFroms;
+                        ViewBag.LoadFilterDateTo = FilterDateTos;
+                        ViewBag.IsDateFilter = "1";
+
+
+
+                        if (cwhere != null && cwhere != "")
+                        {
+                            ViewBag.LoadDetailsMonth = deEntity.Sp_Get_LoadDetail_WithAllFilter("S", FilterDateFroms, FilterDateTos, userid, cwhere).OrderBy(a => a.LoaderNumber).ToList();
+
+                        }
+                        else
+                        {
+                            ViewBag.LoadDetailsMonth = deEntity.Sp_Get_LoadDetail_WithAllFilter(Filter, FilterDateFroms, FilterDateTos, userid, cwhere).OrderBy(a => a.LoaderNumber).ToList();
+                        }
+
+
+
+
+
+                        //Daily = DateTime.Now;
+                        //ViewBag.LoadFilterDateFrom = Daily;
+                        //ViewBag.LoadFilterDateTo = Daily;
+
+                        ////DateTime now = DateTime.Now;
+                        ////var startDate = new DateTime(now.Year, now.Month, 1);
+                        ////var endDate = startDate.AddMonths(1).AddDays(-1);
+
+                        ////ViewBag.DateFrom = startDate;
+                        ////ViewBag.DateTo = endDate;
+
+
+                        //ViewBag.IsDateFilter = "1";
+                        ////ViewBag.LoadDetails = deEntity.Sp_Get_LoadDetail_FilterWise(Filter).OrderBy(a => a.LoaderNumber).ToList();
+                        //ViewBag.LoadDetailsMonth = deEntity.Sp_Get_LoadDetail_WithAllFilter(Filter, Daily, Daily).OrderBy(a => a.LoaderNumber).ToList();
+                    }
+                    else if (Type == "Daily")
+                    {
+
+                        if (Filter == "A")
+                        {
+
+                            ViewBag.LoadType = "Weekly";
+
+                            DateTime baseDate = DateTime.Today;
+                            var thisWeekStart = baseDate.AddDays(-(int)baseDate.DayOfWeek);
+                            var thisWeekEnd = thisWeekStart.AddDays(7).AddSeconds(-1);
+                            FilterDateFroms = baseDate.AddDays(-(int)baseDate.DayOfWeek);
+                            FilterDateTos = thisWeekStart.AddDays(7).AddSeconds(-1);
+                            ViewBag.LoadFilterDateFrom = FilterDateFroms;
+                            ViewBag.LoadFilterDateTo = FilterDateTos;
+                            ViewBag.IsDateFilter = "1";
+
+
+                            if (cwhere != null && cwhere != "")
+                            {
+                                ViewBag.LoadDetailsMonth = deEntity.Sp_Get_LoadDetail_WithAllFilter("S", FilterDateFroms, FilterDateTos, userid, cwhere).OrderBy(a => a.LoaderNumber).ToList();
+
+                            }
+                            else
+                            {
+                                ViewBag.LoadDetailsMonth = deEntity.Sp_Get_LoadDetail_WithAllFilter(Filter, FilterDateFroms, FilterDateTos, userid, cwhere).OrderBy(a => a.LoaderNumber).ToList();
+                            }
+
+                        }
+                        else if (Filter != "A")
+                        {
+                            ViewBag.LoadType = Type;
+
+                            //DateTime baseDate = DateTime.Today;
+                            //var thisWeekStart = baseDate.AddDays(-(int)baseDate.DayOfWeek);
+                            //var thisWeekEnd = thisWeekStart.AddDays(7).AddSeconds(-1);
+                            //FilterDateFroms = baseDate.AddDays(-(int)baseDate.DayOfWeek);
+                            //FilterDateTos = thisWeekStart.AddDays(7).AddSeconds(-1);
+                            ViewBag.LoadFilterDateFrom = FilterDateFroms;
+                            ViewBag.LoadFilterDateTo = FilterDateTos;
+                            ViewBag.IsDateFilter = "1";
+
+
+                            if (cwhere != null && cwhere != "")
+                            {
+                                ViewBag.LoadDetailsMonth = deEntity.Sp_Get_LoadDetail_WithAllFilter("S", FilterDateFroms, FilterDateTos, userid, cwhere).OrderBy(a => a.LoaderNumber).ToList();
+
+                            }
+                            else
+                            {
+                                ViewBag.LoadDetailsMonth = deEntity.Sp_Get_LoadDetail_WithAllFilter(Filter, FilterDateFroms, FilterDateTos, userid, cwhere).OrderBy(a => a.LoaderNumber).ToList();
+                            }
+
+                        }
+
+
+
+
+
+                    }
+
+                    else if (Type == "Weekly")
+                    {
+
+                        //ViewBag.LoadType = "Monthly";
+
+                        if (Filter == "A")
+                        {
+
+                            ViewBag.LoadType = "Monthly";
+                            FilterDateFroms = FilterDateFroms.AddDays(-30);
+
+                            Daily = DateTime.Today;
+                            string FullMonthName = Daily.ToString("MMMM");
+                            int year = Daily.Year;
+                            ViewBag.MonthDetails = FullMonthName + "  " + year;
+                            FilterDateFroms = Daily.AddDays(1 - Daily.Day);
+                            FilterDateTos = FilterDateFroms.AddMonths(1).AddSeconds(-1);
+
+                            ViewBag.LoadFilterDateFrom = FilterDateFroms;
+                            ViewBag.LoadFilterDateTo = FilterDateTos;
+                            ViewBag.IsDateFilter = "1";
+
+                            if (cwhere != null && cwhere != "")
+                            {
+                                ViewBag.LoadDetailsMonth = deEntity.Sp_Get_LoadDetail_WithAllFilter("S", FilterDateFroms, FilterDateTos, userid, cwhere).OrderBy(a => a.LoaderNumber).ToList();
+
+                            }
+                            else
+                            {
+                                ViewBag.LoadDetailsMonth = deEntity.Sp_Get_LoadDetail_WithAllFilter(Filter, FilterDateFroms, FilterDateTos, userid, cwhere).OrderBy(a => a.LoaderNumber).ToList();
+                            }
+
+                        }
+
+                        else if (Filter != "A")
+                        {
+                            ViewBag.LoadType = Type;
+
+                            //FilterDateFroms = FilterDateFroms.AddDays(-30);
+
+                            //Daily = DateTime.Now;
+                            //string FullMonthName = Daily.ToString("MMMM");
+                            //int year = Daily.Year;
+                            //ViewBag.MonthDetails = FullMonthName + "  " + year;
+                            //FilterDateFroms = Daily.AddDays(1 - Daily.Day);
+                            //FilterDateTos = FilterDateFroms.AddMonths(1).AddSeconds(-1);
+
+
+                            ViewBag.LoadFilterDateFrom = FilterDateFroms;
+                            ViewBag.LoadFilterDateTo = FilterDateTos;
+                            ViewBag.IsDateFilter = "1";
+
+                            if (cwhere != null && cwhere != "")
+                            {
+                                ViewBag.LoadDetailsMonth = deEntity.Sp_Get_LoadDetail_WithAllFilter("S", FilterDateFroms, FilterDateTos, userid, cwhere).OrderBy(a => a.LoaderNumber).ToList();
+
+                            }
+                            else
+                            {
+                                ViewBag.LoadDetailsMonth = deEntity.Sp_Get_LoadDetail_WithAllFilter(Filter, FilterDateFroms, FilterDateTos, userid, cwhere).OrderBy(a => a.LoaderNumber).ToList();
+                            }
+
+                        }
+
+
+
+                    }
+                    else if (Type == "Monthly")
+                    {
+                        //ViewBag.LoadType = "Daily";
+
+
+
+                        if (Filter == "A")
+                        {
+
+                            ViewBag.LoadType = "Daily";
+                            Daily = DateTime.Today;
+                            ViewBag.LoadFilterDateFrom = Daily;
+                            ViewBag.LoadFilterDateTo = Daily;
+
+                            //DateTime now = DateTime.Now;
+                            //var startDate = new DateTime(now.Year, now.Month, 1);
+                            //var endDate = startDate.AddMonths(1).AddDays(-1);
+
+                            //ViewBag.DateFrom = startDate;
+                            //ViewBag.DateTo = endDate;
+
+                            FilterDateFroms = Daily;
+                            FilterDateTos = Daily;
+                            ViewBag.IsDateFilter = "1";
+                            //ViewBag.LoadDetails = deEntity.Sp_Get_LoadDetail_FilterWise(Filter).OrderBy(a => a.LoaderNumber).ToList();
+
+
+                            if (cwhere != null && cwhere != "")
+                            {
+                                ViewBag.LoadDetailsMonth = deEntity.Sp_Get_LoadDetail_WithAllFilter("S", FilterDateFroms, FilterDateTos, userid, cwhere).OrderBy(a => a.LoaderNumber).ToList();
+
+                            }
+                            else
+                            {
+                                ViewBag.LoadDetailsMonth = deEntity.Sp_Get_LoadDetail_WithAllFilter(Filter, FilterDateFroms, FilterDateTos, userid, cwhere).OrderBy(a => a.LoaderNumber).ToList();
+                            }
+
+                        }
+                        else if (Filter != "A")
+                        {
+                            ViewBag.LoadType = Type;
+                            Daily = DateTime.Today;
+                            ViewBag.LoadFilterDateFrom = FilterDateFroms;
+                            ViewBag.LoadFilterDateTo = FilterDateTos;
+
+                            //DateTime now = DateTime.Now;
+                            //var startDate = new DateTime(now.Year, now.Month, 1);
+                            //var endDate = startDate.AddMonths(1).AddDays(-1);
+
+                            //ViewBag.DateFrom = startDate;
+                            //ViewBag.DateTo = endDate;
+
+
+                            string FullMonthName = FilterDateFroms.ToString("MMMM");
+                            int year = FilterDateFroms.Year;
+                            ViewBag.MonthDetails = FullMonthName + "  " + year;
+                            ViewBag.IsDateFilter = "1";
+                            //ViewBag.LoadDetails = deEntity.Sp_Get_LoadDetail_FilterWise(Filter).OrderBy(a => a.LoaderNumber).ToList();
+
+
+                            if (cwhere != null && cwhere != "")
+                            {
+                                ViewBag.LoadDetailsMonth = deEntity.Sp_Get_LoadDetail_WithAllFilter("S", FilterDateFroms, FilterDateTos, userid, cwhere).OrderBy(a => a.LoaderNumber).ToList();
+
+                            }
+                            else
+                            {
+                                ViewBag.LoadDetailsMonth = deEntity.Sp_Get_LoadDetail_WithAllFilter(Filter, FilterDateFroms, FilterDateTos, userid, cwhere).OrderBy(a => a.LoaderNumber).ToList();
+                            }
+
+                        }
+                    }
+                }
+
+                //If Form is already loaded  and previous button clicked 
+                if (previous == 1)
+                {
+
+                    ViewBag.AdvanceFilterDateFroms = AdvanceFilterDateFroms;
+                    ViewBag.AdvanceFilterDateTo = AdvanceFilterDateTo;
+
+                    if (Type == "Daily")
+                    {
+                        ViewBag.LoadType = Type;
+
+
+
+                        DateTime baseDate = DateTime.Today;
+
+                        //var today = baseDate;
+                        //var yesterday = baseDate.AddDays(-1);
+                        var thisWeekStart = baseDate.AddDays(-(int)baseDate.DayOfWeek);
+                        var thisWeekEnd = thisWeekStart.AddDays(7).AddSeconds(-1);
+
+
+
+
+                        //var lastWeekStart = thisWeekStart.AddDays(-7);
+                        //var lastWeekEnd = thisWeekStart.AddSeconds(-1);
+                        //var thisMonthStart = baseDate.AddDays(1 - baseDate.Day);
+                        //var thisMonthEnd = thisMonthStart.AddMonths(1).AddSeconds(-1);
+                        //var lastMonthStart = thisMonthStart.AddMonths(-1);
+                        //var lastMonthEnd = thisMonthStart.AddSeconds(-1);
+
+                        //FilterDateFroms = FilterDateFroms.AddDays(-1);
+                        //FilterDateTos = FilterDateTos.AddDays(-1);
+                        FilterDateFroms = FilterDateFroms.AddDays(-1);
+                        FilterDateTos = FilterDateTos.AddDays(-1);
+
+
+
+                        ViewBag.LoadFilterDateFrom = FilterDateFroms;
+                        ViewBag.LoadFilterDateTo = FilterDateTos;
+                        //DateTime now = DateTime.Now;
+                        //var startDate = new DateTime(now.Year, now.Month, 1);
+                        //var endDate = startDate.AddMonths(1).AddDays(-1);
+
+                        //ViewBag.DateFrom = startDate;
+                        //ViewBag.DateTo = endDate;
+
+
+                        ViewBag.IsDateFilter = "1";
+                        //ViewBag.LoadDetails = deEntity.Sp_Get_LoadDetail_FilterWise(Filter).OrderBy(a => a.LoaderNumber).ToList();
+                        if (cwhere != null && cwhere != "")
+                        {
+                            ViewBag.LoadDetailsMonth = deEntity.Sp_Get_LoadDetail_WithAllFilter("S", FilterDateFroms, FilterDateTos, userid, cwhere).OrderBy(a => a.LoaderNumber).ToList();
+
+                        }
+                        else
+                        {
+                            ViewBag.LoadDetailsMonth = deEntity.Sp_Get_LoadDetail_WithAllFilter(Filter, FilterDateFroms, FilterDateTos, userid, cwhere).OrderBy(a => a.LoaderNumber).ToList();
+                        }
+
+                    }
+
+                    else if (Type == "Weekly")
+                    {
+                        ViewBag.LoadType = Type;
+                        DateTime baseDate = DateTime.Today;
+
+                        //var today = baseDate;
+                        //var yesterday = baseDate.AddDays(-1);
+                        //var thisWeekStart = baseDate.AddDays(-(int)baseDate.DayOfWeek);
+                        //var thisWeekEnd = thisWeekStart.AddDays(7).AddSeconds(-1);
+                        //var lastWeekStart = thisWeekStart.AddDays(-7);
+                        //var lastWeekEnd = thisWeekStart.AddSeconds(-1);
+                        //var thisMonthStart = baseDate.AddDays(1 - baseDate.Day);
+                        //var thisMonthEnd = thisMonthStart.AddMonths(1).AddSeconds(-1);
+                        //var lastMonthStart = thisMonthStart.AddMonths(-1);
+                        //var lastMonthEnd = thisMonthStart.AddSeconds(-1);
+
+
+                        var thisWeekStart = FilterDateFroms.AddDays(-(int)FilterDateFroms.DayOfWeek);
+                        //var thisWeekEnd = thisWeekStart.AddDays(7).AddSeconds(-1);
+                        //var lastWeekStart = thisWeekStart.AddDays(-7);
+                        //var lastWeekEnd = thisWeekStart.AddSeconds(-1);
+
+
+
+                        FilterDateFroms = FilterDateFroms.AddDays(-7);
+                        FilterDateTos = FilterDateTos.AddDays(-7);
+                        //FilterDateTos = FilterDateFroms.AddSeconds(-1);
+
+
+
+                        ViewBag.LoadFilterDateFrom = FilterDateFroms;
+                        ViewBag.LoadFilterDateTo = FilterDateTos;
+                        //DateTime now = DateTime.Now;
+                        //var startDate = new DateTime(now.Year, now.Month, 1);
+                        //var endDate = startDate.AddMonths(1).AddDays(-1);
+
+                        //ViewBag.DateFrom = startDate;
+                        //ViewBag.DateTo = endDate;
+
+
+                        ViewBag.IsDateFilter = "1";
+                        //ViewBag.LoadDetails = deEntity.Sp_Get_LoadDetail_FilterWise(Filter).OrderBy(a => a.LoaderNumber).ToList();
+                        if (cwhere != null && cwhere != "")
+                        {
+                            ViewBag.LoadDetailsMonth = deEntity.Sp_Get_LoadDetail_WithAllFilter("S", FilterDateFroms, FilterDateTos, userid, cwhere).OrderBy(a => a.LoaderNumber).ToList();
+
+                        }
+                        else
+                        {
+                            ViewBag.LoadDetailsMonth = deEntity.Sp_Get_LoadDetail_WithAllFilter(Filter, FilterDateFroms, FilterDateTos, userid, cwhere).OrderBy(a => a.LoaderNumber).ToList();
+                        }
+
+                    }
+                    else if (Type == "Monthly")
+                    {
+
+
+                        //DateTime curDate = DateTime.Now;
+                        //DateTime startDate = curDate.AddMonths(-1).AddDays(1 - curDate.Day);
+                        //DateTime endDate = startDate.AddMonths(1).AddDays(-1);
+
+
+
+
+                        ViewBag.LoadType = Type;
+
+                        //FilterDateFroms = FilterDateFroms.AddDays(-30);
+
+                        Daily = DateTime.Today;
+
+
+                        //DateTime curDate = DateTime.Now;
+                        //DateTime startDate = curDate.AddMonths(-1).AddDays(1 - curDate.Day);
+                        //DateTime endDate = startDate.AddMonths(1).AddDays(-1);
+
+
+                        FilterDateFroms = FilterDateFroms.AddMonths(-1).AddDays(1 - FilterDateFroms.Day);
+                        FilterDateTos = FilterDateFroms.AddMonths(1).AddDays(-1);
+
+
+
+
+
+                        string FullMonthName = FilterDateFroms.ToString("MMMM");
+                        int year = FilterDateFroms.Year;
+
+                        //var thisMonthStart = Daily.AddDays(1 - Daily.Day);
+                        //var thisMonthEnd = thisMonthStart.AddMonths(1).AddSeconds(-1);
+
+                        ViewBag.MonthDetails = FullMonthName + "  " + year;
+
+
+                        ViewBag.LoadFilterDateFrom = FilterDateFroms;
+                        ViewBag.LoadFilterDateTo = FilterDateTos;
+                        //DateTime now = DateTime.Now;
+                        //var startDate = new DateTime(now.Year, now.Month, 1);
+                        //var endDate = startDate.AddMonths(1).AddDays(-1);
+
+                        //ViewBag.DateFrom = startDate;
+                        //ViewBag.DateTo = endDate;
+
+
+                        ViewBag.IsDateFilter = "1";
+                        //ViewBag.LoadDetails = deEntity.Sp_Get_LoadDetail_FilterWise(Filter).OrderBy(a => a.LoaderNumber).ToList();
+                        if (cwhere != null && cwhere != "")
+                        {
+                            ViewBag.LoadDetailsMonth = deEntity.Sp_Get_LoadDetail_WithAllFilter("S", FilterDateFroms, FilterDateTos, userid, cwhere).OrderBy(a => a.LoaderNumber).ToList();
+
+                        }
+                        else
+                        {
+                            ViewBag.LoadDetailsMonth = deEntity.Sp_Get_LoadDetail_WithAllFilter(Filter, FilterDateFroms, FilterDateTos, userid, cwhere).OrderBy(a => a.LoaderNumber).ToList();
+                        }
+
+                    }
+
+
+                }
+
+                //If Form is already loaded  and next  button clicked 
+                if (Next == 1)
+                {
+                    ViewBag.AdvanceFilterDateFroms = AdvanceFilterDateFroms;
+                    ViewBag.AdvanceFilterDateTo = AdvanceFilterDateTo;
+
+                    if (Type == "Daily")
+                    {
+                        ViewBag.LoadType = Type;
+
+                        //var lastWeekStart = thisWeekStart.AddDays(-7);
+                        //var lastWeekEnd = thisWeekStart.AddSeconds(-1);
+                        //var thisMonthStart = baseDate.AddDays(1 - baseDate.Day);
+                        //var thisMonthEnd = thisMonthStart.AddMonths(1).AddSeconds(-1);
+                        //var lastMonthStart = thisMonthStart.AddMonths(-1);
+                        //var lastMonthEnd = thisMonthStart.AddSeconds(-1);
+
+                        //FilterDateFroms = FilterDateFroms.AddDays(-1);
+                        //FilterDateTos = FilterDateTos.AddDays(-1);
+                        FilterDateFroms = FilterDateFroms.AddDays(1);
+                        FilterDateTos = FilterDateTos.AddDays(1);
+
+
+
+                        ViewBag.LoadFilterDateFrom = FilterDateFroms;
+                        ViewBag.LoadFilterDateTo = FilterDateTos;
+                        //DateTime now = DateTime.Now;
+                        //var startDate = new DateTime(now.Year, now.Month, 1);
+                        //var endDate = startDate.AddMonths(1).AddDays(-1);
+
+                        //ViewBag.DateFrom = startDate;
+                        //ViewBag.DateTo = endDate;
+
+
+                        ViewBag.IsDateFilter = "1";
+                        //ViewBag.LoadDetails = deEntity.Sp_Get_LoadDetail_FilterWise(Filter).OrderBy(a => a.LoaderNumber).ToList();
+                        if (cwhere != null && cwhere != "")
+                        {
+                            ViewBag.LoadDetailsMonth = deEntity.Sp_Get_LoadDetail_WithAllFilter("S", FilterDateFroms, FilterDateTos, userid, cwhere).OrderBy(a => a.LoaderNumber).ToList();
+
+                        }
+                        else
+                        {
+                            ViewBag.LoadDetailsMonth = deEntity.Sp_Get_LoadDetail_WithAllFilter(Filter, FilterDateFroms, FilterDateTos, userid, cwhere).OrderBy(a => a.LoaderNumber).ToList();
+                        }
+
+                    }
+                    else if (Type == "Weekly")
+                    {
+                        ViewBag.LoadType = Type;
+                        DateTime baseDate = DateTime.Today;
+
+                        //var today = baseDate;
+                        //var yesterday = baseDate.AddDays(-1);
+                        //var thisWeekStart = baseDate.AddDays(-(int)baseDate.DayOfWeek);
+                        //var thisWeekEnd = thisWeekStart.AddDays(7).AddSeconds(-1);
+                        //var lastWeekStart = thisWeekStart.AddDays(-7);
+                        //var lastWeekEnd = thisWeekStart.AddSeconds(-1);
+                        //var thisMonthStart = baseDate.AddDays(1 - baseDate.Day);
+                        //var thisMonthEnd = thisMonthStart.AddMonths(1).AddSeconds(-1);
+                        //var lastMonthStart = thisMonthStart.AddMonths(-1);
+                        //var lastMonthEnd = thisMonthStart.AddSeconds(-1);
+
+
+                        var thisWeekStart = FilterDateFroms.AddDays(-(int)FilterDateFroms.DayOfWeek);
+                        //var thisWeekEnd = thisWeekStart.AddDays(7).AddSeconds(-1);
+                        //var lastWeekStart = thisWeekStart.AddDays(-7);
+                        //var lastWeekEnd = thisWeekStart.AddSeconds(-1);
+
+
+
+                        FilterDateFroms = FilterDateFroms.AddDays(7);
+                        FilterDateTos = FilterDateTos.AddDays(7);
+                        //FilterDateTos = FilterDateFroms.AddSeconds(-1);
+
+
+
+                        ViewBag.LoadFilterDateFrom = FilterDateFroms;
+                        ViewBag.LoadFilterDateTo = FilterDateTos;
+                        //DateTime now = DateTime.Now;
+                        //var startDate = new DateTime(now.Year, now.Month, 1);
+                        //var endDate = startDate.AddMonths(1).AddDays(-1);
+
+                        //ViewBag.DateFrom = startDate;
+                        //ViewBag.DateTo = endDate;
+
+
+                        ViewBag.IsDateFilter = "1";
+                        //ViewBag.LoadDetails = deEntity.Sp_Get_LoadDetail_FilterWise(Filter).OrderBy(a => a.LoaderNumber).ToList();
+                        if (cwhere != null && cwhere != "")
+                        {
+                            ViewBag.LoadDetailsMonth = deEntity.Sp_Get_LoadDetail_WithAllFilter("S", FilterDateFroms, FilterDateTos, userid, cwhere).OrderBy(a => a.LoaderNumber).ToList();
+
+                        }
+                        else
+                        {
+                            ViewBag.LoadDetailsMonth = deEntity.Sp_Get_LoadDetail_WithAllFilter(Filter, FilterDateFroms, FilterDateTos, userid, cwhere).OrderBy(a => a.LoaderNumber).ToList();
+                        }
+
+                    }
+
+
+                    else if (Type == "Monthly")
+                    {
+
+
+                        //DateTime curDate = DateTime.Now;
+                        //DateTime startDate = curDate.AddMonths(-1).AddDays(1 - curDate.Day);
+                        //DateTime endDate = startDate.AddMonths(1).AddDays(-1);
+
+
+
+
+                        ViewBag.LoadType = Type;
+
+                        //FilterDateFroms = FilterDateFroms.AddDays(-30);
+
+                        Daily = DateTime.Today;
+
+
+                        //DateTime curDate = DateTime.Now;
+                        //DateTime startDate = curDate.AddMonths(-1).AddDays(1 - curDate.Day);
+                        //DateTime endDate = startDate.AddMonths(1).AddDays(-1);
+
+
+
+
+                        FilterDateFroms = FilterDateFroms.AddMonths(1).AddDays(1 - FilterDateFroms.Day);
+                        FilterDateTos = FilterDateFroms.AddMonths(1).AddDays(-1);
+
+
+                        //FilterDateFroms = FilterDateFroms.AddMonths(1).AddDays();
+                        //FilterDateTos = FilterDateFroms.AddMonths(1).AddDays(1);
+
+
+
+
+
+                        string FullMonthName = FilterDateFroms.ToString("MMMM");
+                        int year = FilterDateFroms.Year;
+
+                        //var thisMonthStart = Daily.AddDays(1 - Daily.Day);
+                        //var thisMonthEnd = thisMonthStart.AddMonths(1).AddSeconds(-1);
+
+                        ViewBag.MonthDetails = FullMonthName + "  " + year;
+
+
+                        ViewBag.LoadFilterDateFrom = FilterDateFroms;
+                        ViewBag.LoadFilterDateTo = FilterDateTos;
+                        //DateTime now = DateTime.Now;
+                        //var startDate = new DateTime(now.Year, now.Month, 1);
+                        //var endDate = startDate.AddMonths(1).AddDays(-1);
+
+                        //ViewBag.DateFrom = startDate;
+                        //ViewBag.DateTo = endDate;
+
+
+                        ViewBag.IsDateFilter = "1";
+                        //ViewBag.LoadDetails = deEntity.Sp_Get_LoadDetail_FilterWise(Filter).OrderBy(a => a.LoaderNumber).ToList();
+                        if (cwhere != null && cwhere != "")
+                        {
+                            ViewBag.LoadDetailsMonth = deEntity.Sp_Get_LoadDetail_WithAllFilter("S", FilterDateFroms, FilterDateTos, userid, cwhere).OrderBy(a => a.LoaderNumber).ToList();
+
+                        }
+                        else
+                        {
+                            ViewBag.LoadDetailsMonth = deEntity.Sp_Get_LoadDetail_WithAllFilter(Filter, FilterDateFroms, FilterDateTos, userid, cwhere).OrderBy(a => a.LoaderNumber).ToList();
+                        }
+
+                    }
+
+                    //Daily = FilterDateFroms;
+                    //FilterDateFroms = FilterDateFroms.AddDays(1);
+                    //FilterDateTos = FilterDateTos.AddDays(1);
+
+
+                    //ViewBag.LoadFilterDateFrom = FilterDateFroms;
+                    //ViewBag.LoadFilterDateTo = FilterDateFroms;
+
+                    ////DateTime now = DateTime.Now;
+                    ////var startDate = new DateTime(now.Year, now.Month, 1);
+                    ////var endDate = startDate.AddMonths(1).AddDays(-1);
+
+                    ////ViewBag.DateFrom = startDate;
+                    ////ViewBag.DateTo = endDate;
+
+
+                    //ViewBag.IsDateFilter = "1";
+                    ////ViewBag.LoadDetails = deEntity.Sp_Get_LoadDetail_FilterWise(Filter).OrderBy(a => a.LoaderNumber).ToList();
+                    //ViewBag.LoadDetailsMonth = deEntity.Sp_Get_LoadDetail_WithAllFilter(Filter, FilterDateFroms, FilterDateTos,userid).OrderBy(a => a.LoaderNumber).ToList();
+
+                }
+
+
+                return View();
+
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Error = "Exception Occur While Showing Load List" + ex.Message;
+            }
+
+
+            //get Different dates from current date
+            //DateTime baseDatess = DateTime.Today;
+
+            //var today = baseDatess;
+            //var yesterday = baseDate.AddDays(-1);
+            //var thisWeekStart = baseDate.AddDays(-(int)baseDate.DayOfWeek);
+            //var thisWeekEnd = thisWeekStart.AddDays(7).AddSeconds(-1);
+            //var lastWeekStart = thisWeekStart.AddDays(-7);
+            //var lastWeekEnd = thisWeekStart.AddSeconds(-1);
+            //var thisMonthStart = baseDatess.AddDays(1 - baseDatess.Day);
+            //var thisMonthEnd = thisMonthStart.AddMonths(1).AddSeconds(-1);
+            //var lastMonthStart = thisMonthStart.AddMonths(-1);
+            //var lastMonthEnd = thisMonthStart.AddSeconds(-1);
+
+
+
+
+            return View();
+
+
+        }
+        
         [Customexception]
         public ActionResult Index(int? userid, DateTime AdvanceFilterDateFroms, DateTime AdvanceFilterDateTo, int? previous, int? Next, string Filter, string Type, DateTime FilterDateFroms, DateTime FilterDateTos, string cwhere, int? Custom)
         {
@@ -1725,6 +2494,113 @@ namespace Dieseltech.Controllers
 
 
         }
+
+
+        public byte[] BolExportPdf(string LoadNumberModel)
+        {
+
+            //Method3
+            var actionPDF = new Rotativa.ActionAsPdf("BolPdfDownload", new { LoadNumberModel = LoadNumberModel }) //some route values)
+            {
+                FileName = "TestView.pdf",
+                //PageSize = Size.A4,
+                //PageOrientation = Rotativa.Options.Orientation.Landscape,
+                //PageMargins = { Left = 1, Right = 1 }
+            };
+            byte[] applicationPDFData = actionPDF.BuildPdf(ControllerContext);
+
+            return applicationPDFData;
+
+
+        }
+
+
+        [Customexception]
+        public ActionResult BolDownloadPdf(string LoadNumberModel)
+        {
+            //Method1
+            return new ActionAsPdf("BolPdfDownload", new { LoadNumberModel = LoadNumberModel })
+            {
+                FileName = "Load_" + LoadNumberModel + ".pdf",
+                PageSize = Rotativa.Options.Size.A4
+
+                //FileName = Server.MapPath("~/Content/" + LoadNumberModel + ".pdf")
+            };
+
+
+        }
+
+
+        
+        public ActionResult BolPdfDownload(string LoadNumberModel)
+        {
+            ViewBag.LoadNumberModel = LoadNumberModel;
+            ViewBag.LoadHead = deEntity.Sp_Get_LoadHeadInformation_Edit(LoadNumberModel).ToList();
+
+            DataTable dt = new DataTable();
+            string Query = "";
+            Query = "Exec Sp_Get_Load_Pickup_Delivery_Information '" + LoadNumberModel + "','P'";
+            List<PickupDeliveryInformation> PI = new List<PickupDeliveryInformation>();
+            dt = ut.GetDatatable(Query);
+            foreach (DataRow dr in dt.Rows)
+
+            {
+                PI.Add(new PickupDeliveryInformation
+                {
+                    ShipperName = (dr["ShipperName"]).ToString(),
+                    ShipperAddress = (dr["ShipperAddress"]).ToString(),
+                    CityName = (dr["CityName"]).ToString(),
+                    StateCode = (dr["StateCode"]).ToString(),
+                    ZipCode = (dr["ZipCode"]).ToString(),
+                    ShipperPhone = (dr["ShipperPhone"]).ToString(),
+                    DateTime = (dr["DateTime"]).ToString(),
+                    DateTimeTo = (dr["DateTimeTo"]).ToString(),
+                    PickupNumber = (dr["PickupNumber"]).ToString(),
+                    Comment = (dr["Comment"]).ToString(),
+                    ordernumber = Convert.ToInt32((dr["ordernumber"])),
+                    Name = (dr["name"]).ToString(),
+                });
+
+            }
+            ViewBag.PICount = PI.Count();
+            ViewBag.Count = ViewBag.PICount;
+            ViewBag.LoadPickup = PI;
+
+
+            Query = "Exec Sp_Get_Load_Pickup_Delivery_Information '" + LoadNumberModel + "','D'";
+            List<PickupDeliveryInformation> DI = new List<PickupDeliveryInformation>();
+            dt = ut.GetDatatable(Query);
+            foreach (DataRow dr in dt.Rows)
+            {
+                DI.Add(new PickupDeliveryInformation
+                {
+                    ShipperName = (dr["ShipperName"]).ToString(),
+                    ShipperAddress = (dr["ShipperAddress"]).ToString(),
+                    CityName = (dr["CityName"]).ToString(),
+                    StateCode = (dr["StateCode"]).ToString(),
+                    ZipCode = (dr["ZipCode"]).ToString(),
+                    ShipperPhone = (dr["ShipperPhone"]).ToString(),
+                    DateTime = (dr["DateTime"]).ToString(),
+                    DateTimeTo = (dr["DateTimeTo"]).ToString(),
+                    PickupNumber = (dr["PickupNumber"]).ToString(),
+                    Comment = (dr["Comment"]).ToString(),
+                    ordernumber = Convert.ToInt32((dr["ordernumber"])),
+                    Name = (dr["name"]).ToString(),
+
+                });
+
+            }
+            ViewBag.DICount = DI.Count();
+            if (ViewBag.Count < ViewBag.DICount)
+            {
+                ViewBag.Count = ViewBag.DICount;
+            }
+
+            ViewBag.LoadDelivery = DI;
+
+            return View();
+        }
+
         [Customexception]
         public ActionResult ReportPdfDownload(string LoadNumberModel)
         {
@@ -1950,9 +2826,9 @@ namespace Dieseltech.Controllers
             DataTable dt = new DataTable();
             //qry = " Exec Sp_Get_Load_Locations  '" + LoadNumber + "' ";
 
-            qry = " select Latitude ,Longitude,'' as ShipperAddress , 'P' as Type FROM tblDriverLocation Where LoadNumber = '" + LoadNumber + "' ";
+            //qry = " select Latitude ,Longitude,'' as ShipperAddress , 'P' as Type FROM tblDriverLocation Where LoadNumber = '" + LoadNumber + "' ";
 
-
+            qry = " Exec Sp_Get_Load_Locations  '" + LoadNumber + "' ";
 
             dt = ut.GetDatatable(qry);
 
@@ -1967,6 +2843,11 @@ namespace Dieseltech.Controllers
 
                 LoadLocation.Add(new LoadLocations
                 {
+
+                    //Longitude = (dr["Longitude"]).ToString(),
+                    //Latitude = (dr["Latitude"]).ToString(),
+                    //Address = (dr["ShipperAddress"]).ToString(),
+                    //Type = (dr["Type"]).ToString(),
 
                     Longitude = (dr["Longitude"]).ToString(),
                     Latitude = (dr["Latitude"]).ToString(),
@@ -2141,7 +3022,7 @@ namespace Dieseltech.Controllers
                 ViewBag.LoadHead = deEntity.Sp_Get_LoadHeadInformation_Edit(LoadNumberModel).ToList();
                 ViewBag.LoadInformation = deEntity.tblLoadHeads.ToList().Where(d => d.LoaderNumber == LoadNumberModel).ToList();
 
-
+                ViewBag.CustomerEmail = ViewBag.LoadHead[0].Email; 
 
                 var agentid = (from loadheadinfo in deEntity.tblLoadHeads
                                where loadheadinfo.LoaderNumber == LoadNumberModel
@@ -2465,24 +3346,24 @@ namespace Dieseltech.Controllers
                 //string url = Request.Url.AbsoluteUri;
                 //url = url + "?\\/?LoadNumberModel=" + LoadNumber + "";
 
-                var baseUrl = string.Format("{0}://{1}{2}", Request.Url.Scheme, Request.Url.Authority, Url.Content("~"));
-                baseUrl = baseUrl + "Report/ReportPreview/" + "?LoadNumberModel=" + LoadNumber + "";
-                pdfBuffer = htmlToPdfConverter.ConvertUrlToMemory(baseUrl);
-                //}
-                //else
-                //{
-                //    // convert HTML code
-                //    string htmlCode = collection["textBoxHtmlCode"];
-                //    string baseUrl = collection["textBoxBaseUrl"];
+                //var baseUrl = string.Format("{0}://{1}{2}", Request.Url.Scheme, Request.Url.Authority, Url.Content("~"));
+                //baseUrl = baseUrl + "Report/ReportPreview/" + "?LoadNumberModel=" + LoadNumber + "";
+                //pdfBuffer = htmlToPdfConverter.ConvertUrlToMemory(baseUrl);
+                ////}
+                ////else
+                ////{
+                ////    // convert HTML code
+                ////    string htmlCode = collection["textBoxHtmlCode"];
+                ////    string baseUrl = collection["textBoxBaseUrl"];
 
-                //    // convert HTML code to a PDF memory buffer
-                //    pdfBuffer = htmlToPdfConverter.ConvertHtmlToMemory(htmlCode, baseUrl);
-                //}
+                ////    // convert HTML code to a PDF memory buffer
+                ////    pdfBuffer = htmlToPdfConverter.ConvertHtmlToMemory(htmlCode, baseUrl);
+                ////}
 
-                FileResult fileResult = new FileContentResult(pdfBuffer, "application/pdf");
-                //if (collection["checkBoxOpenInline"] == null)
+                //FileResult fileResult = new FileContentResult(pdfBuffer, "application/pdf");
+                ////if (collection["checkBoxOpenInline"] == null)
 
-                fileResult.FileDownloadName = LoadNumber + ".pdf";
+                //fileResult.FileDownloadName = LoadNumber + ".pdf";
 
 
 
@@ -2533,6 +3414,213 @@ namespace Dieseltech.Controllers
                         mm.SubjectEncoding = System.Text.Encoding.Default;
 
                         mm.Attachments.Add(new Attachment(new MemoryStream(ExportPdf(LoadNumber)), LoadNumber + ".pdf"));
+
+                        mm.IsBodyHtml = true;
+                        SmtpClient smtp = new SmtpClient();
+                        smtp.Host = dt.Rows[0]["Host"].ToString();
+                        smtp.EnableSsl = Convert.ToBoolean(dt.Rows[0]["SSLEnable"]);
+
+
+                        //networkcredential networkcred = new networkcredential("jack@alkaiostransportation.com", "mamba851018@");
+
+                        //NetworkCredential NetworkCred = new NetworkCredential("restock06@gmail.com", "Developer@123");
+
+                        //NetworkCredential NetworkCred = new NetworkCredential("Jack@AlkaiosTransportation.com", "Mamba851018@");
+
+                        NetworkCredential NetworkCred = new NetworkCredential(dt.Rows[0]["Email"].ToString(), dt.Rows[0]["Password"].ToString());
+                        smtp.UseDefaultCredentials = true;
+                        smtp.Credentials = NetworkCred;
+                        smtp.Port = Convert.ToInt32(dt.Rows[0]["Port"]);
+                        smtp.Send(mm);
+                    }
+                    string query = "Exec Sp_Insert_Update_EmailHistory 0,'" + LoadNumber + "' ,'" + letter + "','" + Subject + "' ,1,'Successfully Send','" + Detail + "' ";
+                    ut.InsertUpdate(query);
+                }
+
+
+
+
+
+                //return fileResult;
+                return Json("1", JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Error = "Exception Occur While Sending Email:" + ex.Message;
+                string query = "Exec Sp_Insert_Update_EmailHistory 0,'" + LoadNumber + "' ,'" + Email + "','" + Subject + "' ,0,'" + ex.Message + "','" + Detail + "'";
+                ut.InsertUpdate(query);
+                return Json("0", JsonRequestBehavior.AllowGet);
+
+            }
+
+
+            //return fileResult;
+            return Json("1", JsonRequestBehavior.AllowGet);
+        }
+
+        //Code to generate pdf and send email 
+        [HttpPost]
+        [ValidateInput(false)]
+        //[Customexception]
+        public ActionResult BolConvertToPdf(string LoadNumber, string Subject, string Email, string Detail, int userid)
+        {
+
+            try
+            {
+                DataTable dt = new DataTable();
+
+
+                string ccEmailQuery = "select Email_Adress from tblUser where User_ID =" + userid + "";
+                string ccemail = ut.ExecuteScalar(ccEmailQuery);
+
+                string EmailQuery = "select * from tblEmailSetting";
+                dt = ut.GetDatatable(EmailQuery);
+                //m_formCollection = collection;
+
+                // create the HTML to PDF converter
+                HtmlToPdf htmlToPdfConverter = new HtmlToPdf();
+
+                // set a demo serial number
+                htmlToPdfConverter.SerialNumber = "YCgJMTAE-BiwJAhIB-EhlWTlBA-UEBRQFBA-U1FOUVJO-WVlZWQ==";
+
+                // set browser width
+                htmlToPdfConverter.BrowserWidth = int.Parse("1200");
+
+                htmlToPdfConverter.HiddenHtmlElements = new string[]
+                { "#btnsendemail" ,"#cmd"};
+
+
+                // set browser height if specified, otherwise use the default
+                //if (collection["textBoxBrowserHeight"].Length > 0)
+                //    htmlToPdfConverter.BrowserHeight = int.Parse(collection["textBoxBrowserHeight"]);
+
+                // set HTML Load timeout
+                htmlToPdfConverter.HtmlLoadedTimeout = int.Parse("120");
+
+                // set PDF page size and orientation
+                htmlToPdfConverter.Document.PageSize = PdfPageSize.A4;
+                htmlToPdfConverter.Document.PageOrientation = PdfPageOrientation.Portrait;
+
+                // set the PDF standard used by the document
+                htmlToPdfConverter.Document.PdfStandard = PdfStandard.Pdf;
+
+                // set PDF page margins
+                htmlToPdfConverter.Document.Margins = new PdfMargins(10);
+
+                // set whether to embed the true type font in PDF
+                htmlToPdfConverter.Document.FontEmbedding = true;
+
+                // set triggering mode; for WaitTime mode set the wait time before convert
+                //switch (collection["dropDownListTriggeringMode"])
+                //{
+                //    case "Auto":
+                //        htmlToPdfConverter.TriggerMode = ConversionTriggerMode.Auto;
+                //        break;
+                //    case "WaitTime":
+                //        htmlToPdfConverter.TriggerMode = ConversionTriggerMode.WaitTime;
+                //        htmlToPdfConverter.WaitBeforeConvert = int.Parse(collection["textBoxWaitTime"]);
+                //        break;
+                //    case "Manual":
+                //        htmlToPdfConverter.TriggerMode = ConversionTriggerMode.Manual;
+                //        break;
+                //    default:
+                //        htmlToPdfConverter.TriggerMode = ConversionTriggerMode.Auto;
+                //        break;
+                //}
+
+                htmlToPdfConverter.TriggerMode = ConversionTriggerMode.WaitTime;
+
+                // set header and footer
+                SetHeader(htmlToPdfConverter.Document);
+                SetFooter(htmlToPdfConverter.Document);
+
+                // set the document security
+                htmlToPdfConverter.Document.Security.OpenPassword = "";
+                htmlToPdfConverter.Document.Security.AllowPrinting = true;
+
+                // set the permissions password too if an open password was set
+                if (htmlToPdfConverter.Document.Security.OpenPassword != null && htmlToPdfConverter.Document.Security.OpenPassword != String.Empty)
+                    htmlToPdfConverter.Document.Security.PermissionsPassword = htmlToPdfConverter.Document.Security.OpenPassword + "_admin";
+
+                // convert HTML to PDF
+                byte[] pdfBuffer = null;
+
+                //if (collection["UrlOrHtmlCode"] == "radioButtonConvertUrl")
+                //{
+                // convert URL to a PDF memory buffer
+                //string url = collection["textBoxUrl"];
+                //string url = Request.Url.AbsoluteUri;
+                //url = url + "?\\/?LoadNumberModel=" + LoadNumber + "";
+
+                //var baseUrl = string.Format("{0}://{1}{2}", Request.Url.Scheme, Request.Url.Authority, Url.Content("~"));
+                //baseUrl = baseUrl + "Report/ReportPreview/" + "?LoadNumberModel=" + LoadNumber + "";
+                //pdfBuffer = htmlToPdfConverter.ConvertUrlToMemory(baseUrl);
+                //}
+                //else
+                //{
+                //    // convert HTML code
+                //    string htmlCode = collection["textBoxHtmlCode"];
+                //    string baseUrl = collection["textBoxBaseUrl"];
+
+                //    // convert HTML code to a PDF memory buffer
+                //    pdfBuffer = htmlToPdfConverter.ConvertHtmlToMemory(htmlCode, baseUrl);
+                //}
+
+                //FileResult fileResult = new FileContentResult(pdfBuffer, "application/pdf");
+                ////if (collection["checkBoxOpenInline"] == null)
+
+                //fileResult.FileDownloadName = LoadNumber + ".pdf";
+
+
+
+                //using (MailMessage mm = new MailMessage("Jack@AlkaiosTransportation.com", Email))
+
+
+                string[] AllEmail = Email.Split(',');
+
+                //Iterate through each of the letters
+                foreach (var letter in AllEmail)
+                {
+                    using (MailMessage mm = new MailMessage(dt.Rows[0]["Email"].ToString(), letter))
+                    {
+                        //string link = Request.Url.ToString();
+                        //link = link.Replace("ForgetPassword", "ChangePassword");
+                        mm.Subject = Subject;
+
+                        mm.CC.Add(new MailAddress(ccemail));
+                        mm.Headers.Add("In-Reply-To", ccemail); 
+
+                        //mm.CC.Add(new MailAddress(dt.Rows[0]["CCEmail"].ToString()));
+                        //mm.Headers.Add("In-Reply-To", dt.Rows[0]["CCEmail"].ToString());
+
+                        //ReplyTo "reply@adminsystem.com";
+                        //mm.CC.Add(new MailAddress("Jack@alkaiostransportation.com"));
+                        string body = "Load Number: " + LoadNumber + "";
+                        body += "<br/>";
+                        body += "<br/>";
+
+                        //body += "<p><strong >GMC:</strong>" + dt.Rows[0]["Category"].ToString() + " Specialist</p>";
+
+                        body += "<p>" + Detail + "</p>";
+
+                        //body += "<p>Consuldoc Limited , C/O Lighthall Consult, Boardman House, 64 The Broadway, </p>";
+                        //body += "<p>London, United Kingdom, E15 1NT</p>";
+
+
+
+                        //body += "<br /><br />Thanks for choosing Consuldoc Limited. You’ve just taken an exciting step in your wellness journey, and we’re so glad to be a part of it.";
+                        //body += "<br />Your appointment is booked for  <strong>" + dt.Rows[0]["StartTime"].ToString() + "</strong> on  <strong>  " + dt.Rows[0]["AppointmentDate"].ToString() + " </strong>";
+                        //body += ", With  Consultant  <strong>" + dt.Rows[0]["DoctorName"].ToString() + "</strong> ";
+
+                        //body += "<br /><br />Best Regards,  ";
+                        //body += "<br />" + dt.Rows[0]["DoctorName"].ToString() + "  ";
+                        mm.Body = body;
+                        //mm.Attachments.Add(new Attachment(new MemoryStream(pdfBuffer), LoadNumber + ".pdf"));
+
+                        mm.BodyEncoding = System.Text.Encoding.UTF8;
+                        mm.SubjectEncoding = System.Text.Encoding.Default;
+
+                        mm.Attachments.Add(new Attachment(new MemoryStream(BolExportPdf(LoadNumber)), LoadNumber + ".pdf"));
 
                         mm.IsBodyHtml = true;
                         SmtpClient smtp = new SmtpClient();

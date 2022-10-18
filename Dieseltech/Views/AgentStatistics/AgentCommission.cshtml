@@ -1,0 +1,348 @@
+﻿@using Dieseltech.Models;
+@{
+    ViewBag.Title = "Company Revenue";
+
+}
+
+
+
+
+
+
+<head>
+    <style>
+
+
+        div#tblannualtotals_filter {
+            position: sticky;
+            top: 0;
+            padding: 5px;
+            z-index: 100;
+            background: darkblue;
+            color: white !important;
+            width: 21.5% !important;
+        }
+
+        /*  #Loadshead {
+            position: sticky;
+            top: 0;
+            padding: 5px;
+            z-index: 100;
+        }*/
+
+        div#tblannualtotals_length {
+            position: sticky !important;
+            top: 0 !important;
+            padding: 5px !important;
+            z-index: 100 !important;
+            background: darkblue !important;
+            color: white !important;
+            width: 78.5% !important;
+            height: 51px !important;
+        }
+
+        thead {
+            position: sticky !important;
+            top: 50px !important;
+            z-index: 100 !important;
+        }
+
+        select {
+            color: white !important;
+        }
+
+        option {
+            color: black !important;
+        }
+
+        input[type="search"] {
+            color: white !important;
+        }
+
+        /* label {
+            color: white !important
+        }*/
+    </style>
+
+</head>
+<div class="content">
+    <div class="row">
+        <div class="col-md-6">
+            <h4 class="page-title">Agents Commission <a href="#"><i onclick="RefereshList()" class="fa fa-refresh"></i></a></h4>
+            <span style="color:red;" id="fademsg">@ViewBag.error</span>
+        </div>
+        <div class="col-md-6 text-right">
+            <button class="btn btn-primary" data-toggle="modal" data-target="#AddCommision_Modal" id="AddCommision">Add Commission</button>
+            
+        </div>
+        
+        
+    </div>
+
+
+    
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="table-responsive" style="max-height: 700px !important;">
+
+                <table style="font-size:12px;width:99.9%;" class="table table-condensed table-fit table-sm table-striped g-dataTable  mb-0" id="tblannualtotals">
+                    <thead>
+                        <tr>
+                            <th hidden>Agent Id </th>
+                            <th>Agent Name </th>
+                            <th>Commission Percentage </th>
+                            <th>Affective Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (Dieseltech.Models.sp_Get_AgentsLatestCommision_Result item in @ViewBag.AgentsLatestCommision)
+                        {
+                            <tr>
+                                <td hidden>@item.AgentId</td>
+                                <td id="AgentName" ><a href="#" style="color:blue !important;">@item.UserName</a></td>
+                                <td>@item.Commissionpercentage</td>
+                                <td>@item.AffectiveDate.Value.ToString("MM/dd/yyyy")</td>
+                            </tr>
+                        }
+
+                    </tbody>
+                    
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+<div id="Edit_Truck" class="modal fade delete-modal" role="dialog">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <!--Header-->
+            <div class="modal-header">
+                <p class="heading lead">Agent Information</p>
+
+                <button type="button" style="color:white" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" class="white-text">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="ModalBody">
+                <div class="row ">
+
+                    
+                    <div class="col-md-12">
+                        <span style="color:green;display:none;" id="CommissionDeleteAlert">Commission Successfully Deleted!</span>
+                        <div id="AgentInformationModalName" style="font-size:16px;"></div>
+                        <div class="table-responsive">
+
+                            <table name="tblTruckList" style="font-size:12px;width:100%" class="table table-condensed table-fit table-sm table-striped tblTrucklist    mb-0" id="tblTruckList">
+
+                                <thead style="top: 0px !important;">
+
+                                    <tr>
+                                        @*<th>Agent Name</th>*@
+                                        <th hidden>AgentCommissionId</th>
+                                        <th>Commission Percentage</th>
+                                        <th>Affective Date</th>
+                                        <th>Action</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody id="truckBody">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+</div>
+
+
+
+
+<div id="AddCommision_Modal" class="modal" role="dialog" >
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <!--Header-->
+            <div class="modal-header">
+                <p class="heading lead">Add Agent Commission</p>
+
+                <button type="button" style="color:white" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" class="white-text">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="">
+
+                            <div class="form-group">
+                                <div class="row">
+                                   
+                                    <div class="col-md-12">
+                                        @using (Html.BeginForm("AddAgentCommission", "AgentStatistics", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                                        {@Html.AntiForgeryToken()
+                                        <label>Agent</label>
+                                        <select class="form-control" style="color:black!important;" name="AgentId" required>
+                                            @foreach (tblUser item in @ViewBag.Agents)
+                                            {
+                                                <option value="@item.User_ID">@item.UserName</option>
+                                            }
+
+                                        </select>
+                                        <label>Commission Percentage</label>
+                                        <input class="form-control" type="number" name="Commision" value="" required/>
+                                        <label>Affective Date</label>
+                                        <input class="form-control" type="date" name="AffectiveDate" value="" required/><br />
+                                        <button class="btn btn-primary">Submit</button>
+                                        
+                                        }
+                                    </div>
+                                   
+                                </div>
+                            </div>
+            </div>
+        </div>
+
+    </div>
+
+
+</div>
+
+
+<script>
+
+    function ShowDeleteCommission(AgentId, AgentCommissionId, Type) {
+
+        if (Type=='d') {
+            var model = {
+
+                AgentCommissionId: AgentCommissionId
+            };
+
+
+
+            $.ajax({
+                type: "POST",
+                url: "/AgentStatistics/DeleteAgentCommission",
+                data: JSON.stringify(model),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (r) {
+                    if (r == 1) {
+                        $("#CommissionDeleteAlert").show();
+                        $("#CommissionDeleteAlert").fadeOut(10000);
+                    }
+                }
+            });
+        }
+
+
+        $("#tblTruckList tbody tr").remove();
+        $('#Edit_Truck').modal('show');
+
+        var model = {
+
+            AgentId: AgentId
+        };
+
+
+
+        $.ajax({
+            type: "POST",
+            url: "/AgentStatistics/AgentCommission",
+            data: JSON.stringify(model),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (r) {
+
+                console.log(r)
+
+                for (var i = 0; i < r.length; i++) {
+
+                    var datevalue = new Date(parseInt(r[i].AffectiveDate.replace("/Date(", "").replace(")/", ""), 10));
+                    var todayDate = new Date(datevalue);
+                    var format = "AM";
+                    var hour = todayDate.getHours();
+                    var min = todayDate.getMinutes();
+                    if (hour > 11) { format = "PM"; }
+                    if (hour > 12) { hour = hour - 12; }
+                    if (hour == 0) { hour = 12; }
+                    if (min < 10) { min = "0" + min; }
+                    var Month = todayDate.getMonth() + 1;
+                    if (i == 0) {
+                        $("#AgentInformationModalNameLabel1").remove();
+                        $("#AgentInformationModalNameLabel2").remove();
+                        $('#AgentInformationModalName').append("<label id='AgentInformationModalNameLabel1'><b>Agent Name:</b></label> <label id='AgentInformationModalNameLabel2'>" + r[i].UserName + "</label>");
+                    }
+
+
+
+                    var AffectiveDate = Month + "/" + todayDate.getDate() + "/" + todayDate.getFullYear() + "" /* + hour + ":" + min + " " + format*/;
+
+
+
+                    tr = $('<tr/>');
+
+                    //tr.append("<td>" + r[i].UserName + "</td>");
+                    tr.append("<td hidden>" + r[i].AgentCommissionId + "</td>");
+                    tr.append("<td>" + r[i].Commissionpercentage + "</td>");
+                    tr.append("<td>" + AffectiveDate + "</td>");
+                    tr.append("<td id='DeleteCommission' onclick='ShowDeleteCommission(" + AgentId + "," + r[i].AgentCommissionId + "," + '"d"'+")'><div class='actions'><a class='text-danger' href='#'  id=''><i class='fa fa-trash'></i> Delete</a></div></td>");
+                    $('#tblTruckList tbody').append(tr);
+
+                }
+
+            }
+        });
+    }
+
+    $('#tblannualtotals').on('click', '#AgentName', function () {
+        //console.log($(this));
+        var currentRow = $(this).closest("tr");
+
+        var AgentId = currentRow.find("td:eq(0)").text() /*this.cells[0] */;
+
+        //alert(AgentId);
+
+        ShowDeleteCommission(AgentId,0,'s');
+
+
+    });
+
+    
+
+
+    function RefereshList() {
+        location.reload();
+    }
+
+    jQuery(document).ready(function () {
+        $('#fademsg').fadeOut(10000);
+          
+
+
+        
+        $('#tblannualtotals').DataTable({
+            
+
+               
+            //"search": {
+            //    "search": JqueryTableSearchValue
+            //},
+           "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+            "pageLength": -1,
+            "fixedHeader": true,
+           
+            responsive: true,
+        });
+    });
+
+
+
+</script>

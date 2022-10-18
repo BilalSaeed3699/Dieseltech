@@ -1,0 +1,19 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>ViewBolPdf</title>
+</head>
+<body>
+    <div>
+        <a style="background-color: #028ee1 !important;border: 1px solid #028ee1" id="btndownload" href="@Url.Action("BolDownloadPdf","Account",new {LoadNumberModel = @ViewBag.LoadNumber })" class="btn btn-success"><i class="fa fa-download"></i> BOl PDF Download</a>
+
+    </div>
+</body>
+</html>

@@ -15,23 +15,23 @@ namespace Dieseltech.Models
     public partial class tblTruck
     {
         public int TruckId { get; set; }
-        public int CreatedBy { get; set; }
-        public System.DateTime CreatedDate { get; set; }
-        public bool IsActive { get; set; }
         public string CarrierAssignId { get; set; }
         public string TruckNo { get; set; }
         public string TruckYard { get; set; }
         public string TrailerNo { get; set; }
         public int TrailerTypeId { get; set; }
-        public int ZipCode { get; set; }
+        public string ZipCode { get; set; }
         public System.DateTime AvailableDate { get; set; }
         public string DriverName { get; set; }
         public string DriverPhone { get; set; }
         public string DriverLanguage { get; set; }
+        public int CreatedBy { get; set; }
+        public System.DateTime CreatedDate { get; set; }
         public int DriverId { get; set; }
         public string StateName { get; set; }
         public string CityName { get; set; }
         public string StateCode { get; set; }
+        public bool IsActive { get; set; }
         public string PrefferedDestination { get; set; }
     }
 }

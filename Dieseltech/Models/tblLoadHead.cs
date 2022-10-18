@@ -68,5 +68,6 @@ namespace Dieseltech.Models
         public decimal QuickPaypercentage { get; set; }
         public decimal AdjustedCarrierRate { get; set; }
         public Nullable<bool> IsManagerFutureLoad { get; set; }
+        public Nullable<int> Status { get; set; }
     }
 }

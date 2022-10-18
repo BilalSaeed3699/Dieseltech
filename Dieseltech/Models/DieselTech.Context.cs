@@ -28,8 +28,6 @@ namespace Dieseltech.Models
         }
     
         public virtual DbSet<tblBroker> tblBrokers { get; set; }
-        public virtual DbSet<tblProfile> tblProfiles { get; set; }
-        public virtual DbSet<tblUser> tblUsers { get; set; }
         public virtual DbSet<tblAccess_Level_Menu> tblAccess_Level_Menu { get; set; }
         public virtual DbSet<tblActivationCode> tblActivationCodes { get; set; }
         public virtual DbSet<tblForgetPassword> tblForgetPasswords { get; set; }
@@ -42,7 +40,6 @@ namespace Dieseltech.Models
         public virtual DbSet<tblState> tblStates { get; set; }
         public virtual DbSet<tblZone> tblZones { get; set; }
         public virtual DbSet<tblDriver> tblDrivers { get; set; }
-        public virtual DbSet<tblTruck> tblTrucks { get; set; }
         public virtual DbSet<tblBrokerHelper> tblBrokerHelpers { get; set; }
         public virtual DbSet<tblAccess_Level> tblAccess_Level { get; set; }
         public virtual DbSet<tblCompany> tblCompanies { get; set; }
@@ -58,23 +55,27 @@ namespace Dieseltech.Models
         public virtual DbSet<tblLoadConfirmationDocument> tblLoadConfirmationDocuments { get; set; }
         public virtual DbSet<tblCarrierDocument> tblCarrierDocuments { get; set; }
         public virtual DbSet<tblDriverLicense> tblDriverLicenses { get; set; }
-        public virtual DbSet<tblStateCityData> tblStateCityDatas { get; set; }
-        public virtual DbSet<tblLoadDelivery> tblLoadDeliveries { get; set; }
-        public virtual DbSet<tblLoadPickup> tblLoadPickups { get; set; }
         public virtual DbSet<tblLoadFilePathTemp> tblLoadFilePathTemps { get; set; }
-        public virtual DbSet<tblShipper> tblShippers { get; set; }
         public virtual DbSet<tblThemeColor> tblThemeColors { get; set; }
         public virtual DbSet<tblCarrierCategory> tblCarrierCategories { get; set; }
         public virtual DbSet<tblComment> tblComments { get; set; }
         public virtual DbSet<tblEmailSetting> tblEmailSettings { get; set; }
         public virtual DbSet<tblEmailHistory> tblEmailHistories { get; set; }
         public virtual DbSet<tblDriverLocation> tblDriverLocations { get; set; }
-        public virtual DbSet<tblLoadHead> tblLoadHeads { get; set; }
-        public virtual DbSet<tblCarrier> tblCarriers { get; set; }
         public virtual DbSet<tblNotification> tblNotifications { get; set; }
         public virtual DbSet<tblAgentcommission> tblAgentcommissions { get; set; }
         public virtual DbSet<tblcarriercollection> tblcarriercollections { get; set; }
         public virtual DbSet<tblcustomercollection> tblcustomercollections { get; set; }
+        public virtual DbSet<tblProfile> tblProfiles { get; set; }
+        public virtual DbSet<tblUser> tblUsers { get; set; }
+        public virtual DbSet<tblLoadDelivery> tblLoadDeliveries { get; set; }
+        public virtual DbSet<tblLoadPickup> tblLoadPickups { get; set; }
+        public virtual DbSet<tblShipper> tblShippers { get; set; }
+        public virtual DbSet<tblStateCityData> tblStateCityDatas { get; set; }
+        public virtual DbSet<tblAgentSalary> tblAgentSalaries { get; set; }
+        public virtual DbSet<tblTruck> tblTrucks { get; set; }
+        public virtual DbSet<tblCarrier> tblCarriers { get; set; }
+        public virtual DbSet<tblLoadHead> tblLoadHeads { get; set; }
     
         public virtual int SP_ActivationCode_Info(Nullable<System.Guid> code)
         {
@@ -259,11 +260,6 @@ namespace Dieseltech.Models
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_Get_Dashboard_Stats_Result>("Sp_Get_Dashboard_Stats");
         }
     
-        public virtual ObjectResult<Sp_GetAll_Truck_List_Result> Sp_GetAll_Truck_List()
-        {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_GetAll_Truck_List_Result>("Sp_GetAll_Truck_List");
-        }
-    
         public virtual ObjectResult<Sp_TruckBoard_Truck_List_Result> Sp_TruckBoard_Truck_List(string filterData, string filterType)
         {
             var filterDataParameter = filterData != null ?
@@ -303,27 +299,6 @@ namespace Dieseltech.Models
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_Get_LoadDetail_FilterMonthWise_Result>("Sp_Get_LoadDetail_FilterMonthWise", filterTypeParameter, dateFromParameter, dateToParameter);
         }
     
-        public virtual ObjectResult<Sp_Get_Agent_Statistics_New_Result> Sp_Get_Agent_Statistics_New(string filterType, Nullable<System.DateTime> dateFrom, Nullable<System.DateTime> dateTime, Nullable<int> agentId)
-        {
-            var filterTypeParameter = filterType != null ?
-                new ObjectParameter("FilterType", filterType) :
-                new ObjectParameter("FilterType", typeof(string));
-    
-            var dateFromParameter = dateFrom.HasValue ?
-                new ObjectParameter("DateFrom", dateFrom) :
-                new ObjectParameter("DateFrom", typeof(System.DateTime));
-    
-            var dateTimeParameter = dateTime.HasValue ?
-                new ObjectParameter("DateTime", dateTime) :
-                new ObjectParameter("DateTime", typeof(System.DateTime));
-    
-            var agentIdParameter = agentId.HasValue ?
-                new ObjectParameter("AgentId", agentId) :
-                new ObjectParameter("AgentId", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_Get_Agent_Statistics_New_Result>("Sp_Get_Agent_Statistics_New", filterTypeParameter, dateFromParameter, dateTimeParameter, agentIdParameter);
-        }
-    
         public virtual ObjectResult<Sp_Get_LoadDetail_FilterWise_Result> Sp_Get_LoadDetail_FilterWise(string filterType)
         {
             var filterTypeParameter = filterType != null ?
@@ -331,31 +306,6 @@ namespace Dieseltech.Models
                 new ObjectParameter("FilterType", typeof(string));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_Get_LoadDetail_FilterWise_Result>("Sp_Get_LoadDetail_FilterWise", filterTypeParameter);
-        }
-    
-        public virtual ObjectResult<Sp_Get_LoadDetail_WithAllFilter_Result> Sp_Get_LoadDetail_WithAllFilter(string filterType, Nullable<System.DateTime> dateFrom, Nullable<System.DateTime> dateTime, Nullable<int> userid, string cwhere)
-        {
-            var filterTypeParameter = filterType != null ?
-                new ObjectParameter("FilterType", filterType) :
-                new ObjectParameter("FilterType", typeof(string));
-    
-            var dateFromParameter = dateFrom.HasValue ?
-                new ObjectParameter("DateFrom", dateFrom) :
-                new ObjectParameter("DateFrom", typeof(System.DateTime));
-    
-            var dateTimeParameter = dateTime.HasValue ?
-                new ObjectParameter("DateTime", dateTime) :
-                new ObjectParameter("DateTime", typeof(System.DateTime));
-    
-            var useridParameter = userid.HasValue ?
-                new ObjectParameter("userid", userid) :
-                new ObjectParameter("userid", typeof(int));
-    
-            var cwhereParameter = cwhere != null ?
-                new ObjectParameter("cwhere", cwhere) :
-                new ObjectParameter("cwhere", typeof(string));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_Get_LoadDetail_WithAllFilter_Result>("Sp_Get_LoadDetail_WithAllFilter", filterTypeParameter, dateFromParameter, dateTimeParameter, useridParameter, cwhereParameter);
         }
     
         public virtual ObjectResult<Sp_Get_Agents_List_Result> Sp_Get_Agents_List()
@@ -379,11 +329,6 @@ namespace Dieseltech.Models
                 new ObjectParameter("CarrierAssignId", typeof(string));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_Get_Carrier_LoadList_Result>("Sp_Get_Carrier_LoadList", carrierAssignIdParameter);
-        }
-    
-        public virtual ObjectResult<Sp_Get_All_Carrier_List_Result> Sp_Get_All_Carrier_List()
-        {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_Get_All_Carrier_List_Result>("Sp_Get_All_Carrier_List");
         }
     
         public virtual ObjectResult<Sp_Get_All_Carrier_List_Filter_Result> Sp_Get_All_Carrier_List_Filter(Nullable<int> filterType, Nullable<int> blackList, Nullable<int> ownerlist)
@@ -528,15 +473,6 @@ namespace Dieseltech.Models
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_Search_Autocomplete_TruckInfo_Result>("Sp_Search_Autocomplete_TruckInfo", filterParameter);
         }
     
-        public virtual ObjectResult<Sp_Get_CarrierTruck_Information_Result> Sp_Get_CarrierTruck_Information(string assignID)
-        {
-            var assignIDParameter = assignID != null ?
-                new ObjectParameter("AssignID", assignID) :
-                new ObjectParameter("AssignID", typeof(string));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_Get_CarrierTruck_Information_Result>("Sp_Get_CarrierTruck_Information", assignIDParameter);
-        }
-    
         public virtual ObjectResult<Sp_get_collection_list_Result> Sp_get_collection_list()
         {
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_get_collection_list_Result>("Sp_get_collection_list");
@@ -576,6 +512,94 @@ namespace Dieseltech.Models
                 new ObjectParameter("searchValue", typeof(string));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_Get_Carrier_Revenue_Result>("Sp_Get_Carrier_Revenue", searchValueParameter);
+        }
+    
+        public virtual ObjectResult<sp_Get_AgentCommisionList_Result> sp_Get_AgentCommisionList(Nullable<int> iD)
+        {
+            var iDParameter = iD.HasValue ?
+                new ObjectParameter("ID", iD) :
+                new ObjectParameter("ID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp_Get_AgentCommisionList_Result>("sp_Get_AgentCommisionList", iDParameter);
+        }
+    
+        public virtual ObjectResult<sp_Get_AgentsLatestCommision_Result> sp_Get_AgentsLatestCommision()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp_Get_AgentsLatestCommision_Result>("sp_Get_AgentsLatestCommision");
+        }
+    
+        public virtual ObjectResult<Sp_Get_Agent_Statistics_New_Result> Sp_Get_Agent_Statistics_New(string filterType, Nullable<System.DateTime> dateFrom, Nullable<System.DateTime> dateTime, Nullable<int> agentId)
+        {
+            var filterTypeParameter = filterType != null ?
+                new ObjectParameter("FilterType", filterType) :
+                new ObjectParameter("FilterType", typeof(string));
+    
+            var dateFromParameter = dateFrom.HasValue ?
+                new ObjectParameter("DateFrom", dateFrom) :
+                new ObjectParameter("DateFrom", typeof(System.DateTime));
+    
+            var dateTimeParameter = dateTime.HasValue ?
+                new ObjectParameter("DateTime", dateTime) :
+                new ObjectParameter("DateTime", typeof(System.DateTime));
+    
+            var agentIdParameter = agentId.HasValue ?
+                new ObjectParameter("AgentId", agentId) :
+                new ObjectParameter("AgentId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_Get_Agent_Statistics_New_Result>("Sp_Get_Agent_Statistics_New", filterTypeParameter, dateFromParameter, dateTimeParameter, agentIdParameter);
+        }
+    
+        public virtual ObjectResult<sp_Get_AgentSalaryList_Result> sp_Get_AgentSalaryList(Nullable<int> iD)
+        {
+            var iDParameter = iD.HasValue ?
+                new ObjectParameter("ID", iD) :
+                new ObjectParameter("ID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp_Get_AgentSalaryList_Result>("sp_Get_AgentSalaryList", iDParameter);
+        }
+    
+        public virtual ObjectResult<Sp_Get_All_Carrier_List_Result> Sp_Get_All_Carrier_List()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_Get_All_Carrier_List_Result>("Sp_Get_All_Carrier_List");
+        }
+    
+        public virtual ObjectResult<Sp_GetAll_Truck_List_Result> Sp_GetAll_Truck_List()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_GetAll_Truck_List_Result>("Sp_GetAll_Truck_List");
+        }
+    
+        public virtual ObjectResult<Sp_Get_LoadDetail_WithAllFilter_Result> Sp_Get_LoadDetail_WithAllFilter(string filterType, Nullable<System.DateTime> dateFrom, Nullable<System.DateTime> dateTime, Nullable<int> userid, string cwhere)
+        {
+            var filterTypeParameter = filterType != null ?
+                new ObjectParameter("FilterType", filterType) :
+                new ObjectParameter("FilterType", typeof(string));
+    
+            var dateFromParameter = dateFrom.HasValue ?
+                new ObjectParameter("DateFrom", dateFrom) :
+                new ObjectParameter("DateFrom", typeof(System.DateTime));
+    
+            var dateTimeParameter = dateTime.HasValue ?
+                new ObjectParameter("DateTime", dateTime) :
+                new ObjectParameter("DateTime", typeof(System.DateTime));
+    
+            var useridParameter = userid.HasValue ?
+                new ObjectParameter("userid", userid) :
+                new ObjectParameter("userid", typeof(int));
+    
+            var cwhereParameter = cwhere != null ?
+                new ObjectParameter("cwhere", cwhere) :
+                new ObjectParameter("cwhere", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_Get_LoadDetail_WithAllFilter_Result>("Sp_Get_LoadDetail_WithAllFilter", filterTypeParameter, dateFromParameter, dateTimeParameter, useridParameter, cwhereParameter);
+        }
+    
+        public virtual ObjectResult<Sp_Get_CarrierTruck_Information_Result> Sp_Get_CarrierTruck_Information(string assignID)
+        {
+            var assignIDParameter = assignID != null ?
+                new ObjectParameter("AssignID", assignID) :
+                new ObjectParameter("AssignID", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_Get_CarrierTruck_Information_Result>("Sp_Get_CarrierTruck_Information", assignIDParameter);
         }
     }
 }

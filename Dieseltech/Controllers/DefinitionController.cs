@@ -164,10 +164,13 @@ namespace Dieseltech.Controllers
 
                 
                 int Isdeleted = (from carrierinfo in deEntity.tblCarriers
-                               where carrierinfo.AssignID == CarrierAssignsId
+                               where carrierinfo.AssignID == CarrierAssignsId 
                                select carrierinfo.Isdeleted).SingleOrDefault();
 
-              if(Isdeleted ==0)
+                //int Isdeleted = deEntity.tblCarriers.Where(x => x.AssignID == CarrierAssignsId && x.is).Select(s => s.Isdeleted).FirstOrDefault();
+                                 
+
+                if (Isdeleted ==0)
                 {
                     ViewBag.CarrierDetials = deEntity.tblCarriers.ToList().Where(d => d.AssignID == CarrierAssignsId).ToList();
                 }
@@ -229,7 +232,7 @@ namespace Dieseltech.Controllers
                     Email = dr["Email"].ToString(),
                     TrailerNo = dr["TrailerNo"].ToString(),
                     TruckYard = dr["TruckYard"].ToString(),
-                    ZipCode = Convert.ToInt32(dr["ZipCode"]),
+                    ZipCode = dr["ZipCode"].ToString(),
                     StateCode = dr["StateCode"].ToString(),
                     DriverName = dr["DriverName"].ToString(),
                     DriverPhone = dr["DriverPhone"].ToString(),
@@ -279,7 +282,7 @@ namespace Dieseltech.Controllers
                     Email = dr["Email"].ToString(),
                     TrailerNo = dr["TrailerNo"].ToString(),
                     TruckYard = dr["TruckYard"].ToString(),
-                    ZipCode = Convert.ToInt32(dr["ZipCode"]),
+                    ZipCode = dr["ZipCode"].ToString(),
                     StateCode = dr["StateCode"].ToString(),
                     DriverName = dr["DriverName"].ToString(),
                     DriverPhone = dr["DriverPhone"].ToString(),
@@ -304,11 +307,11 @@ namespace Dieseltech.Controllers
 
         [HttpGet]
         [Customexception]
-        public JsonResult GetStateCity(Int64 ZipCode)
+        public JsonResult GetStateCity(string ZipCode)
         {
             
             dt = new DataTable();
-            qry = "Exec Sp_Get_StateCityList " + ZipCode+"";
+            qry = "Exec Sp_Get_StateCityList '" + ZipCode+"'";
             dt = ul.GetDatatable(qry);
             if(dt.Rows[0]["ZipCodeResult"].ToString()=="0")
             {
@@ -349,7 +352,7 @@ namespace Dieseltech.Controllers
                     StateName = "0",
                     CityName = "0",
                     StateCode = "0",
-                    ZipCode=0,
+                    ZipCode= "0",
                 };
                 return Json(StateCityData, JsonRequestBehavior.AllowGet);
             }
@@ -360,7 +363,7 @@ namespace Dieseltech.Controllers
                     StateName = dt.Rows[0]["StateName"].ToString(),
                     CityName = dt.Rows[0]["CityName"].ToString(),
                     StateCode = dt.Rows[0]["StateCode"].ToString(),
-                    ZipCode = Convert.ToInt32(dt.Rows[0]["ZipCode"].ToString()),
+                    ZipCode = dt.Rows[0]["ZipCode"].ToString(),
                 };
                 return Json(StateCityData, JsonRequestBehavior.AllowGet);
             }
@@ -1305,7 +1308,7 @@ namespace Dieseltech.Controllers
         [HttpPost]
         [Customexception]
         public ActionResult SaveCarrierInformation(FormCollection FC, HttpPostedFileBase[] MCAuthorityDocument, HttpPostedFileBase[] W9Document,
-            HttpPostedFileBase[] InsuranceDocument, HttpPostedFileBase[] DriverLicense ,tblTruck tblTruckList)
+            HttpPostedFileBase[] InsuranceDocument, HttpPostedFileBase[] DriverLicense ,tblTruck tblTruckList,bool IsNeedToAssign=false)
         {
 
             string result = "";
@@ -1317,6 +1320,7 @@ namespace Dieseltech.Controllers
 
             var OwnerOperator = (FC.Get("OwnerOperator"));
             var QuickPay = (FC.Get("IsQuickPay"));
+            //var IsNeedToAssign = Convert.ToBoolean(FC.Get("IsNeedToAssign"));
             var BlackList = (FC.Get("IsBlackList"));
             var trailerinterchange = (FC.Get("Istrailerinterchange"));
             var Quickpaypercentage = (FC.Get("Quickpaypercentage"));
@@ -1370,8 +1374,13 @@ namespace Dieseltech.Controllers
                 Istrailerinterchange = 1;
 
             }
+            //if (IsNeedToAssign == null)
+            //{
+            //    IsNeedToAssign = false;
 
-            
+            //}
+
+
 
             try
             {
@@ -1386,7 +1395,7 @@ namespace Dieseltech.Controllers
                 //Save Carrier Data
                 qry = " Exec  SP_Definition_Carrier '" + name + "','" + FC.Get("ModernCarrier") + "', '" + FC.Get("CarrierAssignId") + "'  ";
                 qry += " , '" + FC.Get("ContactName") + "', '" + FC.Get("PhoneNumber") + "' , 'true',"+ IsBlackList + "," + Istrailerinterchange + "," + Session["User_id"] + " ,'I' ";
-                qry += " , " + FC.Get("CategoryId") + "," + IsOwnerOpertor + " , " + IsQuickPay + ",0  ,  '" + FC.Get("Email") + "'  ,  '" + FC.Get("ContactName2") + "' ,  '" + FC.Get("PhoneNumber2") + "', '" + FC.Get("InsuranceExpirationDate") + "'," + Quickpaypercentagevalue + "";
+                qry += " , " + FC.Get("CategoryId") + "," + IsOwnerOpertor + " , " + IsQuickPay + ",0  ,  '" + FC.Get("Email") + "'  ,  '" + FC.Get("ContactName2") + "' ,  '" + FC.Get("PhoneNumber2") + "', '" + FC.Get("InsuranceExpirationDate") + "'," + Quickpaypercentagevalue + ",  '" + IsNeedToAssign + "'";
                 result = ul.ExecuteScalar(qry);
 
                 //Save Carrier Document
@@ -1699,7 +1708,7 @@ namespace Dieseltech.Controllers
 
             Utility ul = new Utility();
             qry = " Exec  SP_Definition_Carrier '" + carrier.CarrierName + "','" + carrier.MC_ + "', "+carrier.AssignID +"  ";
-            qry += " , '"+carrier.ContactName +"', '"+carrier.Phonenumber+"' ,  " + carrier.IsActive + "," + Session["User_id"] + " ,'I',0,0,0,'' , '" + carrier.ContactName2 + "', '" + carrier.Phonenumber2 + "', '" + carrier.InsuranceExpirationDate + "',0  ";
+            qry += " , '"+carrier.ContactName +"', '"+carrier.Phonenumber+"' ,  " + carrier.IsActive + "," + Session["User_id"] + " ,'I',0,0,0,'' , '" + carrier.ContactName2 + "', '" + carrier.Phonenumber2 + "', '" + carrier.InsuranceExpirationDate + "',0,  " + carrier.IsNeedToAssign + "  ";
             //string query = "insert into  tblCountry values('" + country.CountryName + "',"+country.IsActive +",1)";
             result = ul.ExecuteScalar(qry);
             if (result == "-1")

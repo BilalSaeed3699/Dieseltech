@@ -2,6 +2,7 @@
 @{
     ViewBag.Title = "Company Revenue";
     List<Sp_Get_Company_Summary_Revenue_Result> comapnyrevenuesummary = (List<Sp_Get_Company_Summary_Revenue_Result>)ViewBag.CompanySummaryRevenue;
+    int RoleId = Convert.ToInt32(Session["Role_id"]);
 }
 
 @{decimal Totalcombinedprofit = 0;}
@@ -105,7 +106,8 @@ else if (comapnyrevenuesummary.Count == 1)
             <span style="color:red;" id="fademsg">@ViewBag.error</span>
         </div>
         <div class="col-md-4">
-
+            @if (@RoleId==1)
+            {
             <select id="ddlAgent" required name="ddlAgent" onchange="ReloadList(this)" class="form-control js-example-basic-single">
                 <option value="0">All Agents</option>
                 @foreach (var item in ViewBag.AgentList)
@@ -124,6 +126,9 @@ else if (comapnyrevenuesummary.Count == 1)
                     </text>
                 }
             </select>
+            }
+
+            
         </div>
         <div class="col-md-2">
 
@@ -251,7 +256,7 @@ else if (comapnyrevenuesummary.Count == 1)
                             <th>JETLINE TRANSPORT</th>
                             <th>SPORT TRUCKING </th>
 
-                            <th>Commission (%)</th>
+                            @*<th>Commission (%)</th>*@
                             <th>Commission under  ALKAIOS </th>
                             <th>Commission under  JETLINE </th>
                             <th>Commission under  SPORT </th>
@@ -268,7 +273,7 @@ else if (comapnyrevenuesummary.Count == 1)
                                 <td>@item.JETLINE</td>
                                 <td>@item.Sporttruckingt</td>
 
-                                <td>@item.Commissionpercentage</td>
+                                @*<td>@item.Commissionpercentage</td>*@
                                 <td>@item.Alkaiosagentcommission</td>
                                 <td>@item.jetlineagentcommission</td>
                                 <td>@item.sportagentcommission</td>
@@ -280,7 +285,7 @@ else if (comapnyrevenuesummary.Count == 1)
 
                     </tbody>
                     <tfoot  style="color:white !important;">
-                        <tr><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th></tr>
+                        <tr><th></th><th></th>@*<th></th>*@<th></th><th></th><th></th><th></th><th></th><th></th><th></th></tr>
                     </tfoot>
                 </table>
             </div>
@@ -400,21 +405,21 @@ else if (comapnyrevenuesummary.Count == 1)
                 //    }, 0);
 
                 var friTotal = api
-                    .column(5)
+                    .column(4)
                     .data()
                     .reduce(function (a, b) {
                         return intVal(a) + intVal(b);
                     }, 0);
 
                 var wedTotal1 = api
-                    .column(6)
+                    .column(5)
                     .data()
                     .reduce(function (a, b) {
                         return intVal(a) + intVal(b);
                     }, 0);
 
                 var thuTotal1 = api
-                    .column(7)
+                    .column(6)
                     .data()
                     .reduce(function (a, b) {
                         return intVal(a) + intVal(b);
@@ -427,7 +432,7 @@ else if (comapnyrevenuesummary.Count == 1)
                 //        return intVal(a) + intVal(b);
                 //    }, 0);
                 var monTotal1 = api
-                    .column(9)
+                    .column(8)
                     .data()
                     .reduce(function (a, b) {
                         return intVal(a) + intVal(b);
@@ -440,11 +445,11 @@ else if (comapnyrevenuesummary.Count == 1)
                 $(api.column(2).footer()).html(numFormat(tueTotal));
                 $(api.column(3).footer()).html(numFormat(wedTotal));
                 //$(api.column(4).footer()).html(thuTotal);
-                $(api.column(5).footer()).html(numFormat(friTotal));
-                $(api.column(6).footer()).html(numFormat(wedTotal1));
-                $(api.column(7).footer()).html(numFormat(thuTotal1));
+                $(api.column(4).footer()).html(numFormat(friTotal));
+                $(api.column(5).footer()).html(numFormat(wedTotal1));
+                $(api.column(6).footer()).html(numFormat(thuTotal1));
                 //$(api.column(8).footer()).html(friTotal1);
-                $(api.column(9).footer()).html(numFormat(monTotal1));
+                $(api.column(8).footer()).html(numFormat(monTotal1));
             },
             //"search": {
             //    "search": JqueryTableSearchValue
@@ -456,7 +461,7 @@ else if (comapnyrevenuesummary.Count == 1)
                 {
                     "orderable": false,
                     "render": $.fn.dataTable.render.number(',', '.', 2, ''),
-                    "targets": [1, , 2, 3, 5, 6, 7, 8, 9],
+                    "targets": [1, , 2, 3, 4, 5,6, 7,8],
                 },
                 /*{ responsivePriority: 10001, targets: 2 },*/
             ],

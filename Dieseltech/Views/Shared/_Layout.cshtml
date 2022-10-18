@@ -116,7 +116,7 @@
         <script src="~/assets/js/respond.min.js"></script>
     <![endif]-->
 
-    <style>
+<style>
 
 
        /* table.dataTable.dtr-inline.collapsed > tbody > tr > td.dtr-control:before, table.dataTable.dtr-inline.collapsed > tbody > tr > th.dtr-control:before {
@@ -144,6 +144,10 @@
 
         .header {
             background-color: @Session["Color"] !important;
+        }
+        #AgentBadge {
+            background-color: transparent ;
+            /*color:white;*/
         }
 
 
@@ -195,7 +199,7 @@
             background: url(../../assets/img/Preloader_1.gif) center no-repeat #fff;*/
         /*background-image: url('../../assets/img/Preloader_2.gif');*/
         /*}*/
-    </style>
+</style>
 </head>
 <body>
 
@@ -691,6 +695,12 @@
                                         {
                                             <li>
                                                 <a href="@Url.Action(parent.Action_name, parent.Controller_name,new {statemaintain=1, AdvanceFilterDateFroms= DateTime.Now.ToString("MM/dd/yyyy") , AdvanceFilterDateTo =  DateTime.Now.ToString("MM/dd/yyyy"), FilterDateFroms= DateTime.Now.ToString("MM/dd/yyyy") , FilterDateTos =  DateTime.Now.ToString("MM/dd/yyyy") })"><i class="@parent.Icon_Class"></i> <span>@parent.Page_Name</span></a>
+                                            </li>
+                                        }
+                                        else if (parent.Controller_name == "Report" && parent.Action_name == "NeedToCover")
+                                        {
+                                            <li>
+                                                <a href="@Url.Action(parent.Action_name, parent.Controller_name,new {AdvanceFilterDateFroms= DateTime.Now.ToString("MM/dd/yyyy") , AdvanceFilterDateTo =  DateTime.Now.ToString("MM/dd/yyyy"), FilterDateFroms= DateTime.Now.ToString("MM/dd/yyyy") , FilterDateTos =  DateTime.Now.ToString("MM/dd/yyyy") })"><i class="@parent.Icon_Class"></i> <span>@parent.Page_Name</span></a>
                                             </li>
                                         }
                                         else

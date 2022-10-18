@@ -7,6 +7,7 @@ using System.Web.Mvc;
 
 namespace Dieseltech.Controllers
 {
+    [FilterConfig.AuthorizeActionFilter]
     [HandleError]
     public class InsuranceexpirationController : Controller
     {

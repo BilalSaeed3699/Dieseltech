@@ -244,6 +244,15 @@
     <Compile Include="Models\Sp_GetAll_Truck_List_Result.cs">
       <DependentUpon>DieselTech.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\sp_Get_AgentCommisionList_Result.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_Get_AgentSalaryList_Result.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_Get_AgentsLatestCommision_Result.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Sp_Get_Agents_List_Result.cs">
       <DependentUpon>DieselTech.tt</DependentUpon>
     </Compile>
@@ -389,6 +398,9 @@
       <DependentUpon>DieselTech.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\tblAgentcommission.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tblAgentSalary.cs">
       <DependentUpon>DieselTech.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\tblBroker.cs">
@@ -796,6 +808,11 @@
     <Content Include="Uploads\Broker\0001\Queries.docx" />
     <Content Include="Views\revenue\customerrevenue.cshtml" />
     <Content Include="Views\revenue\carrierrevenue.cshtml" />
+    <Content Include="Views\AgentStatistics\AgentCommission.cshtml" />
+    <Content Include="Views\Report\BolPdfDownload.cshtml" />
+    <Content Include="Views\Account\BolPdfDownload.cshtml" />
+    <Content Include="Views\Account\ViewBolPdf.cshtml" />
+    <Content Include="Views\Report\NeedToCover.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

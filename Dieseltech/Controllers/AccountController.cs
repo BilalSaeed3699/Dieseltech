@@ -1,5 +1,6 @@
 ﻿
 using Dieseltech.Models;
+using Rotativa;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -34,6 +35,7 @@ namespace Dieseltech.Controllers
         public ActionResult Index()
         {
             Session["User_id"] = null;
+            Session["Role_id"] = null;
             Session["type"] = null;
             Session["Menu"] = null;
             Session["CarrierAssignId"] = null;
@@ -100,7 +102,7 @@ namespace Dieseltech.Controllers
                 //}
                 if (EmployeeActiveStatus == 1)
                 {
-
+                    int? Accessid = deEntity.tblProfiles.Where(x => x.User_ID == EmployeeIDAlready).Select(s=>s.Accessid).FirstOrDefault();
 
                     HttpCookie UserID = Request.Cookies["_UserID"];
                     UserID = new HttpCookie("_UserID");
@@ -109,6 +111,7 @@ namespace Dieseltech.Controllers
                     Response.Cookies.Add(UserID);
 
                     Session["User_id"] = EmployeeIDAlready;
+                    Session["Role_id"] = Accessid;
                     Session["type"] = UserName;
                     return RedirectToAction("Index", "Home");
                 }
@@ -509,6 +512,34 @@ namespace Dieseltech.Controllers
 
             //}
        
+        }
+
+        public ActionResult ViewBolPdf()
+        {
+            
+            return View();
+        }
+
+        public ActionResult BolDownloadPdf(string LoadNumberModel)
+        {
+            //Method1
+            return new ActionAsPdf("BolPdfDownload", new { LoadNumberModel = LoadNumberModel })
+            {
+                FileName = "Load_" + LoadNumberModel + ".pdf"
+
+                //FileName = Server.MapPath("~/Content/" + LoadNumberModel + ".pdf")
+            };
+
+
+        }
+
+
+
+        public ActionResult BolPdfDownload(string LoadNumberModel)
+        {
+
+
+            return View();
         }
 
     }

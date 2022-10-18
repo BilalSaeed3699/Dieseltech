@@ -147,7 +147,7 @@
                         </div>
                     </div>
 
-                    <div class="col-md-3" style="max-width:16%">
+                    @*<div class="col-md-3" style="max-width:16%">
                         <label><strong>Agent Commission (%) </strong></label>
                         <input id="commissionpercentage" value="@ViewBag.Agentcommissionpercentage" type="number" style="width:90%;height:35px !important" />
                         
@@ -156,23 +156,30 @@
                     <div class="col-md-1">
                         <label><strong>Salary </strong></label>
                         <input id="txtsalrary" value="@ViewBag.salary" type="number" style="width:100%; height: 35px !important" />
-                    </div>
+                    </div>*@
 
-                    <div class="col-md-1">
+                <div class="col-md-5 mt-4">
+                    <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#AddSalary_Modal" id="AddSalary">Add Salary</button>
+                    <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#AddCommision_Modal" id="AddCommision">Add Commission</button>
+                    <a name="Filter" href="@Url.Action("Index", "Report", new { FilterDateFroms = DateTime.Now.ToString("MM/dd/yyyy"), FilterDateTos = DateTime.Now.ToString("MM/dd/yyyy"),AdvanceFilterDateFroms = DateTime.Now.ToString("MM/dd/yyyy"),  AdvanceFilterDateTo = DateTime.Now.ToString("MM/dd/yyyy") })" style="background-color: #6c757d !important" class="btn btn-secondary FilterButton"><i class="fa fa-history"></i> Back</a>
+                </div>
+
+                    @*<div class="col-md-1">
                         <label><strong>Action </strong></label>
                         <a style="font-size:11px" onclick="Addagentcommission()" class="btn btn-primary"> <i class="fa fa-plus"></i> Update </a>
-                    </div>
+                    </div>*@
 
                     <div class="col-md-2">
                         <div class="btn-group" style="float:right">
-                            <label style="visibility:hidden"><strong>Salary </strong></label>
+                            <label style="visibility:hidden"><strong>Salary </strong></label>   
+
                             
-                            <a name="Filter" href="@Url.Action("Index", "Report", new { FilterDateFroms = DateTime.Now.ToString("MM/dd/yyyy"), FilterDateTos = DateTime.Now.ToString("MM/dd/yyyy") })" style="background-color: #6c757d !important" class="btn btn-secondary FilterButton"><i class="fa fa-history"></i> Back</a>
 
                         </div>
                     </div>
                 </div>
                 <div class="row">
+                    
                     <div class="col-md-10">
                         <a href="@Url.Action("Index", "AgentStatistics", new { Filter = "A", Type = @ViewBag.LoadType, previous = 1, Next = 0, FilterDateFroms = ViewBag.LoadFilterDateFrom, FilterDateTos = ViewBag.LoadFilterDateTo, ddlAgentvalue = ViewBag.UserId })" name="Filter" value="D" onclick="GetFilterTypeValue('D')" class="btn btn-primary FilterButton">Previous</a>
                         <a name="Filter" href="@Url.Action("Index", "AgentStatistics", new { Filter = "A", Type = @ViewBag.LoadType, previous = 0, Next = 1, FilterDateFroms = ViewBag.LoadFilterDateFrom, FilterDateTos = ViewBag.LoadFilterDateTo, ddlAgentvalue = ViewBag.UserId })" value="W" onclick="GetFilterTypeValue('W')" class="btn btn-primary">
@@ -209,6 +216,72 @@
 
                 <div class="content">
                     <div class="row">
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="table-responsive card-body">
+
+                                    <table name="tblTruckList" style="font-size:12px;width:100%" class="table table-condensed table-fit table-sm table-striped tblTrucklist    mb-0" id="tblSalaryList">
+
+                                        <thead style="top: 0px !important;">
+
+                                            <tr>
+                                                @*<th>Agent Name</th>*@
+                                                <th hidden>AgentCommissionId</th>
+                                                <th>Salary</th>
+                                                <th>Affective Date</th>
+                                                <th>Action</th>
+
+                                            </tr>
+                                        </thead>
+                                        <tbody id="truckBody">
+                                            @foreach (sp_Get_AgentSalaryList_Result item in @ViewBag.Get_AgentSalaryList_Result)
+                                            {
+                                                <tr>
+                                                    <td hidden>@item.AgentSalaryId</td>
+                                                    <td>@item.salary</td>
+                                                    <td>@item.AffectiveDate.ToString("MM/dd/yyyy")</td>
+                                                    <td id='DeleteCommission' onclick='ShowDeleteSalary(@ViewBag.UserId,@item.AgentSalaryId,"d")'><div class='actions'><a class='text-danger' href='#' id=''><i class='fa fa-trash'></i> Delete</a></div></td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <br />
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="table-responsive card-body">
+
+                                    <table name="tblTruckList" style="font-size:12px;width:100%" class="table table-condensed table-fit table-sm table-striped tblTrucklist    mb-0" id="tblTruckList">
+
+                                        <thead style="top: 0px !important;">
+
+                                            <tr>
+                                                @*<th>Agent Name</th>*@
+                                                <th hidden>AgentCommissionId</th>
+                                                <th>Commission Percentage</th>
+                                                <th>Affective Date</th>
+                                                <th>Action</th>
+
+                                            </tr>
+                                        </thead>
+                                        <tbody id="truckBody">
+                                            @foreach (sp_Get_AgentCommisionList_Result item in @ViewBag.Get_AgentCommisionList_Result)
+                                            {
+                                                <tr>
+                                                    <td hidden>@item.AgentCommissionId</td>
+                                                    <td>@item.Commissionpercentage</td>
+                                                    <td>@item.AffectiveDate.ToString("MM/dd/yyyy")</td>
+                                                    <td id='DeleteCommission' onclick='ShowDeleteCommission(@ViewBag.UserId,@item.AgentCommissionId,"d")'><div class='actions'><a class='text-danger' href='#' id=''><i class='fa fa-trash'></i> Delete</a></div></td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <br />
+                        </div>
                         <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
                             <h3 style="font-weight:Bold">Agent Name</h3>
                             <div class="dash-widget" style="        background-color: #7a92a3
@@ -277,7 +350,8 @@
                                 <span class="dash-widget-bg3" style="        background-color: darkgreen !important
 "><i class="fa fa-money" aria-hidden="true"></i></span>
                                 <div class="dash-widget-info text-right">
-                                    <h3 style="color:white" id="agentcommissionvalue">@AgentCommission.ToString("0.00")</h3>
+                                    @*<h3 style="color:white" id="agentcommissionvalue">@AgentCommission.ToString("0.00")</h3>*@
+                                    <h3 style="color:white" id="agentcommissionvalue">@ListAgentStats[0].Commission.ToString("0.00")</h3>
                                     <span style="        font-size: 14px;
         background-color: white;
         color: darkgreen !important;
@@ -359,7 +433,275 @@
 </div>
 
 
+<div id="AddCommision_Modal" class="modal" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <!--Header-->
+            <div class="modal-header">
+                <p class="heading lead">Add Agent Commission</p>
+
+                <button type="button" style="color:white" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" class="white-text">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="">
+
+                <div class="form-group">
+                    <div class="row">
+
+                        <div class="col-md-12">
+                            @using (Html.BeginForm("AddAgentCommission", "AgentStatistics", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                            {@Html.AntiForgeryToken()
+                            <label>Agent</label>
+                            <select class="form-control" style="color:black!important;" name="AgentId" required>
+                                @foreach (Sp_Get_Agents_List_Result item in @ViewBag.AgentList)
+                                {
+                                    <option value="@item.User_ID">@item.UserName</option>
+                                }
+
+                            </select>
+                            <label>Commission Percentage</label>
+                            <input class="form-control" type="number" name="Commision" value="0" required />
+                            <label>Affective Date</label>
+                            <input class="form-control" type="date" name="AffectiveDate" value="" required /><br />
+                            <input class="form-control" style="display:none;" type="text" name="AgentStat" value="1" required /><br />
+                            <button class="btn btn-primary">Submit</button>
+
+                        }
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+</div>
+
+
+
+
+<div id="AddSalary_Modal" class="modal" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <!--Header-->
+            <div class="modal-header">
+                <p class="heading lead">Add Agent Salary</p>
+
+                <button type="button" style="color:white" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" class="white-text">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="">
+
+                <div class="form-group">
+                    <div class="row">
+
+                        <div class="col-md-12">
+                            @using (Html.BeginForm("AddAgentSalary", "AgentStatistics", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                            {@Html.AntiForgeryToken()
+                            <label>Agent</label>
+                            <select class="form-control" style="color:black!important;" name="AgentId" required>
+                                @foreach (Sp_Get_Agents_List_Result item in @ViewBag.AgentList)
+                                {
+                                    <option value="@item.User_ID">@item.UserName</option>
+                                }
+
+                            </select>
+                            <label>Salary</label>
+                            <input class="form-control" type="number" name="salary" value="0" required />
+                            <label>Affective Date</label>
+                            <input class="form-control" type="date" name="AffectiveDate" value="" required /><br />
+                            <input class="form-control" style="display:none;" type="text" name="AgentStat" value="1" required /><br />
+                            <button class="btn btn-primary">Submit</button>
+
+                        }
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+</div>
+
+
 <script>
+
+    function ShowDeleteCommission(AgentId, AgentCommissionId, Type) {
+
+        if (Type == 'd') {
+            var model = {
+
+                AgentCommissionId: AgentCommissionId
+            };
+
+
+
+            $.ajax({
+                type: "POST",
+                url: "/AgentStatistics/DeleteAgentCommission",
+                data: JSON.stringify(model),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (r) {
+                    if (r == 1) {
+                        $("#CommissionDeleteAlert").show();
+                        $("#CommissionDeleteAlert").fadeOut(10000);
+                    }
+                }
+            });
+        }
+
+
+        $("#tblTruckList tbody tr").remove();
+        $('#Edit_Truck').modal('show');
+
+        var model = {
+
+            AgentId: AgentId
+        };
+
+
+
+        $.ajax({
+            type: "POST",
+            url: "/AgentStatistics/AgentCommission",
+            data: JSON.stringify(model),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (r) {
+
+                console.log(r)
+
+                for (var i = 0; i < r.length; i++) {
+
+                    var datevalue = new Date(parseInt(r[i].AffectiveDate.replace("/Date(", "").replace(")/", ""), 10));
+                    var todayDate = new Date(datevalue);
+                    var format = "AM";
+                    var hour = todayDate.getHours();
+                    var min = todayDate.getMinutes();
+                    if (hour > 11) { format = "PM"; }
+                    if (hour > 12) { hour = hour - 12; }
+                    if (hour == 0) { hour = 12; }
+                    if (min < 10) { min = "0" + min; }
+                    var Month = todayDate.getMonth() + 1;
+                    if (i == 0) {
+                        $("#AgentInformationModalNameLabel1").remove();
+                        $("#AgentInformationModalNameLabel2").remove();
+                        $('#AgentInformationModalName').append("<label id='AgentInformationModalNameLabel1'><b>Agent Name:</b></label> <label id='AgentInformationModalNameLabel2'>" + r[i].UserName + "</label>");
+                    }
+
+
+
+                    var AffectiveDate = Month + "/" + todayDate.getDate() + "/" + todayDate.getFullYear() + "" /* + hour + ":" + min + " " + format*/;
+
+
+
+                    tr = $('<tr/>');
+
+                    //tr.append("<td>" + r[i].UserName + "</td>");
+                    tr.append("<td hidden>" + r[i].AgentCommissionId + "</td>");
+                    tr.append("<td>" + r[i].Commissionpercentage + "</td>");
+                    tr.append("<td>" + AffectiveDate + "</td>");
+                    tr.append("<td id='DeleteCommission' onclick='ShowDeleteCommission(" + AgentId + "," + r[i].AgentCommissionId + "," + '"d"' + ")'><div class='actions'><a class='text-danger' href='#'  id=''><i class='fa fa-trash'></i> Delete</a></div></td>");
+                    $('#tblTruckList tbody').append(tr);
+
+                }
+
+            }
+        });
+    } function ShowDeleteSalary(AgentId, AgentSalaryId, Type) {
+
+        if (Type == 'd') {
+            var model = {
+
+                AgentSalaryId: AgentSalaryId
+            };
+
+
+
+            $.ajax({
+                type: "POST",
+                url: "/AgentStatistics/DeleteAgentSalary",
+                data: JSON.stringify(model),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (r) {
+                    if (r == 1) {
+                        $("#CommissionDeleteAlert").show();
+                        $("#CommissionDeleteAlert").fadeOut(10000);
+                    }
+                }
+            });
+        }
+
+
+        $("#tblSalaryList tbody tr").remove();
+        $('#Edit_Truck').modal('show');
+
+        var model = {
+
+            AgentId: AgentId
+        };
+
+
+
+        $.ajax({
+            type: "POST",
+            url: "/AgentStatistics/AgentSalary",
+            data: JSON.stringify(model),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (r) {
+
+                console.log(r)
+
+                for (var i = 0; i < r.length; i++) {
+
+                    var datevalue = new Date(parseInt(r[i].AffectiveDate.replace("/Date(", "").replace(")/", ""), 10));
+                    var todayDate = new Date(datevalue);
+                    var format = "AM";
+                    var hour = todayDate.getHours();
+                    var min = todayDate.getMinutes();
+                    if (hour > 11) { format = "PM"; }
+                    if (hour > 12) { hour = hour - 12; }
+                    if (hour == 0) { hour = 12; }
+                    if (min < 10) { min = "0" + min; }
+                    var Month = todayDate.getMonth() + 1;
+                    if (i == 0) {
+                        $("#AgentInformationModalNameLabel1").remove();
+                        $("#AgentInformationModalNameLabel2").remove();
+                        $('#AgentInformationModalName').append("<label id='AgentInformationModalNameLabel1'><b>Agent Name:</b></label> <label id='AgentInformationModalNameLabel2'>" + r[i].UserName + "</label>");
+                    }
+
+
+
+                    var AffectiveDate = Month + "/" + todayDate.getDate() + "/" + todayDate.getFullYear() + "" /* + hour + ":" + min + " " + format*/;
+
+
+
+                    tr = $('<tr/>');
+
+                    //tr.append("<td>" + r[i].UserName + "</td>");
+                    tr.append("<td hidden>" + r[i].AgentCommissionId + "</td>");
+                    tr.append("<td>" + r[i].salary + "</td>");
+                    tr.append("<td>" + AffectiveDate + "</td>");
+                    tr.append("<td id='DeleteCommission' onclick='ShowDeleteSalary(" + AgentId + "," + r[i].AgentCommissionId + "," + '"d"' + ")'><div class='actions'><a class='text-danger' href='#'  id=''><i class='fa fa-trash'></i> Delete</a></div></td>");
+                    $('#tblSalaryList tbody').append(tr);
+
+                }
+
+            }
+        });
+    }
+
+
     // In your Javascript (external .js resource or <script> tag)
     jQuery(document).ready(function () {
         jQuery('#ddlAgent').select2();

@@ -15,7 +15,7 @@ using static Dieseltech.FilterConfig;
 
 namespace Dieseltech.Controllers
 {
-    [FilterConfig.AuthorizeActionFilter]
+    //[FilterConfig.AuthorizeActionFilter]
     [HandleError]
 
     /// Summary description for CountryService
@@ -172,13 +172,13 @@ namespace Dieseltech.Controllers
 
         }
 
-        [Customexception]
-        public JsonResult GetState(int ZipCode)
+        
+        public JsonResult GetState(string ZipCode)
 
         {
             List<tblStateCityData> StateCityList = new List<tblStateCityData>();
 
-            string query = " SELECT        ZipCode, CityName, StateCode FROM            tblStateCityData where Zipcode = " + ZipCode + "";
+            string query = " SELECT        ZipCode, CityName, StateCode FROM            tblStateCityData where Zipcode = '" + ZipCode + "'";
             dt = ut.GetDatatable(query);
             foreach (DataRow dr in dt.Rows)
 
@@ -188,7 +188,7 @@ namespace Dieseltech.Controllers
                 {
                     //, MC#,AssignID, ContactName, Phonenumber
 
-                    ZipCode = Convert.ToInt32(dr["ZipCode"].ToString()),
+                    ZipCode =dr["ZipCode"].ToString(),
                     StateCode = dr["StateCode"].ToString(),
                     CityName = dr["CityName"].ToString(),
 
@@ -201,7 +201,7 @@ namespace Dieseltech.Controllers
 
             return Json(StateCityList, JsonRequestBehavior.AllowGet);
         }
-        [Customexception]
+       
         public JsonResult GetCarrierDetail(string AssignID)
 
         {
@@ -250,7 +250,7 @@ namespace Dieseltech.Controllers
                     TruckYard = dr["TruckYard"].ToString(),
                     TrailerNo = dr["TrailerNo"].ToString(),
                     TrailerTypeId = Convert.ToInt32(dr["TrailerTypeId"]),
-                    ZipCode = Convert.ToInt32(dr["ZipCode"].ToString()),
+                    ZipCode =dr["ZipCode"].ToString(),
                     AvailableDate = (dr["AvailableDate"].ToString()),
                     //AvailableDate = Convert.ToDateTime(dr["AvailableDate"]),
                     DriverName = dr["DriverName"].ToString(),
@@ -281,6 +281,7 @@ namespace Dieseltech.Controllers
                     InsuranceExpirationDate = Convert.ToDateTime(dr["InsuranceExpirationDate"]),
                     PrefferedDestination = dr["PrefferedDestination"].ToString(),
                     quickpaypercentage = Convert.ToDouble(dr["quickpaypercentage"].ToString()),
+                    IsNeedToAssign = Convert.ToBoolean(dr["IsNeedToAssign"].ToString()),
                 });
 
             }
@@ -360,7 +361,7 @@ namespace Dieseltech.Controllers
         }
 
 
-        [Customexception]
+      
         public JsonResult GetStateCityName(string prefix)
 
         {
@@ -379,7 +380,7 @@ namespace Dieseltech.Controllers
                 {
                     //, MC#,AssignID, ContactName, Phonenumber
 
-                    ZipCode = Convert.ToInt32(dr["ZipCode"].ToString()),
+                    ZipCode = dr["ZipCode"].ToString(),
                     StateCode = dr["StateCode"].ToString(),
                     CityName = dr["CityName"].ToString(),
 
@@ -397,7 +398,7 @@ namespace Dieseltech.Controllers
 
 
 
-        [Customexception]
+        
         public JsonResult GetShipperRecord(string prefix)
 
         {
@@ -426,7 +427,8 @@ namespace Dieseltech.Controllers
                     ShipperCity = (dr["ShipperCity"]).ToString(),
                     ShipperStateCode = (dr["ShipperStateCode"]).ToString(),
                     ShipperStateName = (dr["ShipperStateName"]).ToString(),
-                    ShipperZipCode = Convert.ToInt32(dr["ShipperZipCode"]),
+                    //ShipperZipCode = Convert.ToInt32(dr["ShipperZipCode"]),
+                    ShipperZipCode = dr["ShipperZipCode"].ToString(),
                     ShipperAssignId = (dr["ShipperAssignId"]).ToString(),
 
 
@@ -439,7 +441,7 @@ namespace Dieseltech.Controllers
 
         }
 
-        [Customexception]
+     
         public JsonResult GetShipperDetail(string AssignID)
 
         {
@@ -462,7 +464,7 @@ namespace Dieseltech.Controllers
                     ShipperCity = (dr["ShipperCity"]).ToString(),
                     ShipperStateCode = (dr["ShipperStateCode"]).ToString(),
                     ShipperStateName = (dr["ShipperStateName"]).ToString(),
-                    ShipperZipCode = Convert.ToInt32(dr["ShipperZipCode"]),
+                    ShipperZipCode = dr["ShipperZipCode"].ToString(),
                     ShipperAssignId = (dr["ShipperAssignId"]).ToString(),
                     Longitude = (dr["Longitude"]).ToString(),
                     Latitude = (dr["Latitude"]).ToString(),
@@ -558,7 +560,7 @@ namespace Dieseltech.Controllers
 
                 ViewBag.LoadDocuments = deEntity.tblLoadFilePaths.ToList().Where(d => d.LoaderNumber == LoaderNumber).ToList();
                 ViewBag.FutureLoad = deEntity.tblLoadHeads.Where(lh => lh.IsManagerFutureLoad == IsManagerFutureload).ToList();
-                ViewBag.StateCityList = deEntity.tblStateCityDatas.ToList();
+                //ViewBag.StateCityList = deEntity.tblStateCityDatas.ToList();
                 if (LoaderNumber != null && LoaderNumber != "")
                 {
 
@@ -2074,7 +2076,7 @@ namespace Dieseltech.Controllers
 
                         //Insert or Update Shipper
                         qry = "Exec Sp_InsertUpdate_Shipper " + Pickup.ShipperId + ",'" + Pickup.ShipperName + "','" + Pickup.PhoneNumber + "','" + Pickup.Address + "' ,";
-                        qry += " '" + Pickup.CityName + "' , '" + Pickup.StateCode + "', '" + Pickup.StateCode + "'," + Pickup.ZipCode + " ,'" + ShipperAssignID + "'";
+                        qry += " '" + Pickup.CityName + "' , '" + Pickup.StateCode + "', '" + Pickup.StateCode + "','" + Pickup.ZipCode + "' ,'" + ShipperAssignID + "'";
                         qry += " , '" + Pickup.Longitude + "' , '" + Pickup.Latitude + "' ";
                         ut.InsertUpdate(qry);
 
@@ -2265,7 +2267,7 @@ namespace Dieseltech.Controllers
 
                         //Insert or Update Shipper
                         qry = "Exec Sp_InsertUpdate_Shipper " + Pickup.ShipperId + ",'" + Pickup.ShipperName + "','" + Pickup.PhoneNumber + "','" + Pickup.Address + "' ,";
-                        qry += " '" + Pickup.CityName + "' , '" + Pickup.StateCode + "', '" + Pickup.StateCode + "'," + Pickup.ZipCode + " ,'" + ShipperAssignID + "'";
+                        qry += " '" + Pickup.CityName + "' , '" + Pickup.StateCode + "', '" + Pickup.StateCode + "','" + Pickup.ZipCode + "' ,'" + ShipperAssignID + "'";
                         qry += " , '" + Pickup.Longitude + "' , '" + Pickup.Latitude + "' ";
                         ut.InsertUpdate(qry);
 
@@ -2281,7 +2283,7 @@ namespace Dieseltech.Controllers
                         Pickup.PickUpId = txtPickupId;
                         qry = " Exec  Sp_Insert_Update_LoadPickup  '" + LoaderNumber + "' , '" + Pickup.Information + "'," + Pickup.ShipperId + ", ";
                         qry += " '" + Pickup.ShipperName + "' ,1,'" + Pickup.CountryName + "','" + Pickup.PhoneNumber + "' ";
-                        qry += " ,'" + Pickup.Address + "' , " + Pickup.ZipCode + ",'', '" + Pickup.CityName + "','" + Pickup.DateTimeFrom.ToString("yyyy-MM-dd HH:mm") + "' ";
+                        qry += " ,'" + Pickup.Address + "' ,'" + Pickup.ZipCode + "','', '" + Pickup.CityName + "','" + Pickup.DateTimeFrom.ToString("yyyy-MM-dd HH:mm") + "' ";
                         qry += ", '" + Pickup.DateTimeTo.ToString("yyyy-MM-dd HH:mm") + "' , '" + Pickup.PickupNumber + "', '" + Pickup.Traitor + "','" + Pickup.Comments + "' ";
                         qry += " ," + Convert.ToInt32(Session["User_id"]) + ",0," + Pickup.PickUpId + " ,'" + Pickup.Longitude + "','" + Pickup.Latitude + "'," + Pickup.Pickuporder + ",'U'   ";
                         ut.InsertUpdate(qry);
@@ -2449,7 +2451,7 @@ namespace Dieseltech.Controllers
 
                         //Insert or Update Shipper
                         qry = "Exec Sp_InsertUpdate_Shipper " + Load.ShipperId + ",'" + Load.ShipperName + "','" + Load.PhoneNumber + "','" + Load.Address + "' ,";
-                        qry += " '" + Load.CityName + "' , '" + Load.StateCode + "', '" + Load.StateCode + "'," + Load.ZipCode + " ,'" + ShipperAssignID + "'";
+                        qry += " '" + Load.CityName + "' , '" + Load.StateCode + "', '" + Load.StateCode + "','" + Load.ZipCode + "' ,'" + ShipperAssignID + "'";
                         qry += ", '" + Load.Longitude + "' , '" + Load.Latitude + "' ";
 
                         ut.InsertUpdate(qry);
@@ -2669,7 +2671,7 @@ namespace Dieseltech.Controllers
 
                         //Insert or Update Shipper
                         qry = "Exec Sp_InsertUpdate_Shipper " + Delivery.ShipperId + ",'" + Delivery.ShipperName + "','" + Delivery.PhoneNumber + "','" + Delivery.Address + "' ,";
-                        qry += " '" + Delivery.CityName + "' , '" + Delivery.StateCode + "', '" + Delivery.StateCode + "'," + Delivery.ZipCode + " ,'" + ShipperAssignID + "'";
+                        qry += " '" + Delivery.CityName + "' , '" + Delivery.StateCode + "', '" + Delivery.StateCode + "','" + Delivery.ZipCode + "' ,'" + ShipperAssignID + "'";
                         qry += ", '" + Delivery.Longitude + "' , '" + Delivery.Latitude + "' ";
                         ut.InsertUpdate(qry);
 
@@ -2678,7 +2680,7 @@ namespace Dieseltech.Controllers
                         Delivery.DeliveryId = txtDeliveryId;
                         qry = " Exec  Sp_Insert_Update_LoadDelivery  '" + LoaderNumber + "' , '" + Delivery.Information + "'," + Delivery.ShipperId + ", ";
                         qry += " '" + Delivery.ShipperName + "' ,1,'" + Delivery.CountryName + "','" + Delivery.PhoneNumber + "' ";
-                        qry += " ,'" + Delivery.Address + "' , " + Delivery.ZipCode + ",'', '" + Delivery.CityName + "','" + Delivery.DateTimeFrom.ToString("yyyy-MM-dd HH:mm") + "' ";
+                        qry += " ,'" + Delivery.Address + "' , '" + Delivery.ZipCode + "','', '" + Delivery.CityName + "','" + Delivery.DateTimeFrom.ToString("yyyy-MM-dd HH:mm") + "' ";
                         qry += ", '" + Delivery.DateTimeTo.ToString("yyyy-MM-dd HH:mm") + "' , '" + Delivery.PickupNumber + "', '" + Delivery.Traitor + "','" + Delivery.Comments + "' ";
                         qry += " ," + Convert.ToInt32(Session["User_id"]) + ",0, " + Delivery.PickUpId + " ,'" + Delivery.Longitude + "' ,'" + Delivery.Latitude + "' ," + Delivery.DeliveryId + "," + Delivery.Deliveryorder + ",'U'   ";
                         ut.InsertUpdate(qry);
@@ -3858,7 +3860,7 @@ namespace Dieseltech.Controllers
                     ShipperCity = dr["ShipperCity"].ToString(),
                     ShipperStateCode = dr["ShipperStateCode"].ToString(),
                     ShipperStateName = dr["ShipperStateName"].ToString(),
-                    ShipperZipCode = Convert.ToInt32(dr["ShipperZipCode"]),
+                    ShipperZipCode =dr["ShipperZipCode"].ToString(),
                     ShipperAssignId = dr["ShipperAssignId"].ToString(),
                 });
 

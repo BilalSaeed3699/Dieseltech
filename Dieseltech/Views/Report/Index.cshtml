@@ -93,6 +93,18 @@
         input[type="search"] {
             color: white !important;
         }
+        .colorcheckbox {
+            font-size: 12px;
+            padding: 3px !important;
+            width: 1.2em;
+            height: 1.2em;
+            border-radius: 70%;
+            vertical-align: middle;
+            border: 2px solid #26abff;
+            -webkit-appearance: none;
+            outline: none;
+            cursor: pointer;
+        }
     </style>
 </head>
 
@@ -167,9 +179,9 @@
 
 
                 <div class="row">
-                    <div class="col-md-5">
+                    <div class="col-md-2">
                         <a href="@Url.Action("Index", "Report", new {userid =@ViewBag.UserId,Filter ="A", Type = @ViewBag.LoadType,AdvanceFilterDateFroms = ViewBag.AdvanceFilterDateFroms, AdvanceFilterDateTo = ViewBag.AdvanceFilterDateTo, FilterDateFroms = ViewBag.LoadFilterDateFrom, FilterDateTos = ViewBag.LoadFilterDateTo })" style="width:100% !important;height:100%">
-                            <div class="col-md-12" style="background-color: rgb(20,29,186) !important;height:100% !important;width:31%">
+                            <div class="col-md-12 text-center" style="background-color: rgb(20,29,186) !important; height: 100% !important; width: 80%; padding-top: 4%;">
 
                                 <h3 style="color:White" id="FilterPeriodType">@ViewBag.LoadType</h3>
 
@@ -198,19 +210,34 @@
 
                             </div>
                         </a>
+
+                    </div>
+                    
+                    <div class="col-md-1 card" style="box-shadow: 0 0px 0px 0 rgb(0 0 0 / 10%); !important;">
+                        <i class="fa fa-circle" style="color: #ff667d; font-size: 13px; padding-bottom: 2%; " aria-hidden="true"><small style="color:black;"> Dispatched</small> </i>
+                        <i class="fa fa-circle" style="color: #e6e600; font-size: 13px; padding-bottom: 2%; " aria-hidden="true"><small style="color:black;"> At the shipper</small> </i>
+                        <i class="fa fa-circle" style="color: #4fabc9; font-size: 13px; " aria-hidden="true"><small style="color:black;"> Loaded</small> </i>
+                        
+                    </div>
+                    
+                    <div class="col-md-2 card" style="box-shadow: 0 0px 0px 0 rgb(0 0 0 / 10%) !important; ">
+                        <i class="fa fa-circle" style="color: orange; font-size: 13px; padding-bottom: 2%; " aria-hidden="true"><small style="color:black;"> At the delivery</small> </i>
+                        <i class="fa fa-circle" style="color: #4fe34f; font-size: 13px; padding-bottom: 2%; " aria-hidden="true"><small style="color:black;">  Delivered</small> </i>
+                        <i class="fa fa-circle" style="color: transparent; background: linear-gradient(to bottom, #000000 0%, #e4d28d 100%); -webkit-background-clip: text;  font-size: 13px; " aria-hidden="true"><small style="color:black;"> POD</small> </i>
+
                     </div>
                     <div class="col-md-7">
                         <div class="btn-group" style="float:right">
                             @*<i class="fa fa-circle" style="color:darkorange;font-size:15px" aria-hidden="true"> Confo</i>
-                                &nbsp;
-                                <i class="fa fa-circle" style="color:darkgreen;font-size:15px" aria-hidden="true"> Confo POD</i>
-                                &nbsp;
-                                <i class="fa fa-circle" style="color:blue;font-size:15px" aria-hidden="true"> Confo POD,Invoice</i>*@
+                &nbsp;
+                <i class="fa fa-circle" style="color:darkgreen;font-size:15px" aria-hidden="true"> Confo POD</i>
+                &nbsp;
+                <i class="fa fa-circle" style="color:blue;font-size:15px" aria-hidden="true"> Confo POD,Invoice</i>*@
 
                             @*<a name="Filter" onclick="AgentModel(@Session["User_id"],'@ViewBag.LoadFilterDateFrom.ToString("yyyy-MM-dd")','@ViewBag.LoadFilterDateTo.ToString("yyyy-MM-dd")')" style="background-color: darkgreen !important" class="btn btn-secondary FilterButton">
-                                    <i class="fa fa-plus"></i>
-                                    My Sum
-                                </a>*@
+                    <i class="fa fa-plus"></i>
+                    My Sum
+                </a>*@
 
                             <a style="background-color: deepskyblue !important" class="btn btn-primary FilterButton"><i onclick="RefereshList()" style="font-size:19px !important" class="fa fa-refresh"></i></a>
 
@@ -334,7 +361,8 @@
                                 @*<th>Email History</th>*@
                                 @*<th></th>*@
                                 <th>Status</th>
-                                <th>C.O.D</th>
+                                <th>Load Status</th>
+                                <th hidden>C.O.D</th>
                                 <th>Load Number </th>
                                 <th>Broker Reference</th>
                                 <th>Future Load</th>
@@ -375,121 +403,361 @@
                                         profitmargin = (agentamount / brokeramount) * 100;
 
                                     }
+                                    if (item.IsNeedToAssign == true)
+                                    {
+                                        <tr style="background:#ff9999;">
+                                            @*<td></td>*@
+                                            @*<td onclick="ShowEmailHistory(@item.LoaderNumber)"><button type="button" class="fa fa-eye"><span class="glyphicon glyphicon-eye-open"></span></button></td>*@
 
-                                    <tr>
-                                         @*<td></td>*@
-                                        @*<td onclick="ShowEmailHistory(@item.LoaderNumber)"><button type="button" class="fa fa-eye"><span class="glyphicon glyphicon-eye-open"></span></button></td>*@
+                                            @*<td data-toggle="collapse" data-target="#Load_@item.LoaderNumber" class="accordion-toggle"><button data-toggle="tooltip" data-placement="top" title="Click to view Email History" type="button" class="fa fa-eye"><span class="glyphicon glyphicon-eye-open"></span></button></td>*@
+                                            @if (@item.IsCancel == 0)
+                                            {
 
-                                        @*<td data-toggle="collapse" data-target="#Load_@item.LoaderNumber" class="accordion-toggle"><button data-toggle="tooltip" data-placement="top" title="Click to view Email History" type="button" class="fa fa-eye"><span class="glyphicon glyphicon-eye-open"></span></button></td>*@
-                                        @if (@item.IsCancel == 0)
-                                        {
+                                                <td onclick="LoadApprovalStatus(@item.IsCancel,'@item.LoaderNumber')" style="background:#ff9999;"><i class="fa fa-check-square" style="font-size: 25px;color: #218838"></i></td>
+                                            }
+                                            else if (@item.IsCancel == 1)
+                                            {
+                                                <td onclick="LoadApprovalStatus(@item.IsCancel,'@item.LoaderNumber')" style="background:#ff9999;"><i class="fa fa-window-close" style="font-size: 25px;color:#ff9999"></i></td>
+                                            }
 
-                                            <td onclick="LoadApprovalStatus(@item.IsCancel,'@item.LoaderNumber')"><i class="fa fa-check-square" style="font-size: 25px;color: #218838"></i></td>
-                                        }
-                                        else if (@item.IsCancel == 1)
-                                        {
-                                            <td onclick="LoadApprovalStatus(@item.IsCancel,'@item.LoaderNumber')"><i class="fa fa-window-close" style="font-size: 25px;color:Red"></i></td>
-                                        }
+                                        <td style="background: #ff9999; min-width: 50px;">
+                                            @if (@item.Status == 1)
+                                            {
+                                                <input onclick="ChangeStatus(this,'@item.LoaderNumber')" name="1 " id="Dispatched" title="Dispatched" style="border: 2px solid brown; background-color: #ff667d !important;" class="chkcolor colorcheckbox " value="#ff667d" type="checkbox">
+                                                <input onclick="ChangeStatus(this,'@item.LoaderNumber')" name="2 " id="ShipperAt" title="At the shipper" style="border: 2px solid grey; background-color: #e6e600 !important;" class="chkcolor colorcheckbox "value= #e6e600 type="checkbox">
+                                                <input onclick="ChangeStatus(this,'@item.LoaderNumber')" name="3 " id="Loaded" title="Loaded" style="border: 2px solid grey; background-color: #4fabc9 !important;" class="chkcolor colorcheckbox " value="#4fabc9" type="checkbox">
+                                                <input onclick="ChangeStatus(this,'@item.LoaderNumber')" name="4 " id="DeliveryTo" title="At the delivery" style="border: 2px solid grey; background-color: orange !important;" class="chkcolor colorcheckbox " value="orange" type="checkbox">
+                                                <input onclick="ChangeStatus(this,'@item.LoaderNumber')" name="5 " id="EmptyAtDelivery" title="Delivered" style="border: 2px solid grey; background-color: #4fe34f !important;" class="chkcolor colorcheckbox " value="#4fe34f" type="checkbox">
+                                                <input onclick="ChangeStatus(this,'@item.LoaderNumber')" name="6 " id="POD" title="POD" style="border: 2px solid grey; background:linear-gradient(to bottom, #000000 0%, #e4d28d 100%);" class="chkcolor colorcheckbox " value="linear-gradient(to bottom, #000000 0%, #e4d28d 100%)" type="checkbox">
+                                            }
+                                            else if (@item.Status == 2)
+                                            {
+                                                <input onclick="ChangeStatus(this,'@item.LoaderNumber')" name="1 " id="Dispatched" title="Dispatched" style="border: 2px solid grey; background-color: #ff667d !important;" class="chkcolor colorcheckbox " value="#ff667d" type="checkbox">
+                                                <input onclick="ChangeStatus(this,'@item.LoaderNumber')" name="2 " id="ShipperAt" title="At the shipper" style="border: 2px solid brown; background-color: #e6e600 !important;" class="chkcolor colorcheckbox "value= #e6e600 type="checkbox">
+                                                <input onclick="ChangeStatus(this,'@item.LoaderNumber')" name="3 " id="Loaded" title="Loaded" style="border: 2px solid grey; background-color: #4fabc9 !important;" class="chkcolor colorcheckbox " value="#4fabc9" type="checkbox">
+                                                <input onclick="ChangeStatus(this,'@item.LoaderNumber')" name="4 " id="DeliveryTo" title="At the delivery" style="border: 2px solid grey; background-color: orange !important;" class="chkcolor colorcheckbox " value="orange" type="checkbox">
+                                                <input onclick="ChangeStatus(this,'@item.LoaderNumber')" name="5 " id="EmptyAtDelivery" title="Delivered" style="border: 2px solid grey; background-color: #4fe34f !important;" class="chkcolor colorcheckbox " value="#4fe34f" type="checkbox">
+                                                <input onclick="ChangeStatus(this,'@item.LoaderNumber')" name="6 " id="POD" title="POD" style="border: 2px solid grey; background:linear-gradient(to bottom, #000000 0%, #e4d28d 100%);" class="chkcolor colorcheckbox " value="linear-gradient(to bottom, #000000 0%, #e4d28d 100%)" type="checkbox">
+                                            }
+                                            else if (@item.Status == 3)
+                                            {
+                                                <input onclick="ChangeStatus(this,'@item.LoaderNumber')" name="1 " id="Dispatched" title="Dispatched" style="border: 2px solid grey; background-color: #ff667d !important;" class="chkcolor colorcheckbox " value="#ff667d" type="checkbox">
+                                                <input onclick="ChangeStatus(this,'@item.LoaderNumber')" name="2 " id="ShipperAt" title="At the shipper" style="border: 2px solid grey; background-color: #e6e600 !important;" class="chkcolor colorcheckbox "value= #e6e600 type="checkbox">
+                                                <input onclick="ChangeStatus(this,'@item.LoaderNumber')" name="3 " id="Loaded" title="Loaded" style="border: 2px solid brown; background-color: #4fabc9 !important;" class="chkcolor colorcheckbox " value="#4fabc9" type="checkbox">
+                                                <input onclick="ChangeStatus(this,'@item.LoaderNumber')" name="4 " id="DeliveryTo" title="At the delivery" style="border: 2px solid grey; background-color: orange !important;" class="chkcolor colorcheckbox " value="orange" type="checkbox">
+                                                <input onclick="ChangeStatus(this,'@item.LoaderNumber')" name="5 " id="EmptyAtDelivery" title="Delivered" style="border: 2px solid grey; background-color: #4fe34f !important;" class="chkcolor colorcheckbox " value="#4fe34f" type="checkbox">
+                                                <input onclick="ChangeStatus(this,'@item.LoaderNumber')" name="6 " id="POD" title="POD" style="border: 2px solid grey; background:linear-gradient(to bottom, #000000 0%, #e4d28d 100%);" class="chkcolor colorcheckbox " value="linear-gradient(to bottom, #000000 0%, #e4d28d 100%)" type="checkbox">
+                                            }
+                                            else if (@item.Status == 4)
+                                            {
+                                                <input onclick="ChangeStatus(this,'@item.LoaderNumber')" name="1 " id="Dispatched" title="Dispatched" style="border: 2px solid grey; background-color: #ff667d !important;" class="chkcolor colorcheckbox " value="#ff667d" type="checkbox">
+                                                <input onclick="ChangeStatus(this,'@item.LoaderNumber')" name="2 " id="ShipperAt" title="At the shipper" style="border: 2px solid grey; background-color: #e6e600 !important;" class="chkcolor colorcheckbox "value= #e6e600 type="checkbox">
+                                                <input onclick="ChangeStatus(this,'@item.LoaderNumber')" name="3 " id="Loaded" title="Loaded" style="border: 2px solid grey; background-color: #4fabc9 !important;" class="chkcolor colorcheckbox " value="#4fabc9" type="checkbox">
+                                                <input onclick="ChangeStatus(this,'@item.LoaderNumber')" name="4 " id="DeliveryTo" title="At the delivery" style="border: 2px solid brown; background-color: orange !important;" class="chkcolor colorcheckbox " value="orange" type="checkbox">
+                                                <input onclick="ChangeStatus(this,'@item.LoaderNumber')" name="5 " id="EmptyAtDelivery" title="Delivered" style="border: 2px solid grey; background-color: #4fe34f !important;" class="chkcolor colorcheckbox " value="#4fe34f" type="checkbox">
+                                                <input onclick="ChangeStatus(this,'@item.LoaderNumber')" name="6 " id="POD" title="POD" style="border: 2px solid grey; background:linear-gradient(to bottom, #000000 0%, #e4d28d 100%);" class="chkcolor colorcheckbox " value="linear-gradient(to bottom, #000000 0%, #e4d28d 100%)" type="checkbox">
+                                            }
+                                            else if (@item.Status == 5)
+                                            {
+                                                <input onclick="ChangeStatus(this,'@item.LoaderNumber')" name="1 " id="Dispatched" title="Dispatched" style="border: 2px solid grey; background-color: #ff667d !important;" class="chkcolor colorcheckbox " value="#ff667d" type="checkbox">
+                                                <input onclick="ChangeStatus(this,'@item.LoaderNumber')" name="2 " id="ShipperAt" title="At the shipper" style="border: 2px solid grey; background-color: #e6e600 !important;" class="chkcolor colorcheckbox "value= #e6e600 type="checkbox">
+                                                <input onclick="ChangeStatus(this,'@item.LoaderNumber')" name="3 " id="Loaded" title="Loaded" style="border: 2px solid grey; background-color: #4fabc9 !important;" class="chkcolor colorcheckbox " value="#4fabc9" type="checkbox">
+                                                <input onclick="ChangeStatus(this,'@item.LoaderNumber')" name="4 " id="DeliveryTo" title="At the delivery" style="border: 2px solid grey; background-color: orange !important;" class="chkcolor colorcheckbox " value="orange" type="checkbox">
+                                                <input onclick="ChangeStatus(this,'@item.LoaderNumber')" name="5 " id="EmptyAtDelivery" title="Delivered" style="border: 2px solid brown; background-color: #4fe34f !important;" class="chkcolor colorcheckbox " value="#4fe34f" type="checkbox">
+                                                <input onclick="ChangeStatus(this,'@item.LoaderNumber')" name="6 " id="POD" title="POD" style="border: 2px solid grey; background:linear-gradient(to bottom, #000000 0%, #e4d28d 100%);" class="chkcolor colorcheckbox " value="linear-gradient(to bottom, #000000 0%, #e4d28d 100%)" type="checkbox">
+                                            }
+                                            else if (@item.Status == 6)
+                                            {
+                                                <input onclick="ChangeStatus(this,'@item.LoaderNumber')" name="1 " id="Dispatched" title="Dispatched" style="border: 2px solid grey; background-color: #ff667d !important;" class="chkcolor colorcheckbox " value="#ff667d" type="checkbox">
+                                                <input onclick="ChangeStatus(this,'@item.LoaderNumber')" name="2 " id="ShipperAt" title="At the shipper" style="border: 2px solid grey; background-color: #e6e600 !important;" class="chkcolor colorcheckbox "value= #e6e600 type="checkbox">
+                                                <input onclick="ChangeStatus(this,'@item.LoaderNumber')" name="3 " id="Loaded" title="Loaded" style="border: 2px solid grey; background-color: #4fabc9 !important;" class="chkcolor colorcheckbox " value="#4fabc9" type="checkbox">
+                                                <input onclick="ChangeStatus(this,'@item.LoaderNumber')" name="4 " id="DeliveryTo" title="At the delivery" style="border: 2px solid grey; background-color: orange !important;" class="chkcolor colorcheckbox " value="orange" type="checkbox">
+                                                <input onclick="ChangeStatus(this,'@item.LoaderNumber')" name="5 " id="EmptyAtDelivery" title="Delivered" style="border: 2px solid grey; background-color: #4fe34f !important;" class="chkcolor colorcheckbox " value="#4fe34f" type="checkbox">
+                                                <input onclick="ChangeStatus(this,'@item.LoaderNumber')" name="6 " id="POD" title="POD" style="border: 2px solid brown; background:linear-gradient(to bottom, #000000 0%, #e4d28d 100%);" class="chkcolor colorcheckbox " value="linear-gradient(to bottom, #000000 0%, #e4d28d 100%)" type="checkbox">
+                                            }
+                                            else
+                                            {
+                                                <input onclick="ChangeStatus(this,'@item.LoaderNumber')" name="1 " id="Dispatched" title="Dispatched" style="border: 2px solid grey; background-color: #ff667d !important;" class="chkcolor colorcheckbox " value="#ff667d" type="checkbox">
+                                                <input onclick="ChangeStatus(this,'@item.LoaderNumber')" name="2 " id="ShipperAt" title="At the shipper" style="border: 2px solid grey; background-color: #e6e600 !important;" class="chkcolor colorcheckbox "value= #e6e600 type="checkbox">
+                                                <input onclick="ChangeStatus(this,'@item.LoaderNumber')" name="3 " id="Loaded" title="Loaded" style="border: 2px solid grey; background-color: #4fabc9 !important;" class="chkcolor colorcheckbox " value="#4fabc9" type="checkbox">
+                                                <input onclick="ChangeStatus(this,'@item.LoaderNumber')" name="4 " id="DeliveryTo" title="At the delivery" style="border: 2px solid grey; background-color: orange !important;" class="chkcolor colorcheckbox " value="orange" type="checkbox">
+                                                <input onclick="ChangeStatus(this,'@item.LoaderNumber')" name="5 " id="EmptyAtDelivery" title="Delivered" style="border: 2px solid grey; background-color: #4fe34f !important;" class="chkcolor colorcheckbox " value="#4fe34f" type="checkbox">
+                                                <input onclick="ChangeStatus(this,'@item.LoaderNumber')" name="6 " id="POD" title="POD" style="border: 2px solid grey; background:linear-gradient(to bottom, #000000 0%, #e4d28d 100%);" class="chkcolor colorcheckbox " value="linear-gradient(to bottom, #000000 0%, #e4d28d 100%)" type="checkbox">
+                                            }
 
-                                        <td>@item.COD</td>
-                                        <td class="LoadNumber"> <a> @item.LoaderNumber</a></td>
-                                        <td class="BrokerReference"> <a> @item.BrokerReference</a></td>
-                                        <td class="FutureLoad"> <a style="color: #009efb" target="_blank" href="@Url.Action("Index", "CopyLoad", new { LoadNumber = @item.LoaderNumber })"> @item.FutureLoadText</a></td>
 
-                                        @*<td class="LoadNumber"> <a style="color: #009efb" target="_blank" href="@Url.Action("EditLoad", "Load", new { LoaderNumber = @item.LoaderNumber })"> @item.LoaderNumber</a></td>*@
-                                        <td>@item.RegistrationDate</td>
-                                        <td>
-
-                                            <a>
-                                                @item.Agent
-                                            </a>
                                         </td>
+                                            <td style="background:#ff9999;" hidden>@item.COD</td>
+                                            <td class="LoadNumber" style="background:#ff9999;"> <a> @item.LoaderNumber</a></td>
+                                            <td class="BrokerReference" style="background:#ff9999;"> <a> @item.BrokerReference</a></td>
+                                            <td class="FutureLoad" style="background:#ff9999;"> <a style="color: blue" target="_blank" href="@Url.Action("Index", "CopyLoad", new { LoadNumber = @item.LoaderNumber })"> @item.FutureLoadText</a></td>
 
-                                        <td>@item.Profile</td>
-                                        <td>@item.Brokernanme</td>
-                                        <td class="LoadReportNumber"> <a style="color: #009efb" target="_blank" href="@Url.Action("LoadConfirmation", "Load", new { LoaderNumber = @item.LoaderNumber })"> @item.CarrierName</a></td>
+                                            @*<td class="LoadNumber"> <a style="color: #009efb" target="_blank" href="@Url.Action("EditLoad", "Load", new { LoaderNumber = @item.LoaderNumber })"> @item.LoaderNumber</a></td>*@
+                                            <td style="background:#ff9999;">@item.RegistrationDate</td>
+                                            <td style="background:#ff9999;">
+                                                @if (@item.Status == 1)
+                                                {
+                                                    <span id="AgentBadge" style="background: #ff667d;" class="badge badge-light">@item.Agent</span>
+                                                }
+                                                else if (@item.Status == 2)
+                                                {
+                                                    <span id="AgentBadge" style="background: #e6e600;" class="badge badge-light">@item.Agent</span>
+                                                }
+                                                else if (@item.Status == 3)
+                                                {
+                                                    <span id="AgentBadge" style="background: #4fabc9 ;" class="badge badge-light">@item.Agent</span>
+                                                }
+                                                else if (@item.Status == 4)
+                                                {
+                                                    <span id="AgentBadge" style="background: orange;" class="badge badge-light">@item.Agent</span>
+                                                }
+                                                else if (@item.Status == 5)
+                                                {
+                                                    <span id="AgentBadge" style="background: #4fe34f ;" class="badge badge-light">@item.Agent</span>
+                                                }
+                                                else if (@item.Status == 6)
+                                                {
+                                                    <span id="AgentBadge" style="background:linear-gradient(to bottom, #000000 0%, #e4d28d 100%); color: white;" class="badge badge-light">@item.Agent</span>
+                                                }
+                                                else
+                                                {
+                                                    <span id="AgentBadge" class="badge badge-light">@item.Agent</span>
+                                                }
+                                            </td>
 
-                                        <td>@item.LoadTypeName</td>
+                                            <td style="background:#ff9999;">@item.Profile</td>
+                                            <td style="background:#ff9999;">@item.Brokernanme</td>
+                                            <td class="LoadReportNumber" style="background:#ff9999;"> <a style="color: blue" target="_blank" href="@Url.Action("LoadConfirmation", "Load", new { LoaderNumber = @item.LoaderNumber })"> @item.CarrierName</a></td>
 
-                                        @*<td>@item.PickupInfo</td>
-                                            <td>@item.PickupDate</td>
-                                            <td>@item.DeliveryInfo</td>
-                                            <td>@item.DeliveryDate</td>*@
-                                        <td>@item.BrokerRate</td>
-                                        <td>@item.CarrierRate</td>
-                                        <td>@item.Profit</td>
-                                        <td>@Convert.ToInt64(@profitmargin)</td>
-                                        <td style="width:7%">
-                                            <a id="btnView" target="_blank" href="@Url.Action("ReportPreview", "Report", new { LoadNumberModel = @item.LoaderNumber })" class="btn btn-sm bg-info-light">
-                                                <i class="fa fa-eye"></i> View
-                                            </a>
+                                            <td style="background:#ff9999;">@item.LoadTypeName</td>
+
+                                            @*<td>@item.PickupInfo</td>
+                        <td>@item.PickupDate</td>
+                        <td>@item.DeliveryInfo</td>
+                        <td>@item.DeliveryDate</td>*@
+                                            <td style="background:#ff9999;">@item.BrokerRate</td>
+                                            <td style="background:#ff9999;">@item.CarrierRate</td>
+                                            <td style="background:#ff9999;">@item.Profit</td>
+                                            <td style="background:#ff9999;">@Convert.ToInt64(@profitmargin)</td>
+                                            <td style="width: 7%; background: #ff9999;" >
+                                                <a id="btnView" target="_blank" href="@Url.Action("ReportPreview", "Report", new { LoadNumberModel = @item.LoaderNumber })" class="btn btn-sm bg-info-light">
+                                                    <i class="fa fa-eye"></i> View
+                                                </a>
+                                            </td>
+
+
+
+
+
+                                        </tr>
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            @*<td></td>*@
+                                            @*<td onclick="ShowEmailHistory(@item.LoaderNumber)"><button type="button" class="fa fa-eye"><span class="glyphicon glyphicon-eye-open"></span></button></td>*@
+
+                                            @*<td data-toggle="collapse" data-target="#Load_@item.LoaderNumber" class="accordion-toggle"><button data-toggle="tooltip" data-placement="top" title="Click to view Email History" type="button" class="fa fa-eye"><span class="glyphicon glyphicon-eye-open"></span></button></td>*@
+                                            @if (@item.IsCancel == 0)
+                                            {
+
+                                                <td onclick="LoadApprovalStatus(@item.IsCancel,'@item.LoaderNumber')"><i class="fa fa-check-square" style="font-size: 25px;color: #218838"></i></td>
+                                            }
+                                            else if (@item.IsCancel == 1)
+                                            {
+                                                <td onclick="LoadApprovalStatus(@item.IsCancel,'@item.LoaderNumber')"><i class="fa fa-window-close" style="font-size: 25px;color:Red"></i></td>
+                                            }
+                                        <td style="min-width: 50px;">
+                                            @if (@item.Status == 1)
+                                            {
+                                                <input onclick="ChangeStatus(this,'@item.LoaderNumber')" name="1 " id="Dispatched" title="Dispatched" style="border: 2px solid brown; background-color: #ff667d !important;" class="chkcolor colorcheckbox " value="#ff667d" type="checkbox">
+                                                <input onclick="ChangeStatus(this,'@item.LoaderNumber')" name="2 " id="ShipperAt" title="At the shipper" style="border: 2px solid grey; background-color: #e6e600 !important;" class="chkcolor colorcheckbox "value= #e6e600 type="checkbox">
+                                                <input onclick="ChangeStatus(this,'@item.LoaderNumber')" name="3 " id="Loaded" title="Loaded" style="border: 2px solid grey; background-color: #4fabc9 !important;" class="chkcolor colorcheckbox " value="#4fabc9" type="checkbox">
+                                                <input onclick="ChangeStatus(this,'@item.LoaderNumber')" name="4 " id="DeliveryTo" title="At the delivery" style="border: 2px solid grey; background-color: orange !important;" class="chkcolor colorcheckbox " value="orange" type="checkbox">
+                                                <input onclick="ChangeStatus(this,'@item.LoaderNumber')" name="5 " id="EmptyAtDelivery" title="Delivered" style="border: 2px solid grey; background-color: #4fe34f !important;" class="chkcolor colorcheckbox " value="#4fe34f" type="checkbox">
+                                                <input onclick="ChangeStatus(this,'@item.LoaderNumber')" name="6 " id="POD" title="POD" style="border: 2px solid grey; background:linear-gradient(to bottom, #000000 0%, #e4d28d 100%);" class="chkcolor colorcheckbox " value="linear-gradient(to bottom, #000000 0%, #e4d28d 100%)" type="checkbox">
+                                            }
+                                            else if (@item.Status == 2)
+                                            {
+                                                <input onclick="ChangeStatus(this,'@item.LoaderNumber')" name="1 " id="Dispatched" title="Dispatched" style="border: 2px solid grey; background-color: #ff667d !important;" class="chkcolor colorcheckbox " value="#ff667d" type="checkbox">
+                                                <input onclick="ChangeStatus(this,'@item.LoaderNumber')" name="2 " id="ShipperAt" title="At the shipper" style="border: 2px solid brown; background-color: #e6e600 !important;" class="chkcolor colorcheckbox "value= #e6e600 type="checkbox">
+                                                <input onclick="ChangeStatus(this,'@item.LoaderNumber')" name="3 " id="Loaded" title="Loaded" style="border: 2px solid grey; background-color: #4fabc9 !important;" class="chkcolor colorcheckbox " value="#4fabc9" type="checkbox">
+                                                <input onclick="ChangeStatus(this,'@item.LoaderNumber')" name="4 " id="DeliveryTo" title="At the delivery" style="border: 2px solid grey; background-color: orange !important;" class="chkcolor colorcheckbox " value="orange" type="checkbox">
+                                                <input onclick="ChangeStatus(this,'@item.LoaderNumber')" name="5 " id="EmptyAtDelivery" title="Delivered" style="border: 2px solid grey; background-color: #4fe34f !important;" class="chkcolor colorcheckbox " value="#4fe34f" type="checkbox">
+                                                <input onclick="ChangeStatus(this,'@item.LoaderNumber')" name="6 " id="POD" title="POD" style="border: 2px solid grey; background:linear-gradient(to bottom, #000000 0%, #e4d28d 100%);" class="chkcolor colorcheckbox " value="linear-gradient(to bottom, #000000 0%, #e4d28d 100%)" type="checkbox">
+                                            }
+                                            else if (@item.Status == 3)
+                                            {
+                                                <input onclick="ChangeStatus(this,'@item.LoaderNumber')" name="1 " id="Dispatched" title="Dispatched" style="border: 2px solid grey; background-color: #ff667d !important;" class="chkcolor colorcheckbox " value="#ff667d" type="checkbox">
+                                                <input onclick="ChangeStatus(this,'@item.LoaderNumber')" name="2 " id="ShipperAt" title="At the shipper" style="border: 2px solid grey; background-color: #e6e600 !important;" class="chkcolor colorcheckbox "value= #e6e600 type="checkbox">
+                                                <input onclick="ChangeStatus(this,'@item.LoaderNumber')" name="3 " id="Loaded" title="Loaded" style="border: 2px solid brown; background-color: #4fabc9 !important;" class="chkcolor colorcheckbox " value="#4fabc9" type="checkbox">
+                                                <input onclick="ChangeStatus(this,'@item.LoaderNumber')" name="4 " id="DeliveryTo" title="At the delivery" style="border: 2px solid grey; background-color: orange !important;" class="chkcolor colorcheckbox " value="orange" type="checkbox">
+                                                <input onclick="ChangeStatus(this,'@item.LoaderNumber')" name="5 " id="EmptyAtDelivery" title="Delivered" style="border: 2px solid grey; background-color: #4fe34f !important;" class="chkcolor colorcheckbox " value="#4fe34f" type="checkbox">
+                                                <input onclick="ChangeStatus(this,'@item.LoaderNumber')" name="6 " id="POD" title="POD" style="border: 2px solid grey; background:linear-gradient(to bottom, #000000 0%, #e4d28d 100%);" class="chkcolor colorcheckbox " value="linear-gradient(to bottom, #000000 0%, #e4d28d 100%)" type="checkbox">
+                                            }
+                                            else if (@item.Status == 4)
+                                            {
+                                                <input onclick="ChangeStatus(this,'@item.LoaderNumber')" name="1 " id="Dispatched" title="Dispatched" style="border: 2px solid grey; background-color: #ff667d !important;" class="chkcolor colorcheckbox " value="#ff667d" type="checkbox">
+                                                <input onclick="ChangeStatus(this,'@item.LoaderNumber')" name="2 " id="ShipperAt" title="At the shipper" style="border: 2px solid grey; background-color: #e6e600 !important;" class="chkcolor colorcheckbox "value= #e6e600 type="checkbox">
+                                                <input onclick="ChangeStatus(this,'@item.LoaderNumber')" name="3 " id="Loaded" title="Loaded" style="border: 2px solid grey; background-color: #4fabc9 !important;" class="chkcolor colorcheckbox " value="#4fabc9" type="checkbox">
+                                                <input onclick="ChangeStatus(this,'@item.LoaderNumber')" name="4 " id="DeliveryTo" title="At the delivery" style="border: 2px solid brown; background-color: orange !important;" class="chkcolor colorcheckbox " value="orange" type="checkbox">
+                                                <input onclick="ChangeStatus(this,'@item.LoaderNumber')" name="5 " id="EmptyAtDelivery" title="Delivered" style="border: 2px solid grey; background-color: #4fe34f !important;" class="chkcolor colorcheckbox " value="#4fe34f" type="checkbox">
+                                                <input onclick="ChangeStatus(this,'@item.LoaderNumber')" name="6 " id="POD" title="POD" style="border: 2px solid grey; background:linear-gradient(to bottom, #000000 0%, #e4d28d 100%);" class="chkcolor colorcheckbox " value="linear-gradient(to bottom, #000000 0%, #e4d28d 100%)" type="checkbox">
+                                            }
+                                            else if (@item.Status == 5)
+                                            {
+                                                <input onclick="ChangeStatus(this,'@item.LoaderNumber')" name="1 " id="Dispatched" title="Dispatched" style="border: 2px solid grey; background-color: #ff667d !important;" class="chkcolor colorcheckbox " value="#ff667d" type="checkbox">
+                                                <input onclick="ChangeStatus(this,'@item.LoaderNumber')" name="2 " id="ShipperAt" title="At the shipper" style="border: 2px solid grey; background-color: #e6e600 !important;" class="chkcolor colorcheckbox "value= #e6e600 type="checkbox">
+                                                <input onclick="ChangeStatus(this,'@item.LoaderNumber')" name="3 " id="Loaded" title="Loaded" style="border: 2px solid grey; background-color: #4fabc9 !important;" class="chkcolor colorcheckbox " value="#4fabc9" type="checkbox">
+                                                <input onclick="ChangeStatus(this,'@item.LoaderNumber')" name="4 " id="DeliveryTo" title="At the delivery" style="border: 2px solid grey; background-color: orange !important;" class="chkcolor colorcheckbox " value="orange" type="checkbox">
+                                                <input onclick="ChangeStatus(this,'@item.LoaderNumber')" name="5 " id="EmptyAtDelivery" title="Delivered" style="border: 2px solid brown; background-color: #4fe34f !important;" class="chkcolor colorcheckbox " value="#4fe34f" type="checkbox">
+                                                <input onclick="ChangeStatus(this,'@item.LoaderNumber')" name="6 " id="POD" title="POD" style="border: 2px solid grey; background:linear-gradient(to bottom, #000000 0%, #e4d28d 100%);" class="chkcolor colorcheckbox " value="linear-gradient(to bottom, #000000 0%, #e4d28d 100%)" type="checkbox">
+                                            }
+                                            else if (@item.Status == 6)
+                                            {
+                                                <input onclick="ChangeStatus(this,'@item.LoaderNumber')" name="1 " id="Dispatched" title="Dispatched" style="border: 2px solid grey; background-color: #ff667d !important;" class="chkcolor colorcheckbox " value="#ff667d" type="checkbox">
+                                                <input onclick="ChangeStatus(this,'@item.LoaderNumber')" name="2 " id="ShipperAt" title="At the shipper" style="border: 2px solid grey; background-color: #e6e600 !important;" class="chkcolor colorcheckbox "value= #e6e600 type="checkbox">
+                                                <input onclick="ChangeStatus(this,'@item.LoaderNumber')" name="3 " id="Loaded" title="Loaded" style="border: 2px solid grey; background-color: #4fabc9 !important;" class="chkcolor colorcheckbox " value="#4fabc9" type="checkbox">
+                                                <input onclick="ChangeStatus(this,'@item.LoaderNumber')" name="4 " id="DeliveryTo" title="At the delivery" style="border: 2px solid grey; background-color: orange !important;" class="chkcolor colorcheckbox " value="orange" type="checkbox">
+                                                <input onclick="ChangeStatus(this,'@item.LoaderNumber')" name="5 " id="EmptyAtDelivery" title="Delivered" style="border: 2px solid grey; background-color: #4fe34f !important;" class="chkcolor colorcheckbox " value="#4fe34f" type="checkbox">
+                                                <input onclick="ChangeStatus(this,'@item.LoaderNumber')" name="6 " id="POD" title="POD" style="border: 2px solid brown; background:linear-gradient(to bottom, #000000 0%, #e4d28d 100%);" class="chkcolor colorcheckbox " value="linear-gradient(to bottom, #000000 0%, #e4d28d 100%)" type="checkbox">
+                                            }
+                                            else
+                                            {
+                                                <input onclick="ChangeStatus(this,'@item.LoaderNumber')" name="1 " id="Dispatched" title="Dispatched" style="border: 2px solid grey; background-color: #ff667d !important;" class="chkcolor colorcheckbox " value="#ff667d" type="checkbox">
+                                                <input onclick="ChangeStatus(this,'@item.LoaderNumber')" name="2 " id="ShipperAt" title="At the shipper" style="border: 2px solid grey; background-color: #e6e600 !important;" class="chkcolor colorcheckbox "value= #e6e600 type="checkbox">
+                                                <input onclick="ChangeStatus(this,'@item.LoaderNumber')" name="3 " id="Loaded" title="Loaded" style="border: 2px solid grey; background-color: #4fabc9 !important;" class="chkcolor colorcheckbox " value="#4fabc9" type="checkbox">
+                                                <input onclick="ChangeStatus(this,'@item.LoaderNumber')" name="4 " id="DeliveryTo" title="At the delivery" style="border: 2px solid grey; background-color: orange !important;" class="chkcolor colorcheckbox " value="orange" type="checkbox">
+                                                <input onclick="ChangeStatus(this,'@item.LoaderNumber')" name="5 " id="EmptyAtDelivery" title="Delivered" style="border: 2px solid grey; background-color: #4fe34f !important;" class="chkcolor colorcheckbox " value="#4fe34f" type="checkbox">
+                                                <input onclick="ChangeStatus(this,'@item.LoaderNumber')" name="6 " id="POD" title="POD" style="border: 2px solid grey; background:linear-gradient(to bottom, #000000 0%, #e4d28d 100%);" class="chkcolor colorcheckbox " value="linear-gradient(to bottom, #000000 0%, #e4d28d 100%)" type="checkbox">
+                                            }
                                         </td>
+                                            <td hidden>@item.COD</td>
+                                            <td class="LoadNumber"> <a> @item.LoaderNumber</a></td>
+                                            <td class="BrokerReference"> <a> @item.BrokerReference</a></td>
+                                            <td class="FutureLoad"> <a style="color: blue" target="_blank" href="@Url.Action("Index", "CopyLoad", new { LoadNumber = @item.LoaderNumber })"> @item.FutureLoadText</a></td>
+
+                                            @*<td class="LoadNumber"> <a style="color: #009efb" target="_blank" href="@Url.Action("EditLoad", "Load", new { LoaderNumber = @item.LoaderNumber })"> @item.LoaderNumber</a></td>*@
+                                            <td>@item.RegistrationDate</td>
+                                            <td>
+                                                @if (@item.Status == 1)
+                                                {
+                                                    <span id="AgentBadge" style="background: #ff667d;" class="badge badge-light">@item.Agent</span>
+                                                }
+                                                else if (@item.Status == 2)
+                                                {
+                                                    <span id="AgentBadge" style="background: #e6e600;" class="badge badge-light">@item.Agent</span>
+                                                }
+                                                else if (@item.Status == 3)
+                                                {
+                                                    <span id="AgentBadge" style="background: #4fabc9 ;" class="badge badge-light">@item.Agent</span>
+                                                }
+                                                else if (@item.Status == 4)
+                                                {
+                                                    <span id="AgentBadge" style="background: orange;" class="badge badge-light">@item.Agent</span>
+                                                }
+                                                else if (@item.Status == 5)
+                                                {
+                                                    <span id="AgentBadge" style="background: #4fe34f ;" class="badge badge-light">@item.Agent</span>
+                                                }
+                                                else if (@item.Status == 6)
+                                                {
+                                                    <span id="AgentBadge" style="background:linear-gradient(to bottom, #000000 0%, #e4d28d 100%); color: white;" class="badge badge-light">@item.Agent</span>
+                                                }
+                                                else
+                                                {
+                                                    <span id="AgentBadge" class="badge badge-light">@item.Agent</span>
+                                                }
+
+                                            </td>
+
+                                            <td>@item.Profile</td>
+                                            <td>@item.Brokernanme</td>
+                                            <td class="LoadReportNumber"> <a style="color: blue" target="_blank" href="@Url.Action("LoadConfirmation", "Load", new { LoaderNumber = @item.LoaderNumber })"> @item.CarrierName</a></td>
+
+                                            <td>@item.LoadTypeName</td>
+
+                                            @*<td>@item.PickupInfo</td>
+                        <td>@item.PickupDate</td>
+                        <td>@item.DeliveryInfo</td>
+                        <td>@item.DeliveryDate</td>*@
+                                            <td>@item.BrokerRate</td>
+                                            <td>@item.CarrierRate</td>
+                                            <td>@item.Profit</td>
+                                            <td>@Convert.ToInt64(@profitmargin)</td>
+                                            <td style="width:7%">
+                                                <a id="btnView" target="_blank" href="@Url.Action("ReportPreview", "Report", new { LoadNumberModel = @item.LoaderNumber })" class="btn btn-sm bg-info-light">
+                                                    <i class="fa fa-eye"></i> View
+                                                </a>
+                                            </td>
 
 
 
 
 
-                                    </tr>
+                                        </tr>
+                                    }
+
 
 
                                     //Inner table
                                     @*<tr style="width:100%">
-                                            <td colspan="12" class="hiddenRow">
-                                                <div class="accordian-body collapse" id="Load_@item.LoaderNumber">
-                                                    <table class="table table-border table-striped table-sm custom-table mb-0 g-dataTable searchable sortable">
-                                                        <thead>
-                                                            <tr class="info">
-                                                                <th>Load Number</th>
-                                                                <th>Send To Email</th>
-                                                                <th>Subject</th>
-                                                                <th>Date</th>
-                                                                <th>Send Status </th>
-                                                                <th>Send Message</th>
-                                                            </tr>
-                                                        </thead>
+                    <td colspan="12" class="hiddenRow">
+                        <div class="accordian-body collapse" id="Load_@item.LoaderNumber">
+                            <table class="table table-border table-striped table-sm custom-table mb-0 g-dataTable searchable sortable">
+                                <thead>
+                                    <tr class="info">
+                                        <th>Load Number</th>
+                                        <th>Send To Email</th>
+                                        <th>Subject</th>
+                                        <th>Date</th>
+                                        <th>Send Status </th>
+                                        <th>Send Message</th>
+                                    </tr>
+                                </thead>
 
-                                                        <tbody>
-                                                            @{int i = 0;}
-                                                            @foreach (var items in ListEmailHistory)
-                                                            {
+                                <tbody>
+                                    @{int i = 0;}
+                                    @foreach (var items in ListEmailHistory)
+                                    {
 
-                                                                if (items.LoadNumber == item.LoaderNumber)
-                                                                {
-                                                                    i++;
-                                                                    <tr data-toggle="collapse" class="accordion-toggle">
-                                                                        <td>@items.LoadNumber</td>
-                                                                        <td>@items.Email</td>
-                                                                        <td>@items.Subject</td>
-                                                                        <td>@items.Date.ToString("MM/dd/yyyy")</td>
-                                                                        <td>
-                                                                            @if (items.IsSend == 0)
-                                                                            {
-                                                                                <span data-toggle="tooltip" data-placement="top" title="@items.SendStatus" class="badge badge-danger">Failed</span>
-                                                                            }
-                                                                            else if (items.IsSend == 1)
-                                                                            {
-                                                                                <span class="badge badge-success">Send</span>
-                                                                            }
-                                                                        </td>
-                                                                        <td>@items.Detail</td>
+                                        if (items.LoadNumber == item.LoaderNumber)
+                                        {
+                                            i++;
+                                            <tr data-toggle="collapse" class="accordion-toggle">
+                                                <td>@items.LoadNumber</td>
+                                                <td>@items.Email</td>
+                                                <td>@items.Subject</td>
+                                                <td>@items.Date.ToString("MM/dd/yyyy")</td>
+                                                <td>
+                                                    @if (items.IsSend == 0)
+                                                    {
+                                                        <span data-toggle="tooltip" data-placement="top" title="@items.SendStatus" class="badge badge-danger">Failed</span>
+                                                    }
+                                                    else if (items.IsSend == 1)
+                                                    {
+                                                        <span class="badge badge-success">Send</span>
+                                                    }
+                                                </td>
+                                                <td>@items.Detail</td>
 
-                                                                    </tr>
-                                                                }
+                                            </tr>
+                                        }
 
-                                                            }
+                                    }
 
-                                                            @if (i == 0)
-                                                            {
-                                                                <tr data-toggle="collapse" class="accordion-toggle">
-                                                                    <td colspan="7" class="text-center"><strong style="font-size:15px;font-weight:bold">No Email Send</strong></td>
-                                                                </tr>
-                                                            }
-                                                        </tbody>
-                                                    </table>
+                                    @if (i == 0)
+                                    {
+                                        <tr data-toggle="collapse" class="accordion-toggle">
+                                            <td colspan="7" class="text-center"><strong style="font-size:15px;font-weight:bold">No Email Send</strong></td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
 
-                                                </div>
-                                            </td>
-                                        </tr>*@
+                        </div>
+                    </td>
+                </tr>*@
                                 }
                             }
 
@@ -770,6 +1038,117 @@
 
 <script type="text/javascript">
 
+    function ChangeStatus(Check, LoadNumber) {
+        
+        var Row = $(Check).closest("tr");
+        var Dispatched=Row.find('#Dispatched');
+        var ShipperAt = Row.find('#ShipperAt');
+        var Loaded = Row.find('#Loaded');
+        var DeliveryTo = Row.find('#DeliveryTo');
+        var EmptyAtDelivery = Row.find('#EmptyAtDelivery');
+        var POD = Row.find('#POD');
+        var AgentBadge = Row.find('#AgentBadge');
+        //alert($(Check).attr('id'));
+        var Status = $(Check).attr('name');
+        //alert(LoadNumber);
+
+
+        if ($(Check).attr('id') == 'Dispatched') {
+            ShipperAt.css('border-color', 'rgb(128, 128, 128)');
+            Loaded.css('border-color', 'rgb(128, 128, 128)');
+            DeliveryTo.css('border-color', 'rgb(128, 128, 128)');
+            EmptyAtDelivery.css('border-color', 'rgb(128, 128, 128)');
+            POD.css('border-color', 'rgb(128, 128, 128)');
+            Dispatched.css('border-color', 'brown');
+            AgentBadge.css('background', '' + $(Check).val() + '');
+            AgentBadge.css('color', 'black');
+
+        }
+        else if ($(Check).attr('id') == 'ShipperAt') {
+            Loaded.css('border-color', 'rgb(128, 128, 128)');
+            DeliveryTo.css('border-color', 'rgb(128, 128, 128)');
+            EmptyAtDelivery.css('border-color', 'rgb(128, 128, 128)');
+            POD.css('border-color', 'rgb(128, 128, 128)');
+            Dispatched.css('border-color', 'rgb(128, 128, 128)');
+            ShipperAt.css('border-color', 'brown');
+            AgentBadge.css('background', '' + $(Check).val() + '');
+            AgentBadge.css('color', 'black');
+        }
+        else if ($(Check).attr('id') == 'Loaded') {
+            DeliveryTo.css('border-color', 'rgb(128, 128, 128)');
+            EmptyAtDelivery.css('border-color', 'rgb(128, 128, 128)');
+            POD.css('border-color', 'rgb(128, 128, 128)');
+            Dispatched.css('border-color', 'rgb(128, 128, 128)');
+            ShipperAt.css('border-color', 'rgb(128, 128, 128)');
+            Loaded.css('border-color', 'brown');
+            AgentBadge.css('background', '' + $(Check).val() + '');
+            AgentBadge.css('color', 'black');
+        }
+        else if ($(Check).attr('id') == 'DeliveryTo') {
+            EmptyAtDelivery.css('border-color', 'rgb(128, 128, 128)');
+            POD.css('border-color', 'rgb(128, 128, 128)');
+            Dispatched.css('border-color', 'rgb(128, 128, 128)');
+            ShipperAt.css('border-color', 'rgb(128, 128, 128)');
+            Loaded.css('border-color', 'rgb(128, 128, 128)');
+            DeliveryTo.css('border-color', 'brown');
+            AgentBadge.css('background', '' + $(Check).val() + '');
+            AgentBadge.css('color', 'black');
+        }
+        else if ($(Check).attr('id') == 'EmptyAtDelivery') {
+            POD.css('border-color', 'rgb(128, 128, 128)');
+            Dispatched.css('border-color', 'rgb(128, 128, 128)');
+            ShipperAt.css('border-color', 'rgb(128, 128, 128)');
+            Loaded.css('border-color', 'rgb(128, 128, 128)');
+            DeliveryTo.css('border-color', 'rgb(128, 128, 128)');
+            EmptyAtDelivery.css('border-color', 'brown');
+            AgentBadge.css('background', '' + $(Check).val() + '');
+            AgentBadge.css('color', 'black');
+        }
+        else if ($(Check).attr('id') == 'POD') {
+            Dispatched.css('border-color', 'rgb(128, 128, 128)');
+            ShipperAt.css('border-color', 'rgb(128, 128, 128)');
+            Loaded.css('border-color', 'rgb(128, 128, 128)');
+            DeliveryTo.css('border-color', 'rgb(128, 128, 128)');
+            EmptyAtDelivery.css('border-color', 'rgb(128, 128, 128)');
+            POD.css('border-color', 'brown');
+            AgentBadge.css('background', '' + $(Check).val() + '');
+            AgentBadge.css('color', 'white');
+        }
+
+
+        
+
+
+
+        var model = {
+            LoadNumber: LoadNumber,
+            Status: Status
+        };
+
+          $.ajax({
+            type: "POST",
+            url: '@Url.Action("ChangeLoadSatus", "Report")',
+              data: JSON.stringify(model),
+              contentType: "application/json; charset=utf-8",
+              dataType: "json",
+            success: function (result) {
+                
+              },
+              failure: function (response) {
+                  //alert("No Data");
+              },
+              error: function (response) {
+                  //alert(response.responseText);
+              }
+        });
+
+        //if ($(Check).css('border-color') == 'rgb(128, 128, 128)') {
+        //    $(Check).css('border-color', 'rgb(38, 171, 255)');
+        //}
+        //else {
+        //    $(Check).css('border-color', 'rgb(128, 128, 128)');
+        //}
+    }
 
     function ReloadList(userid, Filter, Type, AdvanceFilterDateFroms,AdvanceFilterDateTo,FilterDateFroms,FilterDateTos) {
 

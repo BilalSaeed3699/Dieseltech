@@ -814,7 +814,8 @@ else if (Convert.ToInt32(@Session["User_id"]) == 2)
                                                 <small id="lblDisableDelivery" style="display:none;color:red">
                                                     Add Pickup First
                                                 </small>
-                                            </label>
+                                            </label><br />
+                                            <label style="color:red;display:none;" id="AjaxError">Error</label>
                                         </div>
                                     </div>
 
@@ -845,7 +846,7 @@ else if (Convert.ToInt32(@Session["User_id"]) == 2)
 
                                                     <div class="row">
                                                         <div class="col-md-6">
-                                                            <label value="0" hidden id="lblPickupMoveId"></label>
+                                                            <label value="0" hidden id="lblPickupMoveId">0</label>
                                                             <h5 class="text-bold card-title">
                                                                 Pickup
 
@@ -932,7 +933,7 @@ else if (Convert.ToInt32(@Session["User_id"]) == 2)
                                                     <div class="row">
                                                         <div class="col-md-12">
 
-                                                            <label hidden id="lblDeliveryMoveId"></label>
+                                                            <label hidden id="lblDeliveryMoveId">0</label>
 
                                                             <i id="btnDeliverytoPickup" onclick="MoveDeliverytoPickup()" style="cursor:pointer; float:left;font-size:26px;color:cornflowerblue" class="fa fa-toggle-left"></i>
 
@@ -2697,451 +2698,460 @@ $("#tblPickup").sortable({
     function MovePickuptoDelivery() {
 
         var PickupId = document.getElementById('lblPickupMoveId').textContent;
-        var textArray = [];
-        $('#tblPickup tr').each(function () {
-            textArray.push($(this).find('td:nth-child(2)').text())
+        if (PickupId == 0) {
 
-        });
+        }
+        else {
+            var textArray = [];
+            $('#tblPickup tr').each(function () {
+                textArray.push($(this).find('td:nth-child(2)').text())
 
-        var textDeliveryArray = [];
-        $('#tblDelivery tr').each(function () {
-            textDeliveryArray.push($(this).find('td:nth-child(2)').text())
+            });
 
-        });
+            var textDeliveryArray = [];
+            $('#tblDelivery tr').each(function () {
+                textDeliveryArray.push($(this).find('td:nth-child(2)').text())
 
-        var LoadNumber = $("#GetLoadNumber").val()
-        var model = {
-            txtPickupId: PickupId,
-            LoadNumber: LoadNumber,
-            PickupsId: textArray,
-            DeliveriesId: textDeliveryArray
-        };
+            });
+
+            var LoadNumber = $("#GetLoadNumber").val()
+            var model = {
+                txtPickupId: PickupId,
+                LoadNumber: LoadNumber,
+                PickupsId: textArray,
+                DeliveriesId: textDeliveryArray
+            };
 
 
 
-        //Send the JSON array to Controller using AJAX.
-        $.ajax({
+            //Send the JSON array to Controller using AJAX.
+            $.ajax({
 
-            type: "POST",
-            url: "/EditLoad/MoveLoadPickupToDelivery",
-            data: JSON.stringify(model),
-            //data: JSON.stringify(formData),
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            success: function (data) {
-                console.log(data);
+                type: "POST",
+                url: "/EditLoad/MoveLoadPickupToDelivery",
+                data: JSON.stringify(model),
+                //data: JSON.stringify(formData),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    console.log(data);
 
-                if (data.length == 0) {
+                    if (data.length == 0) {
+                        $("#tblPickup #tblPickupBody").remove();
+                        $("#tblDelivery #tblDeliveryBody").remove();
+                        document.getElementById('DeliveryPickUpInfo').innerHTML = "";
+                        $('#txtpickuporder').val(1);
+                        $('#txtDeliveryporder').val(1);
+                        return;
+                    }
+
+
+
+                    $('#txtPickupId').val(data[0].MaxPickupId);
+                    //Set Deliver Pickup Label
                     $("#tblPickup #tblPickupBody").remove();
                     $("#tblDelivery #tblDeliveryBody").remove();
-                    document.getElementById('DeliveryPickUpInfo').innerHTML = "";
-                    $('#txtpickuporder').val(1);
-                    $('#txtDeliveryporder').val(1);
-                    return;
-                }
+
+                    var img = document.createElement('img');
+                    img.src = "/assets/img/Logistic-Truck_Pickup.png";
+
+
+                    var Pickupcount = 0;
+                    var Deliverycount = 0;
+
+
+                    for (var i = 0; i < data.length; i++) {
+
+
+                        if (data[i].MaxPickupId == data[i].PickUpId) {
+
+                            document.getElementById('DeliveryPickUpInfo').innerHTML = "( Current Pickup : " + data[i].ShipperName + " , " + data[i].Address + " , " + data[i].StateCode + " )";
+                        }
+
+                        if (data[i].LoadType == 'P') {
+                            Pickupcount = 1;
+                            var PickupOrder = inWords(data[i].Pickuporder);
+                            var datevalue = new Date(parseInt(data[i].DateTimeFrom.replace("/Date(", "").replace(")/", ""), 10));
+                            var todayDate = new Date(datevalue);
+                            var format = "AM";
+                            var hour = todayDate.getHours();
+                            var min = todayDate.getMinutes();
+                            if (hour > 11) { format = "PM"; }
+                            if (hour > 12) { hour = hour - 12; }
+                            if (hour == 0) { hour = 12; }
+                            if (min < 10) { min = "0" + min; }
+                            var Month = todayDate.getMonth() + 1;
+
+                            //var DateFrom = Month + "/" + todayDate.getDate() + "/" + todayDate.getFullYear() + " " + hour + ":" + min + " " + format;
+
+
+                            var DateFrom = todayDate.getDate() + "/" + Month + "/" + todayDate.getFullYear() + " " + hour + ":" + min + " " + format;
+
+                            var datevalue = new Date(parseInt(data[i].DateTimeTo.replace("/Date(", "").replace(")/", ""), 10));
+                            var todayDate = new Date(datevalue);
+                            var format = "AM";
+                            var hour = todayDate.getHours();
+                            var min = todayDate.getMinutes();
+                            if (hour > 11) { format = "PM"; }
+                            if (hour > 12) { hour = hour - 12; }
+                            if (hour == 0) { hour = 12; }
+                            if (min < 10) { min = "0" + min; }
+                            var Month = todayDate.getMonth() + 1;
+                            var DateTo = Month + "/" + todayDate.getDate() + "/" + todayDate.getFullYear() + " " + hour + ":" + min + " " + format;
+
+
+                            tr = $('<tr id="tblPickupBody" />');
+                            tr.append("<td hidden class='txtpickuporder'>" + data[i].Pickuporder + "</td>");
+                            tr.append("<td hidden class='PickUpId'>" + data[i].PickUpId + "</td>");
+                            tr.append("<td ><img class='selectPickup' src='" + img.src + "' /></td>");
+                            tr.append("<td>" + PickupOrder + " pick up , " + data[i].Information + ", " + DateFrom + "</td>");
+                            tr.append("<td class='ShipperName' hidden>" + data[i].ShipperName + "</td>");
+                            tr.append("<td hidden>" + data[i].CountryName + "</td>");
+                            tr.append("<td class='Address' hidden>" + data[i].Address + "</td>");
+                            tr.append("<td  class='Phone' hidden>" + data[i].PhoneNumber + "</td>");
+                            tr.append("<td class='ZipCode' hidden>" + data[i].ZipCode + "</td>");
+                            tr.append("<td class='StateCode' hidden>" + data[i].StateCode + "</td>");
+                            tr.append("<td  class='CityName' hidden>" + data[i].CityName + "</td>");
+                            tr.append("<td class='DateTimeFrom' hidden>" + data[i].NewDateFrom + "</td>");
+                            tr.append("<td  class='DateTimeTo' hidden>" + data[i].NewDateTo + "</td>");
+                            tr.append("<td  class='Traitor' hidden>" + data[i].Traitor + "</td>");
+                            tr.append("<td  class='PickupNumber' hidden>" + data[i].PickupNumber + "</td>");
+                            tr.append("<td  class='Comments' hidden>" + data[i].Comments + "</td>");
+                            tr.append("<td class='ShipperId' hidden>" + data[i].ShipperId + "</td>");
+                            tr.append("<td class='Longitude' hidden>" + data[i].Longitude + "</td>");
+                            tr.append("<td class='Latitude' hidden>" + data[i].Latitude + "</td>");
 
 
 
-                $('#txtPickupId').val(data[0].MaxPickupId);
-                //Set Deliver Pickup Label
-                $("#tblPickup #tblPickupBody").remove();
-                $("#tblDelivery #tblDeliveryBody").remove();
+                            tr.append("<td><input type='button'  value='✎' style='background - color: #7c0710; color: white; padding: 0px 7px;' class='btn EditPickup'></td>");
+                            tr.append("<td><input type='button' onclick='RemovePickup(" + data[i].PickUpId + ")' value='x' style='background-color:Red !important; color: white; padding: 0px 7px;' class='btn'></td>");
+                            tr.append("<td><i id='btnCopyPickup' style='cursor: pointer; font-size: 22px; color: darkgoldenrod' class='fa fa-copy CopyPickup'></i></td>");
+                            $('#txtpickuporder').val(data[i].Pickuporder + 1);
+                            $('#tblPickup').append(tr);
+                        }
+                        else if (data[i].LoadType == 'D') {
+                            Deliverycount = 1;
+                            var DeliveryOrder = inWords(data[i].Deliveryporder);
+                            var datevalue = new Date(parseInt(data[i].DateTimeFrom.replace("/Date(", "").replace(")/", ""), 10));
+                            var todayDate = new Date(datevalue);
+                            var format = "AM";
+                            var hour = todayDate.getHours();
+                            var min = todayDate.getMinutes();
+                            if (hour > 11) { format = "PM"; }
+                            if (hour > 12) { hour = hour - 12; }
+                            if (hour == 0) { hour = 12; }
+                            if (min < 10) { min = "0" + min; }
+                            var Month = todayDate.getMonth() + 1;
 
-                var img = document.createElement('img');
-                img.src = "/assets/img/Logistic-Truck_Pickup.png";
-
-
-                var Pickupcount = 0;
-                var Deliverycount = 0;
-
-
-                for (var i = 0; i < data.length; i++) {
-
-
-                    if (data[i].MaxPickupId == data[i].PickUpId) {
-
-                        document.getElementById('DeliveryPickUpInfo').innerHTML = "( Current Pickup : " + data[i].ShipperName + " , " + data[i].Address + " , " + data[i].StateCode + " )";
-                    }
-
-                    if (data[i].LoadType == 'P') {
-                        Pickupcount = 1;
-                        var PickupOrder = inWords(data[i].Pickuporder);
-                        var datevalue = new Date(parseInt(data[i].DateTimeFrom.replace("/Date(", "").replace(")/", ""), 10));
-                        var todayDate = new Date(datevalue);
-                        var format = "AM";
-                        var hour = todayDate.getHours();
-                        var min = todayDate.getMinutes();
-                        if (hour > 11) { format = "PM"; }
-                        if (hour > 12) { hour = hour - 12; }
-                        if (hour == 0) { hour = 12; }
-                        if (min < 10) { min = "0" + min; }
-                        var Month = todayDate.getMonth() + 1;
-
-                        //var DateFrom = Month + "/" + todayDate.getDate() + "/" + todayDate.getFullYear() + " " + hour + ":" + min + " " + format;
+                            //var DateFrom = Month + "/" + todayDate.getDate() + "/" + todayDate.getFullYear() + " " + hour + ":" + min + " " + format;
 
 
-                        var DateFrom = todayDate.getDate() + "/" + Month + "/" + todayDate.getFullYear() + " " + hour + ":" + min + " " + format;
+                            var DateFrom = todayDate.getDate() + "/" + Month + "/" + todayDate.getFullYear() + " " + hour + ":" + min + " " + format;
 
-                        var datevalue = new Date(parseInt(data[i].DateTimeTo.replace("/Date(", "").replace(")/", ""), 10));
-                        var todayDate = new Date(datevalue);
-                        var format = "AM";
-                        var hour = todayDate.getHours();
-                        var min = todayDate.getMinutes();
-                        if (hour > 11) { format = "PM"; }
-                        if (hour > 12) { hour = hour - 12; }
-                        if (hour == 0) { hour = 12; }
-                        if (min < 10) { min = "0" + min; }
-                        var Month = todayDate.getMonth() + 1;
-                        var DateTo = Month + "/" + todayDate.getDate() + "/" + todayDate.getFullYear() + " " + hour + ":" + min + " " + format;
+                            var datevalue = new Date(parseInt(data[i].DateTimeTo.replace("/Date(", "").replace(")/", ""), 10));
+                            var todayDate = new Date(datevalue);
+                            var format = "AM";
+                            var hour = todayDate.getHours();
+                            var min = todayDate.getMinutes();
+                            if (hour > 11) { format = "PM"; }
+                            if (hour > 12) { hour = hour - 12; }
+                            if (hour == 0) { hour = 12; }
+                            if (min < 10) { min = "0" + min; }
+                            var Month = todayDate.getMonth() + 1;
+                            var DateTo = Month + "/" + todayDate.getDate() + "/" + todayDate.getFullYear() + " " + hour + ":" + min + " " + format;
 
-
-                        tr = $('<tr id="tblPickupBody" />');
-                        tr.append("<td hidden class='txtpickuporder'>" + data[i].Pickuporder + "</td>");
-                        tr.append("<td hidden class='PickUpId'>" + data[i].PickUpId + "</td>");
-                        tr.append("<td ><img class='selectPickup' src='" + img.src + "' /></td>");
-                        tr.append("<td>" + PickupOrder + " pick up , " + data[i].Information + ", " + DateFrom + "</td>");
-                        tr.append("<td class='ShipperName' hidden>" + data[i].ShipperName + "</td>");
-                        tr.append("<td hidden>" + data[i].CountryName + "</td>");
-                        tr.append("<td class='Address' hidden>" + data[i].Address + "</td>");
-                        tr.append("<td  class='Phone' hidden>" + data[i].PhoneNumber + "</td>");
-                        tr.append("<td class='ZipCode' hidden>" + data[i].ZipCode + "</td>");
-                        tr.append("<td class='StateCode' hidden>" + data[i].StateCode + "</td>");
-                        tr.append("<td  class='CityName' hidden>" + data[i].CityName + "</td>");
-                        tr.append("<td class='DateTimeFrom' hidden>" + data[i].NewDateFrom  + "</td>");
-                        tr.append("<td  class='DateTimeTo' hidden>" + data[i].NewDateTo+ "</td>");
-                        tr.append("<td  class='Traitor' hidden>" + data[i].Traitor + "</td>");
-                        tr.append("<td  class='PickupNumber' hidden>" + data[i].PickupNumber + "</td>");
-                        tr.append("<td  class='Comments' hidden>" + data[i].Comments + "</td>");
-                        tr.append("<td class='ShipperId' hidden>" + data[i].ShipperId + "</td>");
-                        tr.append("<td class='Longitude' hidden>" + data[i].Longitude + "</td>");
-                        tr.append("<td class='Latitude' hidden>" + data[i].Latitude + "</td>");
-
-
-
-                        tr.append("<td><input type='button'  value='✎' style='background - color: #7c0710; color: white; padding: 0px 7px;' class='btn EditPickup'></td>");
-                        tr.append("<td><input type='button' onclick='RemovePickup(" + data[i].PickUpId + ")' value='x' style='background-color:Red !important; color: white; padding: 0px 7px;' class='btn'></td>");
-                        tr.append("<td><i id='btnCopyPickup' style='cursor: pointer; font-size: 22px; color: darkgoldenrod' class='fa fa-copy CopyPickup'></i></td>");
-                        $('#txtpickuporder').val(data[i].Pickuporder + 1);
-                        $('#tblPickup').append(tr);
-                    }
-                    else if (data[i].LoadType == 'D') {
-                        Deliverycount = 1;
-                        var DeliveryOrder = inWords(data[i].Deliveryporder);
-                        var datevalue = new Date(parseInt(data[i].DateTimeFrom.replace("/Date(", "").replace(")/", ""), 10));
-                        var todayDate = new Date(datevalue);
-                        var format = "AM";
-                        var hour = todayDate.getHours();
-                        var min = todayDate.getMinutes();
-                        if (hour > 11) { format = "PM"; }
-                        if (hour > 12) { hour = hour - 12; }
-                        if (hour == 0) { hour = 12; }
-                        if (min < 10) { min = "0" + min; }
-                        var Month = todayDate.getMonth() + 1;
-
-                        //var DateFrom = Month + "/" + todayDate.getDate() + "/" + todayDate.getFullYear() + " " + hour + ":" + min + " " + format;
-
-
-                        var DateFrom = todayDate.getDate() + "/" + Month + "/" + todayDate.getFullYear() + " " + hour + ":" + min + " " + format;
-
-                        var datevalue = new Date(parseInt(data[i].DateTimeTo.replace("/Date(", "").replace(")/", ""), 10));
-                        var todayDate = new Date(datevalue);
-                        var format = "AM";
-                        var hour = todayDate.getHours();
-                        var min = todayDate.getMinutes();
-                        if (hour > 11) { format = "PM"; }
-                        if (hour > 12) { hour = hour - 12; }
-                        if (hour == 0) { hour = 12; }
-                        if (min < 10) { min = "0" + min; }
-                        var Month = todayDate.getMonth() + 1;
-                        var DateTo = Month + "/" + todayDate.getDate() + "/" + todayDate.getFullYear() + " " + hour + ":" + min + " " + format;
-
-                        $('#txtDeliveryId').val(data[i].MaxDeliveryID);
+                            $('#txtDeliveryId').val(data[i].MaxDeliveryID);
                         @*var someNumericValue = @(ViewBag.LastPickupId);*@
-                        //alert(someNumericValue);
+                            //alert(someNumericValue);
 
 
-                        var img = document.createElement('img');
-                        img.src = "/assets/img/Logistic-Truck_Delivery.png";
+                            var img = document.createElement('img');
+                            img.src = "/assets/img/Logistic-Truck_Delivery.png";
 
 
-                        tr = $('<tr id="tblDeliveryBody"/>');
-                        tr.append("<td hidden class='txtDeliveryorder'>" + data[i].Deliveryporder + "</td>");
+                            tr = $('<tr id="tblDeliveryBody"/>');
+                            tr.append("<td hidden class='txtDeliveryorder'>" + data[i].Deliveryporder + "</td>");
 
 
-                        tr.append("<td class='DeliveryId' hidden>" + data[i].DeliveryId + "</td>");
-                        tr.append("<td class='DeliveryPickupId' hidden>" + data[i].PickUpId + "</td>");
+                            tr.append("<td class='DeliveryId' hidden>" + data[i].DeliveryId + "</td>");
+                            tr.append("<td class='DeliveryPickupId' hidden>" + data[i].PickUpId + "</td>");
 
-                        tr.append("<td><img class='selectDelivery' src='" + img.src + "' /></td>");
-                        tr.append("<td>" + DeliveryOrder + " stop,  " + data[i].Information + ", " + DateFrom + "</td>");
-                        tr.append("<td class='ShipperName' hidden>" + data[i].ShipperName + "</td>");
-                        tr.append("<td hidden>" + data[i].CountryName + "</td>");
-                        tr.append("<td class='Address' hidden>" + data[i].Address + "</td>");
-                        tr.append("<td class='Phone' hidden>" + data[i].PhoneNumber + "</td>");
-                        tr.append("<td class='ZipCode' hidden>" + data[i].ZipCode + "</td>");
-                        tr.append("<td class='StateCode' hidden>" + data[i].StateCode + "</td>");
-                        tr.append("<td class='CityName' hidden>" + data[i].CityName + "</td>");
-                        tr.append("<td class='DateTimeFrom' hidden>" + data[i].NewDateFrom  + "</td>");
-                        tr.append("<td class='DateTimeTo' hidden>" + data[i].NewDateTo + "</td>");
-                        tr.append("<td  class='Traitor' hidden>" + data[i].Traitor + "</td>");
-                        tr.append("<td class='PickupNumber' hidden>" + data[i].PickupNumber + "</td>");
-                        tr.append("<td class='Comments' hidden>" + data[i].Comments + "</td>");
-                        tr.append("<td class='ShipperId' hidden>" + data[i].ShipperId + "</td>");
-                        tr.append("<td class='Longitude' hidden>" + data[i].Longitude + "</td>");
-                        tr.append("<td class='Latitude' hidden>" + data[i].Latitude + "</td>");
-                        tr.append("<td><input type='button'  value='✎' style='background - color: #7c0710; color: white; padding: 0px 7px;' class='btn EditDelivery'></td>");
-                        tr.append("<td><input type='button' onclick='RemoveDelivery(" + data[i].DeliveryId + ")' value='x' style='background-color:Red !important; color: white; padding: 0px 7px;' class='btn'></td>");
-                        tr.append("<td><i id='btnCopyDelivery'  style='cursor: pointer; font-size: 22px; color: darkgoldenrod' class='fa fa-copy CopyDelivery'></i></td>");
+                            tr.append("<td><img class='selectDelivery' src='" + img.src + "' /></td>");
+                            tr.append("<td>" + DeliveryOrder + " stop,  " + data[i].Information + ", " + DateFrom + "</td>");
+                            tr.append("<td class='ShipperName' hidden>" + data[i].ShipperName + "</td>");
+                            tr.append("<td hidden>" + data[i].CountryName + "</td>");
+                            tr.append("<td class='Address' hidden>" + data[i].Address + "</td>");
+                            tr.append("<td class='Phone' hidden>" + data[i].PhoneNumber + "</td>");
+                            tr.append("<td class='ZipCode' hidden>" + data[i].ZipCode + "</td>");
+                            tr.append("<td class='StateCode' hidden>" + data[i].StateCode + "</td>");
+                            tr.append("<td class='CityName' hidden>" + data[i].CityName + "</td>");
+                            tr.append("<td class='DateTimeFrom' hidden>" + data[i].NewDateFrom + "</td>");
+                            tr.append("<td class='DateTimeTo' hidden>" + data[i].NewDateTo + "</td>");
+                            tr.append("<td  class='Traitor' hidden>" + data[i].Traitor + "</td>");
+                            tr.append("<td class='PickupNumber' hidden>" + data[i].PickupNumber + "</td>");
+                            tr.append("<td class='Comments' hidden>" + data[i].Comments + "</td>");
+                            tr.append("<td class='ShipperId' hidden>" + data[i].ShipperId + "</td>");
+                            tr.append("<td class='Longitude' hidden>" + data[i].Longitude + "</td>");
+                            tr.append("<td class='Latitude' hidden>" + data[i].Latitude + "</td>");
+                            tr.append("<td><input type='button'  value='✎' style='background - color: #7c0710; color: white; padding: 0px 7px;' class='btn EditDelivery'></td>");
+                            tr.append("<td><input type='button' onclick='RemoveDelivery(" + data[i].DeliveryId + ")' value='x' style='background-color:Red !important; color: white; padding: 0px 7px;' class='btn'></td>");
+                            tr.append("<td><i id='btnCopyDelivery'  style='cursor: pointer; font-size: 22px; color: darkgoldenrod' class='fa fa-copy CopyDelivery'></i></td>");
 
-                        $('#txtDeliveryporder').val(data[i].Deliveryporder + 1);
-                        $('#tblDelivery').append(tr);
+                            $('#txtDeliveryporder').val(data[i].Deliveryporder + 1);
+                            $('#tblDelivery').append(tr);
+
+
+                        }
 
 
                     }
 
+                    if (parseInt(Pickupcount) == 0) {
+                        $('#txtpickuporder').val(1);
+                    }
+                    if (parseInt(Deliverycount) == 0) {
+                        $('#txtDeliveryporder').val(1);
+                    }
+
+
+
+
+
 
                 }
-
-                if (parseInt(Pickupcount) == 0) {
-                    $('#txtpickuporder').val(1);
-                }
-                if (parseInt(Deliverycount) == 0) {
-                    $('#txtDeliveryporder').val(1);
-                }
-
-
-
-
-
-
-            }
-        });
+            });
+        }
     }
 
     function MoveDeliverytoPickup() {
 
         var DeliveryId = document.getElementById('lblDeliveryMoveId').textContent;
+        if (DeliveryId == 0) {
 
-        var LoadNumber = $("#GetLoadNumber").val();
-        var textArray = [];
-        $('#tblPickup tr').each(function () {
-            textArray.push($(this).find('td:nth-child(2)').text())
+        }
+        else {
+            var LoadNumber = $("#GetLoadNumber").val();
+            var textArray = [];
+            $('#tblPickup tr').each(function () {
+                textArray.push($(this).find('td:nth-child(2)').text())
 
-        });
+            });
 
-        var textDeliveryArray = [];
-        $('#tblDelivery tr').each(function () {
-            textDeliveryArray.push($(this).find('td:nth-child(2)').text())
+            var textDeliveryArray = [];
+            $('#tblDelivery tr').each(function () {
+                textDeliveryArray.push($(this).find('td:nth-child(2)').text())
 
-        });
-        var model = {
-            txtDeliveryId: DeliveryId,
-            LoadNumber: LoadNumber,
-            PickupsId: textArray,
-            DeliveriesId: textDeliveryArray
-        };
+            });
+            var model = {
+                txtDeliveryId: DeliveryId,
+                LoadNumber: LoadNumber,
+                PickupsId: textArray,
+                DeliveriesId: textDeliveryArray
+            };
 
 
 
-        //Send the JSON array to Controller using AJAX.
-        $.ajax({
+            //Send the JSON array to Controller using AJAX.
+            $.ajax({
 
-            type: "POST",
-            url: "/EditLoad/MovePickuptoDelivery",
-            data: JSON.stringify(model),
-            //data: JSON.stringify(formData),
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            success: function (data) {
+                type: "POST",
+                url: "/EditLoad/MovePickuptoDelivery",
+                data: JSON.stringify(model),
+                //data: JSON.stringify(formData),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
 
-                document.getElementById('lblPickupMoveId').innerHTML = "0";
+                    document.getElementById('lblPickupMoveId').innerHTML = "0";
 
-                if (data.length == 0) {
+                    if (data.length == 0) {
+                        $("#tblPickup #tblPickupBody").remove();
+                        $("#tblDelivery #tblDeliveryBody").remove();
+                        document.getElementById('DeliveryPickUpInfo').innerHTML = "";
+                        $('#txtpickuporder').val(1);
+                        $('#txtDeliveryporder').val(1);
+                        return;
+                    }
+
+
+
+                    $('#txtPickupId').val(data[0].MaxPickupId);
+                    //Set Deliver Pickup Label
                     $("#tblPickup #tblPickupBody").remove();
                     $("#tblDelivery #tblDeliveryBody").remove();
-                    document.getElementById('DeliveryPickUpInfo').innerHTML = "";
-                    $('#txtpickuporder').val(1);
-                    $('#txtDeliveryporder').val(1);
-                    return;
-                }
+
+                    var img = document.createElement('img');
+                    img.src = "/assets/img/Logistic-Truck_Pickup.png";
 
 
 
-                $('#txtPickupId').val(data[0].MaxPickupId);
-                //Set Deliver Pickup Label
-                $("#tblPickup #tblPickupBody").remove();
-                $("#tblDelivery #tblDeliveryBody").remove();
-
-                var img = document.createElement('img');
-                img.src = "/assets/img/Logistic-Truck_Pickup.png";
+                    var Pickupcount = 0;
+                    var Deliverycount = 0;
 
 
 
-                var Pickupcount = 0;
-                var Deliverycount = 0;
+                    for (var i = 0; i < data.length; i++) {
+
+
+                        if (data[i].MaxPickupId == data[i].PickUpId) {
+
+                            document.getElementById('DeliveryPickUpInfo').innerHTML = "( Current Pickup : " + data[i].ShipperName + " , " + data[i].Address + " , " + data[i].StateCode + " )";
+                        }
+
+                        if (data[i].LoadType == 'P') {
+                            Pickupcount = 1;
+                            var PickupOrder = inWords(data[i].Pickuporder);
+                            var datevalue = new Date(parseInt(data[i].DateTimeFrom.replace("/Date(", "").replace(")/", ""), 10));
+                            var todayDate = new Date(datevalue);
+                            var format = "AM";
+                            var hour = todayDate.getHours();
+                            var min = todayDate.getMinutes();
+                            if (hour > 11) { format = "PM"; }
+                            if (hour > 12) { hour = hour - 12; }
+                            if (hour == 0) { hour = 12; }
+                            if (min < 10) { min = "0" + min; }
+                            var Month = todayDate.getMonth() + 1;
+
+
+                            //var DateFrom = Month + "/" + todayDate.getDate() + "/" + todayDate.getFullYear() + " " + hour + ":" + min + " " + format;
+
+
+                            var DateFrom = todayDate.getDate() + "/" + Month + "/" + todayDate.getFullYear() + " " + hour + ":" + min + " " + format;
+
+                            var datevalue = new Date(parseInt(data[i].DateTimeTo.replace("/Date(", "").replace(")/", ""), 10));
+                            var todayDate = new Date(datevalue);
+                            var format = "AM";
+                            var hour = todayDate.getHours();
+                            var min = todayDate.getMinutes();
+                            if (hour > 11) { format = "PM"; }
+                            if (hour > 12) { hour = hour - 12; }
+                            if (hour == 0) { hour = 12; }
+                            if (min < 10) { min = "0" + min; }
+                            var Month = todayDate.getMonth() + 1;
+                            var DateTo = Month + "/" + todayDate.getDate() + "/" + todayDate.getFullYear() + " " + hour + ":" + min + " " + format;
+
+                            tr = $('<tr id="tblPickupBody" />');
+                            tr.append("<td hidden class='txtpickuporder'>" + data[i].Pickuporder + "</td>");
+                            tr.append("<td hidden class='PickUpId'>" + data[i].PickUpId + "</td>");
+                            tr.append("<td ><img class='selectPickup' src='" + img.src + "' /></td>");
+                            tr.append("<td>" + PickupOrder + " pick up , " + data[i].Information + ", " + DateFrom + "</td>");
+                            tr.append("<td class='ShipperName' hidden>" + data[i].ShipperName + "</td>");
+                            tr.append("<td hidden>" + data[i].CountryName + "</td>");
+                            tr.append("<td class='Address' hidden>" + data[i].Address + "</td>");
+                            tr.append("<td  class='Phone' hidden>" + data[i].PhoneNumber + "</td>");
+                            tr.append("<td class='ZipCode' hidden>" + data[i].ZipCode + "</td>");
+                            tr.append("<td class='StateCode' hidden>" + data[i].StateCode + "</td>");
+                            tr.append("<td  class='CityName' hidden>" + data[i].CityName + "</td>");
+                            tr.append("<td class='DateTimeFrom' hidden>" + data[i].NewDateFrom + "</td>");
+                            tr.append("<td  class='DateTimeTo' hidden>" + data[i].NewDateTo + "</td>");
+                            tr.append("<td  class='Traitor' hidden>" + data[i].Traitor + "</td>");
+                            tr.append("<td  class='PickupNumber' hidden>" + data[i].PickupNumber + "</td>");
+                            tr.append("<td  class='Comments' hidden>" + data[i].Comments + "</td>");
+                            tr.append("<td class='ShipperId' hidden>" + data[i].ShipperId + "</td>");
+                            tr.append("<td class='Longitude' hidden>" + data[i].Longitude + "</td>");
+                            tr.append("<td class='Latitude' hidden>" + data[i].Latitude + "</td>");
 
 
 
-                for (var i = 0; i < data.length; i++) {
+                            tr.append("<td><input type='button'  value='✎' style='background - color: #7c0710; color: white; padding: 0px 7px;' class='btn EditPickup'></td>");
+                            tr.append("<td><input type='button' onclick='RemovePickup(" + data[i].PickUpId + ")' value='x' style='background-color:Red !important; color: white; padding: 0px 7px;' class='btn'></td>");
+                            tr.append("<td><i id='btnCopyPickup' style='cursor: pointer; font-size: 22px; color: darkgoldenrod' class='fa fa-copy CopyPickup'></i></td>");
+
+                            $('#txtpickuporder').val(data[i].Pickuporder + 1);
+                            $('#tblPickup').append(tr);
+                        }
+                        else if (data[i].LoadType == 'D') {
+                            Deliverycount = 1;
+                            var DeliveryOrder = inWords(data[i].Deliveryporder);
+                            var datevalue = new Date(parseInt(data[i].DateTimeFrom.replace("/Date(", "").replace(")/", ""), 10));
+                            var todayDate = new Date(datevalue);
+                            var format = "AM";
+                            var hour = todayDate.getHours();
+                            var min = todayDate.getMinutes();
+                            if (hour > 11) { format = "PM"; }
+                            if (hour > 12) { hour = hour - 12; }
+                            if (hour == 0) { hour = 12; }
+                            if (min < 10) { min = "0" + min; }
+                            var Month = todayDate.getMonth() + 1;
+
+                            //var DateFrom = Month + "/" + todayDate.getDate() + "/" + todayDate.getFullYear() + " " + hour + ":" + min + " " + format;
 
 
-                    if (data[i].MaxPickupId == data[i].PickUpId) {
+                            var DateFrom = todayDate.getDate() + "/" + Month + "/" + todayDate.getFullYear() + " " + hour + ":" + min + " " + format;
 
-                        document.getElementById('DeliveryPickUpInfo').innerHTML = "( Current Pickup : " + data[i].ShipperName + " , " + data[i].Address + " , " + data[i].StateCode + " )";
-                    }
+                            var datevalue = new Date(parseInt(data[i].DateTimeTo.replace("/Date(", "").replace(")/", ""), 10));
+                            var todayDate = new Date(datevalue);
+                            var format = "AM";
+                            var hour = todayDate.getHours();
+                            var min = todayDate.getMinutes();
+                            if (hour > 11) { format = "PM"; }
+                            if (hour > 12) { hour = hour - 12; }
+                            if (hour == 0) { hour = 12; }
+                            if (min < 10) { min = "0" + min; }
+                            var Month = todayDate.getMonth() + 1;
+                            var DateTo = Month + "/" + todayDate.getDate() + "/" + todayDate.getFullYear() + " " + hour + ":" + min + " " + format;
 
-                    if (data[i].LoadType == 'P') {
-                        Pickupcount = 1;
-                        var PickupOrder = inWords(data[i].Pickuporder);
-                        var datevalue = new Date(parseInt(data[i].DateTimeFrom.replace("/Date(", "").replace(")/", ""), 10));
-                        var todayDate = new Date(datevalue);
-                        var format = "AM";
-                        var hour = todayDate.getHours();
-                        var min = todayDate.getMinutes();
-                        if (hour > 11) { format = "PM"; }
-                        if (hour > 12) { hour = hour - 12; }
-                        if (hour == 0) { hour = 12; }
-                        if (min < 10) { min = "0" + min; }
-                        var Month = todayDate.getMonth() + 1;
-
-
-                        //var DateFrom = Month + "/" + todayDate.getDate() + "/" + todayDate.getFullYear() + " " + hour + ":" + min + " " + format;
-
-
-                        var DateFrom = todayDate.getDate() + "/" + Month + "/" + todayDate.getFullYear() + " " + hour + ":" + min + " " + format;
-
-                        var datevalue = new Date(parseInt(data[i].DateTimeTo.replace("/Date(", "").replace(")/", ""), 10));
-                        var todayDate = new Date(datevalue);
-                        var format = "AM";
-                        var hour = todayDate.getHours();
-                        var min = todayDate.getMinutes();
-                        if (hour > 11) { format = "PM"; }
-                        if (hour > 12) { hour = hour - 12; }
-                        if (hour == 0) { hour = 12; }
-                        if (min < 10) { min = "0" + min; }
-                        var Month = todayDate.getMonth() + 1;
-                        var DateTo = Month + "/" + todayDate.getDate() + "/" + todayDate.getFullYear() + " " + hour + ":" + min + " " + format;
-
-                        tr = $('<tr id="tblPickupBody" />');
-                        tr.append("<td hidden class='txtpickuporder'>" + data[i].Pickuporder + "</td>");
-                        tr.append("<td hidden class='PickUpId'>" + data[i].PickUpId + "</td>");
-                        tr.append("<td ><img class='selectPickup' src='" + img.src + "' /></td>");
-                        tr.append("<td>" + PickupOrder + " pick up , " + data[i].Information + ", " + DateFrom + "</td>");
-                        tr.append("<td class='ShipperName' hidden>" + data[i].ShipperName + "</td>");
-                        tr.append("<td hidden>" + data[i].CountryName + "</td>");
-                        tr.append("<td class='Address' hidden>" + data[i].Address + "</td>");
-                        tr.append("<td  class='Phone' hidden>" + data[i].PhoneNumber + "</td>");
-                        tr.append("<td class='ZipCode' hidden>" + data[i].ZipCode + "</td>");
-                        tr.append("<td class='StateCode' hidden>" + data[i].StateCode + "</td>");
-                        tr.append("<td  class='CityName' hidden>" + data[i].CityName + "</td>");
-                        tr.append("<td class='DateTimeFrom' hidden>" + data[i].NewDateFrom  + "</td>");
-                        tr.append("<td  class='DateTimeTo' hidden>" + data[i].NewDateTo + "</td>");
-                        tr.append("<td  class='Traitor' hidden>" + data[i].Traitor + "</td>");
-                        tr.append("<td  class='PickupNumber' hidden>" + data[i].PickupNumber + "</td>");
-                        tr.append("<td  class='Comments' hidden>" + data[i].Comments + "</td>");
-                        tr.append("<td class='ShipperId' hidden>" + data[i].ShipperId + "</td>");
-                        tr.append("<td class='Longitude' hidden>" + data[i].Longitude + "</td>");
-                        tr.append("<td class='Latitude' hidden>" + data[i].Latitude + "</td>");
-
-
-
-                        tr.append("<td><input type='button'  value='✎' style='background - color: #7c0710; color: white; padding: 0px 7px;' class='btn EditPickup'></td>");
-                        tr.append("<td><input type='button' onclick='RemovePickup(" + data[i].PickUpId + ")' value='x' style='background-color:Red !important; color: white; padding: 0px 7px;' class='btn'></td>");
-                        tr.append("<td><i id='btnCopyPickup' style='cursor: pointer; font-size: 22px; color: darkgoldenrod' class='fa fa-copy CopyPickup'></i></td>");
-
-                        $('#txtpickuporder').val(data[i].Pickuporder + 1);
-                        $('#tblPickup').append(tr);
-                    }
-                    else if (data[i].LoadType == 'D') {
-                        Deliverycount = 1;
-                        var DeliveryOrder = inWords(data[i].Deliveryporder);
-                        var datevalue = new Date(parseInt(data[i].DateTimeFrom.replace("/Date(", "").replace(")/", ""), 10));
-                        var todayDate = new Date(datevalue);
-                        var format = "AM";
-                        var hour = todayDate.getHours();
-                        var min = todayDate.getMinutes();
-                        if (hour > 11) { format = "PM"; }
-                        if (hour > 12) { hour = hour - 12; }
-                        if (hour == 0) { hour = 12; }
-                        if (min < 10) { min = "0" + min; }
-                        var Month = todayDate.getMonth() + 1;
-
-                        //var DateFrom = Month + "/" + todayDate.getDate() + "/" + todayDate.getFullYear() + " " + hour + ":" + min + " " + format;
-
-
-                        var DateFrom = todayDate.getDate() + "/" + Month + "/" + todayDate.getFullYear() + " " + hour + ":" + min + " " + format;
-
-                        var datevalue = new Date(parseInt(data[i].DateTimeTo.replace("/Date(", "").replace(")/", ""), 10));
-                        var todayDate = new Date(datevalue);
-                        var format = "AM";
-                        var hour = todayDate.getHours();
-                        var min = todayDate.getMinutes();
-                        if (hour > 11) { format = "PM"; }
-                        if (hour > 12) { hour = hour - 12; }
-                        if (hour == 0) { hour = 12; }
-                        if (min < 10) { min = "0" + min; }
-                        var Month = todayDate.getMonth() + 1;
-                        var DateTo = Month + "/" + todayDate.getDate() + "/" + todayDate.getFullYear() + " " + hour + ":" + min + " " + format;
-
-                        $('#txtDeliveryId').val(data[i].MaxDeliveryID);
+                            $('#txtDeliveryId').val(data[i].MaxDeliveryID);
                         @*var someNumericValue = @(ViewBag.LastPickupId);*@
-                        //alert(someNumericValue);
+                            //alert(someNumericValue);
 
 
-                        var img = document.createElement('img');
-                        img.src = "/assets/img/Logistic-Truck_Delivery.png";
+                            var img = document.createElement('img');
+                            img.src = "/assets/img/Logistic-Truck_Delivery.png";
 
 
 
-                        tr = $('<tr id="tblDeliveryBody"/>');
-                        tr.append("<td hidden class='txtDeliveryorder'>" + data[i].Deliveryporder + "</td>");
-                        tr.append("<td class='DeliveryId' hidden>" + data[i].DeliveryId + "</td>");
-                        tr.append("<td class='DeliveryPickupId' hidden>" + data[i].PickUpId + "</td>");
+                            tr = $('<tr id="tblDeliveryBody"/>');
+                            tr.append("<td hidden class='txtDeliveryorder'>" + data[i].Deliveryporder + "</td>");
+                            tr.append("<td class='DeliveryId' hidden>" + data[i].DeliveryId + "</td>");
+                            tr.append("<td class='DeliveryPickupId' hidden>" + data[i].PickUpId + "</td>");
 
-                        tr.append("<td><img class='selectDelivery' src='" + img.src + "' /></td>");
-                        tr.append("<td>" + DeliveryOrder + " stop,  " + data[i].Information + ", " + DateFrom + "</td>");
-                        tr.append("<td class='ShipperName' hidden>" + data[i].ShipperName + "</td>");
-                        tr.append("<td hidden>" + data[i].CountryName + "</td>");
-                        tr.append("<td class='Address' hidden>" + data[i].Address + "</td>");
-                        tr.append("<td class='Phone' hidden>" + data[i].PhoneNumber + "</td>");
-                        tr.append("<td class='ZipCode' hidden>" + data[i].ZipCode + "</td>");
-                        tr.append("<td class='StateCode' hidden>" + data[i].StateCode + "</td>");
-                        tr.append("<td class='CityName' hidden>" + data[i].CityName + "</td>");
-                        tr.append("<td class='DateTimeFrom' hidden>" + data[i].NewDateFrom  + "</td>");
-                        tr.append("<td class='DateTimeTo' hidden>" + data[i].NewDateTo + "</td>");
-                        tr.append("<td  class='Traitor' hidden>" + data[i].Traitor + "</td>");
-                        tr.append("<td class='PickupNumber' hidden>" + data[i].PickupNumber + "</td>");
-                        tr.append("<td class='Comments' hidden>" + data[i].Comments + "</td>");
-                        tr.append("<td class='ShipperId' hidden>" + data[i].ShipperId + "</td>");
-                        tr.append("<td class='Longitude' hidden>" + data[i].Longitude + "</td>");
-                        tr.append("<td class='Latitude' hidden>" + data[i].Latitude + "</td>");
-                        tr.append("<td><input type='button'  value='✎' style='background - color: #7c0710; color: white; padding: 0px 7px;' class='btn EditDelivery'></td>");
-                        tr.append("<td><input type='button' onclick='RemoveDelivery(" + data[i].DeliveryId + ")' value='x' style='background-color:Red !important; color: white; padding: 0px 7px;' class='btn'></td>");
-                        tr.append("<td><i id='btnCopyDelivery'  style='cursor: pointer; font-size: 22px; color: darkgoldenrod' class='fa fa-copy CopyDelivery'></i></td>");
+                            tr.append("<td><img class='selectDelivery' src='" + img.src + "' /></td>");
+                            tr.append("<td>" + DeliveryOrder + " stop,  " + data[i].Information + ", " + DateFrom + "</td>");
+                            tr.append("<td class='ShipperName' hidden>" + data[i].ShipperName + "</td>");
+                            tr.append("<td hidden>" + data[i].CountryName + "</td>");
+                            tr.append("<td class='Address' hidden>" + data[i].Address + "</td>");
+                            tr.append("<td class='Phone' hidden>" + data[i].PhoneNumber + "</td>");
+                            tr.append("<td class='ZipCode' hidden>" + data[i].ZipCode + "</td>");
+                            tr.append("<td class='StateCode' hidden>" + data[i].StateCode + "</td>");
+                            tr.append("<td class='CityName' hidden>" + data[i].CityName + "</td>");
+                            tr.append("<td class='DateTimeFrom' hidden>" + data[i].NewDateFrom + "</td>");
+                            tr.append("<td class='DateTimeTo' hidden>" + data[i].NewDateTo + "</td>");
+                            tr.append("<td  class='Traitor' hidden>" + data[i].Traitor + "</td>");
+                            tr.append("<td class='PickupNumber' hidden>" + data[i].PickupNumber + "</td>");
+                            tr.append("<td class='Comments' hidden>" + data[i].Comments + "</td>");
+                            tr.append("<td class='ShipperId' hidden>" + data[i].ShipperId + "</td>");
+                            tr.append("<td class='Longitude' hidden>" + data[i].Longitude + "</td>");
+                            tr.append("<td class='Latitude' hidden>" + data[i].Latitude + "</td>");
+                            tr.append("<td><input type='button'  value='✎' style='background - color: #7c0710; color: white; padding: 0px 7px;' class='btn EditDelivery'></td>");
+                            tr.append("<td><input type='button' onclick='RemoveDelivery(" + data[i].DeliveryId + ")' value='x' style='background-color:Red !important; color: white; padding: 0px 7px;' class='btn'></td>");
+                            tr.append("<td><i id='btnCopyDelivery'  style='cursor: pointer; font-size: 22px; color: darkgoldenrod' class='fa fa-copy CopyDelivery'></i></td>");
 
-                        $('#txtDeliveryporder').val(data[i].Deliveryporder + 1);
+                            $('#txtDeliveryporder').val(data[i].Deliveryporder + 1);
 
-                        $('#tblDelivery').append(tr);
+                            $('#tblDelivery').append(tr);
 
+
+
+                        }
 
 
                     }
 
 
+                    if (parseInt(Pickupcount) == 0) {
+                        $('#txtpickuporder').val(1);
+                    }
+                    if (parseInt(Deliverycount) == 0) {
+                        $('#txtDeliveryporder').val(1);
+                    }
+
+
+
+
                 }
-
-
-                if (parseInt(Pickupcount) == 0) {
-                    $('#txtpickuporder').val(1);
-                }
-                if (parseInt(Deliverycount) == 0) {
-                    $('#txtDeliveryporder').val(1);
-                }
-
-
-
-
-            }
-        });
+            });
+        }
     }
     //Function to get State and city against Zip Code
     function GetLocation(type) {
@@ -3242,10 +3252,16 @@ $("#tblPickup").sortable({
                 }
             },
             failure: function (response) {
-                alert("No Data");
+                //alert("No Data");
+                $("#AjaxError").text(response.responseText + "!");
+                $("#AjaxError").fadeIn();
+                $("#AjaxError").fadeOut(10000);
             },
             error: function (response) {
                 //alert(response.responseText);
+                $("#AjaxError").text(response.responseText + "!");
+                $("#AjaxError").fadeIn();
+                $("#AjaxError").fadeOut(10000);
             }
         });
     }
@@ -3381,10 +3397,16 @@ $("#tblPickup").sortable({
                 }
             },
             failure: function (response) {
-                alert("No Data");
+                //alert("No Data");
+                $("#AjaxError").text(response.responseText + "!");
+                $("#AjaxError").fadeIn();
+                $("#AjaxError").fadeOut(10000);
             },
             error: function (response) {
                 //alert(response.responseText);
+                $("#AjaxError").text(response.responseText + "!");
+                $("#AjaxError").fadeIn();
+                $("#AjaxError").fadeOut(10000);
             }
         });
     }
@@ -3659,7 +3681,10 @@ $("#tblPickup").sortable({
                 location.reload();
             },
             error: function (err) {
-                alert(err.statusText);
+                //alert(err.statusText);
+                $("#AjaxError").text(err.responseText + "!");
+                $("#AjaxError").fadeIn();
+                $("#AjaxError").fadeOut(10000);
             }
         });
     }
@@ -3711,7 +3736,10 @@ $("#tblPickup").sortable({
                 },
                 error: function (err) {
                     document.getElementById("documentgif").style.display = "none";
-                    alert(err.statusText);
+                    //alert(err.statusText);
+                    $("#AjaxError").text(err.responseText + "!");
+                    $("#AjaxError").fadeIn();
+                    $("#AjaxError").fadeOut(10000);
                 }
             });
         } else {
@@ -3744,7 +3772,10 @@ $("#tblPickup").sortable({
                 }
             },
             error: function (err) {
-                alert(err.statusText);
+                //alert(err.statusText);
+                $("#AjaxError").text(err.responseText + "!");
+                $("#AjaxError").fadeIn();
+                $("#AjaxError").fadeOut(10000);
             }
         });
     }
@@ -5235,7 +5266,12 @@ $("#tblPickup").sortable({
                         ($('<option></option>').val(0).html("Select City"));
                     $.each($.parseJSON(result), function (i, city) { $("#CitysId").append($('<option></option>').val(city.Value).html(city.Text)) })
                 },
-                error: function () { alert("Whooaaa! Something went wrong..") },
+                error: function (response) {
+                    //alert("Whooaaa! Something went wrong..")
+                    $("#AjaxError").text(response.responseText + "!");
+                    $("#AjaxError").fadeIn();
+                    $("#AjaxError").fadeOut(10000);
+                },
             });
         }
 
@@ -5258,7 +5294,12 @@ $("#tblPickup").sortable({
                         ($('<option></option>').val(null).html("Select City"));
                     $.each($.parseJSON(result), function (i, city) { $("#CitysId").append($('<option></option>').val(city.Value).html(city.Text)) })
                 },
-                error: function () { alert("Whooaaa! Something went wrong..") },
+                error: function (response) {
+                    //alert("Whooaaa! Something went wrong..")
+                    $("#AjaxError").text(response.responseText + "!");
+                    $("#AjaxError").fadeIn();
+                    $("#AjaxError").fadeOut(10000);
+                },
             });
         }
 
@@ -5424,121 +5465,139 @@ $("#tblPickup").sortable({
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             success: function (data) {
-                $('#txtPickupId').val(data[0].MaxPickupId);
-                //Set Deliver Pickup Label
-                $("#tblPickup #tblPickupBody").remove();
+                if (data.length != 0) {
+                    $('#txtPickupId').val(data[0].MaxPickupId);
+                    //Set Deliver Pickup Label
+                    $("#tblPickup #tblPickupBody").remove();
 
-            var img = document.createElement('img');
-            img.src = "/assets/img/Logistic-Truck_Pickup.png";
+                    var img = document.createElement('img');
+                    img.src = "/assets/img/Logistic-Truck_Pickup.png";
 
-                //var dt = new Date(data[0].DateTimeFrom.year, data[0].DateTimeFrom.month, data[0].DateTimeFrom.day,
-                //    data[0].DateTimeFrom.hours, data[0].DateTimeFrom.minutes, data[0].DateTimeFrom.seconds, data[0].DateTimeFrom.milliSeonds);
-                //alert(dt.toDateString());
+                    //var dt = new Date(data[0].DateTimeFrom.year, data[0].DateTimeFrom.month, data[0].DateTimeFrom.day,
+                    //    data[0].DateTimeFrom.hours, data[0].DateTimeFrom.minutes, data[0].DateTimeFrom.seconds, data[0].DateTimeFrom.milliSeonds);
+                    //alert(dt.toDateString());
 
-                //var json = JSON.stringify(data[0].DateTimeFrom);
-                //alert(json);
-                //return;
-
-
-
+                    //var json = JSON.stringify(data[0].DateTimeFrom);
+                    //alert(json);
+                    //return;
 
 
-                for (var i = 0; i < data.length; i++) {
 
 
-                    if (data[i].MaxPickupId == data[i].PickUpId) {
 
-                        document.getElementById('DeliveryPickUpInfo').innerHTML = "( Current Pickup :" + data[i].ShipperName + data[i].Address + data[i].StateCode + " )";
+                    for (var i = 0; i < data.length; i++) {
+
+
+                        if (data[i].MaxPickupId == data[i].PickUpId) {
+
+                            document.getElementById('DeliveryPickUpInfo').innerHTML = "( Current Pickup :" + data[i].ShipperName + data[i].Address + data[i].StateCode + " )";
+                        }
+
+                        var datevalue = new Date(parseInt(data[i].DateTimeFrom.replace("/Date(", "").replace(")/", ""), 10));
+                        var todayDate = new Date(datevalue);
+                        var format = "AM";
+                        var hour = todayDate.getHours();
+                        var min = todayDate.getMinutes();
+                        if (hour > 11) { format = "PM"; }
+                        if (hour > 12) { hour = hour - 12; }
+                        if (hour == 0) { hour = 12; }
+                        if (min < 10) { min = "0" + min; }
+                        var Month = todayDate.getMonth() + 1;
+
+                        var PickupOrder = inWords(data[i].Pickuporder);
+
+                        //var DateFrom = Month + "/" + todayDate.getDate() + "/" + todayDate.getFullYear() + " " + hour + ":" + min + " " + format;
+
+
+                        var DateFrom = todayDate.getDate() + "/" + Month + "/" + todayDate.getFullYear() + " " + hour + ":" + min + " " + format;
+
+                        var datevalue = new Date(parseInt(data[i].DateTimeTo.replace("/Date(", "").replace(")/", ""), 10));
+                        var todayDate = new Date(datevalue);
+                        var format = "AM";
+                        var hour = todayDate.getHours();
+                        var min = todayDate.getMinutes();
+                        if (hour > 11) { format = "PM"; }
+                        if (hour > 12) { hour = hour - 12; }
+                        if (hour == 0) { hour = 12; }
+                        if (min < 10) { min = "0" + min; }
+                        var Month = todayDate.getMonth() + 1;
+                        var DateTo = Month + "/" + todayDate.getDate() + "/" + todayDate.getFullYear() + " " + hour + ":" + min + " " + format;
+
+                        tr = $('<tr id="tblPickupBody"/>');
+                        tr.append("<td hidden class='txtpickuporder'>" + data[i].Pickuporder + "</td>");
+                        tr.append("<td hidden class='PickUpId'>" + data[i].PickUpId + "</td>");
+                        tr.append("<td ><img class='selectPickup' src='" + img.src + "' /></td>");
+                        tr.append("<td>" + PickupOrder + " pick up , " + data[i].Information + ", " + DateFrom + "</td>");
+                        tr.append("<td class='ShipperName' hidden>" + data[i].ShipperName + "</td>");
+                        tr.append("<td hidden>" + data[i].CountryName + "</td>");
+                        tr.append("<td class='Address' hidden>" + data[i].Address + "</td>");
+                        tr.append("<td  class='Phone' hidden>" + data[i].PhoneNumber + "</td>");
+                        tr.append("<td class='ZipCode' hidden>" + data[i].ZipCode + "</td>");
+                        tr.append("<td class='StateCode' hidden>" + data[i].StateCode + "</td>");
+                        tr.append("<td  class='CityName' hidden>" + data[i].CityName + "</td>");
+                        tr.append("<td class='DateTimeFrom' hidden>" + data[i].NewDateFrom + "</td>");
+                        tr.append("<td  class='DateTimeTo' hidden>" + data[i].NewDateTo + "</td>");
+                        tr.append("<td  class='Traitor' hidden>" + data[i].Traitor + "</td>");
+                        tr.append("<td  class='PickupNumber' hidden>" + data[i].PickupNumber + "</td>");
+                        tr.append("<td  class='Comments' hidden>" + data[i].Comments + "</td>");
+                        tr.append("<td class='ShipperId' hidden>" + data[i].ShipperId + "</td>");
+                        tr.append("<td class='Longitude' hidden>" + data[i].Longitude + "</td>");
+                        tr.append("<td class='Latitude' hidden>" + data[i].Latitude + "</td>");
+
+                        //tr.append("<td hidden>" + data[i].PickUpId + "</td>");
+                        //tr.append("<td><img src='" + img.src + "' /></td>");
+                        //tr.append("<td>" + data[i].Information + "</td>");
+                        //tr.append("<td class='ShipperName' hidden>" + data[i].ShipperName + "</td>");
+                        //tr.append("<td hidden>" + data[i].CountryName + "</td>");
+                        //tr.append("<td hidden>" + data[i].Address + "</td>");
+                        //tr.append("<td hidden>" + data[i].Phone + "</td>");
+                        //tr.append("<td hidden>" + data[i].ZipCode + "</td>");
+                        //tr.append("<td hidden>" + data[i].StateCode + "</td>");
+                        //tr.append("<td hidden>" + data[i].CityName + "</td>");
+                        //tr.append("<td hidden>" + data[i].DateTimeFrom + "</td>");
+                        //tr.append("<td hidden>" + data[i].DateTimeTo + "</td>");
+                        //tr.append("<td hidden>" + data[i].Traitor + "</td>");
+                        //tr.append("<td hidden>" + data[i].PickupNumber + "</td>");
+                        //tr.append("<td hidden>" + data[i].Comments + "</td>");
+                        //tr.append("<td hidden>" + data[i].ShipperId + "</td>");
+                        tr.append("<td><input type='button'  value='✎' style='background - color: #7c0710; color: white; padding: 0px 7px;' class='btn EditPickup'></td>");
+                        tr.append("<td><input type='button' onclick='RemovePickup(" + data[i].PickUpId + ")' value='x' style='background-color:Red !important; color: white; padding: 0px 7px;' class='btn'></td>");
+                        tr.append("<td><i id='btnCopyPickup' style='cursor: pointer; font-size: 22px; color: darkgoldenrod' class='fa fa-copy CopyPickup'></i></td>");
+                        $('#txtpickuporder').val(data[i].Pickuporder + 1);
+                        $('#tblPickup').append(tr);
                     }
 
-                    var datevalue = new Date(parseInt(data[i].DateTimeFrom.replace("/Date(", "").replace(")/", ""), 10));
-                    var todayDate = new Date(datevalue);
-                    var format = "AM";
-                    var hour = todayDate.getHours();
-                    var min = todayDate.getMinutes();
-                    if (hour > 11) { format = "PM"; }
-                    if (hour > 12) { hour = hour - 12; }
-                    if (hour == 0) { hour = 12; }
-                    if (min < 10) { min = "0" + min; }
-                    var Month = todayDate.getMonth() + 1;
-
-                    var PickupOrder = inWords(data[i].Pickuporder);
-
-                    //var DateFrom = Month + "/" + todayDate.getDate() + "/" + todayDate.getFullYear() + " " + hour + ":" + min + " " + format;
-
-
-                    var DateFrom = todayDate.getDate() + "/" + Month + "/" + todayDate.getFullYear() + " " + hour + ":" + min + " " + format;
-
-                    var datevalue = new Date(parseInt(data[i].DateTimeTo.replace("/Date(", "").replace(")/", ""), 10));
-                    var todayDate = new Date(datevalue);
-                    var format = "AM";
-                    var hour = todayDate.getHours();
-                    var min = todayDate.getMinutes();
-                    if (hour > 11) { format = "PM"; }
-                    if (hour > 12) { hour = hour - 12; }
-                    if (hour == 0) { hour = 12; }
-                    if (min < 10) { min = "0" + min; }
-                    var Month = todayDate.getMonth() + 1;
-                    var DateTo =  Month + "/"+ todayDate.getDate() + "/" + todayDate.getFullYear() + " " + hour + ":" + min + " " + format;
-
-                    tr = $('<tr id="tblPickupBody"/>');
-                    tr.append("<td hidden class='txtpickuporder'>" + data[i].Pickuporder + "</td>");
-                    tr.append("<td hidden class='PickUpId'>" + data[i].PickUpId + "</td>");
-                    tr.append("<td ><img class='selectPickup' src='" + img.src + "' /></td>");
-                    tr.append("<td>" + PickupOrder + " pick up , " + data[i].Information + ", " + DateFrom + "</td>");
-                    tr.append("<td class='ShipperName' hidden>" + data[i].ShipperName + "</td>");
-                    tr.append("<td hidden>" + data[i].CountryName + "</td>");
-                    tr.append("<td class='Address' hidden>" + data[i].Address + "</td>");
-                    tr.append("<td  class='Phone' hidden>" + data[i].PhoneNumber + "</td>");
-                    tr.append("<td class='ZipCode' hidden>" + data[i].ZipCode + "</td>");
-                    tr.append("<td class='StateCode' hidden>" + data[i].StateCode + "</td>");
-                    tr.append("<td  class='CityName' hidden>" + data[i].CityName + "</td>");
-                    tr.append("<td class='DateTimeFrom' hidden>" + data[i].NewDateFrom  + "</td>");
-                    tr.append("<td  class='DateTimeTo' hidden>" + data[i].NewDateTo + "</td>");
-                    tr.append("<td  class='Traitor' hidden>" + data[i].Traitor + "</td>");
-                    tr.append("<td  class='PickupNumber' hidden>" + data[i].PickupNumber + "</td>");
-                    tr.append("<td  class='Comments' hidden>" + data[i].Comments + "</td>");
-                    tr.append("<td class='ShipperId' hidden>" + data[i].ShipperId + "</td>");
-                    tr.append("<td class='Longitude' hidden>" + data[i].Longitude + "</td>");
-                    tr.append("<td class='Latitude' hidden>" + data[i].Latitude + "</td>");
-
-                    //tr.append("<td hidden>" + data[i].PickUpId + "</td>");
-                    //tr.append("<td><img src='" + img.src + "' /></td>");
-                    //tr.append("<td>" + data[i].Information + "</td>");
-                    //tr.append("<td class='ShipperName' hidden>" + data[i].ShipperName + "</td>");
-                    //tr.append("<td hidden>" + data[i].CountryName + "</td>");
-                    //tr.append("<td hidden>" + data[i].Address + "</td>");
-                    //tr.append("<td hidden>" + data[i].Phone + "</td>");
-                    //tr.append("<td hidden>" + data[i].ZipCode + "</td>");
-                    //tr.append("<td hidden>" + data[i].StateCode + "</td>");
-                    //tr.append("<td hidden>" + data[i].CityName + "</td>");
-                    //tr.append("<td hidden>" + data[i].DateTimeFrom + "</td>");
-                    //tr.append("<td hidden>" + data[i].DateTimeTo + "</td>");
-                    //tr.append("<td hidden>" + data[i].Traitor + "</td>");
-                    //tr.append("<td hidden>" + data[i].PickupNumber + "</td>");
-                    //tr.append("<td hidden>" + data[i].Comments + "</td>");
-                    //tr.append("<td hidden>" + data[i].ShipperId + "</td>");
-                    tr.append("<td><input type='button'  value='✎' style='background - color: #7c0710; color: white; padding: 0px 7px;' class='btn EditPickup'></td>");
-                    tr.append("<td><input type='button' onclick='RemovePickup(" + data[i].PickUpId +")' value='x' style='background-color:Red !important; color: white; padding: 0px 7px;' class='btn'></td>");
-                    tr.append("<td><i id='btnCopyPickup' style='cursor: pointer; font-size: 22px; color: darkgoldenrod' class='fa fa-copy CopyPickup'></i></td>");
-                       $('#txtpickuporder').val(data[i].Pickuporder + 1);
-                    $('#tblPickup').append(tr);
+                    //IsSave 2 means Update
+                    if (data[0].IsSave == 2) {
+                        document.getElementById("btnAddPickup").disabled = false;
+                        document.getElementById("btnAddPickup").innerText = '+ Add Pickup';
+                        document.getElementById("btnAddDelivery").disabled = false;
+                    }
+                    //IsSave 1 means Insert
+                    else if (data[0].IsSave == 1) {
+                        document.getElementById("btnAddPickup").disabled = false;
+                        document.getElementById("btnAddDelivery").disabled = false;
+                    }
+                    ClearFields();
+                }
+                else {
+                    $("#AjaxError").text("Error in Zip Code!");
+                    $("#AjaxError").fadeIn();
+                    $("#AjaxError").fadeOut(10000);
                 }
 
-                //IsSave 2 means Update
-                if (data[0].IsSave == 2) {
-                    document.getElementById("btnAddPickup").disabled = false;
-                    document.getElementById("btnAddPickup").innerText = '+ Add Pickup';
-                    document.getElementById("btnAddDelivery").disabled = false;
-                }
-                //IsSave 1 means Insert
-                else if (data[0].IsSave == 1) {
-                    document.getElementById("btnAddPickup").disabled = false;
-                    document.getElementById("btnAddDelivery").disabled = false;
-                }
-                ClearFields();
-
-
+            },
+            failure: function (response) {
+                //alert(response.responseText);
+                $("#AjaxError").text(response.responseText + "!");
+                $("#AjaxError").fadeIn();
+                $("#AjaxError").fadeOut(10000);
+            },
+            error: function (response) {
+                //alert(response.responseText);
+                $("#AjaxError").text(response.responseText + "!");
+                $("#AjaxError").fadeIn();
+                $("#AjaxError").fadeOut(10000);
             }
         });
     });
@@ -6182,17 +6241,15 @@ var model = {
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             success: function (data) {
-
-                $('#txtDeliveryId').val(data[0].MaxDeliveryID);
+                if (data.length != 0) {
+                    $('#txtDeliveryId').val(data[0].MaxDeliveryID);
 
                 @*var someNumericValue = @(ViewBag.LastPickupId);*@
-                //alert(someNumericValue);
-                $("#tblDelivery #tblDeliveryBody").remove();
+                    //alert(someNumericValue);
+                    $("#tblDelivery #tblDeliveryBody").remove();
 
-                var img = document.createElement('img');
-                img.src = "/assets/img/Logistic-Truck_Delivery.png";
-
-
+                    var img = document.createElement('img');
+                    img.src = "/assets/img/Logistic-Truck_Delivery.png";
 
 
 
@@ -6200,83 +6257,104 @@ var model = {
 
 
 
-                //$('#txtPickupId').val("111");
-
-                for (var i = 0; i < data.length; i++) {
-
-                    var DeliveryOrder = inWords(data[i].Deliveryorder);
-                    var datevalue = new Date(parseInt(data[i].DateTimeFrom.replace("/Date(", "").replace(")/", ""), 10));
-                    var todayDate = new Date(datevalue);
-                    var format = "AM";
-                    var hour = todayDate.getHours();
-                    var min = todayDate.getMinutes();
-                    if (hour > 11) { format = "PM"; }
-                    if (hour > 12) { hour = hour - 12; }
-                    if (hour == 0) { hour = 12; }
-                    if (min < 10) { min = "0" + min; }
-                    var Month = todayDate.getMonth() + 1;
-                 //   var DateFrom = Month + "/" + todayDate.getDate() + "/" + todayDate.getFullYear() + " " + hour + ":" + min + " " + format;
 
 
-                    var DateFrom = todayDate.getDate() + "/" + Month + "/" + todayDate.getFullYear() + " " + hour + ":" + min + " " + format;
+                    //$('#txtPickupId').val("111");
 
-                    var datevalue = new Date(parseInt(data[i].DateTimeTo.replace("/Date(", "").replace(")/", ""), 10));
-                    var todayDate = new Date(datevalue);
-                    var format = "AM";
-                    var hour = todayDate.getHours();
-                    var min = todayDate.getMinutes();
-                    if (hour > 11) { format = "PM"; }
-                    if (hour > 12) { hour = hour - 12; }
-                    if (hour == 0) { hour = 12; }
-                    if (min < 10) { min = "0" + min; }
-                    var Month = todayDate.getMonth() + 1;
-                    var DateTo = Month + "/" + todayDate.getDate() + "/" + todayDate.getFullYear() + " " + hour + ":" + min + " " + format;
+                    for (var i = 0; i < data.length; i++) {
+
+                        var DeliveryOrder = inWords(data[i].Deliveryorder);
+                        var datevalue = new Date(parseInt(data[i].DateTimeFrom.replace("/Date(", "").replace(")/", ""), 10));
+                        var todayDate = new Date(datevalue);
+                        var format = "AM";
+                        var hour = todayDate.getHours();
+                        var min = todayDate.getMinutes();
+                        if (hour > 11) { format = "PM"; }
+                        if (hour > 12) { hour = hour - 12; }
+                        if (hour == 0) { hour = 12; }
+                        if (min < 10) { min = "0" + min; }
+                        var Month = todayDate.getMonth() + 1;
+                        //   var DateFrom = Month + "/" + todayDate.getDate() + "/" + todayDate.getFullYear() + " " + hour + ":" + min + " " + format;
 
 
-                    tr = $('<tr id="tblDeliveryBody"/>');
-                    tr.append("<td hidden class='txtDeliveryorder'>" + data[i].Deliveryorder + "</td>");
-                    tr.append("<td class='DeliveryId' hidden>" + data[i].DeliveryId + "</td>");
-                    tr.append("<td class='DeliveryPickupId' hidden>" + data[i].PickUpId + "</td>");
+                        var DateFrom = todayDate.getDate() + "/" + Month + "/" + todayDate.getFullYear() + " " + hour + ":" + min + " " + format;
 
-                    tr.append("<td><img class='selectDelivery' src='" + img.src + "' /></td>");
-                    tr.append("<td>" + DeliveryOrder + " stop , " + data[i].Information + ", " + DateFrom + "</td>");
-                    tr.append("<td class='ShipperName' hidden>" + data[i].ShipperName + "</td>");
-                    tr.append("<td hidden>" + data[i].CountryName + "</td>");
-                    tr.append("<td class='Address' hidden>" + data[i].Address + "</td>");
-                    tr.append("<td class='Phone' hidden>" + data[i].PhoneNumber + "</td>");
-                    tr.append("<td class='ZipCode' hidden>" + data[i].ZipCode + "</td>");
-                    tr.append("<td class='StateCode' hidden>" + data[i].StateCode + "</td>");
-                    tr.append("<td class='CityName' hidden>" + data[i].CityName + "</td>");
-                    tr.append("<td class='DateTimeFrom' hidden>" + data[i].NewDateFrom  + "</td>");
-                    tr.append("<td class='DateTimeTo' hidden>" + data[i].NewDateTo + "</td>");
-                    tr.append("<td  class='Traitor' hidden>" + data[i].Traitor + "</td>");
-                    tr.append("<td class='PickupNumber' hidden>" + data[i].PickupNumber + "</td>");
-                    tr.append("<td class='Comments' hidden>" + data[i].Comments + "</td>");
-                    tr.append("<td class='ShipperId' hidden>" + data[i].ShipperId + "</td>");
-                    tr.append("<td class='Longitude' hidden>" + data[i].Longitude + "</td>");
-                    tr.append("<td class='Latitude' hidden>" + data[i].Latitude + "</td>");
-                    tr.append("<td><input type='button'  value='✎' style='background - color: #7c0710; color: white; padding: 0px 7px;' class='btn EditDelivery'></td>");
-                    tr.append("<td><input type='button' onclick='RemoveDelivery(" + data[i].DeliveryId + ")' value='x' style='background-color:Red !important; color: white; padding: 0px 7px;' class='btn'></td>");
-                    tr.append("<td><i id='btnCopyDelivery'  style='cursor: pointer; font-size: 22px; color: darkgoldenrod' class='fa fa-copy CopyDelivery'></i></td>");
-                    $('#txtDeliveryporder').val(data[i].Deliveryorder + 1);
-                    $('#tblDelivery').append(tr);
+                        var datevalue = new Date(parseInt(data[i].DateTimeTo.replace("/Date(", "").replace(")/", ""), 10));
+                        var todayDate = new Date(datevalue);
+                        var format = "AM";
+                        var hour = todayDate.getHours();
+                        var min = todayDate.getMinutes();
+                        if (hour > 11) { format = "PM"; }
+                        if (hour > 12) { hour = hour - 12; }
+                        if (hour == 0) { hour = 12; }
+                        if (min < 10) { min = "0" + min; }
+                        var Month = todayDate.getMonth() + 1;
+                        var DateTo = Month + "/" + todayDate.getDate() + "/" + todayDate.getFullYear() + " " + hour + ":" + min + " " + format;
+
+
+                        tr = $('<tr id="tblDeliveryBody"/>');
+                        tr.append("<td hidden class='txtDeliveryorder'>" + data[i].Deliveryorder + "</td>");
+                        tr.append("<td class='DeliveryId' hidden>" + data[i].DeliveryId + "</td>");
+                        tr.append("<td class='DeliveryPickupId' hidden>" + data[i].PickUpId + "</td>");
+
+                        tr.append("<td><img class='selectDelivery' src='" + img.src + "' /></td>");
+                        tr.append("<td>" + DeliveryOrder + " stop , " + data[i].Information + ", " + DateFrom + "</td>");
+                        tr.append("<td class='ShipperName' hidden>" + data[i].ShipperName + "</td>");
+                        tr.append("<td hidden>" + data[i].CountryName + "</td>");
+                        tr.append("<td class='Address' hidden>" + data[i].Address + "</td>");
+                        tr.append("<td class='Phone' hidden>" + data[i].PhoneNumber + "</td>");
+                        tr.append("<td class='ZipCode' hidden>" + data[i].ZipCode + "</td>");
+                        tr.append("<td class='StateCode' hidden>" + data[i].StateCode + "</td>");
+                        tr.append("<td class='CityName' hidden>" + data[i].CityName + "</td>");
+                        tr.append("<td class='DateTimeFrom' hidden>" + data[i].NewDateFrom + "</td>");
+                        tr.append("<td class='DateTimeTo' hidden>" + data[i].NewDateTo + "</td>");
+                        tr.append("<td  class='Traitor' hidden>" + data[i].Traitor + "</td>");
+                        tr.append("<td class='PickupNumber' hidden>" + data[i].PickupNumber + "</td>");
+                        tr.append("<td class='Comments' hidden>" + data[i].Comments + "</td>");
+                        tr.append("<td class='ShipperId' hidden>" + data[i].ShipperId + "</td>");
+                        tr.append("<td class='Longitude' hidden>" + data[i].Longitude + "</td>");
+                        tr.append("<td class='Latitude' hidden>" + data[i].Latitude + "</td>");
+                        tr.append("<td><input type='button'  value='✎' style='background - color: #7c0710; color: white; padding: 0px 7px;' class='btn EditDelivery'></td>");
+                        tr.append("<td><input type='button' onclick='RemoveDelivery(" + data[i].DeliveryId + ")' value='x' style='background-color:Red !important; color: white; padding: 0px 7px;' class='btn'></td>");
+                        tr.append("<td><i id='btnCopyDelivery'  style='cursor: pointer; font-size: 22px; color: darkgoldenrod' class='fa fa-copy CopyDelivery'></i></td>");
+                        $('#txtDeliveryporder').val(data[i].Deliveryorder + 1);
+                        $('#tblDelivery').append(tr);
+                    }
+
+                    // If Save 2 means Update
+                    if (data[0].IsSave == 2) {
+                        document.getElementById("btnAddPickup").disabled = false;
+                        document.getElementById("btnAddDelivery").innerText = '+ Add Delivery';
+                        document.getElementById("btnAddDelivery").disabled = false;
+                    }
+                    // If Save 1 means Insert
+                    else if (data[0].IsSave == 1) {
+                        document.getElementById("btnAddPickup").disabled = false;
+                        document.getElementById("btnAddDelivery").disabled = false;
+                    }
+
+
+                    ClearFields();
+                }
+                else {
+                    $("#AjaxError").text("Error in Zip Code!");
+                    $("#AjaxError").fadeIn();
+                    $("#AjaxError").fadeOut(10000);
                 }
 
-                // If Save 2 means Update
-                if (data[0].IsSave == 2) {
-                    document.getElementById("btnAddPickup").disabled = false;
-                    document.getElementById("btnAddDelivery").innerText = '+ Add Delivery';
-                    document.getElementById("btnAddDelivery").disabled = false;
-                }
-                // If Save 1 means Insert
-                else if (data[0].IsSave == 1) {
-                    document.getElementById("btnAddPickup").disabled = false;
-                    document.getElementById("btnAddDelivery").disabled = false;
-                }
 
-
-                ClearFields();
-
+            },
+            failure: function (response) {
+                //alert(response.responseText);
+                $("#AjaxError").text(response.responseText + "!");
+                $("#AjaxError").fadeIn();
+                $("#AjaxError").fadeOut(10000);
+            },
+            error: function (response) {
+                //alert(response.responseText);
+                $("#AjaxError").text(response.responseText + "!");
+                $("#AjaxError").fadeIn();
+                $("#AjaxError").fadeOut(10000);
             }
         });
     });
@@ -7152,10 +7230,16 @@ var model = {
                 }
             },
             failure: function (response) {
-                alert("No Data");
+                //alert("No Data");
+                $("#AjaxError").text(response.responseText + "!");
+                $("#AjaxError").fadeIn();
+                $("#AjaxError").fadeOut(10000);
             },
             error: function (response) {
                 //alert(response.responseText);
+                $("#AjaxError").text(response.responseText + "!");
+                $("#AjaxError").fadeIn();
+                $("#AjaxError").fadeOut(10000);
             }
         });
     }
@@ -7189,10 +7273,16 @@ var model = {
                 }
             },
             failure: function (response) {
-                alert("No Data");
+                //alert("No Data");
+                $("#AjaxError").text(response.responseText + "!");
+                $("#AjaxError").fadeIn();
+                $("#AjaxError").fadeOut(10000);
             },
             error: function (response) {
-                alert(response.responseText);
+                //alert(response.responseText);
+                $("#AjaxError").text(response.responseText + "!");
+                $("#AjaxError").fadeIn();
+                $("#AjaxError").fadeOut(10000);
             }
         });
     }

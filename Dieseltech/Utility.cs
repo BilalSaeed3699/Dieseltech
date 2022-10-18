@@ -49,7 +49,7 @@ namespace Dieseltech
 
 
 
-            string qry = "SELECT        ZipCode, CityName, StateCode FROM            tblStateCityData where CityName like '%'+@prefix+'%'  ";
+            string qry = "SELECT top 5  ZipCode, CityName, StateCode FROM            tblStateCityData where CityName like '%'+@prefix+'%'  ";
             qry += " or StateCode like '%'+@prefix+'%' or  ZipCode like '%'+@prefix+'%' ";
 
 

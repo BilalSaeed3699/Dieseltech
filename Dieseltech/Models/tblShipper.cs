@@ -21,7 +21,7 @@ namespace Dieseltech.Models
         public string ShipperCity { get; set; }
         public string ShipperStateCode { get; set; }
         public string ShipperStateName { get; set; }
-        public Nullable<int> ShipperZipCode { get; set; }
+        public string ShipperZipCode { get; set; }
         public string ShipperAssignId { get; set; }
         public string Longitude { get; set; }
         public string Latitude { get; set; }

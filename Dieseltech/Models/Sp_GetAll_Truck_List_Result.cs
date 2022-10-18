@@ -29,14 +29,14 @@ namespace Dieseltech.Models
         public string CityName { get; set; }
         public string StateCode { get; set; }
         public string StateName { get; set; }
-        public int ZipCode { get; set; }
+        public string ZipCode { get; set; }
         public string AvailableDate { get; set; }
         public string Eq { get; set; }
         public string DriverName { get; set; }
         public string LoadSubType { get; set; }
         public string Team { get; set; }
         public int DriverId { get; set; }
-        public Nullable<int> Rating { get; set; }
+        public int Rating { get; set; }
         public string prefferedDestination { get; set; }
     }
 }
