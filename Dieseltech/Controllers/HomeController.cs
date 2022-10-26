@@ -23,6 +23,7 @@ namespace Dieseltech.Controllers
         {
             try
             {
+                int z = 0;
                 if (Session["User_id"] == null)
                 {
                     return View("Index", "Account");
