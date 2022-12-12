@@ -880,7 +880,7 @@ namespace Dieseltech.Controllers
                 ViewBag.cwhere = cwhere;
 
                 //If Form is load first time 
-                if (Filter == null)
+                if (Filter == null || Filter == "")
                 {
                     Filter = "A";
                 }
@@ -1616,7 +1616,7 @@ namespace Dieseltech.Controllers
                 }
 
                 ViewBag.AccessLevel = AccessLevel;
-                if (Filter == null)
+                if (Filter == null || Filter == "")
                 {
                     Filter = "A";
                 }
@@ -3903,7 +3903,7 @@ namespace Dieseltech.Controllers
                 }
                 ViewBag.UserId = userid;
                 ViewBag.AgentList = deEntity.Sp_Get_Agents_List().ToList();
-                if (Filter == null)
+                if (Filter == null || Filter == "")
                 {
                     Filter = "A";
                 }
@@ -4968,6 +4968,52 @@ namespace Dieseltech.Controllers
 
             }
             return Json("1", JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult DailyPickUpAndDeliveries(int AgentId=0)
+        {
+
+            
+            try
+            {
+                HttpCookie cookieObj = Request.Cookies["_UserID"];
+                //int UserId = Int32.Parse(cookieObj["Value"]);
+                var UserId = Int32.Parse(Session["User_id"].ToString());
+                ViewBag.AgentList = deEntity.Sp_Get_Agents_List().ToList();
+                ViewBag.AccessLevel = UserId;
+                if (AgentId==0)
+                {
+                    ViewBag.UserId = UserId;
+                    if (UserId == 2)
+                    {
+                        ViewBag.Pickups = deEntity.tblLoadPickups.Where(x => x.CreatedDate.Year == DateTime.Now.Year && x.CreatedDate.Month == DateTime.Now.Month && x.CreatedDate.Day == DateTime.Now.Day).ToList();
+                        ViewBag.Deliveries = deEntity.tblLoadDeliveries.Where(x => x.CreatedDate.Year == DateTime.Now.Year && x.CreatedDate.Month == DateTime.Now.Month && x.CreatedDate.Day == DateTime.Now.Day).ToList();
+
+                    }
+                    else
+                    {
+                        ViewBag.Pickups = deEntity.tblLoadPickups.Where(x => x.CreatedDate.Year == DateTime.Now.Year && x.CreatedDate.Month == DateTime.Now.Month && x.CreatedDate.Day == DateTime.Now.Day && x.CreatedBy == UserId).ToList();
+                        ViewBag.Deliveries = deEntity.tblLoadDeliveries.Where(x => x.CreatedDate.Year == DateTime.Now.Year && x.CreatedDate.Month == DateTime.Now.Month && x.CreatedDate.Day == DateTime.Now.Day && x.CreatedBy == UserId).ToList();
+
+                    }
+                }
+                else
+                {
+                    ViewBag.UserId = AgentId;
+                    ViewBag.Pickups = deEntity.tblLoadPickups.Where(x => x.CreatedDate.Year == DateTime.Now.Year && x.CreatedDate.Month == DateTime.Now.Month && x.CreatedDate.Day == DateTime.Now.Day && x.CreatedBy == AgentId).ToList();
+                    ViewBag.Deliveries = deEntity.tblLoadDeliveries.Where(x => x.CreatedDate.Year == DateTime.Now.Year && x.CreatedDate.Month == DateTime.Now.Month && x.CreatedDate.Day == DateTime.Now.Day && x.CreatedBy == AgentId).ToList();
+                }
+                
+
+
+                return View();
+
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return View();
         }
 
     }

@@ -3235,12 +3235,12 @@
                 }
             },
             failure: function (response) {
-                $("#AjaxError").text(response.responseText + "!");
+                $("#AjaxError").text("Please try again !");
                 $("#AjaxError").fadeIn();
                 $("#AjaxError").fadeOut(10000);
             },
             error: function (response) {
-                $("#AjaxError").text(response.responseText + "!");
+                $("#AjaxError").text("Please try again !");
                 $("#AjaxError").fadeIn();
                 $("#AjaxError").fadeOut(10000);
             }
@@ -3373,12 +3373,12 @@
                 }
             },
             failure: function (response) {
-                $("#AjaxError").text(response.responseText + "!");
+                $("#AjaxError").text("Please try again !");
                 $("#AjaxError").fadeIn();
                 $("#AjaxError").fadeOut(10000);
             },
             error: function (response) {
-                $("#AjaxError").text(response.responseText + "!");
+                $("#AjaxError").text("Please try again !");
                 $("#AjaxError").fadeIn();
                 $("#AjaxError").fadeOut(10000);
             }
@@ -5247,7 +5247,7 @@
                 },
                 error: function (response) {
                     //alert("Whooaaa! Something went wrong..")
-                    $("#AjaxError").text(response.responseText + "!");
+                    $("#AjaxError").text("Please try again !");
                     $("#AjaxError").fadeIn();
                     $("#AjaxError").fadeOut(10000);
                 },
@@ -5275,7 +5275,7 @@
                 },
                 error: function (response) {
                     //alert("Whooaaa! Something went wrong..")
-                    $("#AjaxError").text(response.responseText + "!");
+                    $("#AjaxError").text("Please try again !");
                     $("#AjaxError").fadeIn();
                     $("#AjaxError").fadeOut(10000);
                 },
@@ -5560,13 +5560,13 @@
             },
             failure: function (response) {
                 //alert(response.responseText);
-                $("#AjaxError").text(response.responseText + "!");
+                $("#AjaxError").text("Please try again !");
                 $("#AjaxError").fadeIn();
                 $("#AjaxError").fadeOut(10000);
             },
             error: function (response) {
                 //alert(response.responseText);
-                $("#AjaxError").text(response.responseText + "!");
+                $("#AjaxError").text("Please try again !");
                 $("#AjaxError").fadeIn();
                 $("#AjaxError").fadeOut(10000);
             }
@@ -5660,7 +5660,7 @@
 
             document.getElementById('DeliveryPickUpInfo').innerHTML = " (Current Pickup :" +ShipperName + Address + StateCode +" )";
             document.getElementById('btnAddPickup').innerText = '+ Update Pickup';
-            document.getElementById("btnAddDelivery").disabled = true;
+            //document.getElementById("btnAddDelivery").disabled = true;
             document.getElementById("btnAddPickup").disabled = false;
             //document.getElementById("btnAddDelivery").style.backgroundColor = 'Black !important';
 
@@ -6294,7 +6294,9 @@ var model = {
                     }
 
 
-                    ClearFields();
+                    if (document.getElementById("btnAddPickup").innerText != "+ Update Pickup") {
+                        ClearFields();
+                    }
                 }
                 else {
                     $("#AjaxError").text("Error in Zip Code!");
@@ -6306,13 +6308,13 @@ var model = {
             },
             failure: function (response) {
                 //alert(response.responseText);
-                $("#AjaxError").text(response.responseText + "!");
+                $("#AjaxError").text("Please try again !");
                 $("#AjaxError").fadeIn();
                 $("#AjaxError").fadeOut(10000);
             },
             error: function (response) {
                 //alert(response.responseText);
-                $("#AjaxError").text(response.responseText + "!");
+                $("#AjaxError").text("Please try again !");
                 $("#AjaxError").fadeIn();
                 $("#AjaxError").fadeOut(10000);
             }
@@ -6373,7 +6375,7 @@ var model = {
 
             document.getElementById('btnAddDelivery').innerText = '+ Update Delivery';
             document.getElementById("btnAddDelivery").disabled = false;
-            document.getElementById("btnAddPickup").disabled = true;
+            //document.getElementById("btnAddPickup").disabled = true;
             //document.getElementById("btnAddDelivery").style.backgroundColor = 'Black !important';
 
 
@@ -7154,14 +7156,14 @@ var model = {
                 }
             },
             failure: function (response) {
-                $("#AjaxError").text(response.responseText + "!");
+                $("#AjaxError").text("Please try again !");
                 $("#AjaxError").fadeIn();
                 $("#AjaxError").fadeOut(10000);
                 //alert("No Data");
             },
             error: function (response) {
                 //alert(response.responseText);
-                $("#AjaxError").text(response.responseText + "!");
+                $("#AjaxError").text("Please try again !");
                 $("#AjaxError").fadeIn();
                 $("#AjaxError").fadeOut(10000);
             }
@@ -7198,13 +7200,13 @@ var model = {
             },
             failure: function (response) {
                 //alert("No Data");
-                $("#AjaxError").text(response.responseText + "!");
+                $("#AjaxError").text("Please try again !");
                 $("#AjaxError").fadeIn();
                 $("#AjaxError").fadeOut(10000);
             },
             error: function (response) {
                 //alert(response.responseText);
-                $("#AjaxError").text(response.responseText + "!");
+                $("#AjaxError").text("Please try again !");
                 $("#AjaxError").fadeIn();
                 $("#AjaxError").fadeOut(10000);
             }

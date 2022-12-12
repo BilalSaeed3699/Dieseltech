@@ -109,7 +109,7 @@ namespace Dieseltech.Controllers
                     UserID.Value = Convert.ToString(EmployeeIDAlready);
                     UserID.Expires = DateTime.Now.AddHours(5);
                     Response.Cookies.Add(UserID);
-
+                    //cookie["UserId"] = EmployeeIDAlready.ToString();
                     Session["User_id"] = EmployeeIDAlready;
                     Session["Role_id"] = Accessid;
                     Session["type"] = UserName;

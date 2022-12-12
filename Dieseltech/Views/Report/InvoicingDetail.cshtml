@@ -95,7 +95,7 @@
 
             <div class="col-md-10">
                 <div style="float:right !important">
-                    Advance Search <input required name="cwhere" value="@ViewBag.cwhere" />
+                    Advance Search <input  name="cwhere" value="@ViewBag.cwhere" />
                     <button type="submit" name="Filter" href="@Url.Action("InvoicingDetail", "Report", new {userid =@ViewBag.UserId,Filter ="S", Type = @ViewBag.LoadType, FilterDateFroms = ViewBag.LoadFilterDateFrom, FilterDateTos = ViewBag.LoadFilterDateTo })" style="background-color: darkblue   !important" class="btn btn-primary FilterButton">
                         <i class="fa fa-search"></i> Search
                     </button>

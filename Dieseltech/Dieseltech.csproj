@@ -813,6 +813,7 @@
     <Content Include="Views\Account\BolPdfDownload.cshtml" />
     <Content Include="Views\Account\ViewBolPdf.cshtml" />
     <Content Include="Views\Report\NeedToCover.cshtml" />
+    <Content Include="Views\Report\DailyPickUpAndDeliveries.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

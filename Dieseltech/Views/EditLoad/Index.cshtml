@@ -713,7 +713,7 @@ else if (Convert.ToInt32(@Session["User_id"]) == 2)
                                             <label>Zip Code <span class="ImportantFields">*</span> <small id="lblZipCodeError" style="Color:red;display:none">Invalid Zip Code</small> </label>
                                             @*<input type="text" id="txtZipCode" name="ZipCode" placeholder="Zip Code" class="form-control">*@
 
-                                            <input class="form-control" placeholder="Zip Code" type="number" id="txtZipCode" onfocusout="GetStateCity()" required name="ZipCode">
+                                            <input class="form-control" placeholder="Zip Code" type="text" id="txtZipCode" onfocusout="GetStateCity()" required name="ZipCode">
 
                                         </div>
                                         <div class="col-md-3">
@@ -3253,13 +3253,13 @@ $("#tblPickup").sortable({
             },
             failure: function (response) {
                 //alert("No Data");
-                $("#AjaxError").text(response.responseText + "!");
+                $("#AjaxError").text("Please try again !");
                 $("#AjaxError").fadeIn();
                 $("#AjaxError").fadeOut(10000);
             },
             error: function (response) {
                 //alert(response.responseText);
-                $("#AjaxError").text(response.responseText + "!");
+                $("#AjaxError").text("Please try again !");
                 $("#AjaxError").fadeIn();
                 $("#AjaxError").fadeOut(10000);
             }
@@ -3398,13 +3398,13 @@ $("#tblPickup").sortable({
             },
             failure: function (response) {
                 //alert("No Data");
-                $("#AjaxError").text(response.responseText + "!");
+                $("#AjaxError").text("Please try again !");
                 $("#AjaxError").fadeIn();
                 $("#AjaxError").fadeOut(10000);
             },
             error: function (response) {
                 //alert(response.responseText);
-                $("#AjaxError").text(response.responseText + "!");
+                $("#AjaxError").text("Please try again !");
                 $("#AjaxError").fadeIn();
                 $("#AjaxError").fadeOut(10000);
             }
@@ -5268,7 +5268,7 @@ $("#tblPickup").sortable({
                 },
                 error: function (response) {
                     //alert("Whooaaa! Something went wrong..")
-                    $("#AjaxError").text(response.responseText + "!");
+                    $("#AjaxError").text("Please try again !");
                     $("#AjaxError").fadeIn();
                     $("#AjaxError").fadeOut(10000);
                 },
@@ -5296,7 +5296,7 @@ $("#tblPickup").sortable({
                 },
                 error: function (response) {
                     //alert("Whooaaa! Something went wrong..")
-                    $("#AjaxError").text(response.responseText + "!");
+                    $("#AjaxError").text("Please try again !");
                     $("#AjaxError").fadeIn();
                     $("#AjaxError").fadeOut(10000);
                 },
@@ -5589,13 +5589,13 @@ $("#tblPickup").sortable({
             },
             failure: function (response) {
                 //alert(response.responseText);
-                $("#AjaxError").text(response.responseText + "!");
+                $("#AjaxError").text("Please try again !");
                 $("#AjaxError").fadeIn();
                 $("#AjaxError").fadeOut(10000);
             },
             error: function (response) {
                 //alert(response.responseText);
-                $("#AjaxError").text(response.responseText + "!");
+                $("#AjaxError").text("Please try again !");
                 $("#AjaxError").fadeIn();
                 $("#AjaxError").fadeOut(10000);
             }
@@ -5687,7 +5687,7 @@ $("#tblPickup").sortable({
 
             document.getElementById('DeliveryPickUpInfo').innerHTML = " (Current Pickup :" +ShipperName + Address + StateCode +" )";
             document.getElementById('btnAddPickup').innerText = '+ Update Pickup';
-            document.getElementById("btnAddDelivery").disabled = true;
+            //document.getElementById("btnAddDelivery").disabled = true;
             document.getElementById("btnAddPickup").disabled = false;
             //document.getElementById("btnAddDelivery").style.backgroundColor = 'Black !important';
 
@@ -6333,8 +6333,10 @@ var model = {
                         document.getElementById("btnAddDelivery").disabled = false;
                     }
 
-
-                    ClearFields();
+                    
+                    if (document.getElementById("btnAddPickup").innerText != "+ Update Pickup") {
+                        ClearFields();
+                    }
                 }
                 else {
                     $("#AjaxError").text("Error in Zip Code!");
@@ -6346,13 +6348,13 @@ var model = {
             },
             failure: function (response) {
                 //alert(response.responseText);
-                $("#AjaxError").text(response.responseText + "!");
+                $("#AjaxError").text("Please try again !");
                 $("#AjaxError").fadeIn();
                 $("#AjaxError").fadeOut(10000);
             },
             error: function (response) {
                 //alert(response.responseText);
-                $("#AjaxError").text(response.responseText + "!");
+                $("#AjaxError").text("Please try again !");
                 $("#AjaxError").fadeIn();
                 $("#AjaxError").fadeOut(10000);
             }
@@ -6413,7 +6415,7 @@ var model = {
 
             document.getElementById('btnAddDelivery').innerText = '+ Update Delivery';
             document.getElementById("btnAddDelivery").disabled = false;
-            document.getElementById("btnAddPickup").disabled = true;
+            //document.getElementById("btnAddPickup").disabled = true;
             //document.getElementById("btnAddDelivery").style.backgroundColor = 'Black !important';
 
 
@@ -7231,13 +7233,13 @@ var model = {
             },
             failure: function (response) {
                 //alert("No Data");
-                $("#AjaxError").text(response.responseText + "!");
+                $("#AjaxError").text("Please try again !");
                 $("#AjaxError").fadeIn();
                 $("#AjaxError").fadeOut(10000);
             },
             error: function (response) {
                 //alert(response.responseText);
-                $("#AjaxError").text(response.responseText + "!");
+                $("#AjaxError").text("Please try again !");
                 $("#AjaxError").fadeIn();
                 $("#AjaxError").fadeOut(10000);
             }
@@ -7274,13 +7276,13 @@ var model = {
             },
             failure: function (response) {
                 //alert("No Data");
-                $("#AjaxError").text(response.responseText + "!");
+                $("#AjaxError").text("Please try again !");
                 $("#AjaxError").fadeIn();
                 $("#AjaxError").fadeOut(10000);
             },
             error: function (response) {
                 //alert(response.responseText);
-                $("#AjaxError").text(response.responseText + "!");
+                $("#AjaxError").text("Please try again !");
                 $("#AjaxError").fadeIn();
                 $("#AjaxError").fadeOut(10000);
             }
