@@ -655,6 +655,8 @@
     <Content Include="assets\plugins\light-gallery\js\lightgallery-all.min.js" />
     <Content Include="assets\plugins\summernote\dist\summernote-bs4.css" />
     <Content Include="assets\plugins\summernote\dist\summernote-bs4.min.js" />
+    <Content Include="bin\Dieseltech.dll" />
+    <Content Include="bin\Dieseltech.pdb" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
