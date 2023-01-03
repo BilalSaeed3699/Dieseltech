@@ -14,7 +14,7 @@ namespace Dieseltech.Controllers
     {
         
         private DieseltechEntities deEntity = new DieseltechEntities();
-        // GET: AccessLevel
+       
         [Customexception]
         public ActionResult Index()
         {
