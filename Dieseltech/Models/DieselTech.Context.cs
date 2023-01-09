@@ -76,6 +76,8 @@ namespace Dieseltech.Models
         public virtual DbSet<tblTruck> tblTrucks { get; set; }
         public virtual DbSet<tblCarrier> tblCarriers { get; set; }
         public virtual DbSet<tblLoadHead> tblLoadHeads { get; set; }
+        public virtual DbSet<tblAgentTier> tblAgentTiers { get; set; }
+        public virtual DbSet<tblCarrierAgent> tblCarrierAgents { get; set; }
     
         public virtual int SP_ActivationCode_Info(Nullable<System.Guid> code)
         {
@@ -99,7 +101,7 @@ namespace Dieseltech.Models
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("Sp_Insert_ActivationCode", userIdParameter, codeParameter);
         }
     
-        public virtual ObjectResult<Nullable<int>> SP_Insert_User(string userName, string paswword, string email_Adress, string crudType)
+        public virtual ObjectResult<Nullable<int>> SP_Insert_User(string userName, string paswword, string email_Adress, Nullable<int> agentTierId, string crudType)
         {
             var userNameParameter = userName != null ?
                 new ObjectParameter("UserName", userName) :
@@ -113,11 +115,15 @@ namespace Dieseltech.Models
                 new ObjectParameter("Email_Adress", email_Adress) :
                 new ObjectParameter("Email_Adress", typeof(string));
     
+            var agentTierIdParameter = agentTierId.HasValue ?
+                new ObjectParameter("AgentTierId", agentTierId) :
+                new ObjectParameter("AgentTierId", typeof(int));
+    
             var crudTypeParameter = crudType != null ?
                 new ObjectParameter("CrudType", crudType) :
                 new ObjectParameter("CrudType", typeof(string));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<int>>("SP_Insert_User", userNameParameter, paswwordParameter, email_AdressParameter, crudTypeParameter);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<int>>("SP_Insert_User", userNameParameter, paswwordParameter, email_AdressParameter, agentTierIdParameter, crudTypeParameter);
         }
     
         public virtual ObjectResult<SP_Verify_UserLogin_Result> SP_Verify_UserLogin(string email_Adress, string password)
@@ -253,11 +259,6 @@ namespace Dieseltech.Models
                 new ObjectParameter("AssignId", typeof(string));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_Show_TruckDetails_Result>("Sp_Show_TruckDetails", assignIdParameter);
-        }
-    
-        public virtual ObjectResult<Sp_Get_Dashboard_Stats_Result> Sp_Get_Dashboard_Stats()
-        {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_Get_Dashboard_Stats_Result>("Sp_Get_Dashboard_Stats");
         }
     
         public virtual ObjectResult<Sp_TruckBoard_Truck_List_Result> Sp_TruckBoard_Truck_List(string filterData, string filterType)
@@ -600,6 +601,37 @@ namespace Dieseltech.Models
                 new ObjectParameter("AssignID", typeof(string));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_Get_CarrierTruck_Information_Result>("Sp_Get_CarrierTruck_Information", assignIDParameter);
+        }
+    
+        public virtual ObjectResult<Sp_Get_Dashboard_Stats_Result> Sp_Get_Dashboard_Stats(Nullable<int> iD)
+        {
+            var iDParameter = iD.HasValue ?
+                new ObjectParameter("ID", iD) :
+                new ObjectParameter("ID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_Get_Dashboard_Stats_Result>("Sp_Get_Dashboard_Stats", iDParameter);
+        }
+    
+        public virtual ObjectResult<Sp_Get_All_Carrier_List_ForMapping_Result> Sp_Get_All_Carrier_List_ForMapping()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_Get_All_Carrier_List_ForMapping_Result>("Sp_Get_All_Carrier_List_ForMapping");
+        }
+    
+        public virtual ObjectResult<Sp_Get_All_Carrier_List_Filter_ForMapping_Result> Sp_Get_All_Carrier_List_Filter_ForMapping(Nullable<int> filterType, Nullable<int> blackList, Nullable<int> ownerlist)
+        {
+            var filterTypeParameter = filterType.HasValue ?
+                new ObjectParameter("FilterType", filterType) :
+                new ObjectParameter("FilterType", typeof(int));
+    
+            var blackListParameter = blackList.HasValue ?
+                new ObjectParameter("BlackList", blackList) :
+                new ObjectParameter("BlackList", typeof(int));
+    
+            var ownerlistParameter = ownerlist.HasValue ?
+                new ObjectParameter("Ownerlist", ownerlist) :
+                new ObjectParameter("Ownerlist", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Sp_Get_All_Carrier_List_Filter_ForMapping_Result>("Sp_Get_All_Carrier_List_Filter_ForMapping", filterTypeParameter, blackListParameter, ownerlistParameter);
         }
     }
 }

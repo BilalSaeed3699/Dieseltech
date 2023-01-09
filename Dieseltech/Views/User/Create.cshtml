@@ -2,6 +2,9 @@
 <!DOCTYPE html>
 <html lang="en">
 
+
+
+
 <!-- register24:03-->
 <head>
     <meta charset="utf-8">
@@ -46,6 +49,16 @@
                             <div class="form-group">
                                 <label>Email Address</label>
                                 <input type="email" class="form-control" id="Email_Adress" name="Email_Adress">
+                            </div>
+                            <div class="form-group">
+
+                                <label>Agent Tier</label>
+                                <select class="form-control" name="AgentTierId">
+                                    @foreach (Dieseltech.Models.tblAgentTier item in @ViewBag.AT)
+                                    {
+                                     <option value="@item.AgentTierId">@item.AgentTier</option>
+                                    }
+                                </select>
                             </div>
                             <div class="form-group">
                                 <label>Password</label>

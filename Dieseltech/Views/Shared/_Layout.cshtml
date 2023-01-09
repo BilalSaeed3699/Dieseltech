@@ -14,6 +14,9 @@
 @{int TotalUnreadNotifications = 0;}
 @{int AlkoisUnreadNotifications = 0;}
 @{int JetlineUnreadNotifications = 0;}
+@{
+    
+}
 <!-- index22:59-->
 <head>
     <meta charset="utf-8">
@@ -69,7 +72,7 @@
     <script src="~/assets/js/jquery.mcautocomplete.js"></script>
 
     <script src="~/assets/js/app.js"></script>
-    
+
     <script src="~/assets/js/bootstrap.min.js"></script>
 
     <script src="~/assets/js/colorpalettepicker.js"></script>
@@ -116,7 +119,7 @@
         <script src="~/assets/js/respond.min.js"></script>
     <![endif]-->
 
-<style>
+    <style>
 
 
        /* table.dataTable.dtr-inline.collapsed > tbody > tr > td.dtr-control:before, table.dataTable.dtr-inline.collapsed > tbody > tr > th.dtr-control:before {
@@ -201,10 +204,10 @@
         /*}*/
 
     .sidebar .sidebar-menu > ul > li > a span {
-        
+
         font-size: 14px;
     }
-</style>
+    </style>
 </head>
 <body>
 
@@ -251,18 +254,18 @@
             <a id="mobile_btn" class="mobile_btn float-left" href="#sidebar"><i class="fa fa-bars"></i></a>
             <ul class="nav user-menu float-right">
                 @*<li class="nav-item dropdown d-none d-sm-block">
-            <a href="javascript:void(0);" id="open_msg_box" class="hasnotifications nav-link"><i class="fa fa-comment-o"></i> <span class="badge badge-pill bg-danger float-right">8</span></a>
-        </li>
-        <li class="nav-item dropdown d-none d-sm-block">
-            <a data-toggle="modal" data-target="#exampleModal">
-                <i style="font-size:20px" class="fa fa-paint-brush"></i> Change Color
-            </a>
-        </li>*@
+                        <a href="javascript:void(0);" id="open_msg_box" class="hasnotifications nav-link"><i class="fa fa-comment-o"></i> <span class="badge badge-pill bg-danger float-right">8</span></a>
+                    </li>
+                    <li class="nav-item dropdown d-none d-sm-block">
+                        <a data-toggle="modal" data-target="#exampleModal">
+                            <i style="font-size:20px" class="fa fa-paint-brush"></i> Change Color
+                        </a>
+                    </li>*@
 
                 <li class="nav-item dropdown d-none d-sm-block">
                     @*<a id="colorpalettediv" style="background-color:@Session["Color"] !important">
-                <i style="font-size:20px" class="fa fa-paint-brush"></i> Choose Color
-            </a>*@
+                            <i style="font-size:20px" class="fa fa-paint-brush"></i> Choose Color
+                        </a>*@
 
                     <input id="ChangeColor" style="width:10% !important;float:right;margin-top:12px" value="@Session["Color"]" data-jscolor=""> <i style="padding-right:5px; font-size:20px;float:right;padding-top:15px;color:White" class="fa fa-paint-brush"></i>
 
@@ -370,8 +373,8 @@
                             </ul>
                         </div>
                         @*<div class="topnav-dropdown-footer">
-                    <a href="activities.html">View all Notifications</a>
-                </div>*@
+                                <a href="activities.html">View all Notifications</a>
+                            </div>*@
                     </div>
                 </li>
 
@@ -479,8 +482,8 @@
                             </ul>
                         </div>
                         @*<div class="topnav-dropdown-footer">
-                    <a href="activities.html">View all Notifications</a>
-                </div>*@
+                                <a href="activities.html">View all Notifications</a>
+                            </div>*@
                     </div>
                 </li>
 
@@ -588,8 +591,8 @@
                             </ul>
                         </div>
                         @*<div class="topnav-dropdown-footer">
-                    <a href="activities.html">View all Notifications</a>
-                </div>*@
+                                <a href="activities.html">View all Notifications</a>
+                            </div>*@
                     </div>
                 </li>
                 <li class="nav-item dropdown has-arrow">
@@ -668,96 +671,90 @@
         </div>
         <div class="sidebar" id="sidebar">
 
-                <div class="sidebar-inner slimscroll" >
-                    <div id="sidebar-menu" class="sidebar-menu">
-                        <ul>
+            <div class="sidebar-inner slimscroll">
+                <div id="sidebar-menu" class="sidebar-menu">
+                    <ul>
 
-                            <li class="">
-                                <a href="@Url.Action("Index", "Home")" style="color: @Session["Color"];"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a>
-                            </li>
-                            @foreach (var parent in list)
+                        <li class="">
+                            <a href="@Url.Action("Index", "Home")" style="color: @Session["Color"];"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a>
+                        </li>
+                        @foreach (var parent in list)
+                        {
+                            if (@parent.IsParent == 1)
                             {
-                                if (@parent.IsParent == 1)
+                                Int32 ParentId = Convert.ToInt32(@parent.Page_ID);
+
+                                if (@parent.Count == 0)
+
                                 {
-                                    Int32 ParentId = Convert.ToInt32(@parent.Page_ID);
-
-                                    if (@parent.Count == 0)
-
+                                    if (parent.Controller_name == "Report" && parent.Action_name == "Index")
                                     {
-                                        if (parent.Controller_name == "Report" && parent.Action_name == "Index")
-                                        {
-                                            <li>
-                                                <a href="@Url.Action(parent.Action_name, parent.Controller_name,new {AdvanceFilterDateFroms= DateTime.Now.ToString("MM/dd/yyyy") , AdvanceFilterDateTo =  DateTime.Now.ToString("MM/dd/yyyy"), FilterDateFroms= DateTime.Now.ToString("MM/dd/yyyy") , FilterDateTos =  DateTime.Now.ToString("MM/dd/yyyy") })"><i class="@parent.Icon_Class"></i> <span>@parent.Page_Name</span></a>
-                                            </li>
-                                        }
-                                        else if (parent.Controller_name == "Report" && parent.Action_name == "LoadDetail")
-                                        {
-                                            <li>
-                                                <a href="@Url.Action(parent.Action_name, parent.Controller_name,new { AdvanceFilterDateFroms= DateTime.Now.ToString("MM/dd/yyyy") , AdvanceFilterDateTo =  DateTime.Now.ToString("MM/dd/yyyy"), FilterDateFroms= DateTime.Now.ToString("MM/dd/yyyy") , FilterDateTos =  DateTime.Now.ToString("MM/dd/yyyy") })"><i class="@parent.Icon_Class"></i> <span>@parent.Page_Name</span></a>
-                                            </li>
-                                        }
-                                        else if (parent.Controller_name == "Report" && parent.Action_name == "InvoicingDetail")
-                                        {
-                                            <li>
-                                                <a href="@Url.Action(parent.Action_name, parent.Controller_name,new {statemaintain=1, AdvanceFilterDateFroms= DateTime.Now.ToString("MM/dd/yyyy") , AdvanceFilterDateTo =  DateTime.Now.ToString("MM/dd/yyyy"), FilterDateFroms= DateTime.Now.ToString("MM/dd/yyyy") , FilterDateTos =  DateTime.Now.ToString("MM/dd/yyyy") })"><i class="@parent.Icon_Class"></i> <span>@parent.Page_Name</span></a>
-                                            </li>
-                                        }
-                                        else if (parent.Controller_name == "Report" && parent.Action_name == "NeedToCover")
-                                        {
-                                            <li>
-                                                <a href="@Url.Action(parent.Action_name, parent.Controller_name,new {AdvanceFilterDateFroms= DateTime.Now.ToString("MM/dd/yyyy") , AdvanceFilterDateTo =  DateTime.Now.ToString("MM/dd/yyyy"), FilterDateFroms= DateTime.Now.ToString("MM/dd/yyyy") , FilterDateTos =  DateTime.Now.ToString("MM/dd/yyyy") })"><i class="@parent.Icon_Class"></i> <span>@parent.Page_Name</span></a>
-                                            </li>
-                                        }
-                                        else
-                                        {
-                                            <li>
-                                                <a href="@Url.Action(parent.Action_name, parent.Controller_name)"><i class="@parent.Icon_Class"></i> <span>@parent.Page_Name</span></a>
-                                            </li>
-                                        }
-
-
+                                        <li>
+                                            <a href="@Url.Action(parent.Action_name, parent.Controller_name,new {AdvanceFilterDateFroms= DateTime.Now.ToString("MM/dd/yyyy") , AdvanceFilterDateTo =  DateTime.Now.ToString("MM/dd/yyyy"), FilterDateFroms= DateTime.Now.ToString("MM/dd/yyyy") , FilterDateTos =  DateTime.Now.ToString("MM/dd/yyyy") })"><i class="@parent.Icon_Class"></i> <span>@parent.Page_Name</span></a>
+                                        </li>
+                                    }
+                                    else if (parent.Controller_name == "Report" && parent.Action_name == "LoadDetail")
+                                    {
+                                        <li>
+                                            <a href="@Url.Action(parent.Action_name, parent.Controller_name,new { AdvanceFilterDateFroms= DateTime.Now.ToString("MM/dd/yyyy") , AdvanceFilterDateTo =  DateTime.Now.ToString("MM/dd/yyyy"), FilterDateFroms= DateTime.Now.ToString("MM/dd/yyyy") , FilterDateTos =  DateTime.Now.ToString("MM/dd/yyyy") })"><i class="@parent.Icon_Class"></i> <span>@parent.Page_Name</span></a>
+                                        </li>
+                                    }
+                                    else if (parent.Controller_name == "Report" && parent.Action_name == "InvoicingDetail")
+                                    {
+                                        <li>
+                                            <a href="@Url.Action(parent.Action_name, parent.Controller_name,new {statemaintain=1, AdvanceFilterDateFroms= DateTime.Now.ToString("MM/dd/yyyy") , AdvanceFilterDateTo =  DateTime.Now.ToString("MM/dd/yyyy"), FilterDateFroms= DateTime.Now.ToString("MM/dd/yyyy") , FilterDateTos =  DateTime.Now.ToString("MM/dd/yyyy") })"><i class="@parent.Icon_Class"></i> <span>@parent.Page_Name</span></a>
+                                        </li>
+                                    }
+                                    else if (parent.Controller_name == "Report" && parent.Action_name == "NeedToCover")
+                                    {
+                                        <li>
+                                            <a href="@Url.Action(parent.Action_name, parent.Controller_name,new {AdvanceFilterDateFroms= DateTime.Now.ToString("MM/dd/yyyy") , AdvanceFilterDateTo =  DateTime.Now.ToString("MM/dd/yyyy"), FilterDateFroms= DateTime.Now.ToString("MM/dd/yyyy") , FilterDateTos =  DateTime.Now.ToString("MM/dd/yyyy") })"><i class="@parent.Icon_Class"></i> <span>@parent.Page_Name</span></a>
+                                        </li>
                                     }
                                     else
                                     {
-                                        <li class="submenu">
-
-                                            <a href="#"><i class="@parent.Icon_Class"></i> <span>@parent.Page_Name</span><span class="menu-arrow"></span></a>
-
-                                            <ul>
-                                                @foreach (var child in list)
-                                                {
-                                                    //if (@parent.IsParent == 0)
-                                                    //{
-                                                    if (@child.ParentId == ParentId)
-                                                    {
-
-                                                        if (child.Action_name == "CarrierInfo")
-                                                        {
-                                                            //child.Action_name = "CarrierInfo/?CarrierAssignsId='1'";
-                                                            <li><a href="@Url.Action(child.Action_name, child.Controller_name,new { CarrierAssignsId ="1"} )"><i class="@child.Icon_Class"></i> <span>@child.Page_Name</span></a></li>
-                                                        }
-                                                        else
-                                                        {
-                                                            <li><a href="@Url.Action(child.Action_name, child.Controller_name)"><i class="@child.Icon_Class"></i> <span>@child.Page_Name</span></a></li>
-                                                        }
-
-
-
-                                                    }
-
-                                                    //}
-
-                                                }
-                                            </ul>
+                                        <li>
+                                            <a href="@Url.Action(parent.Action_name, parent.Controller_name)"><i class="@parent.Icon_Class"></i> <span>@parent.Page_Name</span></a>
                                         </li>
                                     }
 
 
-
-
-
-
                                 }
+                                else
+                                {
+                                    <li class="submenu">
+
+                                        <a href="#"><i class="@parent.Icon_Class"></i> <span>@parent.Page_Name</span><span class="menu-arrow"></span></a>
+
+                                        <ul>
+                                            @foreach (var child in list)
+                                            {
+                                                //if (@parent.IsParent == 0)
+                                                //{
+                                                if (@child.ParentId == ParentId)
+                                                {
+
+                                                    if (child.Action_name == "CarrierInfo")
+                                                    {
+                                                        //child.Action_name = "CarrierInfo/?CarrierAssignsId='1'";
+                                                        <li><a href="@Url.Action(child.Action_name, child.Controller_name,new { CarrierAssignsId ="1"} )"><i class="@child.Icon_Class"></i> <span>@child.Page_Name</span></a></li>
+                                                    }
+                                                    else
+                                                    {
+                                                        <li><a href="@Url.Action(child.Action_name, child.Controller_name)"><i class="@child.Icon_Class"></i> <span>@child.Page_Name</span></a></li>
+                                                    }
+
+
+
+                                                }
+
+                                                //}
+
+                                            }
+                                        </ul>
+                                    </li>
+                                }
+
 
 
 
@@ -766,46 +763,52 @@
                             }
 
 
-                            @*<li class="submenu">
-                        <a href="#"><i class="fa fa-user-secret"></i> <span> Profile </span> <span class="menu-arrow"></span></a>
-                        <ul style="display: none;">
-                            <li><a href="@Url.Action("UserProfiles", "Profile" ,new { id = Convert.ToInt32(Session["User_id"])})">My Profile</a></li>
-                            <li><a href="@Url.Action("EditIndex", "Profile")">Edit Profile</a></li>
-
-                        </ul>
-                    </li>
-                    <li class="submenu">
-                        <a href="#"><i class="fa fa-user"></i> <span> Recipents </span> <span class="menu-arrow"></span></a>
-                        <ul style="display: none;">
-                            <li><a href="@Url.Action("Index", "Recipient")">Recipents List</a></li>
-                            <li><a href="@Url.Action("RecipentEmails", "Recipient")">Recipents Emails</a></li>
-
-                        </ul>
-                    </li>
-                    <li class="submenu">
-                        <a href="#"><i class="fa fa-envelope"></i> <span> Email </span> <span class="menu-arrow"></span></a>
-                        <ul style="display: none;">
-                            <li><a href="@Url.Action("Index", "Compose")">Compose</a></li>
-                            <li><a href="leaves.html">Sent</a></li>
-
-                        </ul>
-                    </li>
-                    <li class="submenu">
-                        <a href="#"><i class="fa fa-cog"></i> <span> Settings </span> <span class="menu-arrow"></span></a>
-                        <ul style="display: none;">
-                            <li><a href="@Url.Action("Index", "Setting")">Email Setting</a></li>
-                            <li><a href="@Url.Action("zipfile", "fileCompress")">Zip File Name</a></li>
-                            <li><a href="@Url.Action("changepasswordnew", "Account")">Change Password</a></li>
-
-                        </ul>
-                    </li>*@
 
 
 
-                        </ul>
-                    </div>
+                        }
+
+
+                        @*<li class="submenu">
+                                <a href="#"><i class="fa fa-user-secret"></i> <span> Profile </span> <span class="menu-arrow"></span></a>
+                                <ul style="display: none;">
+                                    <li><a href="@Url.Action("UserProfiles", "Profile" ,new { id = Convert.ToInt32(Session["User_id"])})">My Profile</a></li>
+                                    <li><a href="@Url.Action("EditIndex", "Profile")">Edit Profile</a></li>
+
+                                </ul>
+                            </li>
+                            <li class="submenu">
+                                <a href="#"><i class="fa fa-user"></i> <span> Recipents </span> <span class="menu-arrow"></span></a>
+                                <ul style="display: none;">
+                                    <li><a href="@Url.Action("Index", "Recipient")">Recipents List</a></li>
+                                    <li><a href="@Url.Action("RecipentEmails", "Recipient")">Recipents Emails</a></li>
+
+                                </ul>
+                            </li>
+                            <li class="submenu">
+                                <a href="#"><i class="fa fa-envelope"></i> <span> Email </span> <span class="menu-arrow"></span></a>
+                                <ul style="display: none;">
+                                    <li><a href="@Url.Action("Index", "Compose")">Compose</a></li>
+                                    <li><a href="leaves.html">Sent</a></li>
+
+                                </ul>
+                            </li>
+                            <li class="submenu">
+                                <a href="#"><i class="fa fa-cog"></i> <span> Settings </span> <span class="menu-arrow"></span></a>
+                                <ul style="display: none;">
+                                    <li><a href="@Url.Action("Index", "Setting")">Email Setting</a></li>
+                                    <li><a href="@Url.Action("zipfile", "fileCompress")">Zip File Name</a></li>
+                                    <li><a href="@Url.Action("changepasswordnew", "Account")">Change Password</a></li>
+
+                                </ul>
+                            </li>*@
+
+
+
+                    </ul>
                 </div>
-            
+            </div>
+
         </div>
         <div class="page-wrapper">
 
@@ -960,15 +963,15 @@
             //$('.g-dataTable').DataTable().makeEditable();
         });
 
-                                    //$(window).load(function () {
-                                    //    // Animate loader off screen
-                                    //    $(".se-pre-con").fadeOut("slow");
-                                    //});
+                                        //$(window).load(function () {
+                                        //    // Animate loader off screen
+                                        //    $(".se-pre-con").fadeOut("slow");
+                                        //});
 
-                                    //$("#test").change(function () {
-                                    //    alert($(this).val());
+                                        //$("#test").change(function () {
+                                        //    alert($(this).val());
 
-                                    //});
+                                        //});
     </script>
 
     @*<script src="~/assets/js/jquery-3.2.1.min.js"></script>

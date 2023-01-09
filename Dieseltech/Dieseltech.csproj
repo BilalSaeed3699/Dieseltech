@@ -259,7 +259,13 @@
     <Compile Include="Models\Sp_Get_Agent_Statistics_New_Result.cs">
       <DependentUpon>DieselTech.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Sp_Get_All_Carrier_List_Filter_ForMapping_Result.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Sp_Get_All_Carrier_List_Filter_Result.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Sp_Get_All_Carrier_List_ForMapping_Result.cs">
       <DependentUpon>DieselTech.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Sp_Get_All_Carrier_List_Result.cs">
@@ -403,6 +409,9 @@
     <Compile Include="Models\tblAgentSalary.cs">
       <DependentUpon>DieselTech.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\tblAgentTier.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\tblBroker.cs">
       <DependentUpon>DieselTech.tt</DependentUpon>
     </Compile>
@@ -410,6 +419,9 @@
       <DependentUpon>DieselTech.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\tblCarrier.cs">
+      <DependentUpon>DieselTech.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tblCarrierAgent.cs">
       <DependentUpon>DieselTech.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\tblCarrierCategory.cs">
@@ -815,6 +827,7 @@
     <Content Include="Views\Account\ViewBolPdf.cshtml" />
     <Content Include="Views\Report\NeedToCover.cshtml" />
     <Content Include="Views\Report\DailyPickUpAndDeliveries.cshtml" />
+    <Content Include="Views\Definition\CarrierMapping.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

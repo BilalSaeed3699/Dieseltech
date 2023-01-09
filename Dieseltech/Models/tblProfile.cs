@@ -33,5 +33,6 @@ namespace Dieseltech.Models
         public Nullable<int> Packageid { get; set; }
         public Nullable<int> Accessid { get; set; }
         public int Isdeleted { get; set; }
+        public Nullable<int> AgentTierId { get; set; }
     }
 }

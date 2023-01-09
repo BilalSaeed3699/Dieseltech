@@ -203,6 +203,130 @@ namespace Dieseltech.Controllers
         }
 
 
+        [HttpGet]
+        [Customexception]
+        //Carrier Info 
+        public ActionResult CarrierMapping(string CarrierAssignsId, string AllCarrier)
+        {
+
+            try
+            {
+                Session["CarrierInsuranceExpirationList"] = deEntity.tblNotifications.Where(n => n.NotificationType == "C").OrderBy(n => n.IsRead).ThenByDescending(n => n.CreateDate).ToList();
+                Session["AlkaiosnotifyList"] = deEntity.tblNotifications.Where(n => n.NotificationType == "P" && n.CompanyId == 1).OrderBy(n => n.IsRead).ThenByDescending(n => n.CreateDate).ToList();
+                Session["JetlinenotifyList"] = deEntity.tblNotifications.Where(n => n.NotificationType == "P" && n.CompanyId == 3).OrderBy(n => n.IsRead).ThenByDescending(n => n.CreateDate).ToList();
+
+
+                if (CarrierAssignsId == null)
+                {
+                    //Session["CarrierAssignId"] = null;
+
+                    if (Session["CarrierAssignId"] != null)
+                    {
+                        CarrierAssignsId = "";
+                        //qry = "Exec SpGetCarrierNumber";
+                        //string NewCarrierAssignID = ul.ExecuteScalar(qry);
+                        ViewBag.CarrierAssignID = Session["CarrierAssignId"].ToString();
+                        CarrierAssignsId = Session["CarrierAssignId"].ToString();
+
+                    }
+                    else
+                    {
+                        CarrierAssignsId = "";
+                        qry = "Exec SpGetCarrierNumber";
+                        string NewCarrierAssignID = ul.ExecuteScalar(qry);
+                        ViewBag.CarrierAssignID = NewCarrierAssignID;
+                        CarrierAssignsId = NewCarrierAssignID;
+
+                        qry = "Exec Sp_Delete_Carrier '" + CarrierAssignsId + "'";
+                        CarrierAssignsId = ul.ExecuteScalar(qry);
+
+                    }
+
+                }
+                //First Time Load
+                else if (CarrierAssignsId == "1")
+                {
+                    CarrierAssignsId = "0";
+                    qry = "Exec SpGetCarrierNumber";
+                    ViewBag.CarrierAssignID = ul.ExecuteScalar(qry);
+                }
+                //Reload on cancel button click
+                else if (CarrierAssignsId == "0")
+                {
+                    CarrierAssignsId = "0";
+                    qry = "Exec SpGetCarrierNumber";
+                    ViewBag.CarrierAssignID = ul.ExecuteScalar(qry);
+                    qry = "Exec Sp_Delete_Carrier '" + CarrierAssignsId + "'";
+                    ul.ExecuteScalar(qry);
+                }
+                else
+                {
+                    ViewBag.CarrierAssignID = CarrierAssignsId;
+                }
+
+
+                if (AllCarrier == null)
+                {
+                    AllCarrier = "0";
+                    ViewBag.AllCarrierDetials = deEntity.tblCarriers.ToList().Where(d => d.AssignID == AllCarrier).ToList();
+                }
+                else
+                {
+                    ViewBag.AllCarrierDetials = deEntity.tblCarriers.ToList();
+                }
+
+
+                ViewBag.LoadType = new ModelHelper().ToSelectLoadTypeItemList(deEntity.tblLoadTypes).ToList();
+                ViewBag.Driver = new ModelHelper().ToSelectDriverItem(deEntity.tblDrivers).ToList();
+                //ViewBag.TruckDetails = deEntity.tblTrucks.Where(c => c.CarrierAssignId == "0001").FirstOrDefault();
+
+
+
+
+                int Isdeleted = (from carrierinfo in deEntity.tblCarriers
+                                 where carrierinfo.AssignID == CarrierAssignsId
+                                 select carrierinfo.Isdeleted).SingleOrDefault();
+
+                //int Isdeleted = deEntity.tblCarriers.Where(x => x.AssignID == CarrierAssignsId && x.is).Select(s => s.Isdeleted).FirstOrDefault();
+
+
+                if (Isdeleted == 0)
+                {
+                    ViewBag.CarrierDetials = deEntity.tblCarriers.ToList().Where(d => d.AssignID == CarrierAssignsId).ToList();
+                }
+                else if (Isdeleted == 1)
+                {
+                    //if carrier is Deleted then show next generated carrier id
+                    qry = "Exec SpGetCarrierNumber";
+                    CarrierAssignsId = ul.ExecuteScalar(qry);
+                    ViewBag.CarrierDetials = deEntity.tblCarriers.ToList().Where(d => d.AssignID == CarrierAssignsId && d.Isdeleted == 0).FirstOrDefault();
+                    ViewBag.CarrierAssignID = CarrierAssignsId;
+                }
+
+
+
+
+                ViewBag.TruckDetails = deEntity.tblTrucks.ToList().Where(d => d.CarrierAssignId == CarrierAssignsId).ToList();
+
+                ViewBag.CarrierDocuments = deEntity.tblCarrierDocuments.ToList().Where(d => d.CarrierAssignId == CarrierAssignsId).ToList();
+                //ViewBag.CarrierCategory = deEntity.tblCarrierCategories.ToList();
+
+                ViewBag.CarrierCategory = new ModelHelper().ToSelectCarrierCategory(deEntity.tblCarrierCategories).ToList();
+
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Error = "Exception Occur While Loading Carrier Information" + ex.Message;
+            }
+
+           
+
+
+            return View();
+        }
+
+
+
         [Customexception]
         public JsonResult AllCarrierList()
 
@@ -255,6 +379,70 @@ namespace Dieseltech.Controllers
 
 
         }
+
+
+        [Customexception]
+        public JsonResult AllCarrierListForMapping()
+
+        {
+
+
+            List<Sp_Get_All_Carrier_List_ForMapping_Result> AllCarrierTruckList = new List<Sp_Get_All_Carrier_List_ForMapping_Result>();
+
+            AllCarrierTruckList = deEntity.Sp_Get_All_Carrier_List_ForMapping().ToList();
+
+
+
+            return Json(AllCarrierTruckList, JsonRequestBehavior.AllowGet);
+
+
+        }
+
+        [Customexception]
+        [HttpPost]
+        public JsonResult AddCarrierMapping(int CarrierID)
+        {
+            tblCarrierAgent Data = new tblCarrierAgent();
+            int UserId = Convert.ToInt32(Session["User_id"]);
+            try
+            {
+                Data.CarrierId = CarrierID;
+                Data.AgentId = UserId;
+                Data.EditDate = DateTime.Now;
+                deEntity.tblCarrierAgents.Add(Data);
+                deEntity.SaveChanges();
+
+                return Json(1);
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Error = "Exception Occur While Loading Carrier Information" + ex.Message;
+            }
+            return Json(0);
+        }
+
+        [Customexception]
+        [HttpPost]
+        public JsonResult RemoveCarrierMapping(int CarrierAgentId)
+        {
+            tblCarrierAgent Data = new tblCarrierAgent();
+            int UserId = Convert.ToInt32(Session["User_id"]);
+            try
+            {
+                Data = deEntity.tblCarrierAgents.Where(x => x.CarrierAgentId == CarrierAgentId).FirstOrDefault();
+                deEntity.Entry(Data).State = EntityState.Deleted;
+                deEntity.SaveChanges();
+
+                return Json(1);
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Error = "Exception Occur While Loading Carrier Information" + ex.Message;
+            }
+            return Json(0);
+        }
+
+
         [Customexception]
         public JsonResult AllCarrierListWithFilter(int FilterType,int BlackList,int operatorlist)
 
@@ -297,6 +485,24 @@ namespace Dieseltech.Controllers
                 });
 
             }
+
+
+
+            return Json(AllCarrierTruckList, JsonRequestBehavior.AllowGet);
+
+
+        }
+
+
+
+
+
+        [Customexception]
+        public JsonResult AllCarrierListWithFilterForMapping(int FilterType, int BlackList, int operatorlist)
+        {
+            List<Sp_Get_All_Carrier_List_Filter_ForMapping_Result> AllCarrierTruckList = new List<Sp_Get_All_Carrier_List_Filter_ForMapping_Result>();
+
+            AllCarrierTruckList = deEntity.Sp_Get_All_Carrier_List_Filter_ForMapping(FilterType, BlackList, operatorlist).ToList();
 
 
 

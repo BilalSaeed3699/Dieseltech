@@ -40,6 +40,5 @@ namespace Dieseltech.Models
         public int Pickuporder { get; set; }
         public string NewDateFrom { get; set; }
         public string NewDateTo { get; set; }
-
     }
 }

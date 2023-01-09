@@ -370,6 +370,20 @@ namespace Dieseltech.Models
             }
             return tempList;
         }
+        public List<SelectListItem> GetATList(dynamic values)
+        {
+            List<SelectListItem> tempList = null;
+            if (values != null)
+            {
+                tempList = new List<SelectListItem>();
+                foreach (var v in values)
+                {
+                    tempList.Add(new SelectListItem { Text = v.AgentTier, Value = Convert.ToString(v.AgentTierId) });
+                }
+                tempList.TrimExcess();
+            }
+            return tempList;
+        }
 
     }
 }

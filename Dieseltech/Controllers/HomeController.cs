@@ -45,10 +45,16 @@ namespace Dieseltech.Controllers
                 Session["AlkaiosnotifyList"] = db.tblNotifications.Where(n => n.NotificationType == "P" && n.CompanyId ==1).OrderBy(n => n.IsRead).ThenByDescending(n => n.CreateDate).ToList();
                 Session["JetlinenotifyList"] = db.tblNotifications.Where(n => n.NotificationType == "P" && n.CompanyId == 3).OrderBy(n => n.IsRead).ThenByDescending(n => n.CreateDate).ToList();
 
-
                 ViewBag.ThemeColor = db.tblThemeColors.ToList();
 
-                ViewBag.DashboardStats = db.Sp_Get_Dashboard_Stats().ToList();
+                int UserId = Convert.ToInt32(Session["User_id"]);
+                ViewBag.DashboardStats = db.Sp_Get_Dashboard_Stats(UserId).ToList();
+
+                ViewBag.ATHL = db.tblProfiles.Where(x => x.AgentTierId == 1).Count();
+                ViewBag.ATSL = db.tblProfiles.Where(x => x.AgentTierId == 2).Count();
+                ViewBag.ATEL = db.tblProfiles.Where(x => x.AgentTierId == 3).Count();
+
+
 
 
                 return View();

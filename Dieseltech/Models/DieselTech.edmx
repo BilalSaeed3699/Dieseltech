@@ -49,6 +49,14 @@
           <Property Name="AffectiveDate" Type="datetime" Nullable="false" />
           <Property Name="CreatedDate" Type="datetime" Nullable="false" />
         </EntityType>
+        <EntityType Name="tblAgentTier">
+          <Key>
+            <PropertyRef Name="AgentTierId" />
+          </Key>
+          <Property Name="AgentTierId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AgentTier" Type="nvarchar" MaxLength="50" />
+          <Property Name="isActive" Type="bit" />
+        </EntityType>
         <EntityType Name="tblBroker">
           <Key>
             <PropertyRef Name="Brokerid" />
@@ -104,6 +112,15 @@
           <Property Name="Istrailerinterchange" Type="int" Nullable="false" />
           <Property Name="Isdeleted" Type="int" Nullable="false" />
           <Property Name="IsNeedToAssign" Type="bit" />
+        </EntityType>
+        <EntityType Name="tblCarrierAgent">
+          <Key>
+            <PropertyRef Name="CarrierAgentId" />
+          </Key>
+          <Property Name="CarrierAgentId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CarrierId" Type="int" />
+          <Property Name="AgentId" Type="int" />
+          <Property Name="EditDate" Type="datetime" />
         </EntityType>
         <EntityType Name="tblCarrierCategory">
           <Key>
@@ -597,6 +614,7 @@ warning 6002: The table/view 'Dieseltech.dbo.tblPackage' does not have a primary
           <Property Name="Packageid" Type="int" />
           <Property Name="Accessid" Type="int" />
           <Property Name="Isdeleted" Type="int" Nullable="false" />
+          <Property Name="AgentTierId" Type="int" />
         </EntityType>
         <EntityType Name="tblQuantityType">
           <Key>
@@ -693,6 +711,7 @@ warning 6002: The table/view 'Dieseltech.dbo.tblStateCityData' does not have a p
           <Property Name="Create_Date" Type="datetime" Nullable="false" />
           <Property Name="ValidUpto" Type="datetime" />
           <Property Name="Isdeleted" Type="int" Nullable="false" />
+          <Property Name="AgentTierId" Type="int" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'Dieseltech.dbo.tblUser_Rights' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -755,6 +774,12 @@ warning 6002: The table/view 'Dieseltech.dbo.tblUser_Rights' does not have a pri
           <Parameter Name="BlackList" Type="int" Mode="In" />
           <Parameter Name="Ownerlist" Type="int" Mode="In" />
         </Function>
+        <Function Name="Sp_Get_All_Carrier_List_Filter_ForMapping" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="FilterType" Type="int" Mode="In" />
+          <Parameter Name="BlackList" Type="int" Mode="In" />
+          <Parameter Name="Ownerlist" Type="int" Mode="In" />
+        </Function>
+        <Function Name="Sp_Get_All_Carrier_List_ForMapping" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="Sp_Get_Annual_Totals" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="Year" Type="int" Mode="In" />
           <Parameter Name="Month" Type="int" Mode="In" />
@@ -789,7 +814,9 @@ warning 6002: The table/view 'Dieseltech.dbo.tblUser_Rights' does not have a pri
         <Function Name="Sp_Get_Customer_Revenue" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="searchValue" Type="varchar(max)" Mode="In" />
         </Function>
-        <Function Name="Sp_Get_Dashboard_Stats" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="Sp_Get_Dashboard_Stats" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ID" Type="int" Mode="In" />
+        </Function>
         <Function Name="Sp_Get_DriverDetails" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="DriverId" Type="int" Mode="In" />
         </Function>
@@ -857,6 +884,7 @@ warning 6002: The table/view 'Dieseltech.dbo.tblUser_Rights' does not have a pri
           <Parameter Name="UserName" Type="varchar" Mode="In" />
           <Parameter Name="Paswword" Type="varchar" Mode="In" />
           <Parameter Name="Email_Adress" Type="varchar" Mode="In" />
+          <Parameter Name="AgentTierId" Type="int" Mode="In" />
           <Parameter Name="CrudType" Type="char" Mode="In" />
         </Function>
         <Function Name="Sp_Search_Autocomplete_TruckInfo" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
@@ -879,9 +907,11 @@ warning 6002: The table/view 'Dieseltech.dbo.tblUser_Rights' does not have a pri
           <EntitySet Name="tblActivationCode" EntityType="Self.tblActivationCode" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblAgentcommission" EntityType="Self.tblAgentcommission" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblAgentSalary" EntityType="Self.tblAgentSalary" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblAgentTier" EntityType="Self.tblAgentTier" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblBroker" EntityType="Self.tblBroker" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblBrokerHelper" EntityType="Self.tblBrokerHelper" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblCarrier" EntityType="Self.tblCarrier" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblCarrierAgent" EntityType="Self.tblCarrierAgent" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblCarrierCategory" EntityType="Self.tblCarrierCategory" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblcarriercollection" EntityType="Self.tblcarriercollection" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblCarrierDocuments" EntityType="Self.tblCarrierDocuments" Schema="dbo" store:Type="Tables" />
@@ -1041,6 +1071,7 @@ warning 6002: The table/view 'Dieseltech.dbo.tblUser_Rights' does not have a pri
             <Parameter Name="UserName" Mode="In" Type="String" />
             <Parameter Name="Paswword" Mode="In" Type="String" />
             <Parameter Name="Email_Adress" Mode="In" Type="String" />
+            <Parameter Name="AgentTierId" Mode="In" Type="Int32" />
             <Parameter Name="CrudType" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="SP_Verify_UserLogin" ReturnType="Collection(DieseltechModel.SP_Verify_UserLogin_Result)">
@@ -1106,7 +1137,6 @@ warning 6002: The table/view 'Dieseltech.dbo.tblUser_Rights' does not have a pri
           <Parameter Name="AssignId" Mode="In" Type="String" />
           </FunctionImport>
           <EntitySet Name="tblComments" EntityType="DieseltechModel.tblComment" />
-          <FunctionImport Name="Sp_Get_Dashboard_Stats" ReturnType="Collection(DieseltechModel.Sp_Get_Dashboard_Stats_Result)" />
           <FunctionImport Name="Sp_TruckBoard_Truck_List" ReturnType="Collection(DieseltechModel.Sp_TruckBoard_Truck_List_Result)">
             <Parameter Name="FilterData" Mode="In" Type="String" />
             <Parameter Name="FilterType" Mode="In" Type="String" />
@@ -1224,7 +1254,18 @@ warning 6002: The table/view 'Dieseltech.dbo.tblUser_Rights' does not have a pri
             <Parameter Name="cwhere" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="Sp_Get_CarrierTruck_Information" ReturnType="Collection(DieseltechModel.Sp_Get_CarrierTruck_Information_Result)">
-            <Parameter Name="AssignID" Mode="In" Type="String" />
+          <Parameter Name="AssignID" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="Sp_Get_Dashboard_Stats" ReturnType="Collection(DieseltechModel.Sp_Get_Dashboard_Stats_Result)">
+          <Parameter Name="ID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <EntitySet Name="tblAgentTiers" EntityType="DieseltechModel.tblAgentTier" />
+          <EntitySet Name="tblCarrierAgents" EntityType="DieseltechModel.tblCarrierAgent" />
+          <FunctionImport Name="Sp_Get_All_Carrier_List_ForMapping" ReturnType="Collection(DieseltechModel.Sp_Get_All_Carrier_List_ForMapping_Result)" />
+          <FunctionImport Name="Sp_Get_All_Carrier_List_Filter_ForMapping" ReturnType="Collection(DieseltechModel.Sp_Get_All_Carrier_List_Filter_ForMapping_Result)">
+            <Parameter Name="FilterType" Mode="In" Type="Int32" />
+            <Parameter Name="BlackList" Mode="In" Type="Int32" />
+            <Parameter Name="Ownerlist" Mode="In" Type="Int32" />
           </FunctionImport>
         </EntityContainer>
         <ComplexType Name="SP_Verify_UserLogin_Result">
@@ -1872,12 +1913,6 @@ warning 6002: The table/view 'Dieseltech.dbo.tblUser_Rights' does not have a pri
           <Property Name="LoaderNumber" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
           <Property Name="Rating" Type="Int32" Nullable="false" />
         </EntityType>
-        <ComplexType Name="Sp_Get_Dashboard_Stats_Result">
-          <Property Type="Int32" Name="BrokerCount" Nullable="true" />
-          <Property Type="Int32" Name="CarrierCount" Nullable="true" />
-          <Property Type="Int32" Name="TruckCount" Nullable="true" />
-          <Property Type="Int32" Name="DriverCount" Nullable="true" />
-        </ComplexType>
         <ComplexType Name="Sp_TruckBoard_Truck_List_Result">
           <Property Type="Int32" Name="TruckId" Nullable="false" />
           <Property Type="String" Name="Board" Nullable="false" MaxLength="9" />
@@ -2347,6 +2382,7 @@ warning 6002: The table/view 'Dieseltech.dbo.tblUser_Rights' does not have a pri
           <Property Name="Packageid" Type="Int32" />
           <Property Name="Accessid" Type="Int32" />
           <Property Name="Isdeleted" Type="Int32" Nullable="false" />
+          <Property Name="AgentTierId" Type="Int32" />
         </EntityType>
         <EntityType Name="tblUser">
           <Key>
@@ -2360,6 +2396,7 @@ warning 6002: The table/view 'Dieseltech.dbo.tblUser_Rights' does not have a pri
           <Property Name="Create_Date" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="ValidUpto" Type="DateTime" Precision="3" />
           <Property Name="Isdeleted" Type="Int32" Nullable="false" />
+          <Property Name="AgentTierId" Type="Int32" />
         </EntityType>
         <EntityType Name="tblLoadDelivery">
           <Key>
@@ -2690,6 +2727,76 @@ warning 6002: The table/view 'Dieseltech.dbo.tblUser_Rights' does not have a pri
           <Property Type="Int32" Name="Istrailerinterchange" Nullable="false" />
           <Property Type="Double" Name="quickpaypercentage" Nullable="false" />
           <Property Type="Boolean" Name="IsNeedToAssign" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="Sp_Get_Dashboard_Stats_Result">
+          <Property Type="Int32" Name="BrokerCount" Nullable="true" />
+          <Property Type="Int32" Name="CarrierCount" Nullable="true" />
+          <Property Type="Int32" Name="TruckCount" Nullable="true" />
+          <Property Type="Int32" Name="DriverCount" Nullable="true" />
+        </ComplexType>
+        <EntityType Name="tblAgentTier">
+          <Key>
+            <PropertyRef Name="AgentTierId" />
+          </Key>
+          <Property Name="AgentTierId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AgentTier" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="isActive" Type="Boolean" />
+        </EntityType>
+        <EntityType Name="tblCarrierAgent">
+          <Key>
+            <PropertyRef Name="CarrierAgentId" />
+          </Key>
+          <Property Name="CarrierAgentId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CarrierId" Type="Int32" />
+          <Property Name="AgentId" Type="Int32" />
+          <Property Name="EditDate" Type="DateTime" Precision="3" />
+        </EntityType>
+        <ComplexType Name="Sp_Get_All_Carrier_List_ForMapping_Result">
+          <Property Type="Int32" Name="CarrierIdMain" Nullable="false" />
+          <Property Type="String" Name="CarrierName" Nullable="false" MaxLength="200" />
+          <Property Type="String" Name="MC_" Nullable="false" MaxLength="200" />
+          <Property Type="String" Name="AssignID" Nullable="false" MaxLength="4" />
+          <Property Type="String" Name="ContactName" Nullable="false" MaxLength="200" />
+          <Property Type="String" Name="Phonenumber" Nullable="false" MaxLength="20" />
+          <Property Type="String" Name="TrailerNo" Nullable="false" MaxLength="200" />
+          <Property Type="String" Name="TruckYard" Nullable="false" MaxLength="200" />
+          <Property Type="String" Name="ZipCode" Nullable="false" MaxLength="500" />
+          <Property Type="String" Name="StateCode" Nullable="false" MaxLength="2" />
+          <Property Type="String" Name="DriverName" Nullable="false" MaxLength="200" />
+          <Property Type="String" Name="DriverPhone" Nullable="false" MaxLength="20" />
+          <Property Type="String" Name="CategoryName" Nullable="false" MaxLength="100" />
+          <Property Type="Int32" Name="Rating" Nullable="false" />
+          <Property Type="Int32" Name="CarrierCategoryId" Nullable="false" />
+          <Property Type="String" Name="Email" Nullable="false" MaxLength="200" />
+          <Property Type="Boolean" Name="isactive" Nullable="false" />
+          <Property Type="Int32" Name="IsBlackList" Nullable="false" />
+          <Property Type="Int32" Name="CarrierAgentId" Nullable="true" />
+          <Property Type="Int32" Name="CarrierId" Nullable="true" />
+          <Property Type="Int32" Name="AgentId" Nullable="true" />
+          <Property Type="DateTime" Name="EditDate" Nullable="true" Precision="23" />
+        </ComplexType>
+        <ComplexType Name="Sp_Get_All_Carrier_List_Filter_ForMapping_Result">
+          <Property Type="Int32" Name="CarrierIdMain" Nullable="false" />
+          <Property Type="String" Name="CarrierName" Nullable="false" MaxLength="200" />
+          <Property Type="String" Name="MC_" Nullable="false" MaxLength="200" />
+          <Property Type="String" Name="AssignID" Nullable="false" MaxLength="4" />
+          <Property Type="String" Name="ContactName" Nullable="false" MaxLength="200" />
+          <Property Type="String" Name="Phonenumber" Nullable="false" MaxLength="20" />
+          <Property Type="String" Name="TrailerNo" Nullable="false" MaxLength="200" />
+          <Property Type="String" Name="TruckYard" Nullable="false" MaxLength="200" />
+          <Property Type="String" Name="ZipCode" Nullable="false" MaxLength="500" />
+          <Property Type="String" Name="StateCode" Nullable="false" MaxLength="2" />
+          <Property Type="String" Name="DriverName" Nullable="false" MaxLength="200" />
+          <Property Type="String" Name="DriverPhone" Nullable="false" MaxLength="20" />
+          <Property Type="String" Name="CategoryName" Nullable="false" MaxLength="100" />
+          <Property Type="Int32" Name="Rating" Nullable="false" />
+          <Property Type="Int32" Name="CarrierCategoryId" Nullable="false" />
+          <Property Type="String" Name="Email" Nullable="false" MaxLength="200" />
+          <Property Type="Int32" Name="IsBlackList" Nullable="false" />
+          <Property Type="Int32" Name="CarrierAgentId" Nullable="true" />
+          <Property Type="Int32" Name="CarrierId" Nullable="true" />
+          <Property Type="Int32" Name="AgentId" Nullable="true" />
+          <Property Type="DateTime" Name="EditDate" Nullable="true" Precision="23" />
         </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
@@ -3372,16 +3479,6 @@ warning 6002: The table/view 'Dieseltech.dbo.tblUser_Rights' does not have a pri
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <FunctionImportMapping FunctionImportName="Sp_Get_Dashboard_Stats" FunctionName="DieseltechModel.Store.Sp_Get_Dashboard_Stats">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="DieseltechModel.Sp_Get_Dashboard_Stats_Result">
-                <ScalarProperty Name="BrokerCount" ColumnName="BrokerCount" />
-                <ScalarProperty Name="CarrierCount" ColumnName="CarrierCount" />
-                <ScalarProperty Name="TruckCount" ColumnName="TruckCount" />
-                <ScalarProperty Name="DriverCount" ColumnName="DriverCount" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="Sp_TruckBoard_Truck_List" FunctionName="DieseltechModel.Store.Sp_TruckBoard_Truck_List">
             <ResultMapping>
               <ComplexTypeMapping TypeName="DieseltechModel.Sp_TruckBoard_Truck_List_Result">
@@ -3911,6 +4008,7 @@ warning 6002: The table/view 'Dieseltech.dbo.tblUser_Rights' does not have a pri
           <EntitySetMapping Name="tblProfiles">
             <EntityTypeMapping TypeName="DieseltechModel.tblProfile">
               <MappingFragment StoreEntitySet="tblProfile">
+                <ScalarProperty Name="AgentTierId" ColumnName="AgentTierId" />
                 <ScalarProperty Name="Isdeleted" ColumnName="Isdeleted" />
                 <ScalarProperty Name="Accessid" ColumnName="Accessid" />
                 <ScalarProperty Name="Packageid" ColumnName="Packageid" />
@@ -3936,6 +4034,7 @@ warning 6002: The table/view 'Dieseltech.dbo.tblUser_Rights' does not have a pri
           <EntitySetMapping Name="tblUsers">
             <EntityTypeMapping TypeName="DieseltechModel.tblUser">
               <MappingFragment StoreEntitySet="tblUser">
+                <ScalarProperty Name="AgentTierId" ColumnName="AgentTierId" />
                 <ScalarProperty Name="Isdeleted" ColumnName="Isdeleted" />
                 <ScalarProperty Name="ValidUpto" ColumnName="ValidUpto" />
                 <ScalarProperty Name="Create_Date" ColumnName="Create_Date" />
@@ -4299,6 +4398,90 @@ warning 6002: The table/view 'Dieseltech.dbo.tblUser_Rights' does not have a pri
                 <ScalarProperty Name="Istrailerinterchange" ColumnName="Istrailerinterchange" />
                 <ScalarProperty Name="quickpaypercentage" ColumnName="quickpaypercentage" />
                 <ScalarProperty Name="IsNeedToAssign" ColumnName="IsNeedToAssign" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="Sp_Get_Dashboard_Stats" FunctionName="DieseltechModel.Store.Sp_Get_Dashboard_Stats">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="DieseltechModel.Sp_Get_Dashboard_Stats_Result">
+                <ScalarProperty Name="BrokerCount" ColumnName="BrokerCount" />
+                <ScalarProperty Name="CarrierCount" ColumnName="CarrierCount" />
+                <ScalarProperty Name="TruckCount" ColumnName="TruckCount" />
+                <ScalarProperty Name="DriverCount" ColumnName="DriverCount" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <EntitySetMapping Name="tblAgentTiers">
+            <EntityTypeMapping TypeName="DieseltechModel.tblAgentTier">
+              <MappingFragment StoreEntitySet="tblAgentTier">
+                <ScalarProperty Name="isActive" ColumnName="isActive" />
+                <ScalarProperty Name="AgentTier" ColumnName="AgentTier" />
+                <ScalarProperty Name="AgentTierId" ColumnName="AgentTierId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblCarrierAgents">
+            <EntityTypeMapping TypeName="DieseltechModel.tblCarrierAgent">
+              <MappingFragment StoreEntitySet="tblCarrierAgent">
+                <ScalarProperty Name="EditDate" ColumnName="EditDate" />
+                <ScalarProperty Name="AgentId" ColumnName="AgentId" />
+                <ScalarProperty Name="CarrierId" ColumnName="CarrierId" />
+                <ScalarProperty Name="CarrierAgentId" ColumnName="CarrierAgentId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="Sp_Get_All_Carrier_List_ForMapping" FunctionName="DieseltechModel.Store.Sp_Get_All_Carrier_List_ForMapping">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="DieseltechModel.Sp_Get_All_Carrier_List_ForMapping_Result">
+                <ScalarProperty Name="CarrierIdMain" ColumnName="CarrierIdMain" />
+                <ScalarProperty Name="CarrierName" ColumnName="CarrierName" />
+                <ScalarProperty Name="MC_" ColumnName="MC#" />
+                <ScalarProperty Name="AssignID" ColumnName="AssignID" />
+                <ScalarProperty Name="ContactName" ColumnName="ContactName" />
+                <ScalarProperty Name="Phonenumber" ColumnName="Phonenumber" />
+                <ScalarProperty Name="TrailerNo" ColumnName="TrailerNo" />
+                <ScalarProperty Name="TruckYard" ColumnName="TruckYard" />
+                <ScalarProperty Name="ZipCode" ColumnName="ZipCode" />
+                <ScalarProperty Name="StateCode" ColumnName="StateCode" />
+                <ScalarProperty Name="DriverName" ColumnName="DriverName" />
+                <ScalarProperty Name="DriverPhone" ColumnName="DriverPhone" />
+                <ScalarProperty Name="CategoryName" ColumnName="CategoryName" />
+                <ScalarProperty Name="Rating" ColumnName="Rating" />
+                <ScalarProperty Name="CarrierCategoryId" ColumnName="CarrierCategoryId" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="isactive" ColumnName="isactive" />
+                <ScalarProperty Name="IsBlackList" ColumnName="IsBlackList" />
+                <ScalarProperty Name="CarrierAgentId" ColumnName="CarrierAgentId" />
+                <ScalarProperty Name="CarrierId" ColumnName="CarrierId" />
+                <ScalarProperty Name="AgentId" ColumnName="AgentId" />
+                <ScalarProperty Name="EditDate" ColumnName="EditDate" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="Sp_Get_All_Carrier_List_Filter_ForMapping" FunctionName="DieseltechModel.Store.Sp_Get_All_Carrier_List_Filter_ForMapping">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="DieseltechModel.Sp_Get_All_Carrier_List_Filter_ForMapping_Result">
+                <ScalarProperty Name="CarrierIdMain" ColumnName="CarrierIdMain" />
+                <ScalarProperty Name="CarrierName" ColumnName="CarrierName" />
+                <ScalarProperty Name="MC_" ColumnName="MC#" />
+                <ScalarProperty Name="AssignID" ColumnName="AssignID" />
+                <ScalarProperty Name="ContactName" ColumnName="ContactName" />
+                <ScalarProperty Name="Phonenumber" ColumnName="Phonenumber" />
+                <ScalarProperty Name="TrailerNo" ColumnName="TrailerNo" />
+                <ScalarProperty Name="TruckYard" ColumnName="TruckYard" />
+                <ScalarProperty Name="ZipCode" ColumnName="ZipCode" />
+                <ScalarProperty Name="StateCode" ColumnName="StateCode" />
+                <ScalarProperty Name="DriverName" ColumnName="DriverName" />
+                <ScalarProperty Name="DriverPhone" ColumnName="DriverPhone" />
+                <ScalarProperty Name="CategoryName" ColumnName="CategoryName" />
+                <ScalarProperty Name="Rating" ColumnName="Rating" />
+                <ScalarProperty Name="CarrierCategoryId" ColumnName="CarrierCategoryId" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="IsBlackList" ColumnName="IsBlackList" />
+                <ScalarProperty Name="CarrierAgentId" ColumnName="CarrierAgentId" />
+                <ScalarProperty Name="CarrierId" ColumnName="CarrierId" />
+                <ScalarProperty Name="AgentId" ColumnName="AgentId" />
+                <ScalarProperty Name="EditDate" ColumnName="EditDate" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

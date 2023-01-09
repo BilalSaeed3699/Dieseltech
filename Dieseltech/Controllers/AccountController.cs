@@ -150,11 +150,11 @@ namespace Dieseltech.Controllers
             name = Username;
             int  userId = 0;
             //Create New User  and get User id
-                qry = "Exec SP_Insert_User '" + Username + "' , '" + password1new + "' ,'" + email + "','I'";
+                qry = "Exec SP_Insert_User '" + Username + "' , '" + password1new + "' ,'" + email + "',1,'I'";
                 userId = Convert.ToInt32(ut.ExecuteScalar(qry));
 
                if(userId ==0)                {
-                    ViewBag.error = "Supplied email address has already been used.";
+                    ViewBag.error = "Supplied email address or Username has already been used.";
                     return View();
                 }
 

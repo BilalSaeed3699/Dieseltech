@@ -4981,27 +4981,28 @@ namespace Dieseltech.Controllers
                 var UserId = Int32.Parse(Session["User_id"].ToString());
                 ViewBag.AgentList = deEntity.Sp_Get_Agents_List().ToList();
                 ViewBag.AccessLevel = UserId;
+                        DateTime TomorrowDate = DateTime.Now.AddDays(1);
                 if (AgentId==0)
                 {
                     ViewBag.UserId = UserId;
                     if (UserId == 2)
                     {
-                        ViewBag.Pickups = deEntity.tblLoadPickups.Where(x => x.CreatedDate.Year == DateTime.Now.Year && x.CreatedDate.Month == DateTime.Now.Month && x.CreatedDate.Day == DateTime.Now.Day).ToList();
-                        ViewBag.Deliveries = deEntity.tblLoadDeliveries.Where(x => x.CreatedDate.Year == DateTime.Now.Year && x.CreatedDate.Month == DateTime.Now.Month && x.CreatedDate.Day == DateTime.Now.Day).ToList();
+                        ViewBag.Pickups = deEntity.tblLoadPickups.Where(x => (x.DateTimeFrom.Year == DateTime.Now.Year && x.DateTimeFrom.Month == DateTime.Now.Month && x.DateTimeFrom.Day == DateTime.Now.Day) || (x.DateTimeFrom.Year == TomorrowDate.Year && x.DateTimeFrom.Month == TomorrowDate.Month && x.DateTimeFrom.Day == TomorrowDate.Day)).ToList();
+                        ViewBag.Deliveries = deEntity.tblLoadDeliveries.Where(x => (x.DateTimeFrom.Year == DateTime.Now.Year && x.DateTimeFrom.Month == DateTime.Now.Month && x.DateTimeFrom.Day == DateTime.Now.Day) || (x.DateTimeFrom.Year == TomorrowDate.Year && x.DateTimeFrom.Month == TomorrowDate.Month && x.DateTimeFrom.Day == TomorrowDate.Day)).ToList();
 
                     }
                     else
                     {
-                        ViewBag.Pickups = deEntity.tblLoadPickups.Where(x => x.CreatedDate.Year == DateTime.Now.Year && x.CreatedDate.Month == DateTime.Now.Month && x.CreatedDate.Day == DateTime.Now.Day && x.CreatedBy == UserId).ToList();
-                        ViewBag.Deliveries = deEntity.tblLoadDeliveries.Where(x => x.CreatedDate.Year == DateTime.Now.Year && x.CreatedDate.Month == DateTime.Now.Month && x.CreatedDate.Day == DateTime.Now.Day && x.CreatedBy == UserId).ToList();
+                        ViewBag.Pickups = deEntity.tblLoadPickups.Where(x => ((x.DateTimeFrom.Year == DateTime.Now.Year && x.DateTimeFrom.Month == DateTime.Now.Month && x.DateTimeFrom.Day == DateTime.Now.Day) || (x.DateTimeFrom.Year == TomorrowDate.Year && x.DateTimeFrom.Month == TomorrowDate.Month && x.DateTimeFrom.Day == TomorrowDate.Day)) && x.CreatedBy == UserId).ToList();
+                        ViewBag.Deliveries = deEntity.tblLoadDeliveries.Where(x => ((x.DateTimeFrom.Year == DateTime.Now.Year && x.DateTimeFrom.Month == DateTime.Now.Month && x.DateTimeFrom.Day == DateTime.Now.Day) || (x.DateTimeFrom.Year == TomorrowDate.Year && x.DateTimeFrom.Month == TomorrowDate.Month && x.DateTimeFrom.Day == TomorrowDate.Day)) && x.CreatedBy == UserId).ToList();
 
                     }
                 }
                 else
                 {
                     ViewBag.UserId = AgentId;
-                    ViewBag.Pickups = deEntity.tblLoadPickups.Where(x => x.CreatedDate.Year == DateTime.Now.Year && x.CreatedDate.Month == DateTime.Now.Month && x.CreatedDate.Day == DateTime.Now.Day && x.CreatedBy == AgentId).ToList();
-                    ViewBag.Deliveries = deEntity.tblLoadDeliveries.Where(x => x.CreatedDate.Year == DateTime.Now.Year && x.CreatedDate.Month == DateTime.Now.Month && x.CreatedDate.Day == DateTime.Now.Day && x.CreatedBy == AgentId).ToList();
+                    ViewBag.Pickups = deEntity.tblLoadPickups.Where(x => ((x.DateTimeFrom.Year == DateTime.Now.Year && x.DateTimeFrom.Month == DateTime.Now.Month && x.DateTimeFrom.Day == DateTime.Now.Day) || (x.DateTimeFrom.Year == TomorrowDate.Year && x.DateTimeFrom.Month == TomorrowDate.Month && x.DateTimeFrom.Day == TomorrowDate.Day)) && x.CreatedBy == AgentId).ToList();
+                    ViewBag.Deliveries = deEntity.tblLoadDeliveries.Where(x => ((x.DateTimeFrom.Year == DateTime.Now.Year && x.DateTimeFrom.Month == DateTime.Now.Month && x.DateTimeFrom.Day == DateTime.Now.Day) || (x.DateTimeFrom.Year == TomorrowDate.Year && x.DateTimeFrom.Month == TomorrowDate.Month && x.DateTimeFrom.Day == TomorrowDate.Day)) && x.CreatedBy == AgentId).ToList();
                 }
                 
 

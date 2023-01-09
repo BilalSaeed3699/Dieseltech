@@ -3,6 +3,7 @@
 @{ 
 
     List<Sp_Get_Dashboard_Stats_Result> DashboardStats = (List<Sp_Get_Dashboard_Stats_Result>)ViewBag.DashboardStats;
+    var UserId = Convert.ToInt32(Session["User_id"]);
 }
 
 <div class="content">
@@ -45,6 +46,37 @@
                     </div>
                 </div>
             </div>
+            @if (UserId==2)
+            {
+                <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
+                    <div class="dash-widget">
+                        <span class="dash-widget-bg2"><i class="fa fa-user-o" aria-hidden="true" style="margin-top:20%;"></i></span>
+                        <div class="dash-widget-info text-right">
+                            <h3>@ViewBag.ATHL</h3>
+                            <span class="widget-title2">High level agent <i class="fa fa-check" aria-hidden="true"></i></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
+                    <div class="dash-widget">
+                        <span class="dash-widget-bg1"><i class="fa fa-user-o" aria-hidden="true" style="margin-top:20%;"></i></span>
+                        <div class="dash-widget-info text-right">
+                            <h3>@ViewBag.ATSL</h3>
+                            <span class="widget-title1">Senior agent <i class="fa fa-check" aria-hidden="true"></i></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
+                    <div class="dash-widget">
+                        <span class="dash-widget-bg3"><i class="fa fa-user-o" aria-hidden="true" style="margin-top:20%;"></i></span>
+                        <div class="dash-widget-info text-right">
+                            <h3>@ViewBag.ATEL</h3>
+                            <span class="widget-title3">Executive agent <i class="fa fa-check" aria-hidden="true"></i></span>
+                        </div>
+                    </div>
+                </div>
+            }
+
         </div>
 
         @*<div class="row">

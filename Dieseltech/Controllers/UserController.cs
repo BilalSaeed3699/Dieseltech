@@ -64,6 +64,7 @@ namespace Dieseltech.Controllers
         public ActionResult Create()
         {
             ViewBag.error = "Please Complete user profile..!!";
+            ViewBag.AT = db.tblAgentTiers.ToList();
             return View();
         }
 
@@ -71,7 +72,7 @@ namespace Dieseltech.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Customexception]
-        public ActionResult Create(string UserName, string Email_Adress, string pass)
+        public ActionResult Create(string UserName, string Email_Adress, string pass, string AgentTierId)
         {
             try
             {
@@ -81,12 +82,12 @@ namespace Dieseltech.Controllers
                 name = UserName;
                 int userId = 0;
                 //Create New User  and get User id
-                qry = "Exec SP_Insert_User '" + UserName + "' , '" + password1new + "' ,'" + Email_Adress + "','I'";
+                qry = "Exec SP_Insert_User '" + UserName + "' , '" + password1new + "' ,'" + Email_Adress + "','" + AgentTierId + "','I'";
                 userId = Convert.ToInt32(ut.ExecuteScalar(qry));
 
                 if (userId == 0)
                 {
-                    ViewBag.error = "Supplied email address has already been used.";
+                    ViewBag.error = "Supplied email address or Username has already been used.";
                     return View();
                 }
 
@@ -137,8 +138,7 @@ namespace Dieseltech.Controllers
                 }
                 return View(speaker1);
             }
-
-
+            ViewBag.AT = new ModelHelper().GetATList(db.tblAgentTiers).ToList();
             ViewBag.image = speaker.Image;
             ViewBag.Details = speaker.Details;
             return View(speaker);
@@ -180,7 +180,7 @@ namespace Dieseltech.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Customexception]
-        public ActionResult Edit([Bind(Include = "profile_id, Profile_name,phoneNo,Email,youtube,instagram,Twitter,Facebook,Adress,Active,Packageid,Accessid,User_ID")] tblProfile speaker, HttpPostedFileBase Image, string Details, string Image1,int? isActiveUser=0)
+        public ActionResult Edit([Bind(Include = "profile_id, Profile_name,phoneNo,Email,youtube,instagram,Twitter,Facebook,Adress,Active,Packageid,Accessid,User_ID,AgentTierId")] tblProfile speaker, HttpPostedFileBase Image, string Details, string Image1,int? isActiveUser=0)
         {
 
             int id = Convert.ToInt32(Session["User_id"]);

@@ -73,7 +73,7 @@ namespace Dieseltech.Controllers
                 int UserId =Convert.ToInt32(Session["User_id"]);
                 if (RoleId!=1)
                 {
-                    LoaderBoard = LoaderBoard.Where(x => x.User_ID == UserId).ToList();
+                    LoaderBoard = LoaderBoard.Where(x => x.User_ID !=2).ToList();
                 }
                 ViewBag.LoaderBoard = LoaderBoard;
 

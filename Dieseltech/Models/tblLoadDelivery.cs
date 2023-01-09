@@ -41,6 +41,5 @@ namespace Dieseltech.Models
         public int Deliveryorder { get; set; }
         public string NewDateFrom { get; set; }
         public string NewDateTo { get; set; }
-
     }
 }

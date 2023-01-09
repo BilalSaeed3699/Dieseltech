@@ -12,16 +12,10 @@ namespace Dieseltech.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class tblUser
+    public partial class tblAgentTier
     {
-        public int User_ID { get; set; }
-        public string UserName { get; set; }
-        public string Password { get; set; }
-        public string Email_Adress { get; set; }
-        public int IsActive { get; set; }
-        public System.DateTime Create_Date { get; set; }
-        public Nullable<System.DateTime> ValidUpto { get; set; }
-        public int Isdeleted { get; set; }
-        public Nullable<int> AgentTierId { get; set; }
+        public int AgentTierId { get; set; }
+        public string AgentTier { get; set; }
+        public Nullable<bool> isActive { get; set; }
     }
 }

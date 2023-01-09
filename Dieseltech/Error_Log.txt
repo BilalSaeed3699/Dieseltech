@@ -785,3 +785,211 @@ Date: 12/06/2022 4:48:28 PM
 Controller Name: Report
 Action Name: LoadDetail
 Exception: Object reference not set to an instance of an object.
+----------------------------------------------------------------------------------------------
+Date: 01/06/2023 5:32:16 PM
+Controller Name: Report
+Action Name: ReportPreview
+Exception: C:\Eazisols\Dieseltech\Dieseltech\Dieseltech\Views\Report\ReportPreview.cshtml(283): error CS1061: 'tblCarrier' does not contain a definition for 'Quantity' and no accessible extension method 'Quantity' accepting a first argument of type 'tblCarrier' could be found (are you missing a using directive or an assembly reference?)
+----------------------------------------------------------------------------------------------
+Date: 01/06/2023 7:47:56 PM
+Controller Name: Home
+Action Name: Index
+Exception: Object reference not set to an instance of an object.
+----------------------------------------------------------------------------------------------
+Date: 01/06/2023 9:20:46 PM
+Controller Name: User
+Action Name: Edit
+Exception: The ViewData item that has the key 'AgentTierId' is of type 'System.Int32' but must be of type 'IEnumerable<SelectListItem>'.
+----------------------------------------------------------------------------------------------
+Date: 01/06/2023 9:21:10 PM
+Controller Name: User
+Action Name: Edit
+Exception: C:\Eazisols\Dieseltech\Dieseltech\Dieseltech\Views\User\Edit.cshtml(126): error CS1503: Argument 3: cannot convert from 'System.Collections.Generic.IEnumerable<Dieseltech.Models.tblAgentTier>' to 'System.Collections.Generic.IEnumerable<System.Web.Mvc.SelectListItem>'
+----------------------------------------------------------------------------------------------
+Date: 01/06/2023 9:24:30 PM
+Controller Name: User
+Action Name: Edit
+Exception: The ViewData item that has the key 'AgentTierId' is of type 'System.Int32' but must be of type 'IEnumerable<SelectListItem>'.
+----------------------------------------------------------------------------------------------
+Date: 01/06/2023 9:26:23 PM
+Controller Name: User
+Action Name: Edit
+Exception: 'Dieseltech.Models.tblAgentTier' does not contain a definition for 'Name'
+----------------------------------------------------------------------------------------------
+Date: 01/06/2023 9:27:21 PM
+Controller Name: User
+Action Name: Edit
+Exception: The ViewData item that has the key 'AgentTierId' is of type 'System.Int32' but must be of type 'IEnumerable<SelectListItem>'.
+----------------------------------------------------------------------------------------------
+Date: 01/06/2023 9:27:46 PM
+Controller Name: User
+Action Name: Edit
+Exception: 'Dieseltech.Models.tblAgentTier' does not contain a definition for 'Name'
+----------------------------------------------------------------------------------------------
+Date: 01/06/2023 9:30:06 PM
+Controller Name: User
+Action Name: Edit
+Exception: 'Dieseltech.Models.tblAgentTier' does not contain a definition for 'Name'
+----------------------------------------------------------------------------------------------
+Date: 01/06/2023 9:41:53 PM
+Controller Name: Home
+Action Name: Index
+Exception: The view 'Index' or its master was not found or no view engine supports the searched locations. The following locations were searched:
+~/Views/Home/Index.aspx
+~/Views/Home/Index.ascx
+~/Views/Shared/Index.aspx
+~/Views/Shared/Index.ascx
+~/Views/Home/Account.master
+~/Views/Shared/Account.master
+~/Views/Home/Account.cshtml
+~/Views/Home/Account.vbhtml
+~/Views/Shared/Account.cshtml
+~/Views/Shared/Account.vbhtml
+----------------------------------------------------------------------------------------------
+Date: 01/09/2023 6:20:13 PM
+Controller Name: Definition
+Action Name: AllCarrierList
+Exception: The data reader is incompatible with the specified 'DieseltechModel.Sp_Get_All_Carrier_List_ForMapping_Result'. A member of the type, 'CarrierId1', does not have a corresponding column in the data reader with the same name.
+----------------------------------------------------------------------------------------------
+Date: 01/09/2023 6:21:29 PM
+Controller Name: Definition
+Action Name: AllCarrierList
+Exception: The data reader is incompatible with the specified 'DieseltechModel.Sp_Get_All_Carrier_List_ForMapping_Result'. A member of the type, 'CarrierId1', does not have a corresponding column in the data reader with the same name.
+----------------------------------------------------------------------------------------------
+Date: 01/09/2023 6:22:04 PM
+Controller Name: Definition
+Action Name: AllCarrierList
+Exception: The data reader is incompatible with the specified 'DieseltechModel.Sp_Get_All_Carrier_List_ForMapping_Result'. A member of the type, 'CarrierId1', does not have a corresponding column in the data reader with the same name.
+----------------------------------------------------------------------------------------------
+Date: 01/09/2023 6:22:45 PM
+Controller Name: Definition
+Action Name: AllCarrierList
+Exception: The data reader is incompatible with the specified 'DieseltechModel.Sp_Get_All_Carrier_List_ForMapping_Result'. A member of the type, 'CarrierId1', does not have a corresponding column in the data reader with the same name.
+----------------------------------------------------------------------------------------------
+Date: 01/09/2023 6:23:31 PM
+Controller Name: Definition
+Action Name: AllCarrierList
+Exception: The data reader is incompatible with the specified 'DieseltechModel.Sp_Get_All_Carrier_List_ForMapping_Result'. A member of the type, 'CarrierId1', does not have a corresponding column in the data reader with the same name.
+----------------------------------------------------------------------------------------------
+Date: 01/09/2023 6:23:59 PM
+Controller Name: Definition
+Action Name: AllCarrierList
+Exception: The data reader is incompatible with the specified 'DieseltechModel.Sp_Get_All_Carrier_List_ForMapping_Result'. A member of the type, 'CarrierId1', does not have a corresponding column in the data reader with the same name.
+----------------------------------------------------------------------------------------------
+Date: 01/09/2023 6:24:03 PM
+Controller Name: Definition
+Action Name: AllCarrierList
+Exception: The data reader is incompatible with the specified 'DieseltechModel.Sp_Get_All_Carrier_List_ForMapping_Result'. A member of the type, 'CarrierId1', does not have a corresponding column in the data reader with the same name.
+----------------------------------------------------------------------------------------------
+Date: 01/09/2023 6:25:36 PM
+Controller Name: Definition
+Action Name: AllCarrierList
+Exception: The data reader is incompatible with the specified 'DieseltechModel.Sp_Get_All_Carrier_List_ForMapping_Result'. A member of the type, 'CarrierId1', does not have a corresponding column in the data reader with the same name.
+----------------------------------------------------------------------------------------------
+Date: 01/09/2023 6:26:00 PM
+Controller Name: Definition
+Action Name: AllCarrierList
+Exception: The data reader is incompatible with the specified 'DieseltechModel.Sp_Get_All_Carrier_List_ForMapping_Result'. A member of the type, 'CarrierId1', does not have a corresponding column in the data reader with the same name.
+----------------------------------------------------------------------------------------------
+Date: 01/09/2023 6:27:27 PM
+Controller Name: Definition
+Action Name: AllCarrierList
+Exception: The data reader is incompatible with the specified 'DieseltechModel.Sp_Get_All_Carrier_List_ForMapping_Result'. A member of the type, 'CarrierId1', does not have a corresponding column in the data reader with the same name.
+----------------------------------------------------------------------------------------------
+Date: 01/09/2023 6:29:00 PM
+Controller Name: Definition
+Action Name: AllCarrierList
+Exception: The data reader is incompatible with the specified 'DieseltechModel.Sp_Get_All_Carrier_List_ForMapping_Result'. A member of the type, 'CarrierId1', does not have a corresponding column in the data reader with the same name.
+----------------------------------------------------------------------------------------------
+Date: 01/09/2023 6:33:23 PM
+Controller Name: Definition
+Action Name: AllCarrierList
+Exception: The data reader is incompatible with the specified 'DieseltechModel.Sp_Get_All_Carrier_List_ForMapping_Result'. A member of the type, 'CarrierId1', does not have a corresponding column in the data reader with the same name.
+----------------------------------------------------------------------------------------------
+Date: 01/09/2023 6:35:02 PM
+Controller Name: Definition
+Action Name: AllCarrierList
+Exception: The data reader is incompatible with the specified 'DieseltechModel.Sp_Get_All_Carrier_List_ForMapping_Result'. A member of the type, 'CarrierId1', does not have a corresponding column in the data reader with the same name.
+----------------------------------------------------------------------------------------------
+Date: 01/09/2023 6:35:21 PM
+Controller Name: Definition
+Action Name: AllCarrierList
+Exception: The data reader is incompatible with the specified 'DieseltechModel.Sp_Get_All_Carrier_List_ForMapping_Result'. A member of the type, 'CarrierId1', does not have a corresponding column in the data reader with the same name.
+----------------------------------------------------------------------------------------------
+Date: 01/09/2023 6:35:34 PM
+Controller Name: Definition
+Action Name: AllCarrierList
+Exception: The data reader is incompatible with the specified 'DieseltechModel.Sp_Get_All_Carrier_List_ForMapping_Result'. A member of the type, 'CarrierId1', does not have a corresponding column in the data reader with the same name.
+----------------------------------------------------------------------------------------------
+Date: 01/09/2023 6:35:51 PM
+Controller Name: Definition
+Action Name: AllCarrierList
+Exception: The data reader is incompatible with the specified 'DieseltechModel.Sp_Get_All_Carrier_List_ForMapping_Result'. A member of the type, 'CarrierId1', does not have a corresponding column in the data reader with the same name.
+----------------------------------------------------------------------------------------------
+Date: 01/09/2023 6:38:24 PM
+Controller Name: Definition
+Action Name: AddCarrierMapping
+Exception: The parameters dictionary contains a null entry for parameter 'CarrierID' of non-nullable type 'System.Int32' for method 'System.Web.Mvc.JsonResult AddCarrierMapping(Int32)' in 'Dieseltech.Controllers.DefinitionController'. An optional parameter must be a reference type, a nullable type, or be declared as an optional parameter.
+Parameter name: parameters
+----------------------------------------------------------------------------------------------
+Date: 01/09/2023 6:39:24 PM
+Controller Name: Definition
+Action Name: AddCarrierMapping
+Exception: The parameters dictionary contains a null entry for parameter 'CarrierID' of non-nullable type 'System.Int32' for method 'System.Web.Mvc.JsonResult AddCarrierMapping(Int32)' in 'Dieseltech.Controllers.DefinitionController'. An optional parameter must be a reference type, a nullable type, or be declared as an optional parameter.
+Parameter name: parameters
+----------------------------------------------------------------------------------------------
+Date: 01/09/2023 6:39:38 PM
+Controller Name: Definition
+Action Name: AddCarrierMapping
+Exception: The parameters dictionary contains a null entry for parameter 'CarrierID' of non-nullable type 'System.Int32' for method 'System.Web.Mvc.JsonResult AddCarrierMapping(Int32)' in 'Dieseltech.Controllers.DefinitionController'. An optional parameter must be a reference type, a nullable type, or be declared as an optional parameter.
+Parameter name: parameters
+----------------------------------------------------------------------------------------------
+Date: 01/09/2023 6:43:21 PM
+Controller Name: Definition
+Action Name: AllCarrierListForMapping
+Exception: The data reader is incompatible with the specified 'DieseltechModel.Sp_Get_All_Carrier_List_ForMapping_Result'. A member of the type, 'CarrierId1', does not have a corresponding column in the data reader with the same name.
+----------------------------------------------------------------------------------------------
+Date: 01/09/2023 6:43:50 PM
+Controller Name: Definition
+Action Name: AllCarrierListForMapping
+Exception: The data reader is incompatible with the specified 'DieseltechModel.Sp_Get_All_Carrier_List_ForMapping_Result'. A member of the type, 'CarrierId1', does not have a corresponding column in the data reader with the same name.
+----------------------------------------------------------------------------------------------
+Date: 01/09/2023 6:46:23 PM
+Controller Name: Definition
+Action Name: AllCarrierListForMapping
+Exception: The data reader is incompatible with the specified 'DieseltechModel.Sp_Get_All_Carrier_List_ForMapping_Result'. A member of the type, 'CarrierId1', does not have a corresponding column in the data reader with the same name.
+----------------------------------------------------------------------------------------------
+Date: 01/09/2023 6:46:34 PM
+Controller Name: Definition
+Action Name: AllCarrierListForMapping
+Exception: The data reader is incompatible with the specified 'DieseltechModel.Sp_Get_All_Carrier_List_ForMapping_Result'. A member of the type, 'CarrierId1', does not have a corresponding column in the data reader with the same name.
+----------------------------------------------------------------------------------------------
+Date: 01/09/2023 6:46:45 PM
+Controller Name: Definition
+Action Name: AllCarrierListForMapping
+Exception: The data reader is incompatible with the specified 'DieseltechModel.Sp_Get_All_Carrier_List_ForMapping_Result'. A member of the type, 'CarrierId1', does not have a corresponding column in the data reader with the same name.
+----------------------------------------------------------------------------------------------
+Date: 01/09/2023 6:47:35 PM
+Controller Name: Definition
+Action Name: AllCarrierListForMapping
+Exception: The data reader is incompatible with the specified 'DieseltechModel.Sp_Get_All_Carrier_List_ForMapping_Result'. A member of the type, 'CarrierId1', does not have a corresponding column in the data reader with the same name.
+----------------------------------------------------------------------------------------------
+Date: 01/09/2023 6:51:55 PM
+Controller Name: Definition
+Action Name: AllCarrierListForMapping
+Exception: The data reader is incompatible with the specified 'DieseltechModel.Sp_Get_All_Carrier_List_ForMapping_Result'. A member of the type, 'CarrierId1', does not have a corresponding column in the data reader with the same name.
+----------------------------------------------------------------------------------------------
+Date: 01/09/2023 6:52:31 PM
+Controller Name: Definition
+Action Name: AllCarrierListForMapping
+Exception: The data reader is incompatible with the specified 'DieseltechModel.Sp_Get_All_Carrier_List_ForMapping_Result'. A member of the type, 'CarrierId1', does not have a corresponding column in the data reader with the same name.
+----------------------------------------------------------------------------------------------
+Date: 01/09/2023 7:01:52 PM
+Controller Name: Definition
+Action Name: CarrierMapping
+Exception: The data reader is incompatible with the specified 'DieseltechModel.Sp_Get_All_Carrier_List_ForMapping_Result'. A member of the type, 'CarrierId1', does not have a corresponding column in the data reader with the same name.
+----------------------------------------------------------------------------------------------
+Date: 01/09/2023 7:02:18 PM
+Controller Name: Definition
+Action Name: CarrierMapping
+Exception: The data reader is incompatible with the specified 'DieseltechModel.Sp_Get_All_Carrier_List_ForMapping_Result'. A member of the type, 'CarrierId1', does not have a corresponding column in the data reader with the same name.
