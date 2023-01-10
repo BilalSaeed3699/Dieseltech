@@ -4,11 +4,33 @@
 
     List<Sp_Get_Dashboard_Stats_Result> DashboardStats = (List<Sp_Get_Dashboard_Stats_Result>)ViewBag.DashboardStats;
     var UserId = Convert.ToInt32(Session["User_id"]);
+    string ImgPath = Session["image"].ToString();
 }
+
+
+
 
 <div class="content">
     <div class="content">
         <div class="row">
+            <div class="col-md-3 text-center">
+                @*<div class="container">
+                <img class=" image" src="@ImgPath">
+                <div class="overlay">
+                    <input class="" type="file" name="name" value="Chose" />
+                </div>
+            </div>*@
+
+                <div class="profile-img-wrap " style="margin-left: 30%;">
+                    <img class="inline-block" src="@ImgPath" id="AvatarImg" alt="user" style="border-radius: 50%;">
+                    <div class="fileupload btn">
+                        <i class="fa fa-camera"></i>
+                        <input class="upload" id="ChangeAvatar" onchange="ChangeAvatar()" type="file">
+                    </div>
+                </div>
+
+            </div>
+
             <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
                 <div class="dash-widget">
                     <span class="dash-widget-bg1"><i class="fa fa-users" aria-hidden="true" style="margin-top:20%;"></i></span>
@@ -37,6 +59,9 @@
                     </div>
                 </div>
             </div>
+
+
+
             <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
                 <div class="dash-widget">
                     <span class="dash-widget-bg4"><i class="fa fa-id-card" aria-hidden="true" style="margin-top:20%;"></i></span>
@@ -46,7 +71,7 @@
                     </div>
                 </div>
             </div>
-            @if (UserId==2)
+            @if (UserId == 2)
             {
                 <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
                     <div class="dash-widget">
@@ -244,3 +269,38 @@
 
 <script src="assets/js/Chart.bundle.js"></script>
 <script src="assets/js/chart.js"></script>
+
+
+<script>
+
+    function ChangeAvatar() {
+
+
+        var formData = new FormData();
+        var fileInput = $("#ChangeAvatar").get(0);
+        var file = fileInput.files[0];
+        formData.append("file", file);
+        ////console.log(file);
+        //formData.append("InvoiceNum",5);
+        ////console.log(FormData);
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("UploadImg", "Home")",
+            data: formData,
+            processData: false,
+            contentType: false,
+            dataType: "json",
+            success: function (r) {
+                $("#AvatarImg").attr("src", r);
+            },
+            error: function (r) {
+                //console.log(r);
+            }
+        });
+    }
+
+
+
+
+</script>

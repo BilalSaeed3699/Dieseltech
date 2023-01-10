@@ -556,7 +556,8 @@ namespace Dieseltech.Controllers
                 qry += " delete tblLoadDelivery Where LoadNumber not in (select LoaderNumber from tblLoadHead)";
                 ut.InsertUpdate(qry);
 
-
+                string qry1 = " Exec SpGetLoadNumber ";
+                ViewBag.LoadNumber = ut.ExecuteScalar(qry1);
 
                 ViewBag.LoadDocuments = deEntity.tblLoadFilePaths.ToList().Where(d => d.LoaderNumber == LoaderNumber).ToList();
                 ViewBag.FutureLoad = deEntity.tblLoadHeads.Where(lh => lh.IsManagerFutureLoad == IsManagerFutureload).ToList();

@@ -227,10 +227,11 @@
 
                 @{string LoaderNumber = Convert.ToString(@TempData["CurrentLoad"]);}
             </h3>
-            @if (LoaderNumber != "")
+            <h3 style="        background-color: #4c5564;color:white" name="LoaderNumber"> New Load Number: @ViewBag.LoadNumber  </h3>
+            @*@if (LoaderNumber != "")
             {
                 <h4 style="color:#009efb">Load Number :  @LoaderNumber</h4>
-            }
+            }*@
 
 
         </div>

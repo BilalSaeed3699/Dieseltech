@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -66,6 +67,47 @@ namespace Dieseltech.Controllers
 
             return View();
         }
+
+
+        public JsonResult UploadImg(HttpPostedFileBase file)
+        {
+            string Data = null;
+            var UserId = Convert.ToInt32(Session["User_id"]);
+            tblProfile Changeimg = db.tblProfiles.Where(x => x.User_ID == UserId).FirstOrDefault();
+            try
+            {
+                var file1 = Request.Files[0];
+                string folder = Server.MapPath(string.Format("~/{0}/", "ProfileImg"));
+                if (!Directory.Exists(folder))
+                {
+                    Directory.CreateDirectory(folder);
+                }
+
+                string path = Path.Combine(Server.MapPath("~/ProfileImg"), Path.GetFileName(file.FileName));
+
+                file.SaveAs(path);
+                path = Path.Combine("\\ProfileImg", Path.GetFileName(file.FileName));
+                Data = file.FileName;
+                Changeimg.Image = path;
+                db.Entry(Changeimg);
+                db.SaveChanges();
+
+
+                return Json(path);
+
+            }
+            catch (Exception ex)
+            {
+
+                ViewBag.Error = ex.Message;
+                Console.WriteLine("Error" + ex.Message);
+            }
+
+
+
+            return Json(0);
+        }
+
         [Customexception]
         public ActionResult UpdateNotification(int Notificationid)
         {
