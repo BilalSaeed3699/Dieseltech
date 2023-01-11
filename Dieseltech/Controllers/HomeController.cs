@@ -51,9 +51,9 @@ namespace Dieseltech.Controllers
                 int UserId = Convert.ToInt32(Session["User_id"]);
                 ViewBag.DashboardStats = db.Sp_Get_Dashboard_Stats(UserId).ToList();
 
-                ViewBag.ATHL = db.tblProfiles.Where(x => x.AgentTierId == 1).Count();
-                ViewBag.ATSL = db.tblProfiles.Where(x => x.AgentTierId == 2).Count();
-                ViewBag.ATEL = db.tblProfiles.Where(x => x.AgentTierId == 3).Count();
+                ViewBag.ATHL = db.tblProfiles.Where(x => x.AgentTierId == 1 && x.Isdeleted == 0).Count();
+                ViewBag.ATSL = db.tblProfiles.Where(x => x.AgentTierId == 2 && x.Isdeleted == 0).Count();
+                ViewBag.ATEL = db.tblProfiles.Where(x => x.AgentTierId == 3 && x.Isdeleted == 0).Count();
 
 
 

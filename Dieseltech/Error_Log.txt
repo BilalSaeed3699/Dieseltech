@@ -1078,3 +1078,58 @@ Date: 01/10/2023 5:52:58 PM
 Controller Name: Report
 Action Name: ReportPreview
 Exception: Object reference not set to an instance of an object.
+----------------------------------------------------------------------------------------------
+Date: 01/11/2023 1:17:24 PM
+Controller Name: User
+Action Name: Index
+Exception: Object reference not set to an instance of an object.
+----------------------------------------------------------------------------------------------
+Date: 01/11/2023 2:41:46 PM
+Controller Name: Home
+Action Name: Index
+Exception: C:\Eazisols\Dieseltech\Dieseltech\Dieseltech\Views\Shared\_Layout.cshtml(678): error CS0103: The name 'ImgPath' does not exist in the current context
+----------------------------------------------------------------------------------------------
+Date: 01/11/2023 3:14:30 PM
+Controller Name: Home
+Action Name: Index
+Exception: The view 'Index' or its master was not found or no view engine supports the searched locations. The following locations were searched:
+~/Views/Home/Index.aspx
+~/Views/Home/Index.ascx
+~/Views/Shared/Index.aspx
+~/Views/Shared/Index.ascx
+~/Views/Home/Account.master
+~/Views/Shared/Account.master
+~/Views/Home/Account.cshtml
+~/Views/Home/Account.vbhtml
+~/Views/Shared/Account.cshtml
+~/Views/Shared/Account.vbhtml
+----------------------------------------------------------------------------------------------
+Date: 01/11/2023 3:44:48 PM
+Controller Name: Home
+Action Name: Index
+Exception: The view 'Index' or its master was not found or no view engine supports the searched locations. The following locations were searched:
+~/Views/Home/Index.aspx
+~/Views/Home/Index.ascx
+~/Views/Shared/Index.aspx
+~/Views/Shared/Index.ascx
+~/Views/Home/Account.master
+~/Views/Shared/Account.master
+~/Views/Home/Account.cshtml
+~/Views/Home/Account.vbhtml
+~/Views/Shared/Account.cshtml
+~/Views/Shared/Account.vbhtml
+----------------------------------------------------------------------------------------------
+Date: 01/11/2023 3:44:49 PM
+Controller Name: Home
+Action Name: Index
+Exception: The view 'Index' or its master was not found or no view engine supports the searched locations. The following locations were searched:
+~/Views/Home/Index.aspx
+~/Views/Home/Index.ascx
+~/Views/Shared/Index.aspx
+~/Views/Shared/Index.ascx
+~/Views/Home/Account.master
+~/Views/Shared/Account.master
+~/Views/Home/Account.cshtml
+~/Views/Home/Account.vbhtml
+~/Views/Shared/Account.cshtml
+~/Views/Shared/Account.vbhtml

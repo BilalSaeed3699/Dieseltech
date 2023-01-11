@@ -8,15 +8,17 @@
     List<tblNotification> NotificationList = (List<tblNotification>)Session["CarrierInsuranceExpirationList"];
     List<tblNotification> AlkoisNotificationList = (List<tblNotification>)Session["AlkaiosnotifyList"];
     List<tblNotification> JetlineNotificationList = (List<tblNotification>)Session["JetlinenotifyList"];
-
+    string ImgPath = Session["image"].ToString();
 
 }
 @{int TotalUnreadNotifications = 0;}
 @{int AlkoisUnreadNotifications = 0;}
 @{int JetlineUnreadNotifications = 0;}
 @{
-    
+
 }
+
+
 <!-- index22:59-->
 <head>
     <meta charset="utf-8">
@@ -250,7 +252,7 @@
                     <span>Dieseltech</span>
                 </a>
             </div>
-            <a id="toggle_btn" href="javascript:void(0);" style="margin-top:1%;"><i class="fa fa-bars"></i></a>
+            <a id="toggle_btn" href="javascript:void(0);" style="margin-top:1%;" onclick="ChangeImg()"><i class="fa fa-bars"></i></a>
             <a id="mobile_btn" class="mobile_btn float-left" href="#sidebar"><i class="fa fa-bars"></i></a>
             <ul class="nav user-menu float-right">
                 @*<li class="nav-item dropdown d-none d-sm-block">
@@ -674,7 +676,21 @@
             <div class="sidebar-inner slimscroll">
                 <div id="sidebar-menu" class="sidebar-menu">
                     <ul>
-
+                        <li id="SideBarImg">
+                            <div class="profile-img-wrap " style="margin-left: 25%; margin-top: 4%; position: sticky !important; ">
+                                <img class="inline-block" src="@ImgPath" id="AvatarImg" alt="user" style="border-radius: 50%;">
+                                <div class="fileupload btn " style="background-color:@Session["Color"]!important; font-size:9px;">
+                                    <i class="fa fa-camera"></i>
+                                    <input class="upload" id="ChangeAvatar" onchange="ChangeAvatar()" type="file">
+                                    <input class="hidden" id="ChangeImgTpye"  hidden type="text" value="1">
+                                </div>
+                            </div>
+                        </li>
+                        <li id="SideBarImgS" style="display:none;">
+                                <span class="user-img">
+                                    <img class="rounded-circle" src="@Session["image"]" width="24" alt="Admin" style="margin-left: 80%; margin-top: 25%;">
+                                </span>
+                        </li>
                         <li class="">
                             <a href="@Url.Action("Index", "Home")" style="color: @Session["Color"];"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a>
                         </li>
@@ -963,15 +979,15 @@
             //$('.g-dataTable').DataTable().makeEditable();
         });
 
-                                        //$(window).load(function () {
-                                        //    // Animate loader off screen
-                                        //    $(".se-pre-con").fadeOut("slow");
-                                        //});
+                                            //$(window).load(function () {
+                                            //    // Animate loader off screen
+                                            //    $(".se-pre-con").fadeOut("slow");
+                                            //});
 
-                                        //$("#test").change(function () {
-                                        //    alert($(this).val());
+                                            //$("#test").change(function () {
+                                            //    alert($(this).val());
 
-                                        //});
+                                            //});
     </script>
 
     @*<script src="~/assets/js/jquery-3.2.1.min.js"></script>
@@ -982,10 +998,23 @@
         <script src="~/assets/js/app.js"></script>*@
 
     @*<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>*@
-    <script>
+<script>
+    function ChangeImg() {
+        var Change = $("#ChangeImgTpye").val();
+        if (Change== 1) {
+            $("#SideBarImg").hide();
+            $("#SideBarImgS").show();
+                $("#ChangeImgTpye").val(2);
+            }
+            else {
+            $("#SideBarImg").show();
+            $("#SideBarImgS").hide();
+                $("#ChangeImgTpye").val(1);
+            }
+            return 0;
+        }
 
-
-    </script>
+</script>
 </body>
 
 <!-- index22:59-->
