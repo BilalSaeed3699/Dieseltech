@@ -1133,3 +1133,68 @@ Exception: The view 'Index' or its master was not found or no view engine suppor
 ~/Views/Home/Account.vbhtml
 ~/Views/Shared/Account.cshtml
 ~/Views/Shared/Account.vbhtml
+----------------------------------------------------------------------------------------------
+Date: 01/12/2023 3:36:04 PM
+Controller Name: Home
+Action Name: Index
+Exception: Encountered end tag "div" with no matching start tag.  Are your start/end tags properly balanced?
+
+----------------------------------------------------------------------------------------------
+Date: 01/12/2023 3:48:11 PM
+Controller Name: Report
+Action Name: InvoicingDetail
+Exception: The parameters dictionary contains a null entry for parameter 'AdvanceFilterDateFroms' of non-nullable type 'System.DateTime' for method 'System.Web.Mvc.ActionResult InvoicingDetail(System.Nullable`1[System.Int32], System.DateTime, System.DateTime, System.Nullable`1[System.Int32], System.Nullable`1[System.Int32], System.String, System.String, System.DateTime, System.DateTime, System.String, System.Nullable`1[System.Int32], System.Nullable`1[System.Int32])' in 'Dieseltech.Controllers.ReportController'. An optional parameter must be a reference type, a nullable type, or be declared as an optional parameter.
+Parameter name: parameters
+----------------------------------------------------------------------------------------------
+Date: 01/12/2023 3:53:22 PM
+Controller Name: Report
+Action Name: InvoicingDetail
+Exception: The parameters dictionary contains a null entry for parameter 'AdvanceFilterDateFroms' of non-nullable type 'System.DateTime' for method 'System.Web.Mvc.ActionResult InvoicingDetail(System.Nullable`1[System.Int32], System.DateTime, System.DateTime, System.Nullable`1[System.Int32], System.Nullable`1[System.Int32], System.String, System.String, System.DateTime, System.DateTime, System.String, System.Nullable`1[System.Int32], System.Nullable`1[System.Int32])' in 'Dieseltech.Controllers.ReportController'. An optional parameter must be a reference type, a nullable type, or be declared as an optional parameter.
+Parameter name: parameters
+----------------------------------------------------------------------------------------------
+Date: 01/12/2023 3:59:43 PM
+Controller Name: Report
+Action Name: InvoicingDetail
+Exception: Object reference not set to an instance of an object.
+----------------------------------------------------------------------------------------------
+Date: 01/12/2023 3:59:54 PM
+Controller Name: Report
+Action Name: InvoicingDetail
+Exception: The parameters dictionary contains a null entry for parameter 'AdvanceFilterDateFroms' of non-nullable type 'System.DateTime' for method 'System.Web.Mvc.ActionResult InvoicingDetail(System.Nullable`1[System.Int32], System.DateTime, System.DateTime, System.Nullable`1[System.Int32], System.Nullable`1[System.Int32], System.String, System.String, System.DateTime, System.DateTime, System.String, System.Nullable`1[System.Int32], System.Nullable`1[System.Int32])' in 'Dieseltech.Controllers.ReportController'. An optional parameter must be a reference type, a nullable type, or be declared as an optional parameter.
+Parameter name: parameters
+----------------------------------------------------------------------------------------------
+Date: 01/12/2023 4:01:27 PM
+Controller Name: Report
+Action Name: InvoicingDetail
+Exception: The parameters dictionary contains a null entry for parameter 'AdvanceFilterDateFroms' of non-nullable type 'System.DateTime' for method 'System.Web.Mvc.ActionResult InvoicingDetail(System.Nullable`1[System.Int32], System.DateTime, System.DateTime, System.Nullable`1[System.Int32], System.Nullable`1[System.Int32], System.String, System.String, System.DateTime, System.DateTime, System.String, System.Nullable`1[System.Int32], System.Nullable`1[System.Int32])' in 'Dieseltech.Controllers.ReportController'. An optional parameter must be a reference type, a nullable type, or be declared as an optional parameter.
+Parameter name: parameters
+----------------------------------------------------------------------------------------------
+Date: 01/12/2023 4:01:45 PM
+Controller Name: Report
+Action Name: InvoicingDetail
+Exception: The parameters dictionary contains a null entry for parameter 'AdvanceFilterDateFroms' of non-nullable type 'System.DateTime' for method 'System.Web.Mvc.ActionResult InvoicingDetail(System.Nullable`1[System.Int32], System.DateTime, System.DateTime, System.Nullable`1[System.Int32], System.Nullable`1[System.Int32], System.String, System.String, System.DateTime, System.DateTime, System.String, System.Nullable`1[System.Int32], System.Nullable`1[System.Int32])' in 'Dieseltech.Controllers.ReportController'. An optional parameter must be a reference type, a nullable type, or be declared as an optional parameter.
+Parameter name: parameters
+----------------------------------------------------------------------------------------------
+Date: 01/12/2023 4:02:44 PM
+Controller Name: Report
+Action Name: InvoicingDetail
+Exception: The parameters dictionary contains a null entry for parameter 'AdvanceFilterDateFroms' of non-nullable type 'System.DateTime' for method 'System.Web.Mvc.ActionResult InvoicingDetail(System.Nullable`1[System.Int32], System.DateTime, System.DateTime, System.Nullable`1[System.Int32], System.Nullable`1[System.Int32], System.String, System.String, System.DateTime, System.DateTime, System.String, System.Nullable`1[System.Int32], System.Nullable`1[System.Int32])' in 'Dieseltech.Controllers.ReportController'. An optional parameter must be a reference type, a nullable type, or be declared as an optional parameter.
+Parameter name: parameters
+----------------------------------------------------------------------------------------------
+Date: 01/12/2023 4:03:50 PM
+Controller Name: Report
+Action Name: InvoicingDetail
+Exception: The parameters dictionary contains a null entry for parameter 'AdvanceFilterDateFroms' of non-nullable type 'System.DateTime' for method 'System.Web.Mvc.ActionResult InvoicingDetail(System.Nullable`1[System.Int32], System.DateTime, System.DateTime, System.Nullable`1[System.Int32], System.Nullable`1[System.Int32], System.String, System.String, System.DateTime, System.DateTime, System.String, System.Nullable`1[System.Int32], System.Nullable`1[System.Int32])' in 'Dieseltech.Controllers.ReportController'. An optional parameter must be a reference type, a nullable type, or be declared as an optional parameter.
+Parameter name: parameters
+----------------------------------------------------------------------------------------------
+Date: 01/12/2023 4:06:09 PM
+Controller Name: Report
+Action Name: InvoicingDetail
+Exception: The parameters dictionary contains a null entry for parameter 'AdvanceFilterDateFroms' of non-nullable type 'System.DateTime' for method 'System.Web.Mvc.ActionResult InvoicingDetail(System.Nullable`1[System.Int32], System.DateTime, System.DateTime, System.Nullable`1[System.Int32], System.Nullable`1[System.Int32], System.String, System.String, System.DateTime, System.DateTime, System.String, System.Nullable`1[System.Int32], System.Nullable`1[System.Int32])' in 'Dieseltech.Controllers.ReportController'. An optional parameter must be a reference type, a nullable type, or be declared as an optional parameter.
+Parameter name: parameters
+----------------------------------------------------------------------------------------------
+Date: 01/12/2023 4:06:14 PM
+Controller Name: Report
+Action Name: InvoicingDetail
+Exception: The parameters dictionary contains a null entry for parameter 'AdvanceFilterDateFroms' of non-nullable type 'System.DateTime' for method 'System.Web.Mvc.ActionResult InvoicingDetail(System.Nullable`1[System.Int32], System.DateTime, System.DateTime, System.Nullable`1[System.Int32], System.Nullable`1[System.Int32], System.String, System.String, System.DateTime, System.DateTime, System.String, System.Nullable`1[System.Int32], System.Nullable`1[System.Int32])' in 'Dieseltech.Controllers.ReportController'. An optional parameter must be a reference type, a nullable type, or be declared as an optional parameter.
+Parameter name: parameters

@@ -9,6 +9,7 @@
     List<tblNotification> AlkoisNotificationList = (List<tblNotification>)Session["AlkaiosnotifyList"];
     List<tblNotification> JetlineNotificationList = (List<tblNotification>)Session["JetlinenotifyList"];
     string ImgPath = Session["image"].ToString();
+    int UserId = Convert.ToInt32(Session["User_id"]);
 
 }
 @{int TotalUnreadNotifications = 0;}
@@ -301,8 +302,8 @@
                                 @foreach (var notifylist in AlkoisNotificationList)
                                 {
                                     <li class="notification-message">
-                                        <a>
-                                            <div class="media">
+                                        @*<a>*@
+                                            <div class="media" style="padding: 12px !important;">
                                                 <span class="avatar">
                                                     <img alt="John Doe" src="/assets/img/user.jpg" class="img-fluid">
                                                 </span>
@@ -311,7 +312,7 @@
                                                 {
 
                                                     <div class="media-body">
-                                                        <p class="noti-details">load #<span class="noti-title">  @notifylist.NotificationReferenceName</span>  ready to be invoiced</p>
+                                                        <p class="noti-details"><a href="@Url.Action("InvoicingDetail", "Report", new {userid =UserId,Filter ="S",AdvanceFilterDateFroms=DateTime.Now.ToString("MM/dd/yyyy"),AdvanceFilterDateTo=DateTime.Now.ToString("MM/dd/yyyy"), FilterDateFroms = DateTime.Now.ToString("MM/dd/yyyy"), FilterDateTos = DateTime.Now.ToString("MM/dd/yyyy"),cwhere=notifylist.NotificationReferenceName })" style="padding: 0px !important;">load #<span class="noti-title">@notifylist.NotificationReferenceName  </span>ready to be invoiced </a> </p>
                                                         <div>
                                                             <p class="noti-time">
                                                                 <label style="color:black">Date: </label><span class="notification-time">@notifylist.CreateDate.ToString("MM/dd/yyyy")</span>
@@ -338,38 +339,39 @@
                                                 }
                                                 else
                                                 {
-                                                    <div class="media-body">
-                                                        <p class="noti-details"><span class="noti-title">@notifylist.NotificationReferenceName</span> Insurance expired</p>
-                                                        <div>
-                                                            <p class="noti-time">
-                                                                <label style="color:black">Expiration Date: </label><span class="notification-time">@notifylist.InsuranceExpirationDate.ToString("MM/dd/yyyy")</span>
+                                            <div class="media-body">
+                                                @*<p class="noti-details"><span class="noti-title">@notifylist.NotificationReferenceName</span> </p>*@
+                                                <p class="noti-details"><a href="@Url.Action("InvoicingDetail", "Report", new {userid =UserId,Filter ="S",AdvanceFilterDateFroms=DateTime.Now.ToString("MM/dd/yyyy"),AdvanceFilterDateTo=DateTime.Now.ToString("MM/dd/yyyy"), FilterDateFroms = DateTime.Now.ToString("MM/dd/yyyy"), FilterDateTos = DateTime.Now.ToString("MM/dd/yyyy"),cwhere=notifylist.NotificationReferenceName })" style="padding: 0px !important;">load #<span class="noti-title">@notifylist.NotificationReferenceName  </span>Insurance expired </a> </p>
+                                                <div>
+                                                    <p class="noti-time">
+                                                        <label style="color:black">Expiration Date: </label><span class="notification-time">@notifylist.InsuranceExpirationDate.ToString("MM/dd/yyyy")</span>
 
 
 
-                                                                @if (notifylist.IsRead == 0)
-                                                                {
-                                                                    <small id=""
-                                                                           onclick="MarkAllRead(@notifylist.NotificationId)" style="float:right;border:1px solid red;background-color:red;color:white;padding:4px;font-size:12px">
-                                                                        Unread
-                                                                    </small>
-                                                                }
-                                                                else if (notifylist.IsRead == 1)
-                                                                {
-                                                                    <small style="cursor:default; float: right; border: 1px solid green; background-color: green; color: white; padding: 4px; font-size: 12px">
-                                                                        Read
-                                                                    </small>
-                                                                }
+                                                        @if (notifylist.IsRead == 0)
+                                                        {
+                                                            <small id=""
+                                                                   onclick="MarkAllRead(@notifylist.NotificationId)" style="float:right;border:1px solid red;background-color:red;color:white;padding:4px;font-size:12px">
+                                                                Unread
+                                                            </small>
+                                                        }
+                                                        else if (notifylist.IsRead == 1)
+                                                        {
+                                                            <small style="cursor:default; float: right; border: 1px solid green; background-color: green; color: white; padding: 4px; font-size: 12px">
+                                                                Read
+                                                            </small>
+                                                        }
 
 
 
-                                                            </p>
+                                                    </p>
 
-                                                        </div>
-                                                    </div>
+                                                </div>
+                                            </div>
                                                 }
 
                                             </div>
-                                        </a>
+                                        @*</a>*@
                                     </li>
                                 }
                             </ul>
@@ -410,8 +412,8 @@
                                 @foreach (var notifylist in JetlineNotificationList)
                                 {
                                     <li class="notification-message">
-                                        <a>
-                                            <div class="media">
+                                        @*<a>*@  
+                                            <div class="media" style="padding: 12px !important;">
                                                 <span class="avatar">
                                                     <img alt="John Doe" src="/assets/img/user.jpg" class="img-fluid">
                                                 </span>
@@ -419,66 +421,68 @@
                                                 @if (notifylist.NotificationType == "P")
                                                 {
 
-                                                    <div class="media-body">
-                                                        <p class="noti-details">load #<span class="noti-title">  @notifylist.NotificationReferenceName</span>  ready to be invoiced</p>
-                                                        <div>
-                                                            <p class="noti-time">
-                                                                <label style="color:black">Date: </label><span class="notification-time">@notifylist.CreateDate.ToString("MM/dd/yyyy")</span>
-                                                                @if (notifylist.IsRead == 0)
-                                                                {
-                                                                    <small id=""
-                                                                           onclick="MarkAllRead(@notifylist.NotificationId)" style="float:right;border:1px solid red;background-color:red;color:white;padding:4px;font-size:12px">
-                                                                        Unread
-                                                                    </small>
-                                                                }
-                                                                else if (notifylist.IsRead == 1)
-                                                                {
-                                                                    <small style="cursor:default; float: right; border: 1px solid green; background-color: green; color: white; padding: 4px; font-size: 12px">
-                                                                        Read
-                                                                    </small>
-                                                                }
+                                            <div class="media-body">
+                                                @*<p class="noti-details">load #<span class="noti-title">  @notifylist.NotificationReferenceName</span>  ready to be invoiced</p>*@
+                                                <p class="noti-details"><a href="@Url.Action("InvoicingDetail", "Report", new {userid =UserId,Filter ="S",AdvanceFilterDateFroms=DateTime.Now.ToString("MM/dd/yyyy"),AdvanceFilterDateTo=DateTime.Now.ToString("MM/dd/yyyy"), FilterDateFroms = DateTime.Now.ToString("MM/dd/yyyy"), FilterDateTos = DateTime.Now.ToString("MM/dd/yyyy"),cwhere=notifylist.NotificationReferenceName })" style="padding: 0px !important;">load #<span class="noti-title">@notifylist.NotificationReferenceName  </span>ready to be invoiced </a> </p>
+                                                <div>
+                                                    <p class="noti-time">
+                                                        <label style="color:black">Date: </label><span class="notification-time">@notifylist.CreateDate.ToString("MM/dd/yyyy")</span>
+                                                        @if (notifylist.IsRead == 0)
+                                                        {
+                                                            <small id=""
+                                                                   onclick="MarkAllRead(@notifylist.NotificationId)" style="float:right;border:1px solid red;background-color:red;color:white;padding:4px;font-size:12px">
+                                                                Unread
+                                                            </small>
+                                                        }
+                                                        else if (notifylist.IsRead == 1)
+                                                        {
+                                                            <small style="cursor:default; float: right; border: 1px solid green; background-color: green; color: white; padding: 4px; font-size: 12px">
+                                                                Read
+                                                            </small>
+                                                        }
 
 
 
-                                                            </p>
+                                                    </p>
 
-                                                        </div>
-                                                    </div>
+                                                </div>
+                                            </div>
                                                 }
                                                 else
                                                 {
-                                                    <div class="media-body">
-                                                        <p class="noti-details"><span class="noti-title">@notifylist.NotificationReferenceName</span> Insurance expired</p>
-                                                        <div>
-                                                            <p class="noti-time">
-                                                                <label style="color:black">Expiration Date: </label><span class="notification-time">@notifylist.InsuranceExpirationDate.ToString("MM/dd/yyyy")</span>
+                                            <div class="media-body">
+                                                @*<p class="noti-details"><span class="noti-title">@notifylist.NotificationReferenceName</span> Insurance expired</p>*@
+                                                <p class="noti-details"><a href="@Url.Action("InvoicingDetail", "Report", new {userid =UserId,Filter ="S",AdvanceFilterDateFroms=DateTime.Now.ToString("MM/dd/yyyy"),AdvanceFilterDateTo=DateTime.Now.ToString("MM/dd/yyyy"), FilterDateFroms = DateTime.Now.ToString("MM/dd/yyyy"), FilterDateTos = DateTime.Now.ToString("MM/dd/yyyy"),cwhere=notifylist.NotificationReferenceName })" style="padding: 0px !important;">load #<span class="noti-title">@notifylist.NotificationReferenceName  </span>Insurance expired </a> </p>
+                                                <div>
+                                                    <p class="noti-time">
+                                                        <label style="color:black">Expiration Date: </label><span class="notification-time">@notifylist.InsuranceExpirationDate.ToString("MM/dd/yyyy")</span>
 
 
 
-                                                                @if (notifylist.IsRead == 0)
-                                                                {
-                                                                    <small id=""
-                                                                           onclick="MarkAllRead(@notifylist.NotificationId)" style="float:right;border:1px solid red;background-color:red;color:white;padding:4px;font-size:12px">
-                                                                        Unread
-                                                                    </small>
-                                                                }
-                                                                else if (notifylist.IsRead == 1)
-                                                                {
-                                                                    <small style="cursor:default; float: right; border: 1px solid green; background-color: green; color: white; padding: 4px; font-size: 12px">
-                                                                        Read
-                                                                    </small>
-                                                                }
+                                                        @if (notifylist.IsRead == 0)
+                                                        {
+                                                            <small id=""
+                                                                   onclick="MarkAllRead(@notifylist.NotificationId)" style="float:right;border:1px solid red;background-color:red;color:white;padding:4px;font-size:12px">
+                                                                Unread
+                                                            </small>
+                                                        }
+                                                        else if (notifylist.IsRead == 1)
+                                                        {
+                                                            <small style="cursor:default; float: right; border: 1px solid green; background-color: green; color: white; padding: 4px; font-size: 12px">
+                                                                Read
+                                                            </small>
+                                                        }
 
 
 
-                                                            </p>
+                                                    </p>
 
-                                                        </div>
-                                                    </div>
+                                                </div>
+                                            </div>
                                                 }
 
                                             </div>
-                                        </a>
+                                        @*</a>*@
                                     </li>
                                 }
                             </ul>
@@ -519,8 +523,8 @@
                                 @foreach (var notifylist in NotificationList)
                                 {
                                     <li class="notification-message">
-                                        <a>
-                                            <div class="media">
+                                        @*<a>*@  
+                                            <div class="media" style="padding: 12px !important;">
                                                 <span class="avatar">
                                                     <img alt="John Doe" src="/assets/img/user.jpg" class="img-fluid">
                                                 </span>
@@ -528,66 +532,68 @@
                                                 @if (notifylist.NotificationType == "P")
                                                 {
 
-                                                    <div class="media-body">
-                                                        <p class="noti-details">load #<span class="noti-title">  @notifylist.NotificationReferenceName</span>  ready to be invoiced</p>
-                                                        <div>
-                                                            <p class="noti-time">
-                                                                <label style="color:black">Date: </label><span class="notification-time">@notifylist.CreateDate.ToString("MM/dd/yyyy")</span>
-                                                                @if (notifylist.IsRead == 0)
-                                                                {
-                                                                    <small id=""
-                                                                           onclick="MarkAllRead(@notifylist.NotificationId)" style="float:right;border:1px solid red;background-color:red;color:white;padding:4px;font-size:12px">
-                                                                        Unread
-                                                                    </small>
-                                                                }
-                                                                else if (notifylist.IsRead == 1)
-                                                                {
-                                                                    <small style="cursor:default; float: right; border: 1px solid green; background-color: green; color: white; padding: 4px; font-size: 12px">
-                                                                        Read
-                                                                    </small>
-                                                                }
+                                            <div class="media-body">
+                                                @*<p class="noti-details">load #<span class="noti-title">  @notifylist.NotificationReferenceName</span>  ready to be invoiced</p>*@
+                                                <p class="noti-details"><a href="@Url.Action("InvoicingDetail", "Report", new {userid =UserId,Filter ="S",AdvanceFilterDateFroms=DateTime.Now.ToString("MM/dd/yyyy"),AdvanceFilterDateTo=DateTime.Now.ToString("MM/dd/yyyy"), FilterDateFroms = DateTime.Now.ToString("MM/dd/yyyy"), FilterDateTos = DateTime.Now.ToString("MM/dd/yyyy"),cwhere=notifylist.NotificationReferenceName })" style="padding: 0px !important;">load #<span class="noti-title">@notifylist.NotificationReferenceName  </span>ready to be invoiced </a> </p>
+                                                <div>
+                                                    <p class="noti-time">
+                                                        <label style="color:black">Date: </label><span class="notification-time">@notifylist.CreateDate.ToString("MM/dd/yyyy")</span>
+                                                        @if (notifylist.IsRead == 0)
+                                                        {
+                                                            <small id=""
+                                                                   onclick="MarkAllRead(@notifylist.NotificationId)" style="float:right;border:1px solid red;background-color:red;color:white;padding:4px;font-size:12px">
+                                                                Unread
+                                                            </small>
+                                                        }
+                                                        else if (notifylist.IsRead == 1)
+                                                        {
+                                                            <small style="cursor:default; float: right; border: 1px solid green; background-color: green; color: white; padding: 4px; font-size: 12px">
+                                                                Read
+                                                            </small>
+                                                        }
 
 
 
-                                                            </p>
+                                                    </p>
 
-                                                        </div>
-                                                    </div>
+                                                </div>
+                                            </div>
                                                 }
                                                 else
                                                 {
-                                                    <div class="media-body">
-                                                        <p class="noti-details"><span class="noti-title">@notifylist.NotificationReferenceName</span> Insurance expired</p>
-                                                        <div>
-                                                            <p class="noti-time">
-                                                                <label style="color:black">Expiration Date: </label><span class="notification-time">@notifylist.InsuranceExpirationDate.ToString("MM/dd/yyyy")</span>
+                                            <div class="media-body">
+                                                @*<p class="noti-details"><span class="noti-title">@notifylist.NotificationReferenceName</span> Insurance expired</p>*@
+                                                <p class="noti-details"><a href="@Url.Action("InvoicingDetail", "Report", new {userid =UserId,Filter ="S",AdvanceFilterDateFroms=DateTime.Now.ToString("MM/dd/yyyy"),AdvanceFilterDateTo=DateTime.Now.ToString("MM/dd/yyyy"), FilterDateFroms = DateTime.Now.ToString("MM/dd/yyyy"), FilterDateTos = DateTime.Now.ToString("MM/dd/yyyy"),cwhere=notifylist.NotificationReferenceName })" style="padding: 0px !important;">load #<span class="noti-title">@notifylist.NotificationReferenceName  </span>Insurance expired </a> </p>
+                                                <div>
+                                                    <p class="noti-time">
+                                                        <label style="color:black">Expiration Date: </label><span class="notification-time">@notifylist.InsuranceExpirationDate.ToString("MM/dd/yyyy")</span>
 
 
 
-                                                                @if (notifylist.IsRead == 0)
-                                                                {
-                                                                    <small id=""
-                                                                           onclick="MarkAllRead(@notifylist.NotificationId)" style="float:right;border:1px solid red;background-color:red;color:white;padding:4px;font-size:12px">
-                                                                        Unread
-                                                                    </small>
-                                                                }
-                                                                else if (notifylist.IsRead == 1)
-                                                                {
-                                                                    <small style="cursor:default; float: right; border: 1px solid green; background-color: green; color: white; padding: 4px; font-size: 12px">
-                                                                        Read
-                                                                    </small>
-                                                                }
+                                                        @if (notifylist.IsRead == 0)
+                                                        {
+                                                            <small id=""
+                                                                   onclick="MarkAllRead(@notifylist.NotificationId)" style="float:right;border:1px solid red;background-color:red;color:white;padding:4px;font-size:12px">
+                                                                Unread
+                                                            </small>
+                                                        }
+                                                        else if (notifylist.IsRead == 1)
+                                                        {
+                                                            <small style="cursor:default; float: right; border: 1px solid green; background-color: green; color: white; padding: 4px; font-size: 12px">
+                                                                Read
+                                                            </small>
+                                                        }
 
 
 
-                                                            </p>
+                                                    </p>
 
-                                                        </div>
-                                                    </div>
+                                                </div>
+                                            </div>
                                                 }
 
                                             </div>
-                                        </a>
+                                        @*</a>*@
                                     </li>
                                 }
                             </ul>
